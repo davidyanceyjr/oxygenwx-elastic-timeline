@@ -1,7 +1,8 @@
-# Cycle plan — 015-p2-acceptance-closure
+# Cycle plan — 021-p2-acceptance-closure
 
 State: CLOSED
-Roadmap: P.2.9
+Cycle ID: 021-p2-acceptance-closure
+Slice ID: P.2.9
 Objective: Verify RTL behavior on the installed prototype and produce an evidence-backed final disposition for P.2 installed acceptance.
 
 ## Scope
@@ -14,9 +15,9 @@ No application source or behavior changes are in scope. If the RTL review confir
 
 May create or update only:
 
-- `.codex/test-artifacts/015-p2-acceptance-closure/` for actual installed captures and findings.
-- `.codex/history/015-p2-acceptance-closure.md` at closeout.
-- `.codex/history/plans/015-p2-acceptance-closure.md` at closeout.
+- `.codex/test-artifacts/021-p2-acceptance-closure/` for actual installed captures and findings.
+- `.codex/history/021-p2-acceptance-closure.md` at closeout.
+- `.codex/history/plans/021-p2-acceptance-closure.md` at closeout.
 - `.codex/current.md` and this plan for cycle lifecycle.
 - `docs/ROADMAP.md` to close P.2.9 only if its full exit is met, or to record an evidence-backed blocker or separately scoped confirmed follow-up.
 
@@ -38,7 +39,7 @@ No application source, production oxygenWX file, or unrelated roadmap item may c
 3. Enable an available RTL system locale, record its exact name and readback, and install/run the current app if needed. In portrait at default font scale, capture actual device screenshots of the daily timeline, hourly timeline, daily forecast browser, and hourly forecast browser.
 4. In RTL, exercise a day tap, immediate horizontal drag, stationary hold-then-drag, scale change, release/collapse, and re-entry. Scrub toward both fixture bounds where reachable and record the displayed endpoint and selected time. Observe chronology/direction, selected-time continuity, responsiveness, gesture ownership, and readable values/labels.
 5. Do not enable or traverse TalkBack for this cycle. For P.2.7 and P.2.13, cite the existing evidence and record the product owner's direction that TalkBack works, no further testing is wanted now, and testing will be revisited before final production release. Do not claim RTL-specific spoken behavior was tested.
-6. Restore the original locale and any other changed settings, verify readback, and preserve screenshots plus device/settings/interaction details in `.codex/test-artifacts/015-p2-acceptance-closure/README.md`.
+6. Restore the original locale and any other changed settings, verify readback, and preserve screenshots plus device/settings/interaction details in `.codex/test-artifacts/021-p2-acceptance-closure/README.md`.
 7. Reconcile every required P.2 outcome as DONE or explicitly BLOCKED with its evidence reference. Record the three cross-cutting visual-quality dispositions, residual gaps, any confirmed defect and proposed separate slice, and the product owner's disposition of residual scope. Do not alter earlier cycle histories.
 8. If P.2.9 exit is met, mark it DONE and write the closeout history and archived plan. If it is not met, record exact blocker/evidence, leave P.2.9 unresolved (BLOCKED when external/device conditions prevent progress), and do not claim final acceptance.
 
@@ -52,7 +53,7 @@ P.2.9 is complete only when all of the following are recorded:
 - The P.2.5, P.2.6, P.2.7, P.2.8, and P.2.11 outcomes are each linked to their existing evidence and marked DONE or explicitly BLOCKED; limitations remain visible.
 - Residual scope receives a product-owner disposition. Confirmed defects are identified as separate bounded follow-ups rather than silently included here.
 - Any changed system setting is restored and read back.
-- Actual installed captures and the review README are saved under `.codex/test-artifacts/015-p2-acceptance-closure/`; closeout is `.codex/history/015-p2-acceptance-closure.md`.
+- Actual installed captures and the review README are saved under `.codex/test-artifacts/021-p2-acceptance-closure/`; closeout is `.codex/history/021-p2-acceptance-closure.md`.
 
 Planned verification: `python scripts/dev.py workflow` before and after the cycle; `python scripts/dev.py build` and `python scripts/dev.py run` as needed to install/launch the current app; installed screenshot capture and manual interaction/accessibility review. Run `git diff --check` and inspect the final diff at closeout. Do not run tests, lint, or contract checks unless the bounded review reveals a specific reason and the plan is revised before doing so.
 

@@ -1,7 +1,8 @@
-# Cycle 015-p2-acceptance-closure
+# Cycle 021-p2-acceptance-closure
 
 Date: 2026-10-24
-Roadmap: P.2.9
+Cycle ID: 021-p2-acceptance-closure
+Slice ID: P.2.9
 
 ## Outcome
 
@@ -16,7 +17,7 @@ P.2.7 and P.2.13 TalkBack acceptance remains DONE based on existing evidence. Pe
 - `python scripts/dev.py workflow` — passed before activation and after activation.
 - `python scripts/dev.py run --serial 8AKY0M32X` with the default shell Java 8 — failed because Gradle requires JVM 17 or later.
 - Re-ran with `JAVA_HOME=/usr/lib/jvm/java-27-openjdk`, `PATH=/usr/lib/jvm/java-27-openjdk/bin:$PATH`, `ANDROID_HOME=/home/opsman/Android/Sdk`, and `ANDROID_SDK_ROOT=/home/opsman/Android/Sdk` — `BUILD SUCCESSFUL`, install succeeded, and `MainActivity` launched.
-- Installed RTL screenshots and adb-injected tap, swipe, hold, and drag interactions were captured and reviewed under `.codex/test-artifacts/015-p2-acceptance-closure/`.
+- Installed RTL screenshots and adb-injected tap, swipe, hold, and drag interactions were captured and reviewed under `.codex/test-artifacts/021-p2-acceptance-closure/`.
 - Locale/settings restoration readback: `system_locales=en-US`, `persist.sys.locale=en-US`, `font_scale=1.0`, animation scales `1`, `enabled_accessibility_services=null`, `accessibility_enabled=0`, portrait (`SurfaceOrientation: 0`).
 - `git diff --check` — passed after closeout edits. `python scripts/dev.py workflow` — passed with current cycle IDLE.
 - No unit tests, lint, contract check, or TalkBack test was run.

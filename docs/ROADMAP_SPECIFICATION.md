@@ -6,10 +6,19 @@ This document defines how `docs/ROADMAP.md` orders and closes work in Oxygen Tim
 
 The roadmap is the ordered, durable list of bounded work slices. A roadmap slice states the outcome and the evidence required to close it. It does not replace the active cycle plan, implementation notes, or history:
 
-- `.codex/current.md` identifies the active cycle and plan.
+- A **slice ID** (such as `P.2.9`) identifies a stable roadmap outcome. Keep it unchanged when ordering or inserting other slices.
+- A **cycle ID** (such as `021-p2-acceptance-closure`) identifies one unique, chronological bounded execution. It is independent of the slice ID and roadmap position; never derive it from the slice number.
+- Each cycle names the slice it addresses. A later bounded attempt at the same slice receives a new cycle ID; an inserted or split slice gets its own slice ID and receives a cycle ID only when work is planned.
+- `.codex/current.md` identifies the active cycle, its slice, and plan.
 - `.codex/plans/` holds the bounded execution plan for an active or planned cycle.
 - `.codex/test-artifacts/<cycle-id>/` holds actual evidence, including device captures.
 - `.codex/history/` holds closed cycle outcomes, verification performed, and limitations.
+
+Assign the next cycle number after the latest cycle record. Do not reuse a cycle
+ID or renumber existing cycles when inserting roadmap work. Include both the
+cycle ID and slice ID in plan and history metadata, and use the cycle ID in the
+plan, evidence, and history paths. This keeps roadmap state distinct from the
+execution chronology while preserving a traceable record across the Git diff.
 
 Roadmap changes do not silently expand an active slice. Scope or ordering changes are recorded in the active plan/history and reflected in the roadmap before dependent work proceeds.
 

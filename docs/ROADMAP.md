@@ -137,7 +137,7 @@ Every visual enhancement must preserve timeline responsiveness, gesture predicta
 **Objective/scope:** Review timeline chronology, gesture directions, and labels under a system RTL locale. Reconcile the installed acceptance evidence; use existing TalkBack acceptance without repeating TalkBack tests in this cycle, per the product owner's direction to revisit before final production release.
 **Depends on:** P.2.5, P.2.6, P.2.7, P.2.8, and P.2.11.
 **Exit:** Installed RTL screenshots and direct-touch observations establish that chronology, gesture directions, fixture bounds, and visible labels remain understandable. Existing P.2.7/P.2.13 TalkBack outcomes are linked without retest; RTL-specific spoken behavior is recorded as unverified per the product owner's decision to revisit TalkBack before final production release. The required P.2 evidence and limitations are reconciled, the three cross-cutting visual-quality checks are recorded, and residual scope is explicitly dispositioned. Confirmed defects get separate implementation slices.
-**Evidence:** `.codex/test-artifacts/015-p2-acceptance-closure/README.md` and installed captures; closeout: `.codex/history/015-p2-acceptance-closure.md`. Existing P.2 evidence is linked from the history record.
+**Evidence:** Cycle 021 (`021-p2-acceptance-closure`): `.codex/test-artifacts/021-p2-acceptance-closure/README.md` and installed captures; closeout: `.codex/history/021-p2-acceptance-closure.md`. Existing P.2 evidence is linked from the history record.
 
 ## P.3 — Integration feasibility spike — DEFERRED
 

@@ -1,4 +1,7 @@
-# Cycle 015 — P.2.9 RTL review and acceptance closure
+# Cycle 021 — P.2.9 RTL review and acceptance closure
+
+- Cycle ID: `021-p2-acceptance-closure`.
+- Slice ID: `P.2.9`.
 
 ## Device and configuration
 
