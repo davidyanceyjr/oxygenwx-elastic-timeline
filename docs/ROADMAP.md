@@ -125,14 +125,14 @@ Every visual enhancement must preserve timeline responsiveness, gesture predicta
 **Exit:** The timeline exposes a standard accessibility click plus a named custom action to open the browser; daily and hourly rows expose their date/time and forecast values, identify the selected row, and selecting a row updates the existing timeline and summary timestamp. Installed Pixel 3 XL evidence shows the browser in daily/hourly states and the hourly list scrolled to the selected Sunday, Oct 25, 12 PM row. This does not replace the separate manual TalkBack scale-action acceptance in P.2.7.
 **Evidence:** `.codex/test-artifacts/018-talkback-forecast-browser/README.md`, installed screenshots and accessibility hierarchy; closeout: `.codex/history/018-talkback-forecast-browser.md`.
 
-### P.2.8 — Verify reduced-motion behavior — PLANNED
+### P.2.8 — Verify reduced-motion behavior — DONE
 
 **Objective/scope:** Review the installed app with the platform reduced-motion/animation setting enabled and record the bounded behavior needed for this prototype. This slice gathers acceptance evidence; any implementation fix gets its own slice.
 **Depends on:** P.1.2.
 **Exit:** The relevant system setting and app response are recorded; selected time and scale remain understandable without disorienting motion, and any required change has its own bounded slice and evidence.
-**Evidence:** Target `.codex/test-artifacts/013-reduced-motion/` and `.codex/history/013-reduced-motion.md`.
+**Evidence:** `.codex/test-artifacts/020-reduced-motion/README.md` and `.codex/history/020-reduced-motion.md`.
 
-### P.2.9 — Verify RTL and close installed acceptance — PLANNED
+### P.2.9 — Verify RTL and close installed acceptance — NEXT
 
 **Objective/scope:** Review timeline chronology, gesture directions, labels, and accessible semantics under a system RTL locale. Then make the final installed-acceptance disposition from the existing P.2 evidence; do not add unrelated visual features.
 **Depends on:** P.2.5, P.2.6, P.2.7, P.2.8, and P.2.11.
