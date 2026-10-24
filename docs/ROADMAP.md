@@ -111,14 +111,12 @@ Every visual enhancement must preserve timeline responsiveness, gesture predicta
 **Exit:** Actual installed Pixel 3 XL captures show both high/low values as readable text alongside the date, heading, other essential forecast values, DEMO DATA label, and timeline labels at compact landscape and 1.3 font scale. Responsiveness, gesture ownership, and readability receive evidence-backed dispositions; RTL and reduced-motion applicability are recorded.
 **Evidence:** Finding: `.codex/history/013-responsive-readability.md`; installed captures and review: `.codex/test-artifacts/014-landscape-high-low/README.md`; outcome: `.codex/history/014-landscape-high-low.md`.
 
-### P.2.7 — Accept the TalkBack scale action — BLOCKED
+### P.2.7 — Accept the TalkBack scale action — DONE
 
 **Objective/scope:** Manually traverse the timeline with TalkBack and invoke its daily/hourly custom action; verify understandable semantics and selected-time continuity.
 **Depends on:** P.2.4.
-**Exit:** TalkBack reaches the timeline, announces useful control/state semantics, invokes the scale action in both directions, and the outcome is recorded. Any confirmed defect gets a separate implementation slice.
-**Blocker:** The owner reports hearing verbal usage instructions, but the timeline only highlights and does not animate. They could not perform the TalkBack traversal/action gestures during this recheck. The daily/hourly action was not invoked, so its availability and behavior remain unknown.
-**Re-entry:** Resume when an operator can navigate the installed device with TalkBack and invoke its custom action while the spoken output is observed; capture the actual focus/action states and selected-time continuity. Create a separate implementation slice only if a defect is confirmed.
-**Evidence:** Prior attempt: `.codex/test-artifacts/016-talkback-timeline/README.md` and `.codex/history/016-talkback-timeline.md`. Recheck: `.codex/test-artifacts/017-talkback-timeline-recheck/README.md` and `.codex/history/017-talkback-timeline-recheck.md`.
+**Exit:** TalkBack reaches the timeline, announces useful control/state semantics, invokes the daily/hourly scale action in both directions, and records the spoken label, visible scale, and selected-time continuity after each action. Any confirmed defect gets a separate implementation slice.
+**Evidence:** Prior attempts: `.codex/test-artifacts/016-talkback-timeline/README.md`, `.codex/history/016-talkback-timeline.md`, `.codex/test-artifacts/017-talkback-timeline-recheck/README.md`, and `.codex/history/017-talkback-timeline-recheck.md`. Installed acceptance and limitations: `.codex/test-artifacts/019-talkback-scale-action/README.md` and `.codex/history/019-talkback-scale-action.md`.
 
 ### P.2.13 — Add a screen-reader forecast browser — DONE
 
