@@ -1,12 +1,18 @@
 # Cycle plan — 014-landscape-high-low
 
-State: ACTIVE
+State: DONE
 Roadmap: P.2.11
 Objective: Keep forecast high/low values readable in compact landscape at 1.3 font scale and verify installed acceptance.
 
 ## Scope
 
 Make the smallest layout change needed for the forecast high/low values to remain visible as readable text in compact landscape at 1.3 system font scale. Keep the existing forecast content and interactions; do not redesign the atmospheric scene or timeline.
+
+### Layout decision contract
+
+- Keep the forecast summary owned by `TimeLabScreen()` and make this a presentation-only layout change. Use the available layout bounds to arrange the existing summary content so the high/low row and every other required forecast value remain on screen together. The exact arrangement is an implementation choice; do not move the decision into new UI state, forecast presentation, or timeline behavior.
+- Respect the system font scale, including 1.3. Do not counter-scale text, clip or ellipsize required values, overlap them, place them beneath another surface, or trade away another essential value to make high/low visible. Keep forecast facts as text; the atmospheric scene remains decorative.
+- If the target viewport cannot show all required text readably through a bounded layout-only change, stop and record the measured constraint and proposed scope decision for the owner. Do not silently relax the text, accessibility, or content requirements.
 
 ### Production boundary
 
@@ -24,8 +30,8 @@ Make the smallest layout change needed for the forecast high/low values to remai
 
 ## Ordered steps
 
-1. Inspect the current screen layout and reproduce the confirmed missing high/low values on the installed Pixel 3 XL in landscape at 1.3 font scale. Record the pre-change capture and relevant display/font settings.
-2. Make one bounded layout adjustment so high/low remain visible and legible with the date, heading, other essential forecast values, DEMO DATA label, and timeline labels in the constrained state.
+1. Inspect `TimeLabScreen()` and the existing baseline `.codex/test-artifacts/014-responsive-readability-recovery/landscape-font-1_3.png`; reproduce the missing high/low values on the installed Pixel 3 XL in landscape at 1.3 font scale. Record the active logical viewport and font settings with the pre-change capture.
+2. Make one bounded, presentation-only layout adjustment based on the available landscape bounds so high/low remain visible and legible with the date, heading, other essential forecast values, DEMO DATA label, and timeline labels. Preserve system font scaling and do not change the forecast content or gesture/timeline ownership.
 3. Run the planned scaffold/architecture checks and debug build, install the resulting app on the Pixel 3 XL, and capture the landscape 1.3-font state. Exercise an immediate daily drag and hold-then-drag/hourly selection to check responsiveness, gesture ownership, and selected-time stability.
 4. Review the capture at full resolution, record the three cross-cutting dispositions (responsiveness, gesture predictability, readability), note RTL and reduced-motion applicability, inspect the final diff, and close with exact command results and evidence limits.
 

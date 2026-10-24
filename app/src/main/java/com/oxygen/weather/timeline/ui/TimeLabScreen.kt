@@ -5,6 +5,7 @@ import androidx.compose.foundation.gestures.detectHorizontalDragGestures
 import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.BoxWithConstraints
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -14,6 +15,7 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.statusBarsPadding
+import androidx.compose.foundation.layout.width
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -88,20 +90,23 @@ fun TimeLabScreen() {
     val latestReturnToNow by rememberUpdatedState<() -> Unit> { returnToNow() }
     val latestShiftDay by rememberUpdatedState<(Int) -> Unit> { days -> shiftDay(days) }
 
-    Box(Modifier.fillMaxSize().background(Color(0xFF11263D))) {
+    BoxWithConstraints(Modifier.fillMaxSize().background(Color(0xFF11263D))) {
+        val compactLandscape = maxHeight < 400.dp
         AtmosphericScene(frame = view.sky, localHour = hourOfDay)
 
         Column(
             Modifier.fillMaxWidth().align(Alignment.TopCenter).statusBarsPadding().padding(horizontal = 25.dp),
         ) {
-            Spacer(Modifier.height(19.dp))
+            Spacer(Modifier.height(if (compactLandscape) 5.dp else 19.dp))
             Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween,
                 verticalAlignment = Alignment.CenterVertically) {
                 Column {
                     Text("OXYGEN  /  TIME LAB", fontSize = 11.sp, letterSpacing = 2.0.sp,
                         fontWeight = FontWeight.SemiBold, color = Color(0xFFECF5FD))
-                    Spacer(Modifier.height(4.dp))
-                    Text("An interactive atmosphere", fontSize = 12.sp, color = Color(0xCDE4EDF5))
+                    if (!compactLandscape) {
+                        Spacer(Modifier.height(4.dp))
+                        Text("An interactive atmosphere", fontSize = 12.sp, color = Color(0xCDE4EDF5))
+                    }
                 }
                 Text("DEMO DATA", fontSize = 10.sp, letterSpacing = 1.0.sp,
                     fontWeight = FontWeight.SemiBold, color = Color(0xFFFFE2A7))
@@ -110,7 +115,7 @@ fun TimeLabScreen() {
 
         Column(
             Modifier.align(Alignment.Center).fillMaxWidth().padding(horizontal = 23.dp)
-                .padding(bottom = 76.dp)
+                .padding(bottom = if (compactLandscape) 48.dp else 76.dp)
                 .pointerInput(swipeThresholdPx) {
                     var totalDrag = 0f
                     detectHorizontalDragGestures(
@@ -132,22 +137,44 @@ fun TimeLabScreen() {
                 },
             horizontalAlignment = Alignment.CenterHorizontally,
         ) {
-            Text(view.heading, fontSize = 13.sp, letterSpacing = 2.sp,
-                fontWeight = FontWeight.SemiBold, color = Color.White.copy(alpha = .93f))
-            Spacer(Modifier.height(5.dp))
-            Text(view.timeLabel, fontSize = 12.sp, letterSpacing = 2.sp,
-                color = Color.White.copy(alpha = .79f))
-            Spacer(Modifier.height(13.dp))
-            Text("${view.temperatureF}°", fontSize = 102.sp, lineHeight = 108.sp,
-                fontWeight = FontWeight.Light, color = Color.White,
-                modifier = Modifier.testTag("forecastTemperature"))
-            Spacer(Modifier.height(3.dp))
-            Text(view.conditionsLabel, fontSize = 23.sp,
-                fontWeight = FontWeight.Light, color = Color.White,
-                textAlign = TextAlign.Center)
-            Spacer(Modifier.height(10.dp))
-            Text("HIGH ${view.highF}°    /    LOW ${view.lowF}°", fontSize = 12.sp,
-                letterSpacing = 1.15.sp, color = Color(0xFFECF3F8))
+            if (compactLandscape) {
+                Row(verticalAlignment = Alignment.CenterVertically) {
+                    Text("${view.temperatureF}°", fontSize = 78.sp, lineHeight = 84.sp,
+                        fontWeight = FontWeight.Light, color = Color.White,
+                        modifier = Modifier.testTag("forecastTemperature"))
+                    Spacer(Modifier.width(18.dp))
+                    Column(horizontalAlignment = Alignment.Start) {
+                        Text(view.heading, fontSize = 13.sp, letterSpacing = 1.5.sp,
+                            fontWeight = FontWeight.SemiBold, color = Color.White.copy(alpha = .93f))
+                        Spacer(Modifier.height(2.dp))
+                        Text(view.timeLabel, fontSize = 12.sp, letterSpacing = 1.5.sp,
+                            color = Color.White.copy(alpha = .79f))
+                        Spacer(Modifier.height(4.dp))
+                        Text(view.conditionsLabel, fontSize = 22.sp,
+                            fontWeight = FontWeight.Light, color = Color.White)
+                        Spacer(Modifier.height(3.dp))
+                        Text("HIGH ${view.highF}°    /    LOW ${view.lowF}°", fontSize = 12.sp,
+                            letterSpacing = 1.0.sp, color = Color(0xFFECF3F8))
+                    }
+                }
+            } else {
+                Text(view.heading, fontSize = 13.sp, letterSpacing = 2.sp,
+                    fontWeight = FontWeight.SemiBold, color = Color.White.copy(alpha = .93f))
+                Spacer(Modifier.height(5.dp))
+                Text(view.timeLabel, fontSize = 12.sp, letterSpacing = 2.sp,
+                    color = Color.White.copy(alpha = .79f))
+                Spacer(Modifier.height(13.dp))
+                Text("${view.temperatureF}°", fontSize = 102.sp, lineHeight = 108.sp,
+                    fontWeight = FontWeight.Light, color = Color.White,
+                    modifier = Modifier.testTag("forecastTemperature"))
+                Spacer(Modifier.height(3.dp))
+                Text(view.conditionsLabel, fontSize = 23.sp,
+                    fontWeight = FontWeight.Light, color = Color.White,
+                    textAlign = TextAlign.Center)
+                Spacer(Modifier.height(10.dp))
+                Text("HIGH ${view.highF}°    /    LOW ${view.lowF}°", fontSize = 12.sp,
+                    letterSpacing = 1.15.sp, color = Color(0xFFECF3F8))
+            }
         }
 
         Column(
