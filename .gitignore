@@ -1,0 +1,9 @@
+.gradle/
+.idea/
+**/build/
+local.properties
+*.iml
+*.hprof
+.DS_Store
+.codex/test-artifacts/*
+!.codex/test-artifacts/.gitkeep

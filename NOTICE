@@ -1,0 +1,11 @@
+Oxygen Elastic Timeline Prototype
+
+Independent UI research scaffold following the public Oxygen Weather source tree:
+https://github.com/davidyanceyjr/oxygenWX
+Pinned reference commit: ec3f93976f037fbb206089d8b9d9fa1f6f93918b
+
+This archive is an original isolated Compose experiment, not a copy of the full Oxygen Weather application.
+The Gradle/Android version coordinates and .codex development-cycle conventions follow the referenced Oxygen Weather repository.
+It does not include proprietary weather data, provider credentials, or production theme assets.
+
+The prototype is distributed under Apache License, Version 2.0 (LICENSE).

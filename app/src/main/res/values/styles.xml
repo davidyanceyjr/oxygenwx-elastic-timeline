@@ -1,0 +1,8 @@
+<resources>
+    <style name="Theme.OxygenTimeLab" parent="android:style/Theme.Material.NoActionBar">
+        <item name="android:windowLightStatusBar">false</item>
+        <item name="android:statusBarColor">#12243C</item>
+        <item name="android:navigationBarColor">#0B1929</item>
+        <item name="android:windowActionModeOverlay">true</item>
+    </style>
+</resources>
