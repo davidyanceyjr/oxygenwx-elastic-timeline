@@ -4,7 +4,7 @@ This is an isolated experimental application based on oxygenWX's workflow and bu
 
 ## Authority
 
-1. `docs/SPECIFICATION.md` — this experiment's product and semantic boundaries.
+1. `docs/SPECIFICATION.md` — controlling prototype scope and semantic invariants; `docs/OXYGEN_EXPERIENCE_SPECIFICATION.md` — adopted experience principles, interaction contract, and experience-level acceptance criteria. If they conflict, `docs/SPECIFICATION.md` controls unless a bounded owner decision updates it.
 2. `docs/ROADMAP_SPECIFICATION.md` — required roadmap statuses, slice format, evidence, and replanning rules.
 3. `docs/ROADMAP.md` — bounded ordered follow-ups conforming to the roadmap specification.
 4. `docs/UI_DEVELOPMENT_WORKFLOW.md` — installed visual acceptance.

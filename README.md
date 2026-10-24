@@ -34,10 +34,10 @@ Matches the referenced project's Android scaffold:
 
 1. **Tap** a short `FRI` / `SAT` / `SUN` area to jump to the corresponding day.
 2. **Drag left** over the bottom strip to pull later days under the central playhead; drag right for earlier time.
-3. **Hold for ~480ms** over a day on the timeline. That day expands in-place into an hour-spaced scale; adjacent days remain compressed. Slide to scrub individual forecast hours.
-4. **Release** and the selected hour remains the same moment while the tape contracts to daily resolution. The forecast changes accordingly.
-5. The subtle **HOURS / DAYS** action gives a discoverable alternative to the hold gesture, especially for accessibility testing.
-6. **RESET** goes back to the first demo day.
+3. **Hold for ~480ms** over the timeline. The time under your finger is selected, then the whole tape expands to a uniform hour-spaced scale. Slide to scrub individual forecast hours.
+4. **Release** to return to daily navigation while retaining the selected hourly position.
+5. The timeline exposes a screen-reader action to switch daily/hourly scales and a forecast browser for linear accessible navigation.
+6. **Swipe horizontally** over the central forecast to move by one day while preserving the hour; **double-tap** the central forecast to return to the current fixture hour.
 
 The background is a custom Compose Canvas weather scene. It changes with synthetic cloud cover, daylight, and an indicative rain texture; the texture **does not** claim rain rate from precipitation probability.
 
@@ -57,10 +57,10 @@ AtmosphericScene (Canvas)    ElasticForecastTimeline (Canvas + pointer gesture)
                               ElasticTimeAxis (pure piecewise projection)
 ```
 
-Time mapping is handled by a **monotonic piecewise function**, not stateful item indices. The focused day has `16dp/hour` when fully expanded; neighbors stay at `55dp/day`. The selected hour maps to exactly the same center-playhead pixel at any expansion fraction. The interface never needs to display all 24 hourly labels simultaneously; only ticks near the playhead are drawn.
+Time mapping is handled by a **monotonic piecewise function**, not stateful item indices. Precision mode uses a uniform hourly scale across the full forecast horizon. The selected hour maps to exactly the same center-playhead pixel at any expansion fraction. The interface never needs to display all 24 hourly labels simultaneously; only ticks near the playhead are drawn.
 
 - `selectedHour` (Double) is forecast time, independent of zoom.
-- `focusDay` chooses which section expands.
+- The selected time remains fixed at the center playhead as the whole timeline changes scale.
 - `precisionMode` activates an animated zoom; it never directly modifies time.
 - Pointer input has a single gesture owner: tap, short drag, or stationary long-press followed by drag.
 - A pure `ElasticTimeAxis` transforms timestamps to/from screen coordinates and clips to available forecast bounds.
@@ -86,7 +86,7 @@ oxygenWX currently requires the four-page `Now -> Hourly -> Daily -> Details` Ho
 - Not built or installed in the creation environment (Android SDK, Gradle cache, and device unavailable); actual on-device visual acceptance is **not claimed**.
 - Fixture rather than production repository/cache; no location, network, alerts, preferences, or unit toggle.
 - Effects are lightweight/procedural, not true 3D or physically accurate clouds.
-- Large-font, TalkBack, RTL, compact viewport, device performance, and reduced-motion behavior still require installed review. The HOURS/DAYS control exists as a fallback, but full accessibility acceptance is outstanding.
+- Large-font, TalkBack, RTL, compact viewport, device performance, and reduced-motion behavior have cycle-specific installed evidence and documented limitations under `.codex/history/`; review those records before making broader acceptance claims.
 - The scene uses a fixed sample landscape and continuous decorative transitions; not a scientifically validated sky simulation.
 
 See `docs/SPECIFICATION.md`, `docs/ROADMAP.md`, and `.codex/history/001-elastic-timeline-prototype.md` for specific scope and evidence.

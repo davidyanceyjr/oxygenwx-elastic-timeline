@@ -1,5 +1,7 @@
 # Oxygen Time Lab — prototype specification
 
+Experience-level principles and acceptance criteria are maintained in the adopted companion [`OXYGEN_EXPERIENCE_SPECIFICATION.md`](OXYGEN_EXPERIENCE_SPECIFICATION.md). This document remains controlling for prototype scope and hard semantic/architecture constraints; any conflict requires an explicit bounded owner decision recorded here before implementation.
+
 Status: one bounded standalone UI experiment. Authority intentionally limited to this sibling project.
 Reference: oxygenWX commit `ec3f93976f037fbb206089d8b9d9fa1f6f93918b`.
 
