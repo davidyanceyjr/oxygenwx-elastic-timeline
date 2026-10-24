@@ -37,7 +37,7 @@ object ForecastProjection {
         val dayIndex = ElasticTimeAxis.dayIndex(clamped).coerceIn(0, SampleForecast.days.lastIndex)
         val day = SampleForecast.days[dayIndex]
         val sky = if (precision) interpolate(clamped) else day.representative.toFrame()
-        val selectedTime = SampleForecast.hours[floor(clamped).toInt()].time
+        val selectedTime = SampleForecast.hours[clamped.roundToInt()].time
         val dayLabel = day.date.format(DateTimeFormatter.ofPattern("EEE, MMM d", Locale.US))
         val hourLabel = selectedTime.format(DateTimeFormatter.ofPattern("h a", Locale.US))
         return ForecastView(

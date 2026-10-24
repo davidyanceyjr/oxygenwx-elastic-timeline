@@ -39,12 +39,12 @@ Every visual enhancement must preserve timeline responsiveness, gesture predicta
 **Exit:** Installed foreground app is confirmed and actual device screenshots plus reproduction/device details are recorded. This exit does not imply full accessibility or environment acceptance.
 **Evidence:** `.codex/history/002-p1-pixel-install.md`, `.codex/history/007-visual-baseline.md`, and local captures under `.codex/test-artifacts/002-p1-pixel-install/` and `.codex/test-artifacts/007-visual-baseline/` (including the later hourly long-press capture documented in that folder's README).
 
-### P.1.3 — Run Android unit tests and lint — NEXT
+### P.1.3 — Run Android unit tests and lint — DONE
 
 **Objective/scope:** Run the app's debug unit-test and lint tasks on an Android host; diagnose only failures in those tasks.
 **Depends on:** P.1.1.
 **Exit:** `:app:testDebugUnitTest` and `:app:lintDebug` both pass, or a reproducible blocker with command output and affected scope is recorded; do not mark DONE on an unexplained failure.
-**Evidence:** Target `.codex/test-artifacts/010-android-host-checks/` and `.codex/history/010-android-host-checks.md`.
+**Evidence:** `.codex/history/010-android-host-checks.md`; logs and host details under `.codex/test-artifacts/010-android-host-checks/`.
 
 ## P.2 — Owner review, visual polish, and installed acceptance
 
@@ -76,12 +76,19 @@ Every visual enhancement must preserve timeline responsiveness, gesture predicta
 **Exit:** Installed UI has no removed visible controls, and source/semantics expose the daily/hourly custom accessibility action. Manual TalkBack acceptance remains a separate slice.
 **Evidence:** `.codex/history/006-remove-timeline-hints.md`; `.codex/test-artifacts/006-remove-timeline-hints/pixel-3xl.png`.
 
-### P.2.5 — Verify timeline gesture arbitration and time stability — PLANNED
+### P.2.5 — Verify timeline gesture arbitration and time stability — NEXT
 
 **Objective/scope:** On the Pixel 3 XL, review immediate drag versus stationary hold, hourly scrubbing, release/collapse, and selected-time stability; assess responsiveness, gesture predictability, and readability. Fixes are out of scope for this evidence-gathering slice.
-**Depends on:** P.1.2, P.2.1, and P.2.4.
+**Depends on:** P.1.2, P.2.1, P.2.4, and P.2.5a.
 **Exit:** Each gesture is exercised and its observed result recorded with screenshots; selected timestamp continuity and all three cross-cutting visual-quality checks receive an evidence-backed pass/fail disposition. Confirmed defects get separate implementation slices.
-**Evidence:** Target `.codex/test-artifacts/010-gesture-acceptance/` and `.codex/history/010-gesture-acceptance.md`.
+**Evidence:** Original evidence and blocker investigation: `.codex/history/010-gesture-acceptance.md`, `.codex/test-artifacts/010-gesture-acceptance/`, and `.codex/test-artifacts/011-blocker-investigation/README.md`. Recheck target: `.codex/test-artifacts/012-gesture-acceptance-recheck/` and `.codex/history/012-gesture-acceptance-recheck.md`.
+
+### P.2.5a — Align forecast time label with selected hourly tick — DONE
+
+**Objective/scope:** Make the forecast summary's displayed hour use the same nearest-hour convention as the hourly tape's selected tick, while preserving fractional selection and interpolated forecast values during a drag.
+**Depends on:** P.2.1.
+**Exit:** On the installed Pixel 3 XL, fractional-hour positions no longer show different hours in the forecast summary and selected tape label; after release/collapse and stationary re-entry, the same rounded selected hour remains visible. The change does not quantize selection during movement or alter interpolated values.
+**Evidence:** `.codex/history/011-hour-label-alignment.md`; `.codex/test-artifacts/011-hour-label-alignment/`.
 
 ### P.2.6 — Review readability at large text and constrained layouts — PLANNED
 

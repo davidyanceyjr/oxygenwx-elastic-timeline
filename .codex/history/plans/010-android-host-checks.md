@@ -1,6 +1,6 @@
 # Cycle plan — 010-android-host-checks
 
-State: PLANNED
+State: DONE
 Roadmap: P.1.3
 Objective: Run Android debug unit tests and lint on an Android host; record exact outcomes and diagnose failures without expanding into code fixes.
 
@@ -16,11 +16,11 @@ Verification and failure diagnosis only. Do not modify application source, Gradl
 
 ## Steps
 
-- [ ] Confirm Android host/toolchain and record Java/SDK versions and repository status.
-- [ ] Run `:app:testDebugUnitTest` with the configured Android host environment.
-- [ ] Run `:app:lintDebug` with the same environment.
-- [ ] For each failure, retain complete relevant output and diagnose only enough to identify host/toolchain versus project scope; do not fix source here.
-- [ ] Review evidence and `git diff --check`; close with exact outcomes and limitations.
+- [x] Confirm Android host/toolchain and record Java/SDK versions and repository status.
+- [x] Run `python scripts/dev.py test` with the configured Android host environment; this invokes `:app:testDebugUnitTest`.
+- [x] Run `python scripts/dev.py lint` with the same environment; this invokes `:app:lintDebug`.
+- [x] For each failure, retain complete relevant output and diagnose only enough to identify host/toolchain versus project scope; do not fix source here. Both tasks passed; lint emitted five non-fatal warnings recorded in the evidence README.
+- [x] Review evidence and `git diff --check`; close with exact outcomes and limitations.
 
 ## Acceptance/evidence
 
@@ -29,9 +29,18 @@ Verification and failure diagnosis only. Do not modify application source, Gradl
 - Exit is met only if both tasks pass, or a reproducible blocker/failure with exact output and affected scope is recorded for replanning. Unexplained failures do not close the slice as DONE.
 - Target closeout: `.codex/history/010-android-host-checks.md`.
 
+## Authorized verification
+
+- `python scripts/dev.py workflow` before execution and after closeout-record updates.
+- `python scripts/dev.py test`, then `python scripts/dev.py lint`, using the command-scoped Java/Android SDK environment below.
+- `git diff --check` before closeout.
+- Do not run the aggregate `check` or build tasks; this slice authorizes only the two roadmap tasks plus workflow validation and diff hygiene.
+
 ## Host setup
 
 The previous successful Android build used OpenJDK 27 at `/usr/lib/jvm/java-27-openjdk` and the SDK at `/home/opsman/project_git/oxygenWX/.android-sdk`. For execution, set command-scoped `JAVA_HOME`, prepend its `bin` to `PATH`, and set `ANDROID_HOME` to that SDK. Confirm both paths still exist before running tasks; do not write `local.properties` or alter project configuration just to encode this host setup.
+
+For later visual confirmations, the connected Pixel 3 XL is the target device and the X display is `:0`. This cycle does not authorize device install/capture or visual acceptance; its only Android tasks are unit tests and lint.
 
 ## Risks / assumptions
 
