@@ -21,7 +21,9 @@ import androidx.compose.ui.graphics.drawscope.drawIntoCanvas
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.platform.testTag
+import androidx.compose.ui.semantics.CustomAccessibilityAction
 import androidx.compose.ui.semantics.contentDescription
+import androidx.compose.ui.semantics.customActions
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.unit.dp
 import com.oxygen.weather.timeline.data.SampleForecast
@@ -46,6 +48,7 @@ fun ElasticForecastTimeline(
     expanded: Boolean,
     onSelectedHour: (Double) -> Unit,
     onPrecisionStarted: (Int, Double) -> Unit,
+    onTogglePrecision: () -> Unit,
     onGestureEnded: (Boolean) -> Unit,
     modifier: Modifier = Modifier,
 ) {
@@ -62,6 +65,7 @@ fun ElasticForecastTimeline(
     val latestAnimation by rememberUpdatedState(animation)
     val latestSetHour by rememberUpdatedState(onSelectedHour)
     val latestPrecision by rememberUpdatedState(onPrecisionStarted)
+    val latestTogglePrecision by rememberUpdatedState(onTogglePrecision)
     val latestEnded by rememberUpdatedState(onGestureEnded)
 
     fun widthForHour(zoom: Float): Double =
@@ -74,6 +78,15 @@ fun ElasticForecastTimeline(
             .semantics {
                 contentDescription = "Forecast time tape. Tap to select a day, drag to browse days, " +
                     "or press and hold then drag to inspect hours."
+                customActions = listOf(
+                    CustomAccessibilityAction(
+                        label = if (expanded) "Show daily timeline" else "Show hourly timeline",
+                        action = {
+                            latestTogglePrecision()
+                            true
+                        },
+                    ),
+                )
             }
             .pointerInput(Unit) {
                 awaitEachGesture {

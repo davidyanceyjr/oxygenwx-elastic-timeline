@@ -14,9 +14,7 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.statusBarsPadding
-import androidx.compose.foundation.layout.width
 import androidx.compose.material3.Text
-import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableDoubleStateOf
@@ -34,10 +32,6 @@ import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.platform.LocalHapticFeedback
 import androidx.compose.ui.platform.testTag
-import androidx.compose.ui.semantics.contentDescription
-import androidx.compose.ui.semantics.liveRegion
-import androidx.compose.ui.semantics.LiveRegionMode
-import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
@@ -45,7 +39,6 @@ import androidx.compose.ui.unit.sp
 import com.oxygen.weather.timeline.data.SampleForecast
 import com.oxygen.weather.timeline.presentation.ElasticTimeAxis
 import com.oxygen.weather.timeline.presentation.ForecastProjection
-import java.util.Locale
 import java.time.Duration
 import java.time.LocalDateTime
 import kotlin.math.abs
@@ -179,27 +172,6 @@ fun TimeLabScreen() {
                 }
             }
             Spacer(Modifier.height(13.dp))
-            Row(
-                Modifier.fillMaxWidth().padding(start = 22.dp, end = 17.dp),
-                verticalAlignment = Alignment.CenterVertically,
-                horizontalArrangement = Arrangement.SpaceBetween,
-            ) {
-                Text(if (precisionMode) "HOURLY PRECISION" else "DAILY NAVIGATION",
-                    color = Color(0xFFDFECF4), fontSize = 10.sp, letterSpacing = 1.45.sp,
-                    fontWeight = FontWeight.SemiBold)
-                TextButton(
-                    onClick = {
-                        if (precisionMode) leavePrecision(true)
-                        else enterPrecision(ElasticTimeAxis.dayIndex(selectedHour), selectedHour)
-                    },
-                    modifier = Modifier.semantics {
-                        contentDescription = if (precisionMode) "Collapse to daily timeline" else "Expand to hourly timeline"
-                    },
-                ) {
-                    Text(if (precisionMode) "DAYS ↑" else "HOURS ↓", fontSize = 11.sp,
-                        letterSpacing = .6.sp, color = Color(0xFFFFE1A8))
-                }
-            }
             ElasticForecastTimeline(
                 selectedHour = selectedHour,
                 focusDay = focusDay,
@@ -209,32 +181,19 @@ fun TimeLabScreen() {
                     if (precisionMode) focusDay = ElasticTimeAxis.dayIndex(it)
                 },
                 onPrecisionStarted = { day, atHour -> enterPrecision(day, atHour) },
+                onTogglePrecision = {
+                    if (precisionMode) leavePrecision(true)
+                    else enterPrecision(ElasticTimeAxis.dayIndex(selectedHour), selectedHour)
+                },
                 onGestureEnded = { wasPrecision ->
                     // A hold completed an hour scrub. For an ordinary drag, snap to the
                     // middle of the selected day, leaving the represented DAY unchanged.
-                    // If expanded by the accessibility button, keep precision active.
+                    // If expanded by an accessibility action, keep precision active.
                     if (wasPrecision) leavePrecision(true)
                     else if (!precisionMode) leavePrecision(false)
                     else selectedHour = selectedHour.roundToInt().toDouble()
                 },
             )
-            Row(
-                Modifier.fillMaxWidth().padding(horizontal=25.dp),
-                horizontalArrangement = Arrangement.SpaceBetween,
-                verticalAlignment = Alignment.CenterVertically,
-            ) {
-                Text("SWIPE DAYS  ·  HOLD TAPE FOR HOURS", fontSize = 9.sp,
-                    letterSpacing = .65.sp, color = Color(0xB9D4E4EF))
-                TextButton(
-                    onClick = { returnToNow() },
-                    modifier = Modifier.semantics {
-                        contentDescription = "Return to current time"
-                    },
-                ) {
-                    Text("NOW", fontSize = 10.sp, color = Color(0xFFECEFF5))
-                }
-            }
-            Spacer(Modifier.height(2.dp))
         }
     }
 }
