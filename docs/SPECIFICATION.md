@@ -24,6 +24,10 @@ A full-screen atmospheric scene controlled by a minimalist bottom time tape. Thr
 
 The UI layer consumes typed `ForecastView`, which is derived from sample canonical `ForecastHour` / `ForecastDay` models. `ElasticTimeAxis` is a platform-independent pure monotonic projection, testable without Compose. Atmospheric rendering is decorative, with critical forecast values separately presented as text.
 
+## Hard visual-quality rule
+
+Every visual enhancement must preserve the timeline's responsiveness, gesture predictability, and readability. A weather-scene change is incomplete if it makes scrubbing feel delayed, changes gesture ownership or arbitration unexpectedly, or obscures forecast values or timeline labels.
+
 ## Exclusions
 
 No production oxygenWX files or navigation changes, no third-party data feed, no official alerts, no persisted preferences, no cached real forecast, no maps, no external services.

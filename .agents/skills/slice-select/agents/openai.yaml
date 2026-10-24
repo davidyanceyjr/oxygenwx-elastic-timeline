@@ -1,0 +1,3 @@
+interface:
+  display_name: "Slice Select"
+  short_description: "Draft the next roadmap slice plan"
