@@ -90,12 +90,12 @@ Every visual enhancement must preserve timeline responsiveness, gesture predicta
 **Exit:** On the installed Pixel 3 XL, fractional-hour positions no longer show different hours in the forecast summary and selected tape label; after release/collapse and stationary re-entry, the same rounded selected hour remains visible. The change does not quantize selection during movement or alter interpolated values.
 **Evidence:** `.codex/history/011-hour-label-alignment.md`; `.codex/test-artifacts/011-hour-label-alignment/`.
 
-### P.2.6 — Review readability at large text and constrained layouts — NEXT
+### P.2.6 — Review readability at large text and constrained layouts — DONE
 
 **Objective/scope:** Review representative large system font, landscape/small-screen layout, and bright/dark sky contrast on the installed app. Fixes are out of scope for this evidence-gathering slice.
 **Depends on:** P.1.2.
 **Exit:** Actual screenshots for each condition are reviewed; essential forecast values and timeline labels are readable and unclipped, with findings and any confirmed defect ownership recorded. Confirmed defects get separate implementation slices.
-**Evidence:** Partial findings: `.codex/history/013-responsive-readability.md` and `.codex/test-artifacts/013-responsive-readability/`; recovery evidence: `.codex/history/014-responsive-readability-recovery.md` and `.codex/test-artifacts/014-responsive-readability-recovery/`; landscape high/low fix review: `.codex/history/014-landscape-high-low.md` and `.codex/test-artifacts/014-landscape-high-low/`.
+**Evidence:** Prior findings and recovery: `.codex/history/013-responsive-readability.md`, `.codex/history/014-responsive-readability-recovery.md`, and `.codex/history/014-landscape-high-low.md`; final fresh installed review: `.codex/history/015-responsive-readability-review.md` and `.codex/test-artifacts/015-responsive-readability-review/`.
 
 ### P.2.12 — Restore Android build host and complete P.2.6 evidence — DONE
 
@@ -111,12 +111,21 @@ Every visual enhancement must preserve timeline responsiveness, gesture predicta
 **Exit:** Actual installed Pixel 3 XL captures show both high/low values as readable text alongside the date, heading, other essential forecast values, DEMO DATA label, and timeline labels at compact landscape and 1.3 font scale. Responsiveness, gesture ownership, and readability receive evidence-backed dispositions; RTL and reduced-motion applicability are recorded.
 **Evidence:** Finding: `.codex/history/013-responsive-readability.md`; installed captures and review: `.codex/test-artifacts/014-landscape-high-low/README.md`; outcome: `.codex/history/014-landscape-high-low.md`.
 
-### P.2.7 — Accept the TalkBack scale action — PLANNED
+### P.2.7 — Accept the TalkBack scale action — BLOCKED
 
 **Objective/scope:** Manually traverse the timeline with TalkBack and invoke its daily/hourly custom action; verify understandable semantics and selected-time continuity.
 **Depends on:** P.2.4.
 **Exit:** TalkBack reaches the timeline, announces useful control/state semantics, invokes the scale action in both directions, and the outcome is recorded. Any confirmed defect gets a separate implementation slice.
-**Evidence:** Target `.codex/test-artifacts/012-talkback-timeline/` and `.codex/history/012-talkback-timeline.md`.
+**Blocker:** The owner reports hearing verbal usage instructions, but the timeline only highlights and does not animate. They could not perform the TalkBack traversal/action gestures during this recheck. The daily/hourly action was not invoked, so its availability and behavior remain unknown.
+**Re-entry:** Resume when an operator can navigate the installed device with TalkBack and invoke its custom action while the spoken output is observed; capture the actual focus/action states and selected-time continuity. Create a separate implementation slice only if a defect is confirmed.
+**Evidence:** Prior attempt: `.codex/test-artifacts/016-talkback-timeline/README.md` and `.codex/history/016-talkback-timeline.md`. Recheck: `.codex/test-artifacts/017-talkback-timeline-recheck/README.md` and `.codex/history/017-talkback-timeline-recheck.md`.
+
+### P.2.13 — Add a screen-reader forecast browser — DONE
+
+**Objective/scope:** Provide a TalkBack-actionable, linear forecast browser with daily/hourly rows sourced from the same forecast projection and selected-time state as the visual timeline. Keep decorative ticks and animation out of the spoken data path; do not add a visible scale-control row.
+**Depends on:** P.2.4.
+**Exit:** The timeline exposes a standard accessibility click plus a named custom action to open the browser; daily and hourly rows expose their date/time and forecast values, identify the selected row, and selecting a row updates the existing timeline and summary timestamp. Installed Pixel 3 XL evidence shows the browser in daily/hourly states and the hourly list scrolled to the selected Sunday, Oct 25, 12 PM row. This does not replace the separate manual TalkBack scale-action acceptance in P.2.7.
+**Evidence:** `.codex/test-artifacts/018-talkback-forecast-browser/README.md`, installed screenshots and accessibility hierarchy; closeout: `.codex/history/018-talkback-forecast-browser.md`.
 
 ### P.2.8 — Verify reduced-motion behavior — PLANNED
 

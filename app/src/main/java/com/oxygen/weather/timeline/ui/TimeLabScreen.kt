@@ -54,6 +54,7 @@ fun TimeLabScreen() {
     var selectedHour by rememberSaveable { mutableDoubleStateOf(36.0) }
     var precisionMode by rememberSaveable { mutableStateOf(false) }
     var focusDay by rememberSaveable { mutableIntStateOf(1) }
+    var forecastBrowserOpen by remember { mutableStateOf(false) }
     val haptics = LocalHapticFeedback.current
     val swipeThresholdPx = with(LocalDensity.current) { 48.dp.toPx() }
 
@@ -212,6 +213,7 @@ fun TimeLabScreen() {
                     if (precisionMode) leavePrecision(true)
                     else enterPrecision(ElasticTimeAxis.dayIndex(selectedHour), selectedHour)
                 },
+                onBrowseForecasts = { forecastBrowserOpen = true },
                 onGestureEnded = { wasPrecision ->
                     // A hold completed an hour scrub. For an ordinary drag, snap to the
                     // middle of the selected day, leaving the represented DAY unchanged.
@@ -220,6 +222,22 @@ fun TimeLabScreen() {
                     else if (!precisionMode) leavePrecision(false)
                     else selectedHour = selectedHour.roundToInt().toDouble()
                 },
+            )
+        }
+        if (forecastBrowserOpen) {
+            AccessibleForecastBrowser(
+                selectedHour = selectedHour,
+                precision = precisionMode,
+                onSelect = { hourOffset, precision ->
+                    selectedHour = hourOffset.coerceIn(0.0, SampleForecast.hours.lastIndex.toDouble())
+                    precisionMode = precision
+                    focusDay = ElasticTimeAxis.dayIndex(selectedHour)
+                },
+                onTogglePrecision = {
+                    precisionMode = !precisionMode
+                    focusDay = ElasticTimeAxis.dayIndex(selectedHour)
+                },
+                onDismiss = { forecastBrowserOpen = false },
             )
         }
     }

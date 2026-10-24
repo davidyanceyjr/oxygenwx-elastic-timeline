@@ -24,10 +24,15 @@ import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.semantics.CustomAccessibilityAction
 import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.semantics.customActions
+import androidx.compose.ui.semantics.onClick
+import androidx.compose.ui.semantics.role
 import androidx.compose.ui.semantics.semantics
+import androidx.compose.ui.semantics.stateDescription
+import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.unit.dp
 import com.oxygen.weather.timeline.data.SampleForecast
 import com.oxygen.weather.timeline.presentation.ElasticTimeAxis
+import com.oxygen.weather.timeline.presentation.ForecastProjection
 import kotlinx.coroutines.withTimeoutOrNull
 import kotlin.math.abs
 import kotlin.math.floor
@@ -49,6 +54,7 @@ fun ElasticForecastTimeline(
     onSelectedHour: (Double) -> Unit,
     onPrecisionStarted: (Int, Double) -> Unit,
     onTogglePrecision: () -> Unit,
+    onBrowseForecasts: () -> Unit,
     onGestureEnded: (Boolean) -> Unit,
     modifier: Modifier = Modifier,
 ) {
@@ -66,7 +72,9 @@ fun ElasticForecastTimeline(
     val latestSetHour by rememberUpdatedState(onSelectedHour)
     val latestPrecision by rememberUpdatedState(onPrecisionStarted)
     val latestTogglePrecision by rememberUpdatedState(onTogglePrecision)
+    val latestBrowseForecasts by rememberUpdatedState(onBrowseForecasts)
     val latestEnded by rememberUpdatedState(onGestureEnded)
+    val accessibleView = ForecastProjection.fromHourOffset(selectedHour, expanded)
 
     fun widthForHour(zoom: Float): Double =
         compactDayPx / 24.0 + (expandedPx - compactDayPx / 24.0) * zoom
@@ -76,13 +84,27 @@ fun ElasticForecastTimeline(
             .height(84.dp) // 84dp touch region, even though the visible rail is much thinner
             .testTag("elasticTimeline")
             .semantics {
-                contentDescription = "Forecast time tape. Tap to select a day, drag to browse days, " +
-                    "or press and hold then drag to inspect hours."
+                contentDescription = "Forecast timeline. ${accessibleView.heading}, " +
+                    "${accessibleView.timeLabel}. ${accessibleView.temperatureF} degrees, " +
+                    "${accessibleView.conditionsLabel}. Activate to browse forecast values."
+                role = Role.Button
+                stateDescription = if (expanded) "Hourly scale" else "Daily scale"
+                onClick(label = "Browse forecast values") {
+                    latestBrowseForecasts()
+                    true
+                }
                 customActions = listOf(
                     CustomAccessibilityAction(
                         label = if (expanded) "Show daily timeline" else "Show hourly timeline",
                         action = {
                             latestTogglePrecision()
+                            true
+                        },
+                    ),
+                    CustomAccessibilityAction(
+                        label = "Browse forecast values",
+                        action = {
+                            latestBrowseForecasts()
                             true
                         },
                     ),
