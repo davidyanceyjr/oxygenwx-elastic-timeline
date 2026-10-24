@@ -132,12 +132,12 @@ Every visual enhancement must preserve timeline responsiveness, gesture predicta
 **Exit:** The relevant system setting and app response are recorded; selected time and scale remain understandable without disorienting motion, and any required change has its own bounded slice and evidence.
 **Evidence:** `.codex/test-artifacts/020-reduced-motion/README.md` and `.codex/history/020-reduced-motion.md`.
 
-### P.2.9 — Verify RTL and close installed acceptance — NEXT
+### P.2.9 — Verify RTL and close installed acceptance — DONE
 
-**Objective/scope:** Review timeline chronology, gesture directions, labels, and accessible semantics under a system RTL locale. Then make the final installed-acceptance disposition from the existing P.2 evidence; do not add unrelated visual features.
+**Objective/scope:** Review timeline chronology, gesture directions, and labels under a system RTL locale. Reconcile the installed acceptance evidence; use existing TalkBack acceptance without repeating TalkBack tests in this cycle, per the product owner's direction to revisit before final production release.
 **Depends on:** P.2.5, P.2.6, P.2.7, P.2.8, and P.2.11.
-**Exit:** RTL screenshots and interaction observations establish chronological meaning and control semantics remain understandable. Each required gesture, readability, TalkBack, reduced-motion, and RTL outcome is DONE or explicitly BLOCKED with evidence and a product-owner decision on residual scope; the three cross-cutting visual-quality checks are recorded; any remaining follow-up is identified in the roadmap. Confirmed defects get separate implementation slices.
-**Evidence:** Final RTL and acceptance-closure captures target `.codex/test-artifacts/015-p2-acceptance-closure/`; history target `.codex/history/015-p2-acceptance-closure.md`. Existing P.2 evidence remains linked from the history record.
+**Exit:** Installed RTL screenshots and direct-touch observations establish that chronology, gesture directions, fixture bounds, and visible labels remain understandable. Existing P.2.7/P.2.13 TalkBack outcomes are linked without retest; RTL-specific spoken behavior is recorded as unverified per the product owner's decision to revisit TalkBack before final production release. The required P.2 evidence and limitations are reconciled, the three cross-cutting visual-quality checks are recorded, and residual scope is explicitly dispositioned. Confirmed defects get separate implementation slices.
+**Evidence:** `.codex/test-artifacts/015-p2-acceptance-closure/README.md` and installed captures; closeout: `.codex/history/015-p2-acceptance-closure.md`. Existing P.2 evidence is linked from the history record.
 
 ## P.3 — Integration feasibility spike — DEFERRED
 
