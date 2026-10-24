@@ -76,12 +76,12 @@ Every visual enhancement must preserve timeline responsiveness, gesture predicta
 **Exit:** Installed UI has no removed visible controls, and source/semantics expose the daily/hourly custom accessibility action. Manual TalkBack acceptance remains a separate slice.
 **Evidence:** `.codex/history/006-remove-timeline-hints.md`; `.codex/test-artifacts/006-remove-timeline-hints/pixel-3xl.png`.
 
-### P.2.5 — Verify timeline gesture arbitration and time stability — NEXT
+### P.2.5 — Verify timeline gesture arbitration and time stability — DONE
 
 **Objective/scope:** On the Pixel 3 XL, review immediate drag versus stationary hold, hourly scrubbing, release/collapse, and selected-time stability; assess responsiveness, gesture predictability, and readability. Fixes are out of scope for this evidence-gathering slice.
 **Depends on:** P.1.2, P.2.1, P.2.4, and P.2.5a.
 **Exit:** Each gesture is exercised and its observed result recorded with screenshots; selected timestamp continuity and all three cross-cutting visual-quality checks receive an evidence-backed pass/fail disposition. Confirmed defects get separate implementation slices.
-**Evidence:** Original evidence and blocker investigation: `.codex/history/010-gesture-acceptance.md`, `.codex/test-artifacts/010-gesture-acceptance/`, and `.codex/test-artifacts/011-blocker-investigation/README.md`. Recheck target: `.codex/test-artifacts/012-gesture-acceptance-recheck/` and `.codex/history/012-gesture-acceptance-recheck.md`.
+**Evidence:** Original evidence and blocker investigation: `.codex/history/010-gesture-acceptance.md`, `.codex/test-artifacts/010-gesture-acceptance/`, and `.codex/test-artifacts/011-blocker-investigation/README.md`. Recheck: `.codex/test-artifacts/012-gesture-acceptance-recheck/README.md` and `.codex/history/012-gesture-acceptance-recheck.md`.
 
 ### P.2.5a — Align forecast time label with selected hourly tick — DONE
 
@@ -90,12 +90,27 @@ Every visual enhancement must preserve timeline responsiveness, gesture predicta
 **Exit:** On the installed Pixel 3 XL, fractional-hour positions no longer show different hours in the forecast summary and selected tape label; after release/collapse and stationary re-entry, the same rounded selected hour remains visible. The change does not quantize selection during movement or alter interpolated values.
 **Evidence:** `.codex/history/011-hour-label-alignment.md`; `.codex/test-artifacts/011-hour-label-alignment/`.
 
-### P.2.6 — Review readability at large text and constrained layouts — PLANNED
+### P.2.6 — Review readability at large text and constrained layouts — BLOCKED
 
 **Objective/scope:** Review representative large system font, landscape/small-screen layout, and bright/dark sky contrast on the installed app. Fixes are out of scope for this evidence-gathering slice.
 **Depends on:** P.1.2.
 **Exit:** Actual screenshots for each condition are reviewed; essential forecast values and timeline labels are readable and unclipped, with findings and any confirmed defect ownership recorded. Confirmed defects get separate implementation slices.
-**Evidence:** Target `.codex/test-artifacts/011-responsive-readability/` and `.codex/history/011-responsive-readability.md`.
+**Blocker:** Fresh-build evidence now covers all five conditions, including exact bright/night hourly selections and continuous hold-then-drag. P.2.6 remains BLOCKED because the 1.3-font landscape capture confirms high/low values are absent; P.2.11 owns the required fix and installed review.
+**Evidence:** Partial findings: `.codex/history/013-responsive-readability.md` and `.codex/test-artifacts/013-responsive-readability/`; recovery evidence: `.codex/history/014-responsive-readability-recovery.md` and `.codex/test-artifacts/014-responsive-readability-recovery/`.
+
+### P.2.12 — Restore Android build host and complete P.2.6 evidence — DONE
+
+**Objective/scope:** Provision official Android SDK command-line tools and required SDK packages on the current host, build/install the current prototype on the Pixel 3 XL, and complete the missing exact-time and continuous-contact gesture evidence for P.2.6. Evidence and host setup only; no app changes.
+**Depends on:** None.
+**Exit:** A fresh build succeeds with supported tooling; required installed captures show the exact bright/night fixture times; immediate drag and continuous hold-then-drag outcomes, selected-time continuity, and all P.2.6 condition dispositions are recorded. If a host/device/tool blocker prevents the exit, record it with command output and preserve P.2.6 as BLOCKED.
+**Evidence:** `.codex/history/014-responsive-readability-recovery.md`; `.codex/test-artifacts/014-responsive-readability-recovery/`.
+
+### P.2.11 — Preserve high/low values in landscape at large font — NEXT
+
+**Objective/scope:** Keep the forecast high/low values visible as text in the compact landscape layout at 1.3 system font scale; they are absent from the installed capture. Preserve selected-time authority, timeline responsiveness, predictable gesture ownership, accessible text, and DEMO DATA semantics. Review compact landscape and 1.3 font scale; record RTL and reduced-motion applicability and verify they remain unaffected if layout/animation behavior changes.
+**Depends on:** None.
+**Exit:** Actual installed Pixel 3 XL captures show both high/low values as readable text alongside the date, heading, other essential forecast values, DEMO DATA label, and timeline labels at compact landscape and 1.3 font scale. Responsiveness, gesture ownership, and readability receive evidence-backed dispositions; RTL and reduced-motion applicability are recorded.
+**Evidence:** Finding: `.codex/history/013-responsive-readability.md`; target `.codex/test-artifacts/014-landscape-high-low/` and `.codex/history/014-landscape-high-low.md`.
 
 ### P.2.7 — Accept the TalkBack scale action — PLANNED
 

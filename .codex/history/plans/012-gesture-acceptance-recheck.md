@@ -1,12 +1,12 @@
 # Cycle plan — 012-gesture-acceptance-recheck
 
-State: PLANNED
+State: ACTIVE
 Roadmap: P.2.5
 Objective: Re-run installed Pixel 3 XL gesture, release/collapse, selected-time continuity, responsiveness, predictability, and readability acceptance after the P.2.5a label-alignment fix. Gather evidence only; record separate bounded follow-up slices for confirmed failures.
 
 ## Scope and production boundary
 
-This is an installed evidence-gathering cycle for the standalone Oxygen Time Lab prototype. Do not modify application source, Gradle configuration, dependencies, production oxygenWX, or the sibling checkout. Do not implement fixes. Allowed new/updated records are limited to `.codex/test-artifacts/012-gesture-acceptance-recheck/` and this cycle's closeout at `.codex/history/012-gesture-acceptance-recheck.md`; retain screenshots, command output, observations, and a README in the artifact directory. A confirmed failure is documented with evidence and a proposed separate roadmap slice; it does not authorize a fix in this cycle.
+This is an installed evidence-gathering cycle for the standalone Oxygen Time Lab prototype. Do not modify application source, Gradle configuration, dependencies, production oxygenWX, or the sibling checkout. Do not implement fixes. Allowed new/updated records are limited to `.codex/test-artifacts/012-gesture-acceptance-recheck/`, this cycle's closeout at `.codex/history/012-gesture-acceptance-recheck.md`, and—only if a confirmed finding changes roadmap eligibility or requires a separately bounded follow-up—the minimum corresponding entry/status update in `docs/ROADMAP.md`. Retain screenshots, command output, observations, and a README in the artifact directory. A confirmed failure is documented with evidence and a proposed separate roadmap slice; it does not authorize a fix in this cycle.
 
 ## Dependencies and prior evidence
 
@@ -33,7 +33,7 @@ This is an installed evidence-gathering cycle for the standalone Oxygen Time Lab
 4. Exercise stationary hold-then-drag in each direction for three trials, holding at the center playhead for at least approximately 480 ms before moving. Capture the active hourly scale and scrub outcomes; record selected center labels, summary-hour agreement, response delay, and any gesture ambiguity.
 5. Release/collapse after hourly scrubbing and capture the daily overview. Then hold stationary at the center playhead to re-enter hourly mode without moving it. Compare the selected date/hour before the scale change, during scrubbing, and after re-entry. Include a fractional-hour scrub so the nearest-hour labels and interpolated visual values can be reviewed together. Record any transition that remains unobservable; do not infer continuity from animation alone.
 6. Review installed captures and observations for timeline responsiveness, predictable gesture ownership, and readability of forecast values and timeline labels. Give each of the three cross-cutting checks an evidence-backed pass/fail disposition. For every confirmed failure, document the reproduction and evidence and recommend a separately bounded follow-up slice; make no fix here.
-7. Save original screenshots, reproduction details, trial observations, commands, device conditions, findings, and limitations under `.codex/test-artifacts/012-gesture-acceptance-recheck/`. Inspect the evidence and final diff, run `git diff --check`, update the roadmap only if a confirmed failure or changed eligibility requires a bounded replanning record, and close the cycle with exact results and limitations.
+7. Save original screenshots, reproduction details, trial observations, commands, device conditions, findings, and limitations under `.codex/test-artifacts/012-gesture-acceptance-recheck/`. Inspect the evidence and final diff, run `git diff --check`, and update `docs/ROADMAP.md` only when a confirmed failure or changed eligibility requires a bounded replanning record; tie that entry directly to the evidence and preserve the P.2.5 exit disposition. Close the cycle with exact results and limitations.
 
 ## Visual objective and applicable conditions
 
