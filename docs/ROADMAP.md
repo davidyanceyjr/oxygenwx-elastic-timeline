@@ -126,19 +126,12 @@ Every visual enhancement must preserve timeline responsiveness, gesture predicta
 **Exit:** The relevant system setting and app response are recorded; selected time and scale remain understandable without disorienting motion, and any required change has its own bounded slice and evidence.
 **Evidence:** Target `.codex/test-artifacts/013-reduced-motion/` and `.codex/history/013-reduced-motion.md`.
 
-### P.2.9 — Verify RTL chronology and controls — PLANNED
+### P.2.9 — Verify RTL and close installed acceptance — PLANNED
 
-**Objective/scope:** Review timeline chronology, gesture directions, labels, and accessible semantics under a system RTL locale.
-**Depends on:** P.1.2.
-**Exit:** RTL screenshots and interaction observations establish chronological meaning and control semantics remain understandable; confirmed defects get separate implementation slices.
-**Evidence:** Target `.codex/test-artifacts/014-rtl-chronology/` and `.codex/history/014-rtl-chronology.md`.
-
-### P.2.10 — Close installed acceptance and visual-polish review — PLANNED
-
-**Objective/scope:** Aggregate P.2 evidence and close the prototype's remaining installed-acceptance gaps; do not add unrelated visual features.
-**Depends on:** P.2.5 through P.2.9.
-**Exit:** Each required gesture, readability, TalkBack, reduced-motion, and RTL outcome is DONE or explicitly BLOCKED with evidence and a product-owner decision on residual scope; the three cross-cutting visual-quality checks are recorded; the roadmap identifies any remaining follow-up.
-**Evidence:** Target `.codex/test-artifacts/015-p2-acceptance-closure/` and `.codex/history/015-p2-acceptance-closure.md`.
+**Objective/scope:** Review timeline chronology, gesture directions, labels, and accessible semantics under a system RTL locale. Then make the final installed-acceptance disposition from the existing P.2 evidence; do not add unrelated visual features.
+**Depends on:** P.2.5, P.2.6, P.2.7, P.2.8, and P.2.11.
+**Exit:** RTL screenshots and interaction observations establish chronological meaning and control semantics remain understandable. Each required gesture, readability, TalkBack, reduced-motion, and RTL outcome is DONE or explicitly BLOCKED with evidence and a product-owner decision on residual scope; the three cross-cutting visual-quality checks are recorded; any remaining follow-up is identified in the roadmap. Confirmed defects get separate implementation slices.
+**Evidence:** Final RTL and acceptance-closure captures target `.codex/test-artifacts/015-p2-acceptance-closure/`; history target `.codex/history/015-p2-acceptance-closure.md`. Existing P.2 evidence remains linked from the history record.
 
 ## P.3 — Integration feasibility spike — DEFERRED
 
