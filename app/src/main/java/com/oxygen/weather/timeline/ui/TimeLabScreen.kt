@@ -32,11 +32,15 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.hapticfeedback.HapticFeedbackType
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.platform.LocalDensity
+import androidx.compose.ui.platform.LocalLayoutDirection
 import androidx.compose.ui.platform.LocalHapticFeedback
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.style.TextDirection
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.LayoutDirection
 import androidx.compose.ui.unit.sp
 import com.oxygen.weather.timeline.data.SampleForecast
 import com.oxygen.weather.timeline.presentation.ElasticTimeAxis
@@ -46,7 +50,6 @@ import java.time.Duration
 import java.time.LocalDateTime
 import kotlin.math.abs
 import kotlin.math.floor
-import kotlin.math.roundToInt
 
 /** Experimental one-screen UI; sample forecast and independent package ID. */
 @Composable
@@ -58,6 +61,7 @@ fun TimeLabScreen() {
     var forecastBrowserOpen by remember { mutableStateOf(false) }
     val haptics = LocalHapticFeedback.current
     val swipeThresholdPx = with(LocalDensity.current) { 48.dp.toPx() }
+    val isRtl = LocalLayoutDirection.current == LayoutDirection.Rtl
 
     val view = remember(selectedHour, precisionMode) {
         ForecastProjection.fromHourOffset(selectedHour, precisionMode)
@@ -72,7 +76,7 @@ fun TimeLabScreen() {
         haptics.performHapticFeedback(HapticFeedbackType.LongPress)
     }
     fun leavePrecision(wasPrecisionGesture: Boolean) {
-        selectedHour = if (wasPrecisionGesture) selectedHour.roundToInt().toDouble()
+        selectedHour = if (wasPrecisionGesture) selectedHour
             else (floor(selectedHour / 24.0) * 24.0 + 12.0)
         selectedHour = selectedHour.coerceIn(0.0, SampleForecast.hours.lastIndex.toDouble())
         precisionMode = false
@@ -94,6 +98,7 @@ fun TimeLabScreen() {
 
     BoxWithConstraints(Modifier.fillMaxSize().background(Color(0xFF11263D))) {
         val compactLandscape = maxHeight < 400.dp
+        val compactPresentation = compactLandscape || LocalDensity.current.fontScale >= 1.3f
         AtmosphericScene(
             input = AtmosphereInput(
                 sky = view.sky,
@@ -106,13 +111,13 @@ fun TimeLabScreen() {
         Column(
             Modifier.fillMaxWidth().align(Alignment.TopCenter).statusBarsPadding().padding(horizontal = 25.dp),
         ) {
-            Spacer(Modifier.height(if (compactLandscape) 5.dp else 19.dp))
+            Spacer(Modifier.height(if (compactPresentation) 5.dp else 19.dp))
             Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween,
                 verticalAlignment = Alignment.CenterVertically) {
                 Column {
                     Text("OXYGEN  /  TIME LAB", fontSize = 11.sp, letterSpacing = 2.0.sp,
                         fontWeight = FontWeight.SemiBold, color = Color(0xFFECF5FD))
-                    if (!compactLandscape) {
+                    if (!compactPresentation) {
                         Spacer(Modifier.height(4.dp))
                         Text("An interactive atmosphere", fontSize = 12.sp, color = Color(0xCDE4EDF5))
                     }
@@ -124,7 +129,7 @@ fun TimeLabScreen() {
 
         Column(
             Modifier.align(Alignment.Center).fillMaxWidth().padding(horizontal = 23.dp)
-                .padding(bottom = if (compactLandscape) 48.dp else 76.dp)
+                .padding(bottom = if (compactPresentation) 48.dp else 76.dp)
                 .pointerInput(swipeThresholdPx) {
                     var totalDrag = 0f
                     detectHorizontalDragGestures(
@@ -135,7 +140,7 @@ fun TimeLabScreen() {
                         },
                         onDragEnd = {
                             if (abs(totalDrag) >= swipeThresholdPx) {
-                                latestShiftDay(if (totalDrag < 0f) 1 else -1)
+                                latestShiftDay(if ((totalDrag < 0f) != isRtl) 1 else -1)
                             }
                         },
                         onDragCancel = { totalDrag = 0f },
@@ -146,7 +151,7 @@ fun TimeLabScreen() {
                 },
             horizontalAlignment = Alignment.CenterHorizontally,
         ) {
-            if (compactLandscape) {
+            if (compactPresentation) {
                 Row(verticalAlignment = Alignment.CenterVertically) {
                     Text("${view.temperatureF}°", fontSize = 78.sp, lineHeight = 84.sp,
                         fontWeight = FontWeight.Light, color = Color.White,
@@ -157,7 +162,8 @@ fun TimeLabScreen() {
                             fontWeight = FontWeight.SemiBold, color = Color.White.copy(alpha = .93f))
                         Spacer(Modifier.height(2.dp))
                         Text(view.timeLabel, fontSize = 12.sp, letterSpacing = 1.5.sp,
-                            color = Color.White.copy(alpha = .79f))
+                            color = Color.White.copy(alpha = .79f),
+                            style = TextStyle(textDirection = TextDirection.Ltr))
                         Spacer(Modifier.height(4.dp))
                         Text(view.conditionsLabel, fontSize = 22.sp,
                             fontWeight = FontWeight.Light, color = Color.White)
@@ -171,7 +177,8 @@ fun TimeLabScreen() {
                     fontWeight = FontWeight.SemiBold, color = Color.White.copy(alpha = .93f))
                 Spacer(Modifier.height(5.dp))
                 Text(view.timeLabel, fontSize = 12.sp, letterSpacing = 2.sp,
-                    color = Color.White.copy(alpha = .79f))
+                    color = Color.White.copy(alpha = .79f),
+                    style = TextStyle(textDirection = TextDirection.Ltr))
                 Spacer(Modifier.height(13.dp))
                 Text("${view.temperatureF}°", fontSize = 102.sp, lineHeight = 108.sp,
                     fontWeight = FontWeight.Light, color = Color.White,
@@ -228,7 +235,7 @@ fun TimeLabScreen() {
                     // If expanded by an accessibility action, keep precision active.
                     if (wasPrecision) leavePrecision(true)
                     else if (!precisionMode) leavePrecision(false)
-                    else selectedHour = selectedHour.roundToInt().toDouble()
+                    else Unit
                 },
             )
         }

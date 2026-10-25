@@ -20,6 +20,7 @@ import androidx.compose.ui.graphics.nativeCanvas
 import androidx.compose.ui.graphics.drawscope.drawIntoCanvas
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.platform.LocalDensity
+import androidx.compose.ui.platform.LocalLayoutDirection
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.semantics.CustomAccessibilityAction
 import androidx.compose.ui.semantics.contentDescription
@@ -30,6 +31,7 @@ import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.semantics.stateDescription
 import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.LayoutDirection
 import com.oxygen.weather.timeline.data.SampleForecast
 import com.oxygen.weather.timeline.presentation.ElasticTimeAxis
 import com.oxygen.weather.timeline.presentation.ForecastProjection
@@ -64,6 +66,7 @@ fun ElasticForecastTimeline(
         label = "Hourly precision scale",
     )
     val density = LocalDensity.current
+    val isRtl = LocalLayoutDirection.current == LayoutDirection.Rtl
     val compactDayPx = with(density) { 55.dp.toPx().toDouble() }
     val maxHour = SampleForecast.hours.lastIndex.toDouble()
     val expandedPx = with(density) { 16.dp.toPx().toDouble() }
@@ -110,7 +113,7 @@ fun ElasticForecastTimeline(
                     ),
                 )
             }
-            .pointerInput(Unit) {
+            .pointerInput(isRtl) {
                 awaitEachGesture {
                     val down = awaitFirstDown(requireUnconsumed = false)
                     val downX = down.position.x.toDouble()
@@ -132,8 +135,9 @@ fun ElasticForecastTimeline(
                         if (event == null) {
                             // Long-press fired while finger is stationary: select the time at
                             // the touch, THEN expand without changing that selected timestamp.
+                            val logicalDownX = if (isRtl) size.width - downX else downX
                             val tappedHour = ElasticTimeAxis.hourAtX(
-                                downX, latestSelected, playhead, null,
+                                logicalDownX, latestSelected, playhead, null,
                                 compactDayPx, widthForHour(latestAnimation),
                             ).coerceIn(0.0, maxHour)
                             val day = ElasticTimeAxis.dayIndex(tappedHour)
@@ -146,8 +150,9 @@ fun ElasticForecastTimeline(
                         val change = event.changes.firstOrNull { it.id == down.id }
                         if (change == null || !change.pressed) {
                             if (!dragging && !inPrecision) {
+                                val logicalDownX = if (isRtl) size.width - downX else downX
                                 val target = ElasticTimeAxis.hourAtX(
-                                    downX, latestSelected, playhead, null,
+                                    logicalDownX, latestSelected, playhead, null,
                                     compactDayPx, widthForHour(latestAnimation),
                                 ).coerceIn(0.0, maxHour)
                                 val day = ElasticTimeAxis.dayIndex(target)
@@ -165,7 +170,7 @@ fun ElasticForecastTimeline(
                             }
                             if (dragging && dx != 0.0) {
                                 val next = ElasticTimeAxis.scrub(
-                                    gestureSelection, dx, null,
+                                    gestureSelection, if (isRtl) -dx else dx, null,
                                     compactDayPx, widthForHour(latestAnimation), maxHour,
                                 )
                                 gestureSelection = next
@@ -198,9 +203,12 @@ fun ElasticForecastTimeline(
         )
         drawLine(Color(0x33D7EBF7), Offset(0f, baseY), Offset(w, baseY), stroke)
 
-        fun mapHour(hour: Double): Float = ElasticTimeAxis.xForHour(
-            hour, selectedHour, playhead, dayFocus, compactDayPx, pixelPerHour,
-        ).toFloat()
+        fun mapHour(hour: Double): Float {
+            val logicalX = ElasticTimeAxis.xForHour(
+                hour, selectedHour, playhead, dayFocus, compactDayPx, pixelPerHour,
+            )
+            return (if (isRtl) w - logicalX else logicalX).toFloat()
+        }
 
         for (day in 0 until SampleForecast.DAY_COUNT) {
             val startX = mapHour(day * 24.0)
@@ -254,9 +262,11 @@ fun ElasticForecastTimeline(
             }
             // Keep the chosen hour label on the fixed playhead and magnify it
             // against the regular neighboring three-hour labels.
-            val selectedTick = selectedHour.roundToInt().coerceIn(0, SampleForecast.hours.lastIndex)
-            val selectedTime = SampleForecast.hours[selectedTick].time
-                .format(java.time.format.DateTimeFormatter.ofPattern("h a", java.util.Locale.US))
+            val selectedMoment = SampleForecast.hours.first().time
+                .plus((selectedHour * 60.0).roundToInt().toLong(), java.time.temporal.ChronoUnit.MINUTES)
+            val selectedTime = selectedMoment
+                .format(java.time.format.DateTimeFormatter.ofPattern("h:mm a", java.util.Locale.US))
+                .replace(":00 ", " ")
             drawIntoCanvas { canvas ->
                 val paint = Paint(Paint.ANTI_ALIAS_FLAG).apply {
                     color = android.graphics.Color.argb((245 * zoom).roundToInt(), 255, 226, 167)

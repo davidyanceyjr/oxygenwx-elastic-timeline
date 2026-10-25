@@ -5,6 +5,7 @@ import com.oxygen.weather.timeline.data.ForecastHour
 import com.oxygen.weather.timeline.data.SampleForecast
 import com.oxygen.weather.timeline.data.SkyCondition
 import java.time.format.DateTimeFormatter
+import java.time.temporal.ChronoUnit
 import java.util.Locale
 import kotlin.math.floor
 import kotlin.math.roundToInt
@@ -37,12 +38,14 @@ object ForecastProjection {
         val dayIndex = ElasticTimeAxis.dayIndex(clamped).coerceIn(0, SampleForecast.days.lastIndex)
         val day = SampleForecast.days[dayIndex]
         val sky = if (precision) interpolate(clamped) else day.representative.toFrame()
-        val selectedTime = SampleForecast.hours[clamped.roundToInt()].time
+        val selectedTime = SampleForecast.hours.first().time
+            .plus((clamped * 60.0).roundToInt().toLong(), ChronoUnit.MINUTES)
         val dayLabel = day.date.format(DateTimeFormatter.ofPattern("EEE, MMM d", Locale.US))
-        val hourLabel = selectedTime.format(DateTimeFormatter.ofPattern("h a", Locale.US))
+        val hourLabel = selectedTime.format(DateTimeFormatter.ofPattern("h:mm a", Locale.US))
+            .replace(":00 ", " ")
         return ForecastView(
             heading = dayLabel.uppercase(Locale.US),
-            timeLabel = if (precision) hourLabel else "DAY OVERVIEW",
+            timeLabel = if (precision) hourLabel else "DAY OVERVIEW · SELECTED $hourLabel",
             conditionsLabel = sky.condition.displayName(),
             temperatureF = toF(sky.temperatureC),
             precipitationPercent = sky.rainChancePercent.roundToInt(),
