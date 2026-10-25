@@ -29,22 +29,32 @@ fun AtmosphericScene(input: AtmosphereInput, modifier: Modifier = Modifier) {
 
 /** Typed adapter seam; the current renderer keeps receiving the original forecast values. */
 @Composable
-@Suppress("UNUSED_PARAMETER")
 fun AtmosphericScene(state: SceneVisualState, input: AtmosphereInput, modifier: Modifier = Modifier) {
-    AtmosphericScene(frame = input.sky, localHour = input.localHour, modifier = modifier)
+    AtmosphericScene(state = state, frame = input.sky, localHour = input.localHour, modifier = modifier)
 }
 
-/** Compatibility renderer retained unchanged for baseline parity. */
+/** Compatibility entry point for callers that still provide the original forecast frame. */
 @Composable
 fun AtmosphericScene(frame: SkyFrame, localHour: Double, modifier: Modifier = Modifier) {
+    val input = remember(frame, localHour) {
+        AtmosphereInput(sky = frame, precisionMode = false, localHour = localHour)
+    }
+    val state = remember(input) { SceneVisualStateMapper.map(input) }
+    AtmosphericScene(state = state, frame = frame, localHour = localHour, modifier = modifier)
+}
+
+@Composable
+private fun AtmosphericScene(
+    state: SceneVisualState,
+    frame: SkyFrame,
+    localHour: Double,
+    modifier: Modifier,
+) {
     Canvas(modifier.fillMaxSize()) {
         val cloudy = (frame.cloudPercent / 100.0).toFloat().coerceIn(0f, 1f)
-        val daylight = (sin(((localHour - 6.0) / 12.0) * PI)).toFloat().coerceIn(0f, 1f)
-        val top = lerp(Color(0xFF122A4D), Color(0xFF448DC0), daylight * (1f - cloudy * .42f))
-        val mid = lerp(Color(0xFF314C70), Color(0xFF8FC2DF), daylight * (1f - cloudy * .38f))
-        val horizon = lerp(Color(0xFF7E6C75), Color(0xFFF3BD88), daylight * (1f - cloudy * .45f))
-        drawRect(brush = Brush.verticalGradient(0f to top, .6f to mid, 1f to horizon))
-        drawSunAndGlow(daylight, cloudy, localHour)
+        drawSkyPalette(state)
+        drawDiffuseLight(state)
+        drawIllustrativeCelestial(state, localHour)
         drawCloudBands(cloudy, localHour)
         drawLandscape()
         drawRainHints((frame.rainChancePercent / 100.0).toFloat())
@@ -58,29 +68,77 @@ fun AtmosphericScene(frame: SkyFrame, localHour: Double, modifier: Modifier = Mo
     }
 }
 
-private fun DrawScope.drawSunAndGlow(daylight: Float, cloudiness: Float, hour: Double) {
+private fun DrawScope.drawSkyPalette(state: SceneVisualState) {
+    val daylight = state.daylight?.toFloat()?.coerceIn(0f, 1f) ?: 0f
+    val cloudiness = state.cloudFraction?.toFloat()?.coerceIn(0f, 1f) ?: 0f
+    val twilight = (1f - kotlin.math.abs(daylight - .259f) / .259f).coerceIn(0f, 1f)
+
+    val nightTop = Color(0xFF142440)
+    val nightMid = Color(0xFF34435D)
+    val nightHorizon = Color(0xFF6F6572)
+    val dayTop = Color(0xFF3479A8)
+    val dayMid = Color(0xFF79B5D4)
+    val dayHorizon = Color(0xFFE7B98D)
+    val duskTop = Color(0xFF31466C)
+    val duskMid = Color(0xFF786D88)
+    val duskHorizon = Color(0xFFC58D91)
+
+    fun skyColor(night: Color, twilightColor: Color, day: Color): Color =
+        lerp(lerp(night, twilightColor, twilight), day, daylight)
+
+    val cloudWash = when (state.condition) {
+        com.oxygen.weather.timeline.data.SkyCondition.CLOUDY,
+        com.oxygen.weather.timeline.data.SkyCondition.RAIN,
+        com.oxygen.weather.timeline.data.SkyCondition.STORM -> .10f
+        else -> .035f
+    } * cloudiness
+    val wash = Color(0xFF8293A8).copy(alpha = cloudWash)
+    val top = lerp(skyColor(nightTop, duskTop, dayTop), wash, cloudiness * .30f)
+    val mid = lerp(skyColor(nightMid, duskMid, dayMid), wash, cloudiness * .34f)
+    val horizon = lerp(skyColor(nightHorizon, duskHorizon, dayHorizon), wash, cloudiness * .38f)
+    drawRect(brush = Brush.verticalGradient(0f to top, .58f to mid, 1f to horizon))
+}
+
+private fun DrawScope.drawDiffuseLight(state: SceneVisualState) {
+    val daylight = state.daylight?.toFloat()?.coerceIn(0f, 1f) ?: 0f
+    val cloudiness = state.cloudFraction?.toFloat()?.coerceIn(0f, 1f) ?: 0f
+    if (daylight <= .01f) return
     val w = size.width
     val h = size.height
-    val arc = ((hour - 6.0) / 12.0).coerceIn(0.0, 1.0)
-    val sx = (w * (.10 + .78 * arc)).toFloat()
-    val sy = h * (.48f - .31f * sin(arc * PI).toFloat())
     val strength = daylight * (1f - .65f * cloudiness)
-    if (strength > .01f) {
+    val center = Offset(w * .5f, h * .34f)
+    drawCircle(
+        brush = Brush.radialGradient(
+            colors = listOf(Color(0x88FFD9A0).copy(alpha = .42f * strength), Color.Transparent),
+            center = center, radius = w * .48f,
+        ),
+        radius = w * .48f, center = center,
+    )
+}
+
+private fun DrawScope.drawIllustrativeCelestial(state: SceneVisualState, localHour: Double) {
+    val daylight = state.daylight?.toFloat()?.coerceIn(0f, 1f) ?: 0f
+    val cloudiness = state.cloudFraction?.toFloat()?.coerceIn(0f, 1f) ?: 0f
+    val w = size.width
+    val h = size.height
+    val hour = localHour.takeIf(Double::isFinite)?.rem(24.0)?.let { if (it < 0) it + 24 else it } ?: 12.0
+    val arc = ((hour - 6.0) / 12.0).coerceIn(0.0, 1.0)
+    val x = (w * (.12 + .76 * arc)).toFloat()
+    // Keep the small marker in the open upper sky, above the forecast text block.
+    val y = h * (.19f - .045f * sin(arc * PI).toFloat())
+    val sunAlpha = daylight * (1f - .55f * cloudiness)
+    if (sunAlpha > .025f) {
         drawCircle(
-            brush = Brush.radialGradient(
-                colors = listOf(Color(0xB2FFDC9B).copy(alpha=.40f * strength), Color.Transparent),
-                center = Offset(sx, sy), radius = w * .43f,
-            ),
-            radius = w * .43f, center = Offset(sx, sy),
+            color = Color(0xFFFFE6B9).copy(alpha = .76f * sunAlpha),
+            radius = w * .022f,
+            center = Offset(x, y),
         )
-        drawCircle(color = Color(0xFFFFE4B6).copy(alpha = strength),
-            radius = w * .066f, center = Offset(sx, sy))
     } else {
-        drawCircle(
-            color = Color(0xFFE8F4FF).copy(alpha = .7f * (1f - daylight)),
-            radius = w * .033f,
-            center = Offset(w * .71f, h * .19f),
-        )
+        // A simple crescent is an illustration; no phase or visibility model is implied.
+        val moonCenter = Offset(w * .73f, h * .19f)
+        val alpha = (1f - daylight).coerceIn(0f, 1f) * (1f - cloudiness * .35f)
+        drawCircle(Color(0xFFE4ECF5).copy(alpha = .82f * alpha), w * .024f, moonCenter)
+        drawCircle(Color(0xFF263B58).copy(alpha = .96f), w * .020f, Offset(moonCenter.x + w * .011f, moonCenter.y - h * .004f))
     }
 }
 
