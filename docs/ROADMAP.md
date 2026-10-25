@@ -30,6 +30,13 @@ Every visual enhancement must preserve timeline responsiveness, gesture predicta
 **Exit:** The authority relationship is explicit, the proposal's status reflects adoption without claiming unverified acceptance, current behavior discrepancies and owner decisions are recorded, stale README behavior claims are corrected, and documentation/workflow checks plus `git diff --check` pass.
 **Evidence:** `.codex/history/022-experience-spec-adoption.md`; `.codex/history/plans/022-experience-spec-adoption.md`; `.codex/test-artifacts/022-experience-spec-adoption/README.md`.
 
+### G.4 — Ingest the Living Atmosphere Engine proposal — DONE
+
+**Objective/scope:** Reconcile OXY-ATM-001 against controlling prototype and experience authorities and the current source tree; adopt it as a subordinate architecture proposal for roadmap planning; add bounded ATM/ENV follow-ups. Documentation and cycle records only.
+**Depends on:** G.3.
+**Exit:** Authority precedence and adoption limits are explicit; every cited source path is compared with the proposal's baseline; conflicts and missing evidence are recorded; proposed ATM/ENV slices use this roadmap's leaf format; documentation checks pass without application changes.
+**Evidence:** `.codex/history/023-atmosphere-spec-intake.md`; `.codex/history/plans/023-atmosphere-spec-intake.md`; `.codex/test-artifacts/023-atmosphere-spec-intake/README.md`.
+
 ## P.1 — Standalone elastic time tape
 
 ### P.1.1 — Implement the isolated timeline prototype — DONE
@@ -153,7 +160,7 @@ Every visual enhancement must preserve timeline responsiveness, gesture predicta
 **Objective/scope:** Evaluate a future integration with oxygenWX's `Now -> Hourly -> Daily -> Details` navigation, normalized forecast presentation, provenance, and gesture ownership. No production integration or navigation edits are included.
 **Depends on:** Explicit owner approval to begin integration design.
 **Exit after re-entry:** An owner-reviewed design documents pager/timeline gesture ownership, typed normalized presentation binding, source/provenance semantics, and a bounded integration plan that preserves existing network/cache/provider flows.
-**Evidence:** Re-entry and exit evidence target `.codex/test-artifacts/016-integration-feasibility/` and `.codex/history/016-integration-feasibility.md`; no evidence is claimed while deferred.
+**Evidence:** On re-entry, assign the next chronological cycle ID and use `.codex/test-artifacts/<cycle-id>/`, `.codex/history/<cycle-id>.md`, and `.codex/history/plans/<cycle-id>.md`; no evidence is claimed while deferred.
 **Re-entry condition:** The oxygenWX owner explicitly authorizes an integration feasibility design and gesture-ownership review.
 
 ## P.4 — Production-release presentation cleanup — DEFERRED
@@ -163,7 +170,7 @@ Every visual enhancement must preserve timeline responsiveness, gesture predicta
 **Objective/scope:** Remove `OXYGEN / TIME LAB` experimental branding from a production-release presentation.
 **Depends on:** An approved production integration and release candidate.
 **Exit after re-entry:** Release-candidate screens use approved product branding, and installed evidence records all affected surfaces.
-**Evidence:** Target `.codex/test-artifacts/017-release-branding/` and `.codex/history/017-release-branding.md`; no evidence is claimed while deferred.
+**Evidence:** On re-entry, assign the next chronological cycle ID and use `.codex/test-artifacts/<cycle-id>/`, `.codex/history/<cycle-id>.md`, and `.codex/history/plans/<cycle-id>.md`; no evidence is claimed while deferred.
 **Re-entry condition:** A production-release cycle is explicitly authorized for the integrated application.
 
 ### P.4.2 — Replace DEMO DATA only with accurate provenance — DEFERRED
@@ -171,7 +178,7 @@ Every visual enhancement must preserve timeline responsiveness, gesture predicta
 **Objective/scope:** Replace the synthetic-data label only after the app presents production forecast data and accurate source/provenance information.
 **Depends on:** P.3.1 and a production data path with verified provenance.
 **Exit after re-entry:** Installed release UI identifies the actual data/source status accurately, with semantics and source evidence reviewed.
-**Evidence:** Target `.codex/test-artifacts/018-release-provenance/` and `.codex/history/018-release-provenance.md`; no evidence is claimed while deferred.
+**Evidence:** On re-entry, assign the next chronological cycle ID and use `.codex/test-artifacts/<cycle-id>/`, `.codex/history/<cycle-id>.md`, and `.codex/history/plans/<cycle-id>.md`; no evidence is claimed while deferred.
 **Re-entry condition:** Production forecast data and verified provenance are available in an explicitly approved integration cycle.
 
 ### P.4.3 — Define production timeline reset behavior — DEFERRED
@@ -179,5 +186,101 @@ Every visual enhancement must preserve timeline responsiveness, gesture predicta
 **Objective/scope:** Decide how timeline reset/realignment fits production navigation and interaction ownership before integration.
 **Depends on:** P.3.1.
 **Exit after re-entry:** An owner-approved interaction contract states reset gesture/action, relationship to the outer pager, and accessibility semantics before implementation begins.
-**Evidence:** Target `.codex/test-artifacts/019-production-reset-contract/` and `.codex/history/019-production-reset-contract.md`; no evidence is claimed while deferred.
+**Evidence:** On re-entry, assign the next chronological cycle ID and use `.codex/test-artifacts/<cycle-id>/`, `.codex/history/<cycle-id>.md`, and `.codex/history/plans/<cycle-id>.md`; no evidence is claimed while deferred.
 **Re-entry condition:** The owner authorizes production navigation design following the integration feasibility review.
+
+## ATM — Living atmosphere engine
+
+### ATM.0 — Capture installed pre-engine atmosphere baseline — DONE
+
+**Objective/scope:** Establish the installed app baseline before renderer changes by consolidating the existing Pixel 3 XL visual, gesture, reduced-motion, RTL, and accessibility reviews. No new capture cycle is needed.
+**Depends on:** G.4.
+**Exit:** Existing installed evidence covers daily/hourly navigation, main-view swipe and double-tap Now, bright/night and large-font landscape readability, reduced motion, RTL, TalkBack, responsiveness, gesture predictability, and forecast readability; documented limitations remain explicit.
+**Evidence:** Daily/hourly and main-view navigation: `.codex/history/005-main-display-navigation.md`, `.codex/history/012-gesture-acceptance-recheck.md`, and `.codex/history/007-visual-baseline.md`, with captures under the matching `.codex/test-artifacts/` directories. Bright/night and landscape large-font readability: `.codex/history/014-landscape-high-low.md` and `.codex/history/015-responsive-readability-review.md`, with matching artifacts. TalkBack: `.codex/history/018-talkback-forecast-browser.md` and `.codex/history/019-talkback-scale-action.md`, with matching artifacts. Reduced motion: `.codex/history/020-reduced-motion.md` and `.codex/test-artifacts/020-reduced-motion/`. RTL and final P.2 disposition: `.codex/history/021-p2-acceptance-closure.md` and `.codex/test-artifacts/021-p2-acceptance-closure/`. Known limits are recorded in those histories, including qualitative responsiveness and no RTL-specific TalkBack review.
+
+### ATM.1 — Pure typed scene projection and static fallback — DONE
+
+**Objective/scope:** Add a pure typed mapper from existing `SkyFrame`, selected time and explicit effect/environment inputs to immutable scene state, with a coherent static fallback and an adapter seam. Preserve missingness and distinguish condition identity from rain probability. Do not change visible layout, timeline physics, or gestures.
+**Depends on:** ATM.0.
+**Exit:** Scene state derives only from typed inputs; absent values remain absent; rain probability cannot become rain intensity; `selectedHour`, forecast facts, accessibility text, and gesture ownership remain unchanged; the current renderer still provides the accepted baseline. Focused tests/build checks are planned subject to the repository's test authorization rule.
+**Evidence:** Cycle 024 (`024-atm1-scene-projection`): `.codex/test-artifacts/024-atm1-scene-projection/README.md`; closeout: `.codex/history/024-atm1-scene-projection.md`; archived plan: `.codex/history/plans/024-atm1-scene-projection.md`.
+
+### ATM.2 — Sky, light and illustrative celestial layer — NEXT
+
+**Objective/scope:** Add time-aware sky palettes, diffuse light, and illustrative sun/moon artwork with a static/reduced-motion path. No solar ephemeris or moon-phase claims.
+**Depends on:** ATM.1.
+**Exit:** Clear/cloudy/day/dusk/night transitions are continuous across fixture samples; essential text remains readable; installed Pixel 3 XL checks cover daily/hourly, bright/dark, portrait/landscape, default/large font, RTL and reduced-motion states; timeline responsiveness and gesture ownership remain accepted.
+**Evidence:** At planning, assign the next chronological cycle ID and use its `.codex/test-artifacts/<cycle-id>/`, `.codex/history/<cycle-id>.md`, and `.codex/history/plans/<cycle-id>.md`.
+
+### ATM.3 — Deterministic multi-depth cloud renderer — PLANNED
+
+**Objective/scope:** Add stable far/mid cloud groups driven by supported cloud-cover inputs and a controlled effect phase. No precipitation or terrain redesign.
+**Depends on:** ATM.2.
+**Exit:** Cloud visuals change smoothly without reseeding or popping at sample boundaries; the static path is legible; installed Pixel 3 XL review covers clear/overcast and daily/hourly states, compact/large font, RTL and reduced motion, and confirms the timeline remains responsive and forecast facts remain readable.
+**Evidence:** At planning, assign the next chronological cycle ID and use its `.codex/test-artifacts/<cycle-id>/`, `.codex/history/<cycle-id>.md`, and `.codex/history/plans/<cycle-id>.md`.
+
+### ATM.4 — Bounded rain and snow depiction — PLANNED
+
+**Objective/scope:** Add restrained precipitation artwork driven by typed condition and depiction metadata. Snow is enabled only in an explicitly labeled synthetic preview or a future provider-neutral snow type; never infer it from temperature. Do not map probability to particle rate.
+**Depends on:** ATM.3.
+**Exit:** Rain and any snow preview are deterministic and bounded; probability alone does not select particle intensity; static/reduced-motion depictions retain truthful condition text; installed Pixel 3 XL rain and labeled-preview states cover compact/large font, RTL and reduced motion, with timeline responsiveness and readability recorded.
+**Evidence:** At planning, assign the next chronological cycle ID and use its `.codex/test-artifacts/<cycle-id>/`, `.codex/history/<cycle-id>.md`, and `.codex/history/plans/<cycle-id>.md`.
+
+### ATM.5 — Fog and wind effect primitives — PLANNED
+
+**Objective/scope:** Add reusable haze/turbulence primitives only as clearly labeled preview effects until supported typed visibility and wind-direction inputs exist. No fabricated live fog, wind direction, or visibility claims.
+**Depends on:** ATM.4.
+**Exit:** Missing inputs produce no claimed weather effect; preview states are clearly identified as illustrative; effects do not obscure forecast text or timeline and have static fallbacks. Installed Pixel 3 XL review covers preview/absent-input states, compact/large font, RTL and reduced motion.
+**Evidence:** At planning, assign the next chronological cycle ID and use its `.codex/test-artifacts/<cycle-id>/`, `.codex/history/<cycle-id>.md`, and `.codex/history/plans/<cycle-id>.md`.
+
+### ATM.6 — Restrained storm and night refinements — PLANNED
+
+**Objective/scope:** Add muted storm and night artwork using supported condition/time cues. No alerts, solar/moon accuracy claims, or flashes behind critical text.
+**Depends on:** ATM.5.
+**Exit:** Storm/night scenes remain comfortable and legible in static/reduced-motion modes; no strobing or text occlusion occurs; installed Pixel 3 XL review covers storm/night, compact/large font, RTL and reduced motion.
+**Evidence:** At planning, assign the next chronological cycle ID and use its `.codex/test-artifacts/<cycle-id>/`, `.codex/history/<cycle-id>.md`, and `.codex/history/plans/<cycle-id>.md`.
+
+### ATM.7 — Effects policy, lifecycle and performance gate — PLANNED
+
+**Objective/scope:** Add a single effects/quality policy, lifecycle-aware animation coordination, static fallback, and bounded performance review. Environment work is gated on this slice.
+**Depends on:** ATM.6.
+**Exit:** `NONE`, `SUBTLE`, `FULL`, reduced motion and background/offscreen behavior meet their stated contracts; Pixel 3 XL frame/gesture/lifecycle evidence is recorded; all existing P.2 interactions and the three visual hard rules remain accepted. If performance evidence cannot be captured, record the blocker and keep ENV work ineligible.
+**Evidence:** At planning, assign the next chronological cycle ID and use its `.codex/test-artifacts/<cycle-id>/`, `.codex/history/<cycle-id>.md`, and `.codex/history/plans/<cycle-id>.md`.
+
+## ENV — Interchangeable environment packs
+
+### ENV.1 — Environment contract and Neutral baseline — PLANNED
+
+**Objective/scope:** Define immutable environment metadata and migrate existing scenic geometry behind a Neutral pack. No persistent selector or new screen.
+**Depends on:** ATM.7.
+**Exit:** Neutral appearance retains accepted baseline; pack selection changes scenery only and cannot change forecast values, selected time, accessibility labels, gestures, or timeline physics; paired installed Pixel 3 XL evidence covers compact/large font, RTL and reduced motion.
+**Evidence:** At planning, assign the next chronological cycle ID and use its `.codex/test-artifacts/<cycle-id>/`, `.codex/history/<cycle-id>.md`, and `.codex/history/plans/<cycle-id>.md`.
+
+### ENV.2 — Alpine environment pack — PLANNED
+
+**Objective/scope:** Add Alpine scenic geometry and palette using the shared atmosphere renderer. Snow visuals require an actual typed snow state or labeled preview.
+**Depends on:** ENV.1.
+**Exit:** Alpine clear/rain/night states and any permitted snow preview are coherent; forecast facts and all interaction/accessibility behavior match Neutral; paired installed Pixel 3 XL states cover compact/large font, RTL and reduced motion.
+**Evidence:** At planning, assign the next chronological cycle ID and use its `.codex/test-artifacts/<cycle-id>/`, `.codex/history/<cycle-id>.md`, and `.codex/history/plans/<cycle-id>.md`.
+
+### ENV.3 — Coastal environment pack — PLANNED
+
+**Objective/scope:** Add Coastal scenic geometry and palette using the shared atmosphere renderer. No location lookup or geographic truth claims.
+**Depends on:** ENV.1.
+**Exit:** Coastal clear/rain/storm/night states are distinct while forecast facts, timeline, gestures, and accessibility remain unchanged; installed Pixel 3 XL states cover compact/large font, RTL and reduced motion and the render budget is accepted on device.
+**Evidence:** At planning, assign the next chronological cycle ID and use its `.codex/test-artifacts/<cycle-id>/`, `.codex/history/<cycle-id>.md`, and `.codex/history/plans/<cycle-id>.md`.
+
+### ENV.4 — Cross-pack transitions and acceptance matrix — PLANNED
+
+**Objective/scope:** Validate and implement only the bounded transition/fallback needed to move among Neutral, Alpine and Coastal, plus the shared acceptance matrix.
+**Depends on:** ENV.2 and ENV.3.
+**Exit:** Pack transitions never change selected time, forecast facts, provider state, gestures, or accessibility; reduced-motion/static and lower-quality paths work; installed Pixel 3 XL captures cover compact/large font, RTL, daily/hourly and representative weather states.
+**Evidence:** At planning, assign the next chronological cycle ID and use its `.codex/test-artifacts/<cycle-id>/`, `.codex/history/<cycle-id>.md`, and `.codex/history/plans/<cycle-id>.md`.
+
+### ENV.5 — Additional environment packs — DEFERRED
+
+**Objective/scope:** Consider Forest, Plains, Desert, or Urban only after Neutral/Alpine/Coastal acceptance. No commitment to implement all candidates.
+**Depends on:** ENV.4.
+**Exit after re-entry:** Owner-approved asset/reference plan and one specifically selected bounded pack slice with truthful weather mapping and the shared acceptance matrix.
+**Evidence:** No evidence claimed while deferred; re-entry cycle receives its chronological `.codex/test-artifacts/<cycle-id>/`, `.codex/history/<cycle-id>.md`, and `.codex/history/plans/<cycle-id>.md` paths when authorized.
+**Re-entry condition:** Explicit owner selection and approval of one additional pack after ENV.4 is complete.

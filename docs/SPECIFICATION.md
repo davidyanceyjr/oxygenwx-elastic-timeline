@@ -2,6 +2,8 @@
 
 Experience-level principles and acceptance criteria are maintained in the adopted companion [`OXYGEN_EXPERIENCE_SPECIFICATION.md`](OXYGEN_EXPERIENCE_SPECIFICATION.md). This document remains controlling for prototype scope and hard semantic/architecture constraints; any conflict requires an explicit bounded owner decision recorded here before implementation.
 
+The adopted [`OXYGEN_ATMOSPHERE_ENGINE_SPECIFICATION.md`](OXYGEN_ATMOSPHERE_ENGINE_SPECIFICATION.md) is a subordinate architecture proposal for possible atmospheric and environment work in this standalone prototype. It cannot override this document or the experience contract, authorize application changes by itself, or authorize production oxygenWX integration. Its adoption boundary and current-tree review are recorded in `.codex/history/023-atmosphere-spec-intake.md`.
+
 Status: one bounded standalone UI experiment. Authority intentionally limited to this sibling project.
 Reference: oxygenWX commit `ec3f93976f037fbb206089d8b9d9fa1f6f93918b`.
 

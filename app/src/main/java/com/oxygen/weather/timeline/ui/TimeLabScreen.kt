@@ -41,6 +41,7 @@ import androidx.compose.ui.unit.sp
 import com.oxygen.weather.timeline.data.SampleForecast
 import com.oxygen.weather.timeline.presentation.ElasticTimeAxis
 import com.oxygen.weather.timeline.presentation.ForecastProjection
+import com.oxygen.weather.timeline.presentation.atmosphere.AtmosphereInput
 import java.time.Duration
 import java.time.LocalDateTime
 import kotlin.math.abs
@@ -93,7 +94,13 @@ fun TimeLabScreen() {
 
     BoxWithConstraints(Modifier.fillMaxSize().background(Color(0xFF11263D))) {
         val compactLandscape = maxHeight < 400.dp
-        AtmosphericScene(frame = view.sky, localHour = hourOfDay)
+        AtmosphericScene(
+            input = AtmosphereInput(
+                sky = view.sky,
+                precisionMode = view.isPrecision,
+                localHour = hourOfDay,
+            )
+        )
 
         Column(
             Modifier.fillMaxWidth().align(Alignment.TopCenter).statusBarsPadding().padding(horizontal = 25.dp),

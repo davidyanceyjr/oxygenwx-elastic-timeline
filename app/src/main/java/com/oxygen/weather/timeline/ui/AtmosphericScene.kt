@@ -3,6 +3,7 @@ package com.oxygen.weather.timeline.ui
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.geometry.Size
@@ -11,12 +12,29 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Path
 import androidx.compose.ui.graphics.drawscope.DrawScope
 import androidx.compose.ui.graphics.lerp
+import com.oxygen.weather.timeline.presentation.atmosphere.AtmosphereInput
+import com.oxygen.weather.timeline.presentation.atmosphere.SceneVisualState
+import com.oxygen.weather.timeline.presentation.atmosphere.SceneVisualStateMapper
 import com.oxygen.weather.timeline.presentation.SkyFrame
 import kotlin.math.PI
 import kotlin.math.cos
 import kotlin.math.sin
 
 /** Decorative-only rendering. Legible forecast facts are supplied by UI text above this layer. */
+@Composable
+fun AtmosphericScene(input: AtmosphereInput, modifier: Modifier = Modifier) {
+    val state = remember(input) { SceneVisualStateMapper.map(input) }
+    AtmosphericScene(state = state, input = input, modifier = modifier)
+}
+
+/** Typed adapter seam; the current renderer keeps receiving the original forecast values. */
+@Composable
+@Suppress("UNUSED_PARAMETER")
+fun AtmosphericScene(state: SceneVisualState, input: AtmosphereInput, modifier: Modifier = Modifier) {
+    AtmosphericScene(frame = input.sky, localHour = input.localHour, modifier = modifier)
+}
+
+/** Compatibility renderer retained unchanged for baseline parity. */
 @Composable
 fun AtmosphericScene(frame: SkyFrame, localHour: Double, modifier: Modifier = Modifier) {
     Canvas(modifier.fillMaxSize()) {
