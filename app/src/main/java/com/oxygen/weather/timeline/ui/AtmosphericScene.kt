@@ -30,7 +30,13 @@ fun AtmosphericScene(input: AtmosphereInput, modifier: Modifier = Modifier) {
 /** Typed adapter seam; the current renderer keeps receiving the original forecast values. */
 @Composable
 fun AtmosphericScene(state: SceneVisualState, input: AtmosphereInput, modifier: Modifier = Modifier) {
-    AtmosphericScene(state = state, frame = input.sky, localHour = input.localHour, modifier = modifier)
+    AtmosphericScene(
+        state = state,
+        frame = input.sky,
+        localHour = input.localHour,
+        selectedHour = input.selectedHour,
+        modifier = modifier,
+    )
 }
 
 /** Compatibility entry point for callers that still provide the original forecast frame. */
@@ -40,7 +46,7 @@ fun AtmosphericScene(frame: SkyFrame, localHour: Double, modifier: Modifier = Mo
         AtmosphereInput(sky = frame, precisionMode = false, localHour = localHour)
     }
     val state = remember(input) { SceneVisualStateMapper.map(input) }
-    AtmosphericScene(state = state, frame = frame, localHour = localHour, modifier = modifier)
+    AtmosphericScene(state = state, frame = frame, localHour = localHour, selectedHour = 0.0, modifier = modifier)
 }
 
 @Composable
@@ -48,14 +54,14 @@ private fun AtmosphericScene(
     state: SceneVisualState,
     frame: SkyFrame,
     localHour: Double,
+    selectedHour: Double,
     modifier: Modifier,
 ) {
     Canvas(modifier.fillMaxSize()) {
-        val cloudy = (frame.cloudPercent / 100.0).toFloat().coerceIn(0f, 1f)
         drawSkyPalette(state)
         drawDiffuseLight(state)
         drawIllustrativeCelestial(state, localHour)
-        drawCloudBands(cloudy, localHour)
+        drawCloudFields(state.cloudFraction?.toFloat()?.coerceIn(0f, 1f) ?: 0f, state.daylight, selectedHour)
         drawLandscape()
         drawRainHints((frame.rainChancePercent / 100.0).toFloat())
         drawRect(
@@ -142,20 +148,98 @@ private fun DrawScope.drawIllustrativeCelestial(state: SceneVisualState, localHo
     }
 }
 
-private fun DrawScope.drawCloudBands(cloudiness: Float, hour: Double) {
-    if (cloudiness <= .04f) return
-    val w = size.width
-    val h = size.height
-    val drift = (hour * 2.3).toFloat()
-    repeat(7) { i ->
-        val x = ((i * .195f + .06f) * w + drift * (i % 3 + 1)) % (w + w * .5f) - w * .25f
-        val y = h * (.13f + (i % 4) * .09f)
-        val radius = w * (.16f + (i % 3) * .028f)
-        val alpha = (cloudiness * (.36f + (i % 3) * .08f)).coerceIn(0f, .75f)
-        val color = lerp(Color(0xFFD9E8F2), Color(0xFF718DA7), cloudiness * .6f).copy(alpha=alpha)
-        drawOval(color, topLeft = Offset(x - radius, y), size = Size(radius * 2.1f, radius * .58f))
-        drawOval(color, topLeft = Offset(x - radius * .55f, y - radius * .13f),
-            size = Size(radius * 1.02f, radius * .60f))
+private data class CloudShape(
+    val x: Float,
+    val y: Float,
+    val width: Float,
+    val height: Float,
+    val fullness: Float,
+)
+
+private val farClouds = listOf(
+    CloudShape(.02f, .150f, .24f, .038f, .42f),
+    CloudShape(.76f, .160f, .23f, .040f, .48f),
+    CloudShape(1.12f, .148f, .25f, .039f, .46f),
+)
+
+private val midClouds = listOf(
+    CloudShape(.10f, .175f, .25f, .048f, .56f),
+    CloudShape(.79f, .180f, .26f, .051f, .62f),
+    CloudShape(1.22f, .168f, .24f, .047f, .60f),
+)
+
+/** Stable decorative groups. Their phase is a pure function of selected fixture time. */
+private fun DrawScope.drawCloudFields(cloudiness: Float, daylight: Double?, selectedHour: Double) {
+    if (cloudiness <= 0f) return
+    val daylight01 = daylight?.toFloat()?.coerceIn(0f, 1f) ?: 0f
+    val farColor = lerp(Color(0xFF91A7C1), Color(0xFFE2EDF4), daylight01)
+    val midColor = lerp(Color(0xFF7189A5), Color(0xFFD3E1EB), daylight01)
+    drawCloudGroup(
+        shapes = farClouds,
+        cloudiness = cloudiness,
+        selectedHour = selectedHour,
+        rateDpPerHour = .42f,
+        color = farColor,
+        alpha = .34f,
+        detail = .58f,
+    )
+    drawCloudGroup(
+        shapes = midClouds,
+        cloudiness = cloudiness,
+        selectedHour = selectedHour,
+        rateDpPerHour = .88f,
+        color = midColor,
+        alpha = .50f,
+        detail = .90f,
+    )
+}
+
+private fun DrawScope.drawCloudGroup(
+    shapes: List<CloudShape>,
+    cloudiness: Float,
+    selectedHour: Double,
+    rateDpPerHour: Float,
+    color: Color,
+    alpha: Float,
+    detail: Float,
+) {
+    // 1.5 viewport widths form a repeating field; drawing adjacent copies makes
+    // modulo wrapping visually continuous at both horizontal edges.
+    val period = size.width * 1.5f
+    if (period <= 0f) return
+    val hours = selectedHour.takeIf(Double::isFinite) ?: 0.0
+    val driftPx = (hours * rateDpPerHour * density).rem(period.toDouble()).toFloat()
+    val offset = if (driftPx < 0f) driftPx + period else driftPx
+    shapes.forEach { shape ->
+        val cloudWidth = size.width * shape.width
+        val cloudHeight = size.height * shape.height
+        val baseX = shape.x * size.width - offset
+        for (copy in -1..1) {
+            val x = baseX + copy * period
+            val y = shape.y * size.height
+            val shapeAlpha = (cloudiness * alpha * shape.fullness).coerceIn(0f, .62f)
+            val tint = color.copy(alpha = shapeAlpha)
+            drawOval(
+                color = tint,
+                topLeft = Offset(x, y + cloudHeight * .36f),
+                size = Size(cloudWidth, cloudHeight * .62f),
+            )
+            drawCircle(
+                color = tint.copy(alpha = shapeAlpha * detail),
+                radius = cloudHeight * .45f,
+                center = Offset(x + cloudWidth * .30f, y + cloudHeight * .48f),
+            )
+            drawCircle(
+                color = tint.copy(alpha = shapeAlpha * detail),
+                radius = cloudHeight * .58f,
+                center = Offset(x + cloudWidth * .53f, y + cloudHeight * .34f),
+            )
+            drawCircle(
+                color = tint.copy(alpha = shapeAlpha * detail),
+                radius = cloudHeight * .39f,
+                center = Offset(x + cloudWidth * .77f, y + cloudHeight * .49f),
+            )
+        }
     }
 }
 

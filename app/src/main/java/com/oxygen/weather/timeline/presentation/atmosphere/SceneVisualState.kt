@@ -13,6 +13,8 @@ data class AtmosphereInput(
     val environment: EnvironmentId = EnvironmentId.NEUTRAL,
     val effects: EffectsLevel = EffectsLevel.NONE,
     val reducedMotion: Boolean = false,
+    /** Exact selected fixture-hour offset; decorative phase context only. */
+    val selectedHour: Double = 0.0,
 )
 
 enum class EnvironmentId { NEUTRAL }

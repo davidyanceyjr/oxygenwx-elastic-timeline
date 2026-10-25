@@ -99,6 +99,7 @@ fun TimeLabScreen() {
                 sky = view.sky,
                 precisionMode = view.isPrecision,
                 localHour = hourOfDay,
+                selectedHour = selectedHour,
             )
         )
 

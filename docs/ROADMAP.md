@@ -212,19 +212,19 @@ Every visual enhancement must preserve timeline responsiveness, gesture predicta
 **Exit:** Clear/cloudy/day/dusk/night transitions are continuous across fixture samples; essential text remains readable; installed Pixel 3 XL checks cover daily/hourly, bright/dark, portrait/landscape, default/large font, RTL and reduced-motion states; timeline responsiveness and gesture ownership remain accepted.
 **Evidence:** Cycle 025 (`025-atm2-sky-light-celestial`): `.codex/test-artifacts/025-atm2-sky-light-celestial/README.md`; closeout: `.codex/history/025-atm2-sky-light-celestial.md`; archived plan and approved concept: `.codex/history/plans/025-atm2-sky-light-celestial.md` and `.codex/history/plans/025-atm2-sky-light-celestial-concept.png`.
 
-### ATM.3 — Deterministic multi-depth cloud renderer — NEXT
+### ATM.3 — Deterministic multi-depth cloud renderer — BLOCKED
 
 **Objective/scope:** Add stable far/mid cloud groups driven by supported cloud-cover inputs and a controlled effect phase. No precipitation or terrain redesign.
 **Depends on:** ATM.2.
 **Exit:** Cloud visuals change smoothly without reseeding or popping at sample boundaries; the static path is legible; installed Pixel 3 XL review covers clear/overcast and daily/hourly states, compact/large font, RTL and reduced motion, and confirms the timeline remains responsive and forecast facts remain readable.
-**Evidence:** At planning, assign the next chronological cycle ID and use its `.codex/test-artifacts/<cycle-id>/`, `.codex/history/<cycle-id>.md`, and `.codex/history/plans/<cycle-id>.md`.
+**Evidence:** Cycles `026-atm3-cloud-renderer` through `030-atm3-residual-evidence` are recorded in `.codex/history/`; installed evidence is in `.codex/test-artifacts/026-atm3-cloud-renderer/` through `.codex/test-artifacts/030-atm3-residual-evidence/`. Cycle 030 confirms that the actual largest font preset is 1.3 and clips forecast content, captures a zero-motion positive-cloud idle pair and a 7-to-8 PM forecast update, and verifies device restoration. RTL pseudo-locale evidence still shows app content LTR, release still hides the exact selected hour, and distinct cloud phase movement was not visually confirmed between adjacent positive-cloud hours. ATM.3 remains unaccepted and blocked pending bounded corrective work for these findings.
 
-### ATM.4 — Bounded rain and snow depiction — PLANNED
+### ATM.4 — Bounded rain and snow depiction — BLOCKED
 
 **Objective/scope:** Add restrained precipitation artwork driven by typed condition and depiction metadata. Snow is enabled only in an explicitly labeled synthetic preview or a future provider-neutral snow type; never infer it from temperature. Do not map probability to particle rate.
 **Depends on:** ATM.3.
 **Exit:** Rain and any snow preview are deterministic and bounded; probability alone does not select particle intensity; static/reduced-motion depictions retain truthful condition text; installed Pixel 3 XL rain and labeled-preview states cover compact/large font, RTL and reduced motion, with timeline responsiveness and readability recorded.
-**Evidence:** At planning, assign the next chronological cycle ID and use its `.codex/test-artifacts/<cycle-id>/`, `.codex/history/<cycle-id>.md`, and `.codex/history/plans/<cycle-id>.md`.
+**Evidence:** ATM.4 is blocked by the unresolved ATM.3 acceptance findings documented in `.codex/history/030-atm3-residual-evidence.md` and `.codex/test-artifacts/030-atm3-residual-evidence/README.md`. Replan after ATM.3 is accepted.
 
 ### ATM.5 — Fog and wind effect primitives — PLANNED
 
