@@ -212,12 +212,19 @@ Every visual enhancement must preserve timeline responsiveness, gesture predicta
 **Exit:** Clear/cloudy/day/dusk/night transitions are continuous across fixture samples; essential text remains readable; installed Pixel 3 XL checks cover daily/hourly, bright/dark, portrait/landscape, default/large font, RTL and reduced-motion states; timeline responsiveness and gesture ownership remain accepted.
 **Evidence:** Cycle 025 (`025-atm2-sky-light-celestial`): `.codex/test-artifacts/025-atm2-sky-light-celestial/README.md`; closeout: `.codex/history/025-atm2-sky-light-celestial.md`; archived plan and approved concept: `.codex/history/plans/025-atm2-sky-light-celestial.md` and `.codex/history/plans/025-atm2-sky-light-celestial-concept.png`.
 
+### ATM.3a — Consolidate ATM.3 evidence and dependency-order corrective work — DONE
+
+**Objective/scope:** Reuse completed ATM.3 installed evidence, capture the missing 7:30 PM fractional sample and one corrected 8 PM sample after discovering a cycle-030 artifact mismatch, then map source and acceptance dependencies. Evidence and planning only; no application changes.
+**Depends on:** None. This bounded audit can proceed while ATM.3 is blocked.
+**Exit:** Prior evidence is cited by exact path; the two targeted Pixel 3 XL captures disposition the missing fractional and 8 PM states with limitations; device settings are restored; and a source/acceptance dependency map recommends the first corrective slice. ATM.3 remains BLOCKED until its complete exit is met.
+**Evidence:** Cycle 031 (`031-atm3-blocker-confirmation`): `.codex/test-artifacts/031-atm3-blocker-confirmation/README.md`; closeout: `.codex/history/031-atm3-blocker-confirmation.md`; archived plan: `.codex/history/plans/031-atm3-blocker-confirmation.md`.
+
 ### ATM.3 — Deterministic multi-depth cloud renderer — BLOCKED
 
 **Objective/scope:** Add stable far/mid cloud groups driven by supported cloud-cover inputs and a controlled effect phase. No precipitation or terrain redesign.
 **Depends on:** ATM.2.
 **Exit:** Cloud visuals change smoothly without reseeding or popping at sample boundaries; the static path is legible; installed Pixel 3 XL review covers clear/overcast and daily/hourly states, compact/large font, RTL and reduced motion, and confirms the timeline remains responsive and forecast facts remain readable.
-**Evidence:** Cycles `026-atm3-cloud-renderer` through `030-atm3-residual-evidence` are recorded in `.codex/history/`; installed evidence is in `.codex/test-artifacts/026-atm3-cloud-renderer/` through `.codex/test-artifacts/030-atm3-residual-evidence/`. Cycle 030 confirms that the actual largest font preset is 1.3 and clips forecast content, captures a zero-motion positive-cloud idle pair and a 7-to-8 PM forecast update, and verifies device restoration. RTL pseudo-locale evidence still shows app content LTR, release still hides the exact selected hour, and distinct cloud phase movement was not visually confirmed between adjacent positive-cloud hours. ATM.3 remains unaccepted and blocked pending bounded corrective work for these findings.
+**Evidence:** Cycles `026-atm3-cloud-renderer` through `031-atm3-blocker-confirmation` are recorded in `.codex/history/`; installed evidence is in `.codex/test-artifacts/026-atm3-cloud-renderer/` through `.codex/test-artifacts/031-atm3-blocker-confirmation/`. Cycle 030 confirms the largest font preset is 1.3 and records precision-state clipping plus a zero-motion 7 PM idle pair. Its README claims 8 PM evidence, but the named hierarchies contain DAY OVERVIEW and 7 PM states; cycle 031 adds a corrected 8 PM capture and a fractional sample. Verified RTL still renders LTR, release hides the exact selected time and source rounds the selected value, and distinct cloud phase movement remains visually unconfirmed. TalkBack PASS is owner-reported. ATM.3 remains unaccepted and blocked pending corrective work for these findings.
 
 ### ATM.4 — Bounded rain and snow depiction — BLOCKED
 
