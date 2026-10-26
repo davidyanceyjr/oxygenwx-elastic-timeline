@@ -1,6 +1,8 @@
 package com.oxygen.weather.timeline.presentation.atmosphere
 
 import com.oxygen.weather.timeline.data.SkyCondition
+import com.oxygen.weather.timeline.data.PrecipitationAmount
+import com.oxygen.weather.timeline.data.PrecipitationType
 import com.oxygen.weather.timeline.presentation.SkyFrame
 import kotlin.math.PI
 import kotlin.math.sin
@@ -25,7 +27,7 @@ enum class EffectsLevel { NONE, SUBTLE, FULL }
 
 enum class PrecipitationKind { NONE, RAIN, SYNTHETIC_SNOW, UNKNOWN }
 
-enum class DepictionKind { NONE, ILLUSTRATIVE_RAIN, SYNTHETIC_SNOW_PREVIEW, STORM, UNKNOWN }
+enum class DepictionKind { NONE, ILLUSTRATIVE_RAIN, ILLUSTRATIVE_SNOW, SYNTHETIC_SNOW_PREVIEW, STORM, UNKNOWN }
 
 enum class AtmospherePreview { NONE, SYNTHETIC_SNOW }
 
@@ -34,6 +36,10 @@ data class SceneVisualState(
     val condition: SkyCondition,
     val precipitation: PrecipitationKind,
     val depiction: DepictionKind,
+    /** Forecast chance remains separate from precipitation identity and amount. */
+    val precipitationChancePercent: Double,
+    /** Explicit interval amount when supplied; null remains unknown. */
+    val precipitationAmount: PrecipitationAmount?,
     /** Cloud cover in the inclusive range [0, 1], or null when the source is invalid. */
     val cloudFraction: Double?,
     /** Existing illustrative daylight cue in the inclusive range [0, 1], or null when invalid. */
@@ -46,11 +52,13 @@ data class SceneVisualState(
 /** Pure projection of typed forecast inputs into scenic state. */
 object SceneVisualStateMapper {
     fun map(input: AtmosphereInput): SceneVisualState {
-        val (forecastPrecipitation, forecastDepiction) = when (input.sky.condition) {
-            SkyCondition.CLEAR, SkyCondition.PARTLY_CLOUDY, SkyCondition.CLOUDY ->
-                PrecipitationKind.NONE to DepictionKind.NONE
-            SkyCondition.RAIN -> PrecipitationKind.RAIN to DepictionKind.ILLUSTRATIVE_RAIN
-            SkyCondition.STORM -> PrecipitationKind.UNKNOWN to DepictionKind.STORM
+        val (forecastPrecipitation, forecastDepiction) = when (input.sky.precipitationType) {
+            PrecipitationType.NONE -> when (input.sky.condition) {
+                SkyCondition.STORM -> PrecipitationKind.UNKNOWN to DepictionKind.STORM
+                else -> PrecipitationKind.NONE to DepictionKind.NONE
+            }
+            PrecipitationType.RAIN -> PrecipitationKind.RAIN to DepictionKind.ILLUSTRATIVE_RAIN
+            PrecipitationType.SNOW -> PrecipitationKind.SYNTHETIC_SNOW to DepictionKind.ILLUSTRATIVE_SNOW
         }
         val (precipitation, depiction) = when (input.preview) {
             AtmospherePreview.NONE -> forecastPrecipitation to forecastDepiction
@@ -69,6 +77,9 @@ object SceneVisualStateMapper {
             condition = input.sky.condition,
             precipitation = precipitation,
             depiction = depiction,
+            precipitationChancePercent = input.sky.precipitationChancePercent
+                .takeIf(Double::isFinite)?.coerceIn(0.0, 100.0) ?: 0.0,
+            precipitationAmount = input.sky.precipitationAmount,
             cloudFraction = cloudFraction,
             daylight = daylight,
             precisionMode = input.precisionMode,

@@ -17,6 +17,7 @@ import com.oxygen.weather.timeline.presentation.atmosphere.DepictionKind
 import com.oxygen.weather.timeline.presentation.atmosphere.SceneVisualState
 import com.oxygen.weather.timeline.presentation.atmosphere.SceneVisualStateMapper
 import com.oxygen.weather.timeline.presentation.SkyFrame
+import com.oxygen.weather.timeline.data.PrecipitationAmount
 import kotlin.math.PI
 import kotlin.math.cos
 import kotlin.math.sin
@@ -62,11 +63,6 @@ private fun AtmosphericScene(
         drawIllustrativeCelestial(state, localHour)
         drawCloudFields(state.cloudFraction?.toFloat()?.coerceIn(0f, 1f) ?: 0f, state.daylight, selectedHour)
         drawLandscape()
-        when (state.depiction) {
-            DepictionKind.ILLUSTRATIVE_RAIN -> drawRain()
-            DepictionKind.SYNTHETIC_SNOW_PREVIEW -> drawSnow()
-            else -> Unit
-        }
         drawRect(
             brush = Brush.verticalGradient(
                 0f to Color.Transparent,
@@ -74,6 +70,16 @@ private fun AtmosphericScene(
                 1f to Color(0xDD081626),
             )
         )
+        // Keep precipitation above the atmospheric wash, while leaving text and the tape clear.
+        when (state.depiction) {
+            DepictionKind.ILLUSTRATIVE_RAIN -> drawRain(
+                state.precipitationChancePercent,
+                state.precipitationAmount as? PrecipitationAmount.RainLiquidMm,
+            )
+            DepictionKind.ILLUSTRATIVE_SNOW, DepictionKind.SYNTHETIC_SNOW_PREVIEW ->
+                drawSnow(state.precipitationChancePercent)
+            else -> Unit
+        }
     }
 }
 
@@ -273,32 +279,63 @@ private fun DrawScope.drawLandscape() {
     drawPath(near, Color(0xFF244A58))
 }
 
-private fun DrawScope.drawRain() {
-    // A fixed, deterministic illustration. Probability never controls its density or intensity.
-    repeat(MAX_PRECIPITATION_PARTICLES) { i ->
-        val x = ((i * 77 + 29) % 347) / 347f * size.width
-        val y = ((i * 107 + 41) % 491) / 491f * size.height * .62f
-        if (inPrecipitationQuietZone(x, y) || inPrecipitationQuietZone(x - 5f, y + 18f)) return@repeat
-        drawLine(Color(0xFFDFEEFF).copy(alpha=.25f), Offset(x,y),
-            Offset(x - 5f, y + 18f), strokeWidth=1.65f)
+private fun DrawScope.drawRain(chancePercent: Double, amount: PrecipitationAmount.RainLiquidMm?) {
+    val coverage = precipitationCoverage(chancePercent)
+    if (coverage <= 0f) return
+    // Chance selects ambient coverage. Only an explicit liquid amount changes illustrative
+    // streak length/weight; missing totals use a stable middle depiction without a data claim.
+    val amountFactor = amount?.value?.div(3.0)?.toFloat()?.coerceIn(0f, 1f) ?: .2f
+    val streakLength = (15f + amountFactor * 38f) * density
+    val stroke = (1.5f + amountFactor * 1.4f) * density
+    val alpha = .4f + amountFactor * .14f
+    val count = (MAX_PRECIPITATION_PARTICLES * coverage).toInt().coerceAtLeast(12)
+    repeat(count) { i ->
+        val xSeed = (i * 73 + i * i * 19 + 31) % 997
+        val ySeed = (i * 193 + i * i * 47 + 17) % 991
+        val x = xSeed / 997f * size.width
+        val y = ySeed / 991f * size.height * .82f
+        val endX = x - streakLength * .30f
+        val endY = y + streakLength
+        if (inPrecipitationQuietZone(x, y) || inPrecipitationQuietZone(endX, endY)) return@repeat
+        drawLine(
+            Color(0xFFE4F3FF).copy(alpha = alpha), Offset(x, y), Offset(endX, endY),
+            strokeWidth = stroke,
+        )
     }
 }
 
-private fun DrawScope.drawSnow() {
-    // Preview-only static flakes with the same bounded deterministic placement as rain.
-    repeat(MAX_PRECIPITATION_PARTICLES) { i ->
-        val x = ((i * 77 + 29) % 347) / 347f * size.width
-        val y = ((i * 107 + 41) % 491) / 491f * size.height * .62f
+private fun DrawScope.drawSnow(chancePercent: Double) {
+    val coverage = precipitationCoverage(chancePercent)
+    val count = (MAX_SNOW_PARTICLES * coverage).toInt().coerceAtLeast(28)
+    repeat(count) { i ->
+        val xSeed = (i * 83 + i * i * 29 + 19) % 991
+        val ySeed = (i * 127 + i * i * 43 + 53) % 997
+        val x = xSeed / 991f * size.width
+        val y = ySeed / 997f * size.height * .82f
         if (inPrecipitationQuietZone(x, y)) return@repeat
-        drawCircle(Color(0xFFEAF5FF).copy(alpha = .78f), radius = 2.2f, center = Offset(x, y))
+        val radius = (2.3f + (i % 3) * .45f) * density
+        drawCircle(Color(0xFFF0F7FF).copy(alpha = .82f), radius, Offset(x, y))
     }
 }
 
 private fun DrawScope.inPrecipitationQuietZone(x: Float, y: Float): Boolean {
-    val centralForecast = y in (size.height * .22f)..(size.height * .65f) &&
+    val headerText = y <= size.height * .21f
+    val centralForecastText = y in (size.height * .28f)..(size.height * .68f) &&
         x in (size.width * .14f)..(size.width * .86f)
-    val lowerFactsAndTimeline = y >= size.height * .65f
-    return centralForecast || lowerFactsAndTimeline
+    val lowerFactLabels = y in (size.height * .73f)..(size.height * .87f) &&
+        (x < size.width * .34f || x > size.width * .66f)
+    val timeline = y >= size.height * .87f
+    return headerText || centralForecastText || lowerFactLabels || timeline
 }
 
-private const val MAX_PRECIPITATION_PARTICLES = 46
+private fun precipitationCoverage(chancePercent: Double): Float = when {
+    !chancePercent.isFinite() || chancePercent <= 0.0 -> 0f
+    chancePercent <= 20.0 -> .28f
+    chancePercent <= 40.0 -> .44f
+    chancePercent <= 60.0 -> .60f
+    chancePercent <= 80.0 -> .78f
+    else -> .94f
+}
+
+private const val MAX_PRECIPITATION_PARTICLES = 150
+private const val MAX_SNOW_PARTICLES = 180

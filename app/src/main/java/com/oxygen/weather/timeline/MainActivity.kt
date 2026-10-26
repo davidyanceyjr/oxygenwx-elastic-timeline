@@ -19,6 +19,8 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.oxygen.weather.timeline.data.SkyCondition
 import com.oxygen.weather.timeline.data.PrecipitationType
+import com.oxygen.weather.timeline.data.SampleForecast
+import com.oxygen.weather.timeline.presentation.ForecastProjection
 import com.oxygen.weather.timeline.presentation.SkyFrame
 import com.oxygen.weather.timeline.presentation.atmosphere.AtmosphereInput
 import com.oxygen.weather.timeline.presentation.atmosphere.AtmospherePreview
@@ -31,15 +33,54 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         val isDebuggable = applicationInfo.flags and ApplicationInfo.FLAG_DEBUGGABLE != 0
         val showSnowPreview = isDebuggable && intent.getBooleanExtra(EXTRA_PREVIEW_SNOW, false)
+        val previewHour = if (isDebuggable && intent.hasExtra(EXTRA_PREVIEW_HOUR)) {
+            intent.getIntExtra(EXTRA_PREVIEW_HOUR, -1).takeIf { it in SampleForecast.hours.indices }
+        } else null
         setContent {
             MaterialTheme {
-                if (showSnowPreview) SyntheticSnowPreview() else TimeLabScreen()
+                when {
+                    showSnowPreview -> SyntheticSnowPreview()
+                    previewHour != null -> FixturePrecipitationPreview(previewHour)
+                    else -> TimeLabScreen()
+                }
             }
         }
     }
 }
 
 private const val EXTRA_PREVIEW_SNOW = "preview_snow"
+private const val EXTRA_PREVIEW_HOUR = "preview_hour"
+
+@androidx.compose.runtime.Composable
+private fun FixturePrecipitationPreview(hourOffset: Int) {
+    val view = ForecastProjection.fromHourOffset(hourOffset.toDouble(), precision = true)
+    val amountLabel = when (val amount = view.sky.precipitationAmount) {
+        is com.oxygen.weather.timeline.data.PrecipitationAmount.RainLiquidMm -> " · ${amount.value} MM"
+        is com.oxygen.weather.timeline.data.PrecipitationAmount.SnowDepthCm -> " · ${amount.value} CM SNOW"
+        null -> " · AMOUNT UNKNOWN"
+    }
+    val input = AtmosphereInput(
+        sky = view.sky,
+        precisionMode = true,
+        localHour = hourOffset % 24.0,
+        selectedHour = hourOffset.toDouble(),
+    )
+    Box(Modifier.fillMaxSize()) {
+        AtmosphericScene(input = input)
+        Text(
+            text = "ILLUSTRATIVE ${view.conditionsLabel.uppercase()} · ${view.precipitationPercent}% CHANCE$amountLabel",
+            modifier = Modifier.align(Alignment.BottomCenter)
+                .padding(horizontal = 16.dp, vertical = 32.dp)
+                .background(Color(0xDD102237))
+                .padding(horizontal = 18.dp, vertical = 12.dp),
+            color = Color.White,
+            fontSize = 12.sp,
+            fontWeight = FontWeight.SemiBold,
+            letterSpacing = .5.sp,
+            textAlign = TextAlign.Center,
+        )
+    }
+}
 
 @androidx.compose.runtime.Composable
 private fun SyntheticSnowPreview() {
