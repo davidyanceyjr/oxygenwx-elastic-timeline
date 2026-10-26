@@ -13,6 +13,7 @@ import androidx.compose.ui.graphics.Path
 import androidx.compose.ui.graphics.drawscope.DrawScope
 import androidx.compose.ui.graphics.lerp
 import com.oxygen.weather.timeline.presentation.atmosphere.AtmosphereInput
+import com.oxygen.weather.timeline.presentation.atmosphere.DepictionKind
 import com.oxygen.weather.timeline.presentation.atmosphere.SceneVisualState
 import com.oxygen.weather.timeline.presentation.atmosphere.SceneVisualStateMapper
 import com.oxygen.weather.timeline.presentation.SkyFrame
@@ -32,7 +33,6 @@ fun AtmosphericScene(input: AtmosphereInput, modifier: Modifier = Modifier) {
 fun AtmosphericScene(state: SceneVisualState, input: AtmosphereInput, modifier: Modifier = Modifier) {
     AtmosphericScene(
         state = state,
-        frame = input.sky,
         localHour = input.localHour,
         selectedHour = input.selectedHour,
         modifier = modifier,
@@ -46,13 +46,12 @@ fun AtmosphericScene(frame: SkyFrame, localHour: Double, modifier: Modifier = Mo
         AtmosphereInput(sky = frame, precisionMode = false, localHour = localHour)
     }
     val state = remember(input) { SceneVisualStateMapper.map(input) }
-    AtmosphericScene(state = state, frame = frame, localHour = localHour, selectedHour = 0.0, modifier = modifier)
+    AtmosphericScene(state = state, localHour = localHour, selectedHour = 0.0, modifier = modifier)
 }
 
 @Composable
 private fun AtmosphericScene(
     state: SceneVisualState,
-    frame: SkyFrame,
     localHour: Double,
     selectedHour: Double,
     modifier: Modifier,
@@ -63,7 +62,11 @@ private fun AtmosphericScene(
         drawIllustrativeCelestial(state, localHour)
         drawCloudFields(state.cloudFraction?.toFloat()?.coerceIn(0f, 1f) ?: 0f, state.daylight, selectedHour)
         drawLandscape()
-        drawRainHints((frame.rainChancePercent / 100.0).toFloat())
+        when (state.depiction) {
+            DepictionKind.ILLUSTRATIVE_RAIN -> drawRain()
+            DepictionKind.SYNTHETIC_SNOW_PREVIEW -> drawSnow()
+            else -> Unit
+        }
         drawRect(
             brush = Brush.verticalGradient(
                 0f to Color.Transparent,
@@ -270,14 +273,32 @@ private fun DrawScope.drawLandscape() {
     drawPath(near, Color(0xFF244A58))
 }
 
-private fun DrawScope.drawRainHints(rainChance: Float) {
-    // Indicative texture only; probability is not a physical rain-rate measurement.
-    val alpha = ((rainChance - .35f) * 1.25f).coerceIn(0f, .52f)
-    if (alpha <= 0f) return
-    repeat(46) { i ->
+private fun DrawScope.drawRain() {
+    // A fixed, deterministic illustration. Probability never controls its density or intensity.
+    repeat(MAX_PRECIPITATION_PARTICLES) { i ->
         val x = ((i * 77 + 29) % 347) / 347f * size.width
-        val y = ((i * 107 + 41) % 491) / 491f * size.height * .84f
-        drawLine(Color(0xFFDFEEFF).copy(alpha=alpha), Offset(x,y),
+        val y = ((i * 107 + 41) % 491) / 491f * size.height * .62f
+        if (inPrecipitationQuietZone(x, y) || inPrecipitationQuietZone(x - 5f, y + 18f)) return@repeat
+        drawLine(Color(0xFFDFEEFF).copy(alpha=.25f), Offset(x,y),
             Offset(x - 5f, y + 18f), strokeWidth=1.65f)
     }
 }
+
+private fun DrawScope.drawSnow() {
+    // Preview-only static flakes with the same bounded deterministic placement as rain.
+    repeat(MAX_PRECIPITATION_PARTICLES) { i ->
+        val x = ((i * 77 + 29) % 347) / 347f * size.width
+        val y = ((i * 107 + 41) % 491) / 491f * size.height * .62f
+        if (inPrecipitationQuietZone(x, y)) return@repeat
+        drawCircle(Color(0xFFEAF5FF).copy(alpha = .78f), radius = 2.2f, center = Offset(x, y))
+    }
+}
+
+private fun DrawScope.inPrecipitationQuietZone(x: Float, y: Float): Boolean {
+    val centralForecast = y in (size.height * .22f)..(size.height * .65f) &&
+        x in (size.width * .14f)..(size.width * .86f)
+    val lowerFactsAndTimeline = y >= size.height * .65f
+    return centralForecast || lowerFactsAndTimeline
+}
+
+private const val MAX_PRECIPITATION_PARTICLES = 46

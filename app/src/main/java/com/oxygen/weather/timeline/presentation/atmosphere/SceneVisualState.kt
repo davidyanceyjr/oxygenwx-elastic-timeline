@@ -13,6 +13,8 @@ data class AtmosphereInput(
     val environment: EnvironmentId = EnvironmentId.NEUTRAL,
     val effects: EffectsLevel = EffectsLevel.NONE,
     val reducedMotion: Boolean = false,
+    /** Explicit renderer preview only; never inferred from forecast fields. */
+    val preview: AtmospherePreview = AtmospherePreview.NONE,
     /** Exact selected fixture-hour offset; decorative phase context only. */
     val selectedHour: Double = 0.0,
 )
@@ -21,9 +23,11 @@ enum class EnvironmentId { NEUTRAL }
 
 enum class EffectsLevel { NONE, SUBTLE, FULL }
 
-enum class PrecipitationKind { NONE, RAIN, UNKNOWN }
+enum class PrecipitationKind { NONE, RAIN, SYNTHETIC_SNOW, UNKNOWN }
 
-enum class DepictionKind { NONE, ILLUSTRATIVE_RAIN, STORM, UNKNOWN }
+enum class DepictionKind { NONE, ILLUSTRATIVE_RAIN, SYNTHETIC_SNOW_PREVIEW, STORM, UNKNOWN }
+
+enum class AtmospherePreview { NONE, SYNTHETIC_SNOW }
 
 /** Immutable, renderer-independent description of the selected atmosphere. */
 data class SceneVisualState(
@@ -42,12 +46,16 @@ data class SceneVisualState(
 /** Pure projection of typed forecast inputs into scenic state. */
 object SceneVisualStateMapper {
     fun map(input: AtmosphereInput): SceneVisualState {
-        val (precipitation, depiction) = when (input.sky.condition) {
+        val (forecastPrecipitation, forecastDepiction) = when (input.sky.condition) {
             SkyCondition.CLEAR, SkyCondition.PARTLY_CLOUDY, SkyCondition.CLOUDY ->
                 PrecipitationKind.NONE to DepictionKind.NONE
             SkyCondition.RAIN -> PrecipitationKind.RAIN to DepictionKind.ILLUSTRATIVE_RAIN
             SkyCondition.STORM -> PrecipitationKind.UNKNOWN to DepictionKind.STORM
-            else -> PrecipitationKind.UNKNOWN to DepictionKind.UNKNOWN
+        }
+        val (precipitation, depiction) = when (input.preview) {
+            AtmospherePreview.NONE -> forecastPrecipitation to forecastDepiction
+            AtmospherePreview.SYNTHETIC_SNOW ->
+                PrecipitationKind.SYNTHETIC_SNOW to DepictionKind.SYNTHETIC_SNOW_PREVIEW
         }
         val cloudFraction = input.sky.cloudPercent
             .takeIf(Double::isFinite)
