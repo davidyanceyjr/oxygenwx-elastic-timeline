@@ -46,6 +46,7 @@ import com.oxygen.weather.timeline.data.SampleForecast
 import com.oxygen.weather.timeline.presentation.ElasticTimeAxis
 import com.oxygen.weather.timeline.presentation.ForecastProjection
 import com.oxygen.weather.timeline.presentation.atmosphere.AtmosphereInput
+import com.oxygen.weather.timeline.presentation.atmosphere.AtmospherePreview
 import java.time.Duration
 import java.time.LocalDateTime
 import kotlin.math.abs
@@ -53,9 +54,12 @@ import kotlin.math.floor
 
 /** Experimental one-screen UI; sample forecast and independent package ID. */
 @Composable
-fun TimeLabScreen() {
+fun TimeLabScreen(
+    effectPreview: AtmospherePreview = AtmospherePreview.NONE,
+    initialSelectedHour: Double = 36.0,
+) {
     // Absolute hour offset is the sole selection authority. Zoom never rewrites it.
-    var selectedHour by rememberSaveable { mutableDoubleStateOf(36.0) }
+    var selectedHour by rememberSaveable { mutableDoubleStateOf(initialSelectedHour) }
     var precisionMode by rememberSaveable { mutableStateOf(false) }
     var focusDay by rememberSaveable { mutableIntStateOf(1) }
     var forecastBrowserOpen by remember { mutableStateOf(false) }
@@ -105,6 +109,7 @@ fun TimeLabScreen() {
                 precisionMode = view.isPrecision,
                 localHour = hourOfDay,
                 selectedHour = selectedHour,
+                preview = effectPreview,
             )
         )
 
@@ -112,6 +117,16 @@ fun TimeLabScreen() {
             Modifier.fillMaxWidth().align(Alignment.TopCenter).statusBarsPadding().padding(horizontal = 25.dp),
         ) {
             Spacer(Modifier.height(if (compactPresentation) 5.dp else 19.dp))
+            if (effectPreview != AtmospherePreview.NONE) {
+                Text(
+                    text = "ILLUSTRATIVE PREVIEW",
+                    fontSize = 9.sp,
+                    letterSpacing = .7.sp,
+                    fontWeight = FontWeight.SemiBold,
+                    color = Color(0xFFFFE2A7),
+                )
+                Spacer(Modifier.height(6.dp))
+            }
             Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween,
                 verticalAlignment = Alignment.CenterVertically) {
                 Column {

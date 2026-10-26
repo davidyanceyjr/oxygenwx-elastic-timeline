@@ -1,5 +1,7 @@
 package com.oxygen.weather.timeline.presentation.atmosphere
 
+import com.oxygen.weather.timeline.data.PrecipitationAmount
+import com.oxygen.weather.timeline.data.PrecipitationType
 import com.oxygen.weather.timeline.data.SkyCondition
 import com.oxygen.weather.timeline.presentation.SkyFrame
 import org.junit.Assert.assertEquals
@@ -7,6 +9,85 @@ import org.junit.Assert.assertNull
 import org.junit.Test
 
 class SceneVisualStateMapperTest {
+    @Test
+    fun previewProfileMatchesSamplesInterpolatesAndClampsEndpoints() {
+        val expected = listOf(
+            PreviewEffectStrengths(.10, .20),
+            PreviewEffectStrengths(.25, .70),
+            PreviewEffectStrengths(.55, .35),
+            PreviewEffectStrengths(.85, .80),
+            PreviewEffectStrengths(.45, .45),
+            PreviewEffectStrengths(.15, .20),
+        )
+        expected.forEachIndexed { index, strength ->
+            assertEquals(strength, AtmospherePreviewStrengthProfile.at(index * 24.0))
+        }
+        val firstMidpoint = AtmospherePreviewStrengthProfile.at(12.0)
+        assertEquals(.175, firstMidpoint.haze, 1e-12)
+        assertEquals(.45, firstMidpoint.turbulence, 1e-12)
+        val secondMidpoint = AtmospherePreviewStrengthProfile.at(36.0)
+        assertEquals(.40, secondMidpoint.haze, 1e-12)
+        assertEquals(.525, secondMidpoint.turbulence, 1e-12)
+        assertEquals(expected.first(), AtmospherePreviewStrengthProfile.at(-24.0))
+        assertEquals(expected.last(), AtmospherePreviewStrengthProfile.at(144.0))
+    }
+
+    @Test
+    fun previewModesGateIndependentEffectChannelsAndDefaultToOff() {
+        val frame = frame()
+        fun strengths(preview: AtmospherePreview) = SceneVisualStateMapper.map(
+            AtmosphereInput(
+                sky = frame,
+                precisionMode = false,
+                localHour = 12.0,
+                preview = preview,
+                selectedHour = 24.0,
+            )
+        ).previewStrengths
+
+        assertEquals(PreviewEffectStrengths(0.0, 0.0), strengths(AtmospherePreview.NONE))
+        assertEquals(PreviewEffectStrengths(.25, 0.0), strengths(AtmospherePreview.ILLUSTRATIVE_HAZE))
+        assertEquals(PreviewEffectStrengths(0.0, .70), strengths(AtmospherePreview.ILLUSTRATIVE_TURBULENCE))
+        assertEquals(PreviewEffectStrengths(.25, .70), strengths(AtmospherePreview.ILLUSTRATIVE_HAZE_AND_TURBULENCE))
+    }
+
+    @Test
+    fun hazeAndTurbulenceRequireExplicitPreviewSelectionAndPreserveForecastValues() {
+        val frame = frame(condition = SkyCondition.RAIN).copy(
+            precipitationType = PrecipitationType.RAIN,
+            precipitationAmount = PrecipitationAmount.RainLiquidMm(2.5),
+        )
+        assertEquals(5.0, frame.windKph, 0.0)
+        val noPreview = SceneVisualStateMapper.map(
+            AtmosphereInput(sky = frame, precisionMode = false, localHour = 12.0)
+        )
+        assertEquals(AtmospherePreview.NONE, noPreview.preview)
+        assertEquals(PreviewEffectStrengths(0.0, 0.0), noPreview.previewStrengths)
+        assertEquals(DepictionKind.ILLUSTRATIVE_RAIN, noPreview.depiction)
+        assertEquals(PrecipitationAmount.RainLiquidMm(2.5), noPreview.precipitationAmount)
+
+        val previews = listOf(
+            AtmospherePreview.ILLUSTRATIVE_HAZE,
+            AtmospherePreview.ILLUSTRATIVE_TURBULENCE,
+            AtmospherePreview.ILLUSTRATIVE_HAZE_AND_TURBULENCE,
+        )
+        previews.forEach { preview ->
+            val state = SceneVisualStateMapper.map(
+                AtmosphereInput(
+                    sky = frame,
+                    precisionMode = false,
+                    localHour = 12.0,
+                    preview = preview,
+                    selectedHour = 36.0,
+                )
+            )
+            assertEquals(preview, state.preview)
+            assertEquals(PrecipitationKind.RAIN, state.precipitation)
+            assertEquals(DepictionKind.ILLUSTRATIVE_RAIN, state.depiction)
+            assertEquals(PrecipitationAmount.RainLiquidMm(2.5), state.precipitationAmount)
+        }
+    }
+
     @Test
     fun mapsEveryCurrentConditionWithoutCollapsingStormIntoRain() {
         val expected = mapOf(
@@ -77,7 +158,9 @@ class SceneVisualStateMapperTest {
     @Test
     fun mappingLeavesAuthoritativeInputTimeUntouched() {
         val selectedHour = 37.375
-        val input = AtmosphereInput(frame(), precisionMode = true, localHour = selectedHour)
+        val input = AtmosphereInput(
+            frame(), precisionMode = true, localHour = selectedHour, selectedHour = selectedHour,
+        )
         SceneVisualStateMapper.map(input)
         assertEquals(selectedHour, input.localHour, 0.0)
         assertEquals(SkyCondition.CLEAR, input.sky.condition)
@@ -98,5 +181,14 @@ class SceneVisualStateMapperTest {
         condition: SkyCondition = SkyCondition.CLEAR,
         cloudPercent: Double = 50.0,
         rainChance: Double = 0.0,
-    ) = SkyFrame(condition, 20.0, cloudPercent, rainChance, 5.0)
+    ) = SkyFrame(
+        condition = condition,
+        baseSkyCondition = condition,
+        precipitationType = if (condition == SkyCondition.RAIN) PrecipitationType.RAIN else PrecipitationType.NONE,
+        precipitationAmount = null,
+        temperatureC = 20.0,
+        cloudPercent = cloudPercent,
+        precipitationChancePercent = rainChance,
+        windKph = 5.0,
+    )
 }

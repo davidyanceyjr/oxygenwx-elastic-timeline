@@ -33,6 +33,18 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         val isDebuggable = applicationInfo.flags and ApplicationInfo.FLAG_DEBUGGABLE != 0
         val showSnowPreview = isDebuggable && intent.getBooleanExtra(EXTRA_PREVIEW_SNOW, false)
+        val effectPreview = if (isDebuggable) {
+            when (intent.getStringExtra(EXTRA_ATM5_PREVIEW)) {
+                "haze" -> AtmospherePreview.ILLUSTRATIVE_HAZE
+                "turbulence" -> AtmospherePreview.ILLUSTRATIVE_TURBULENCE
+                "combined" -> AtmospherePreview.ILLUSTRATIVE_HAZE_AND_TURBULENCE
+                else -> AtmospherePreview.NONE
+            }
+        } else AtmospherePreview.NONE
+        val effectPreviewHour = if (isDebuggable) {
+            intent.getStringExtra(EXTRA_ATM5_HOUR)?.toDoubleOrNull()
+                ?.takeIf { it.isFinite() && it in 0.0..SampleForecast.hours.lastIndex.toDouble() }
+        } else null
         val previewHour = if (isDebuggable && intent.hasExtra(EXTRA_PREVIEW_HOUR)) {
             intent.getIntExtra(EXTRA_PREVIEW_HOUR, -1).takeIf { it in SampleForecast.hours.indices }
         } else null
@@ -41,7 +53,10 @@ class MainActivity : ComponentActivity() {
                 when {
                     showSnowPreview -> SyntheticSnowPreview()
                     previewHour != null -> FixturePrecipitationPreview(previewHour)
-                    else -> TimeLabScreen()
+                    else -> TimeLabScreen(
+                        effectPreview = effectPreview,
+                        initialSelectedHour = effectPreviewHour ?: 36.0,
+                    )
                 }
             }
         }
@@ -50,6 +65,8 @@ class MainActivity : ComponentActivity() {
 
 private const val EXTRA_PREVIEW_SNOW = "preview_snow"
 private const val EXTRA_PREVIEW_HOUR = "preview_hour"
+private const val EXTRA_ATM5_PREVIEW = "atm5_preview"
+private const val EXTRA_ATM5_HOUR = "atm5_hour"
 
 @androidx.compose.runtime.Composable
 private fun FixturePrecipitationPreview(hourOffset: Int) {

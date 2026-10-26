@@ -13,6 +13,7 @@ import androidx.compose.ui.graphics.Path
 import androidx.compose.ui.graphics.drawscope.DrawScope
 import androidx.compose.ui.graphics.lerp
 import com.oxygen.weather.timeline.presentation.atmosphere.AtmosphereInput
+import com.oxygen.weather.timeline.presentation.atmosphere.AtmospherePreview
 import com.oxygen.weather.timeline.presentation.atmosphere.DepictionKind
 import com.oxygen.weather.timeline.presentation.atmosphere.SceneVisualState
 import com.oxygen.weather.timeline.presentation.atmosphere.SceneVisualStateMapper
@@ -62,7 +63,13 @@ private fun AtmosphericScene(
         drawDiffuseLight(state)
         drawIllustrativeCelestial(state, localHour)
         drawCloudFields(state.cloudFraction?.toFloat()?.coerceIn(0f, 1f) ?: 0f, state.daylight, selectedHour)
-        drawLandscape()
+        drawLandscape(state.previewStrengths.haze.toFloat(), sceneHorizonColor(state))
+        when (state.preview) {
+            AtmospherePreview.ILLUSTRATIVE_TURBULENCE,
+            AtmospherePreview.ILLUSTRATIVE_HAZE_AND_TURBULENCE ->
+                drawPreviewTurbulence(state.previewStrengths.turbulence.toFloat())
+            else -> Unit
+        }
         drawRect(
             brush = Brush.verticalGradient(
                 0f to Color.Transparent,
@@ -80,6 +87,36 @@ private fun AtmosphericScene(
                 drawSnow(state.precipitationChancePercent)
             else -> Unit
         }
+    }
+}
+
+/** Abstract, symmetric air contours in the side sky; no arrow, bearing, or measured direction. */
+private fun DrawScope.drawPreviewTurbulence(strength: Float) {
+    if (strength <= 0f) return
+    val w = size.width
+    val h = size.height
+    listOf(.335f, .355f, .375f).forEachIndexed { index, yFraction ->
+        val amplitude = (.008f + index * .0015f) * strength
+        val path = Path().apply {
+            moveTo(w * .055f, h * yFraction)
+            cubicTo(
+                w * .12f, h * (yFraction - amplitude),
+                w * .205f, h * (yFraction + amplitude),
+                w * .29f, h * yFraction,
+            )
+            moveTo(w * .71f, h * yFraction)
+            cubicTo(
+                w * .795f, h * (yFraction + amplitude),
+                w * .88f, h * (yFraction - amplitude),
+                w * .945f, h * yFraction,
+            )
+        }
+        val alpha = (.17f - index * .035f) * strength
+        drawPath(
+            path,
+            Color(0xFFDDECF2).copy(alpha = alpha),
+            style = androidx.compose.ui.graphics.drawscope.Stroke(width = (1.1f - index * .12f) * density),
+        )
     }
 }
 
@@ -110,8 +147,27 @@ private fun DrawScope.drawSkyPalette(state: SceneVisualState) {
     val wash = Color(0xFF8293A8).copy(alpha = cloudWash)
     val top = lerp(skyColor(nightTop, duskTop, dayTop), wash, cloudiness * .30f)
     val mid = lerp(skyColor(nightMid, duskMid, dayMid), wash, cloudiness * .34f)
-    val horizon = lerp(skyColor(nightHorizon, duskHorizon, dayHorizon), wash, cloudiness * .38f)
+    val horizon = sceneHorizonColor(state)
     drawRect(brush = Brush.verticalGradient(0f to top, .58f to mid, 1f to horizon))
+}
+
+private fun sceneHorizonColor(state: SceneVisualState): Color {
+    val daylight = state.daylight?.toFloat()?.coerceIn(0f, 1f) ?: 0f
+    val cloudiness = state.cloudFraction?.toFloat()?.coerceIn(0f, 1f) ?: 0f
+    val twilight = (1f - kotlin.math.abs(daylight - .259f) / .259f).coerceIn(0f, 1f)
+    val night = Color(0xFF6F6572)
+    val dusk = Color(0xFFC58D91)
+    val day = Color(0xFFE7B98D)
+    val cloudWash = when (state.condition) {
+        com.oxygen.weather.timeline.data.SkyCondition.CLOUDY,
+        com.oxygen.weather.timeline.data.SkyCondition.RAIN,
+        com.oxygen.weather.timeline.data.SkyCondition.STORM -> .10f
+        else -> .035f
+    } * cloudiness
+    val wash = Color(0xFF8293A8).copy(alpha = cloudWash)
+    return lerp(lerp(night, dusk, twilight), day, daylight).let {
+        lerp(it, wash, cloudiness * .38f)
+    }
 }
 
 private fun DrawScope.drawDiffuseLight(state: SceneVisualState) {
@@ -212,47 +268,51 @@ private fun DrawScope.drawCloudGroup(
     alpha: Float,
     detail: Float,
 ) {
-    // 1.5 viewport widths form a repeating field; drawing adjacent copies makes
-    // modulo wrapping visually continuous at both horizontal edges.
-    val period = size.width * 1.5f
-    if (period <= 0f) return
+    if (size.width <= 0f) return
     val hours = selectedHour.takeIf(Double::isFinite) ?: 0.0
-    val driftPx = (hours * rateDpPerHour * density).rem(period.toDouble()).toFloat()
-    val offset = if (driftPx < 0f) driftPx + period else driftPx
     shapes.forEach { shape ->
         val cloudWidth = size.width * shape.width
         val cloudHeight = size.height * shape.height
-        val baseX = shape.x * size.width - offset
-        for (copy in -1..1) {
-            val x = baseX + copy * period
-            val y = shape.y * size.height
-            val shapeAlpha = (cloudiness * alpha * shape.fullness).coerceIn(0f, .62f)
-            val tint = color.copy(alpha = shapeAlpha)
-            drawOval(
-                color = tint,
-                topLeft = Offset(x, y + cloudHeight * .36f),
-                size = Size(cloudWidth, cloudHeight * .62f),
-            )
-            drawCircle(
-                color = tint.copy(alpha = shapeAlpha * detail),
-                radius = cloudHeight * .45f,
-                center = Offset(x + cloudWidth * .30f, y + cloudHeight * .48f),
-            )
-            drawCircle(
-                color = tint.copy(alpha = shapeAlpha * detail),
-                radius = cloudHeight * .58f,
-                center = Offset(x + cloudWidth * .53f, y + cloudHeight * .34f),
-            )
-            drawCircle(
-                color = tint.copy(alpha = shapeAlpha * detail),
-                radius = cloudHeight * .39f,
-                center = Offset(x + cloudWidth * .77f, y + cloudHeight * .49f),
-            )
-        }
+        val edgeInset = size.width * .025f
+        val minX = edgeInset
+        val maxX = (size.width - cloudWidth - edgeInset).coerceAtLeast(minX)
+        val travel = maxX - minX
+        val baseFraction = shape.x.rem(1f).coerceIn(0f, 1f)
+        val basePhase = kotlin.math.asin(baseFraction * 2f - 1f)
+        val phase = if (travel > 0f) {
+            basePhase + (hours * rateDpPerHour * density / (travel * .5f))
+        } else basePhase.toDouble()
+        // A bounded sinusoidal phase keeps clouds wholly inside the viewport
+        // with smooth, deterministic movement as selected forecast time changes.
+        val positionFraction = (.5 + .5 * sin(phase)).toFloat()
+        val x = minX + travel * positionFraction
+        val y = shape.y * size.height
+        val shapeAlpha = (cloudiness * alpha * shape.fullness).coerceIn(0f, .62f)
+        val tint = color.copy(alpha = shapeAlpha)
+        drawOval(
+            color = tint,
+            topLeft = Offset(x, y + cloudHeight * .36f),
+            size = Size(cloudWidth, cloudHeight * .62f),
+        )
+        drawCircle(
+            color = tint.copy(alpha = shapeAlpha * detail),
+            radius = cloudHeight * .45f,
+            center = Offset(x + cloudWidth * .30f, y + cloudHeight * .48f),
+        )
+        drawCircle(
+            color = tint.copy(alpha = shapeAlpha * detail),
+            radius = cloudHeight * .58f,
+            center = Offset(x + cloudWidth * .53f, y + cloudHeight * .34f),
+        )
+        drawCircle(
+            color = tint.copy(alpha = shapeAlpha * detail),
+            radius = cloudHeight * .39f,
+            center = Offset(x + cloudWidth * .77f, y + cloudHeight * .49f),
+        )
     }
 }
 
-private fun DrawScope.drawLandscape() {
+private fun DrawScope.drawLandscape(hazeStrength: Float, horizon: Color) {
     val w = size.width
     val h = size.height
     val distant = Path().apply {
@@ -267,7 +327,9 @@ private fun DrawScope.drawLandscape() {
         lineTo(0f, h)
         close()
     }
-    drawPath(distant, Color(0x884B7486))
+    val ridgeBase = Color(0xFF4B7486)
+    val ridgeHaze = (hazeStrength.coerceIn(0f, 1f) * .30f).coerceIn(0f, .30f)
+    drawPath(distant, lerp(ridgeBase, horizon, ridgeHaze).copy(alpha = 0x88 / 255f))
     val near = Path().apply {
         moveTo(0f, h * .88f)
         cubicTo(w * .25f, h * .78f, w * .44f, h * .89f, w * .65f, h * .84f)
