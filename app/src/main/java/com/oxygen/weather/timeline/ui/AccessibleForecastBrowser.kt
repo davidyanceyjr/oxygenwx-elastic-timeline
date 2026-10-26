@@ -18,9 +18,9 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
-import com.oxygen.weather.timeline.data.SampleForecast
 import com.oxygen.weather.timeline.presentation.ElasticTimeAxis
 import com.oxygen.weather.timeline.presentation.ForecastProjection
+import com.oxygen.weather.timeline.presentation.ForecastSource
 import kotlin.math.roundToInt
 
 private data class ForecastBrowserRow(
@@ -34,6 +34,7 @@ private data class ForecastBrowserRow(
 
 @Composable
 fun AccessibleForecastBrowser(
+    source: ForecastSource = ForecastSource.sample,
     selectedHour: Double,
     precision: Boolean,
     onSelect: (hourOffset: Double, precision: Boolean) -> Unit,
@@ -41,9 +42,9 @@ fun AccessibleForecastBrowser(
     onDismiss: () -> Unit,
 ) {
     val rows = if (precision) {
-        SampleForecast.hours.mapIndexed { index, _ ->
-            val view = ForecastProjection.fromHourOffset(index.toDouble(), precision = true)
-            val selected = index == selectedHour.roundToInt().coerceIn(0, SampleForecast.hours.lastIndex)
+        source.hours.mapIndexed { index, _ ->
+            val view = ForecastProjection.fromHourOffset(index.toDouble(), precision = true, source = source)
+            val selected = index == selectedHour.roundToInt().coerceIn(0, source.lastIndex)
             ForecastBrowserRow(
                 key = "hour-$index",
                 hourOffset = index.toDouble(),
@@ -55,9 +56,9 @@ fun AccessibleForecastBrowser(
             )
         }
     } else {
-        SampleForecast.days.mapIndexed { index, _ ->
-            val hourOffset = index * 24.0 + 12.0
-            val view = ForecastProjection.fromHourOffset(hourOffset, precision = false)
+        source.days.mapIndexed { index, day ->
+            val hourOffset = day.noonSampleIndex.toDouble()
+            val view = ForecastProjection.fromHourOffset(hourOffset, precision = false, source = source)
             val selected = ElasticTimeAxis.dayIndex(selectedHour) == index
             ForecastBrowserRow(
                 key = "day-$index",
@@ -72,9 +73,9 @@ fun AccessibleForecastBrowser(
         }
     }
     val selectedRowIndex = if (precision) {
-        selectedHour.roundToInt().coerceIn(0, SampleForecast.hours.lastIndex)
+        selectedHour.roundToInt().coerceIn(0, source.lastIndex)
     } else {
-        ElasticTimeAxis.dayIndex(selectedHour).coerceIn(0, SampleForecast.days.lastIndex)
+        ElasticTimeAxis.dayIndex(selectedHour).coerceIn(0, source.days.lastIndex)
     }
     val listState = rememberLazyListState()
     LaunchedEffect(precision, selectedRowIndex) {
@@ -86,7 +87,7 @@ fun AccessibleForecastBrowser(
         title = { Text(if (precision) "Hourly forecast" else "Daily forecast") },
         text = {
             Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
-                Text("DEMO DATA", fontWeight = FontWeight.SemiBold)
+                Text(source.hours.first().provenance.label, fontWeight = FontWeight.SemiBold)
                 Text("Select a forecast to update the timeline and summary.")
                 TextButton(onClick = onTogglePrecision) {
                     Text(if (precision) "Browse daily forecasts" else "Browse hourly forecasts")
@@ -123,7 +124,7 @@ fun AccessibleForecastBrowser(
 private fun forecastDetails(
     temperatureF: Int,
     conditions: String,
-    precipitationPercent: Int,
+    precipitationPercent: Int?,
     windMph: Int,
 ): String = "${temperatureF} degrees, $conditions, precipitation chance " +
-    "$precipitationPercent percent, wind $windMph miles per hour"
+    "${precipitationPercent?.let { "$it percent" } ?: "unknown"}, wind $windMph miles per hour"

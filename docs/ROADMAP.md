@@ -284,17 +284,17 @@ This workstream establishes an explicit, debug-only set of typed forecast scenar
 **Concept artifact:** The owner-approved DFM.1 matrix is the implementation contract; no additional scene artwork is in scope.
 **Evidence:** Cycle 040 (`040-dfm2-debug-forecast-catalog`): `.codex/test-artifacts/040-dfm2-debug-forecast-catalog/README.md` and `forecast-catalog-inventory.md`; closeout: `.codex/history/040-dfm2-debug-forecast-catalog.md`; archived plan: `.codex/history/plans/040-dfm2-debug-forecast-catalog.md`. The full debug test task also exposed one unrelated existing time-label assertion failure, recorded in the cycle evidence.
 
-### DFM.3 — Build the debug-only forecast matrix browser — NEXT
+### DFM.3 — Build debug forecast scenario sets for timeline review — DONE
 
-**Objective/scope:** Add an explicitly debug-only way to browse and select every approved catalog scenario and variant, with clear illustrative-data labels and its forecast facts visible. Selection must use the existing time/forecast presentation path. Do not redesign the weather scene in this slice.
+**Objective/scope:** Add a debug-only way to load complete synthetic forecast profiles from the debug catalog for visual review of timeline scrubbing and atmospheric transitions. Provide 3-, 7-, and 10-day weather intervals under test, each surrounded by two calm, clear days before and after; the corresponding loaded forecasts are 7, 11, and 14 days. Include a short rain event, a clear-to-partly-cloudy-to-storm progression, and an extended cold/cloud/wind/snow progression. Treat the timeline as a viewer of the selected forecast samples. Keep all scenario data and access debug-only, and use the existing selected-time and timeline presentation path without adding browser controls to the immersive forecast screen.
 **Depends on:** DFM.2.
-**Exit:** Every approved row and variant can be selected on the installed reference device, the selected timestamp and forecast facts match the catalog, production builds expose no browser entry point, and timeline gestures remain responsive, predictable, and readable.
-**Concept artwork:** Pending owner-approved browser storyboard at `.codex/concepts/DFM.3-debug-forecast-matrix-browser.png`, showing scenario selection, selected time, and forecast facts without a permanent production control.
-**Evidence:** At planning, assign the next chronological cycle ID and use its `.codex/test-artifacts/<cycle-id>/`, `.codex/history/<cycle-id>.md`, and `.codex/history/plans/<cycle-id>.md`.
+**Exit:** Each forecast profile is selectable in a debuggable build and can be scrubbed across its exact loaded bounds on the installed reference device; every weather interval under test has two calm, clear days of forecast context on both sides; selected timestamps and typed synthetic facts match catalog samples; the complete suite covers the approved condition families; no permanent control is added to the forecast screen; release builds expose no scenario browser or scenario data; timeline interaction remains responsive, predictable, and readable.
+**Concept artwork:** Owner approved 2026-10-26 at `.codex/concepts/DFM.3-debug-forecast-matrix-browser.png`. The Pixel 3 XL-based storyboard shows the same full-screen atmosphere and bottom tape across a clear → partly-cloudy → storm scrub sequence, plus separate rain and extended cold/cloud/wind/snow fixtures. No forecast cards or on-screen debug control are proposed.
+**Evidence:** Cycle 041: `.codex/test-artifacts/041-dfm3-debug-forecast-matrix-browser/README.md`; release inspection: `.codex/test-artifacts/041-dfm3-debug-forecast-matrix-browser/release-isolation.txt`; history: `.codex/history/041-dfm3-debug-forecast-matrix-browser.md`; archived plan: `.codex/history/plans/041-dfm3-debug-forecast-matrix-browser.md`. TalkBack, RTL, large-font, and reduced-motion review remain assigned to applicable follow-up cycles.
 
 ## ATM — Matrix-driven atmosphere
 
-### ATM.8 — Map clear, cloudy and day/night matrix states — PLANNED
+### ATM.8 — Map clear, cloudy and day/night matrix states — NEXT
 
 **Objective/scope:** Review and implement the scene mapping for approved clear, partly cloudy, and cloudy scenarios across day, dusk, and night, using the retained abstract landscape. Preserve exact forecast facts and selected time; keep visual interpolation decorative and deterministic.
 **Depends on:** DFM.2 and DFM.3.

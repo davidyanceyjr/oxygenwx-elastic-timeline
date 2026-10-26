@@ -42,25 +42,30 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.LayoutDirection
 import androidx.compose.ui.unit.sp
-import com.oxygen.weather.timeline.data.SampleForecast
 import com.oxygen.weather.timeline.presentation.ElasticTimeAxis
 import com.oxygen.weather.timeline.presentation.ForecastProjection
+import com.oxygen.weather.timeline.presentation.ForecastSource
+import com.oxygen.weather.timeline.presentation.PresentedWarning
 import com.oxygen.weather.timeline.presentation.atmosphere.AtmosphereInput
 import com.oxygen.weather.timeline.presentation.atmosphere.AtmospherePreview
 import java.time.Duration
 import java.time.LocalDateTime
 import kotlin.math.abs
 import kotlin.math.floor
+import kotlin.math.roundToInt
 
 /** Experimental one-screen UI; sample forecast and independent package ID. */
 @Composable
 fun TimeLabScreen(
+    forecastSource: ForecastSource = ForecastSource.sample,
     effectPreview: AtmospherePreview = AtmospherePreview.NONE,
-    initialSelectedHour: Double = 36.0,
+    initialSelectedHour: Double = forecastSource.referenceIndex.toDouble(),
     initialPrecisionMode: Boolean = false,
 ) {
     // Absolute hour offset is the sole selection authority. Zoom never rewrites it.
-    var selectedHour by rememberSaveable { mutableDoubleStateOf(initialSelectedHour) }
+    var selectedHour by rememberSaveable(forecastSource.id) {
+        mutableDoubleStateOf(initialSelectedHour.coerceIn(0.0, forecastSource.lastIndex.toDouble()))
+    }
     var precisionMode by rememberSaveable { mutableStateOf(initialPrecisionMode) }
     var focusDay by rememberSaveable { mutableIntStateOf(1) }
     var forecastBrowserOpen by remember { mutableStateOf(false) }
@@ -68,34 +73,33 @@ fun TimeLabScreen(
     val swipeThresholdPx = with(LocalDensity.current) { 48.dp.toPx() }
     val isRtl = LocalLayoutDirection.current == LayoutDirection.Rtl
 
-    val view = remember(selectedHour, precisionMode) {
-        ForecastProjection.fromHourOffset(selectedHour, precisionMode)
+    val view = remember(selectedHour, precisionMode, forecastSource) {
+        ForecastProjection.fromHourOffset(selectedHour, precisionMode, forecastSource)
     }
-    val hourOfDay = if (precisionMode) selectedHour % 24.0 else 14.0
+    val hourOfDay = if (precisionMode) selectedHour % 24.0 else 12.0
 
     fun enterPrecision(day: Int, selected: Double) {
         // Picking a day may change the selected time; expanding does not.
-        selectedHour = selected.coerceIn(0.0, SampleForecast.hours.lastIndex.toDouble())
-        focusDay = day.coerceIn(0, SampleForecast.DAY_COUNT - 1)
+        selectedHour = selected.roundToInt().coerceIn(0, forecastSource.lastIndex).toDouble()
+        focusDay = day.coerceIn(0, forecastSource.days.lastIndex)
         precisionMode = true
         haptics.performHapticFeedback(HapticFeedbackType.LongPress)
     }
     fun leavePrecision(wasPrecisionGesture: Boolean) {
         selectedHour = if (wasPrecisionGesture) selectedHour
             else (floor(selectedHour / 24.0) * 24.0 + 12.0)
-        selectedHour = selectedHour.coerceIn(0.0, SampleForecast.hours.lastIndex.toDouble())
+        selectedHour = selectedHour.coerceIn(0.0, forecastSource.lastIndex.toDouble())
         precisionMode = false
     }
     fun returnToNow() {
-        val fixtureStart = SampleForecast.hours.first().time
-        val hoursFromStart = Duration.between(fixtureStart, LocalDateTime.now()).toHours().toDouble()
-        selectedHour = hoursFromStart.coerceIn(0.0, SampleForecast.hours.lastIndex.toDouble())
+        val hoursFromStart = if (forecastSource.resetToReference) forecastSource.referenceIndex.toDouble()
+        else Duration.between(forecastSource.hours.first().time, LocalDateTime.now()).toHours().toDouble()
+        selectedHour = hoursFromStart.coerceIn(0.0, forecastSource.lastIndex.toDouble())
         focusDay = ElasticTimeAxis.dayIndex(selectedHour)
         precisionMode = true
     }
     fun shiftDay(days: Int) {
-        selectedHour = (selectedHour + days * 24.0)
-            .coerceIn(0.0, SampleForecast.hours.lastIndex.toDouble())
+        selectedHour = (selectedHour + days * 24.0).coerceIn(0.0, forecastSource.lastIndex.toDouble())
         focusDay = ElasticTimeAxis.dayIndex(selectedHour)
     }
     val latestReturnToNow by rememberUpdatedState<() -> Unit> { returnToNow() }
@@ -135,11 +139,20 @@ fun TimeLabScreen(
                         fontWeight = FontWeight.SemiBold, color = Color(0xFFECF5FD))
                     if (!compactPresentation) {
                         Spacer(Modifier.height(4.dp))
-                        Text("An interactive atmosphere", fontSize = 12.sp, color = Color(0xCDE4EDF5))
+                        Text(
+                            if (view.provenanceDetail.isEmpty()) "An interactive atmosphere" else view.provenanceDetail,
+                            fontSize = 12.sp,
+                            color = Color(0xCDE4EDF5),
+                        )
                     }
                 }
-                Text("DEMO DATA", fontSize = 10.sp, letterSpacing = 1.0.sp,
-                    fontWeight = FontWeight.SemiBold, color = Color(0xFFFFE2A7))
+                Column(horizontalAlignment = Alignment.End) {
+                    Text(view.provenanceLabel, fontSize = 10.sp, letterSpacing = 1.0.sp,
+                        fontWeight = FontWeight.SemiBold, color = Color(0xFFFFE2A7))
+                    if (compactPresentation && view.provenanceDetail.isNotEmpty()) {
+                        Text(view.provenanceDetail, fontSize = 8.sp, color = Color(0xFFFFE2A7))
+                    }
+                }
             }
         }
 
@@ -183,6 +196,7 @@ fun TimeLabScreen(
                         Spacer(Modifier.height(4.dp))
                         Text(displayConditionsLabel(view.conditionsLabel, effectPreview), fontSize = 22.sp,
                             fontWeight = FontWeight.Light, color = Color.White)
+                        DebugFactLine(view.thunderstormProbabilityPercent, view.warning)
                         Spacer(Modifier.height(3.dp))
                         Text("HIGH ${view.highF}°    /    LOW ${view.lowF}°", fontSize = 12.sp,
                             letterSpacing = 1.0.sp, color = Color(0xFFECF3F8))
@@ -203,6 +217,7 @@ fun TimeLabScreen(
                 Text(displayConditionsLabel(view.conditionsLabel, effectPreview), fontSize = 23.sp,
                     fontWeight = FontWeight.Light, color = Color.White,
                     textAlign = TextAlign.Center)
+                DebugFactLine(view.thunderstormProbabilityPercent, view.warning)
                 Spacer(Modifier.height(10.dp))
                 Text("HIGH ${view.highF}°    /    LOW ${view.lowF}°", fontSize = 12.sp,
                     letterSpacing = 1.15.sp, color = Color(0xFFECF3F8))
@@ -220,7 +235,7 @@ fun TimeLabScreen(
                 Column {
                     Text("PRECIP CHANCE", fontSize = 9.sp, letterSpacing = 1.4.sp,
                         color = Color(0xCCDDEAF3))
-                    Text("${view.precipitationPercent}%", fontSize = 19.sp,
+                    Text(view.precipitationPercent?.let { "$it%" } ?: "Unknown", fontSize = 19.sp,
                         fontWeight = FontWeight.Medium, color = Color.White)
                 }
                 Column(horizontalAlignment = Alignment.End) {
@@ -232,12 +247,13 @@ fun TimeLabScreen(
             }
             Spacer(Modifier.height(13.dp))
             ElasticForecastTimeline(
+                source = forecastSource,
                 selectedHour = selectedHour,
                 focusDay = focusDay,
                 expanded = precisionMode,
                 onSelectedHour = {
                     selectedHour = it
-                    if (precisionMode) focusDay = ElasticTimeAxis.dayIndex(it)
+                    if (precisionMode) focusDay = ElasticTimeAxis.dayIndex(it).coerceIn(0, forecastSource.days.lastIndex)
                 },
                 onPrecisionStarted = { day, atHour -> enterPrecision(day, atHour) },
                 onTogglePrecision = {
@@ -257,10 +273,11 @@ fun TimeLabScreen(
         }
         if (forecastBrowserOpen) {
             AccessibleForecastBrowser(
+                source = forecastSource,
                 selectedHour = selectedHour,
                 precision = precisionMode,
                 onSelect = { hourOffset, precision ->
-                    selectedHour = hourOffset.coerceIn(0.0, SampleForecast.hours.lastIndex.toDouble())
+                    selectedHour = hourOffset.coerceIn(0.0, forecastSource.lastIndex.toDouble())
                     precisionMode = precision
                     focusDay = ElasticTimeAxis.dayIndex(selectedHour)
                 },
@@ -280,3 +297,19 @@ private fun displayConditionsLabel(label: String, preview: AtmospherePreview): S
         AtmospherePreview.ILLUSTRATIVE_STORM -> "Illustrative storm"
         else -> label
     }
+
+@Composable
+private fun DebugFactLine(thunderstormChance: Int?, warning: PresentedWarning) {
+    if (thunderstormChance == null && warning != PresentedWarning.PRESENT) return
+    val details = buildList {
+        thunderstormChance?.let { add("THUNDERSTORM CHANCE $it%") }
+        if (warning == PresentedWarning.PRESENT) add("DEBUG WARNING PREVIEW")
+    }.joinToString(" · ")
+    Text(
+        details,
+        fontSize = 10.sp,
+        letterSpacing = .7.sp,
+        color = Color(0xFFFFE2A7),
+        textAlign = TextAlign.Center,
+    )
+}

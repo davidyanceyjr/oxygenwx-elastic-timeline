@@ -32,9 +32,9 @@ import androidx.compose.ui.semantics.stateDescription
 import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.LayoutDirection
-import com.oxygen.weather.timeline.data.SampleForecast
 import com.oxygen.weather.timeline.presentation.ElasticTimeAxis
 import com.oxygen.weather.timeline.presentation.ForecastProjection
+import com.oxygen.weather.timeline.presentation.ForecastSource
 import kotlinx.coroutines.withTimeoutOrNull
 import kotlin.math.abs
 import kotlin.math.floor
@@ -50,6 +50,7 @@ private const val HOLD_DURATION_MS = 480L
  */
 @Composable
 fun ElasticForecastTimeline(
+    source: ForecastSource = ForecastSource.sample,
     selectedHour: Double,
     focusDay: Int,
     expanded: Boolean,
@@ -68,7 +69,7 @@ fun ElasticForecastTimeline(
     val density = LocalDensity.current
     val isRtl = LocalLayoutDirection.current == LayoutDirection.Rtl
     val compactDayPx = with(density) { 55.dp.toPx().toDouble() }
-    val maxHour = SampleForecast.hours.lastIndex.toDouble()
+    val maxHour = source.lastIndex.toDouble()
     val expandedPx = with(density) { 16.dp.toPx().toDouble() }
     val latestSelected by rememberUpdatedState(selectedHour)
     val latestAnimation by rememberUpdatedState(animation)
@@ -77,7 +78,7 @@ fun ElasticForecastTimeline(
     val latestTogglePrecision by rememberUpdatedState(onTogglePrecision)
     val latestBrowseForecasts by rememberUpdatedState(onBrowseForecasts)
     val latestEnded by rememberUpdatedState(onGestureEnded)
-    val accessibleView = ForecastProjection.fromHourOffset(selectedHour, expanded)
+    val accessibleView = ForecastProjection.fromHourOffset(selectedHour, expanded, source)
 
     fun widthForHour(zoom: Float): Double =
         compactDayPx / 24.0 + (expandedPx - compactDayPx / 24.0) * zoom
@@ -141,8 +142,9 @@ fun ElasticForecastTimeline(
                                 compactDayPx, widthForHour(latestAnimation),
                             ).coerceIn(0.0, maxHour)
                             val day = ElasticTimeAxis.dayIndex(tappedHour)
-                            latestPrecision(day, tappedHour)
-                            gestureSelection = tappedHour
+                            val exactHour = tappedHour.roundToInt().toDouble()
+                            latestPrecision(day, exactHour)
+                            gestureSelection = exactHour
                             inPrecision = true
                             longPressArmed = false
                             continue
@@ -173,8 +175,9 @@ fun ElasticForecastTimeline(
                                     gestureSelection, if (isRtl) -dx else dx, null,
                                     compactDayPx, widthForHour(latestAnimation), maxHour,
                                 )
-                                gestureSelection = next
-                                latestSetHour(next)
+                                val selected = if (inPrecision) next.roundToInt().toDouble() else next
+                                gestureSelection = selected
+                                latestSetHour(selected)
                             }
                             change.consume()
                         }
@@ -210,7 +213,7 @@ fun ElasticForecastTimeline(
             return (if (isRtl) w - logicalX else logicalX).toFloat()
         }
 
-        for (day in 0 until SampleForecast.DAY_COUNT) {
+        for (day in source.days.indices) {
             val startX = mapHour(day * 24.0)
             val midX = mapHour(day * 24.0 + 12.0)
             if (startX >= -8f && startX <= w + 8f) {
@@ -218,7 +221,7 @@ fun ElasticForecastTimeline(
                     Offset(startX, baseY + 10.dp.toPx()), stroke)
             }
             if (midX >= -60f && midX <= w + 60f) {
-                val text = SampleForecast.days[day].date.dayOfWeek.name.take(3)
+                val text = source.days[day].date.dayOfWeek.name.take(3)
                 val selectedDayIndex = if (zoom > .8f) focusDay
                     else ElasticTimeAxis.dayIndex(selectedHour)
                 val selectedDay = day == selectedDayIndex
@@ -238,7 +241,7 @@ fun ElasticForecastTimeline(
         }
         if (zoom > .01f) {
             // Keep the full fixture on one uniform hourly axis; only nearby marks render.
-            for (hour in 0..SampleForecast.hours.lastIndex) {
+            for (hour in 0..source.lastIndex) {
                 val x = mapHour(hour.toDouble())
                 if (x < -30f || x > w + 30f) continue
                 val isMajor = hour % 3 == 0
@@ -262,8 +265,7 @@ fun ElasticForecastTimeline(
             }
             // Keep the chosen hour label on the fixed playhead and magnify it
             // against the regular neighboring three-hour labels.
-            val selectedMoment = SampleForecast.hours.first().time
-                .plus((selectedHour * 60.0).roundToInt().toLong(), java.time.temporal.ChronoUnit.MINUTES)
+            val selectedMoment = source.hours[selectedHour.roundToInt().coerceIn(0, source.lastIndex)].time
             val selectedTime = selectedMoment
                 .format(java.time.format.DateTimeFormatter.ofPattern("h:mm a", java.util.Locale.US))
                 .replace(":00 ", " ")
