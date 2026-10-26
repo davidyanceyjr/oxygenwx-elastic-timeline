@@ -1,6 +1,6 @@
 # Cycle plan — 034-atm3b-precipitation-demo-data
 
-State: PLANNED
+State: ACTIVE
 Roadmap: ATM.3b
 Objective: Add deterministic hourly demo precipitation inputs for visual design while keeping chance, amount, and precipitation type distinct.
 
@@ -16,11 +16,13 @@ Allowed application files:
 - `app/src/main/java/com/oxygen/weather/timeline/ui/TimeLabScreen.kt` only to use a generic precipitation-chance label
 - `app/src/main/java/com/oxygen/weather/timeline/MainActivity.kt` only for any mechanical update to the changed typed field name
 
-Allowed records: this plan, `.codex/test-artifacts/034-atm3b-precipitation-demo-data/`, and `.codex/history/034-atm3b-precipitation-demo-data.md` at closeout.
+Allowed records: this plan, `docs/ROADMAP.md` only for the required active/done status and evidence lifecycle, `.codex/test-artifacts/034-atm3b-precipitation-demo-data/`, and `.codex/history/034-atm3b-precipitation-demo-data.md` at closeout.
 
 Do not modify `AtmosphericScene.kt`, timeline rendering/gesture code, fixture horizon, build configuration, or dependencies. Do not change the accepted atmosphere artwork in this cycle.
 
 ## Functional invariants
+
+- Owner resolution during execution: preserve the accepted atmosphere artwork by keeping `ForecastHour.condition` as a renderer-compatibility signal with its current deterministic fixture mapping. Add independent cloud-derived `baseSkyCondition`, explicit `precipitationType`, and tagged `precipitationAmount` fields. User-facing condition wording uses precipitation type when present and otherwise the base sky condition. This compatibility signal is not the canonical precipitation identity.
 
 - The fixture remains deterministic, local, synthetic, and labeled `DEMO DATA`.
 - Hourly precipitation chance, explicit precipitation identity, and hourly amount are separate signals. Probability does not create an amount or select rain heaviness.
@@ -54,8 +56,8 @@ Do not modify `AtmosphericScene.kt`, timeline rendering/gesture code, fixture ho
 ## Steps
 
 1. Inspect the current deterministic hourly fixture and projection. Record exact, normally navigable samples (local fixture time; index is hour offset from Oct 23 00:00): 0% at Oct 24 11:00 / index 35, 12% at Oct 28 00:00 / index 120, 50% at Oct 23 00:00 / index 0, 78% at Oct 23 10:00 / index 10, and 82% at Oct 27 12:00 / index 108. Record differing rain accumulations at Oct 23 10:00–12:00 / indices 10–12, missing rain amount at Oct 23 13:00 / index 13, and snow depths at Oct 26 00:00–02:00 / indices 72–74.
-2. Add a nullable tagged hourly amount (`RainLiquidMm` for liquid rain accumulation; `SnowDepthCm` for fresh snowfall depth) and an explicit typed precipitation identity for every fixture hour. Assign `RAIN` at indices 0–23, 24–25, and 96–119; assign `SNOW` at indices 72–74; assign `NONE` to all remaining indices. Do not create `STORM` hours. Assign only the non-null amounts and values listed in the invariants; all other amount values are null. Replace chance-threshold weather-identity inference with deterministic fixture assignments independent of chance and temperature; preserve unrelated temperature/cloud/wind samples and the fixture horizon. Preserve the legacy visible rain periods, and retain the base cloud-derived sky category for other hours independently of precipitation identity.
-3. Carry generic chance, base sky condition, precipitation identity, and tagged amount independently through the selected-hour projection. For explicit snow, provide visible condition wording `Snow` while retaining the base sky condition as its own projected field. At fractional hours, use the nearest source hour for categorical identity and amount; preserve amount missingness. Daily overview keeps the existing representative-hour behavior.
+2. Add independent base cloud-derived sky category, nullable tagged hourly amount (`RainLiquidMm` for liquid rain accumulation; `SnowDepthCm` for fresh snowfall depth), and explicit typed precipitation identity for every fixture hour. Keep `ForecastHour.condition` as the legacy renderer-compatibility signal with its exact existing mapping so accepted scene artwork is unchanged; do not use it as projected precipitation identity. Assign `RAIN` at indices 0–23, 24–25, and 96–119; assign `SNOW` at indices 72–74; assign `NONE` to all remaining indices. Do not create `STORM` precipitation identity or legacy `STORM` condition hours. Assign only the non-null amounts and values listed in the invariants; all other amount values are null. Explicit precipitation assignments are independent of chance and temperature; preserve unrelated temperature/cloud/wind samples and the fixture horizon. Preserve the legacy visible rain periods.
+3. Carry generic chance, legacy scene-compatibility condition, base sky condition, precipitation identity, and tagged amount independently through the selected-hour projection. For explicit rain/snow, provide visible condition wording `Showers`/`Snow`; otherwise use base sky condition wording. Retain the base sky condition separately. At fractional hours, use the nearest source hour for categorical identity and amount; preserve amount missingness. Daily overview keeps the existing representative-hour behavior.
 4. Change the visible `RAIN CHANCE` label to `PRECIP CHANCE`. Confirm the existing accessible browser wording remains `precipitation chance`; do not add a permanent control, panel, or status row.
 5. Build and inspect the normal installed hourly states on the Pixel 3 XL for representative rain and snow fixture hours. Capture the selected time, condition, DEMO DATA label, and chance text; do not assess or claim precipitation-renderer acceptance. Use portrait/default font; RTL and reduced-motion review are not applicable because this slice changes no directionality or animation, and the label remains a short static secondary fact.
 6. Record a fixture-to-projection table with exact source hour/index, chance, base sky condition, visible condition wording, precipitation type, tagged amount, and missingness in `.codex/test-artifacts/034-atm3b-precipitation-demo-data/README.md`. Include the five chance-tier samples and every non-null/missing amount sample specified above. Installed screenshots verify the selected time, visible condition/chance label, and `DEMO DATA`; they do not expose the non-visible hourly amount. Inspect the final diff and run `git diff --check`.

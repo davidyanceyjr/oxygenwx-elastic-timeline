@@ -2,6 +2,8 @@ package com.oxygen.weather.timeline.presentation
 
 import com.oxygen.weather.timeline.data.ForecastDay
 import com.oxygen.weather.timeline.data.ForecastHour
+import com.oxygen.weather.timeline.data.PrecipitationAmount
+import com.oxygen.weather.timeline.data.PrecipitationType
 import com.oxygen.weather.timeline.data.SampleForecast
 import com.oxygen.weather.timeline.data.SkyCondition
 import java.time.format.DateTimeFormatter
@@ -12,10 +14,14 @@ import kotlin.math.roundToInt
 
 /** Presentation-only view. All underlying fixture weather units remain metric. */
 data class SkyFrame(
+    /** Legacy scene-renderer input retained until the renderer consumes typed effects. */
     val condition: SkyCondition,
+    val baseSkyCondition: SkyCondition,
+    val precipitationType: PrecipitationType,
+    val precipitationAmount: PrecipitationAmount?,
     val temperatureC: Double,
     val cloudPercent: Double,
-    val rainChancePercent: Double,
+    val precipitationChancePercent: Double,
     val windKph: Double,
 )
 
@@ -46,9 +52,13 @@ object ForecastProjection {
         return ForecastView(
             heading = dayLabel.uppercase(Locale.US),
             timeLabel = if (precision) hourLabel else "DAY OVERVIEW · SELECTED $hourLabel",
-            conditionsLabel = sky.condition.displayName(),
+            conditionsLabel = when (sky.precipitationType) {
+                PrecipitationType.RAIN -> "Showers"
+                PrecipitationType.SNOW -> "Snow"
+                PrecipitationType.NONE -> sky.baseSkyCondition.displayName()
+            },
             temperatureF = toF(sky.temperatureC),
-            precipitationPercent = sky.rainChancePercent.roundToInt(),
+            precipitationPercent = sky.precipitationChancePercent.roundToInt(),
             windMph = (sky.windKph / 1.609344).roundToInt(),
             lowF = toF(day.lowC),
             highF = toF(day.highC),
@@ -65,18 +75,29 @@ object ForecastProjection {
         val weight = t - left
         val a = SampleForecast.hours[left]
         val b = SampleForecast.hours[right]
+        val categorical = if (weight < 0.5) a else b
         fun mix(x: Double, y: Double) = x + (y - x) * weight
         return SkyFrame(
-            condition = if (weight < 0.5) a.condition else b.condition,
+            condition = categorical.condition,
+            baseSkyCondition = categorical.baseSkyCondition,
+            precipitationType = categorical.precipitationType,
+            precipitationAmount = categorical.precipitationAmount,
             temperatureC = mix(a.temperatureC, b.temperatureC),
             cloudPercent = mix(a.cloudPercent, b.cloudPercent),
-            rainChancePercent = mix(a.precipitationProbabilityPercent, b.precipitationProbabilityPercent),
+            precipitationChancePercent = mix(a.precipitationProbabilityPercent, b.precipitationProbabilityPercent),
             windKph = mix(a.windKph, b.windKph),
         )
     }
 
     private fun ForecastHour.toFrame() = SkyFrame(
-        condition, temperatureC, cloudPercent, precipitationProbabilityPercent, windKph,
+        condition = condition,
+        baseSkyCondition = baseSkyCondition,
+        precipitationType = precipitationType,
+        precipitationAmount = precipitationAmount,
+        temperatureC = temperatureC,
+        cloudPercent = cloudPercent,
+        precipitationChancePercent = precipitationProbabilityPercent,
+        windKph = windKph,
     )
 
     private fun toF(celsius: Double) = (celsius * 9.0 / 5.0 + 32.0).roundToInt()

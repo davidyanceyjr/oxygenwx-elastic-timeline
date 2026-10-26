@@ -202,7 +202,7 @@ fun TimeLabScreen() {
                 verticalAlignment = Alignment.Bottom,
             ) {
                 Column {
-                    Text("RAIN CHANCE", fontSize = 9.sp, letterSpacing = 1.4.sp,
+                    Text("PRECIP CHANCE", fontSize = 9.sp, letterSpacing = 1.4.sp,
                         color = Color(0xCCDDEAF3))
                     Text("${view.precipitationPercent}%", fontSize = 19.sp,
                         fontWeight = FontWeight.Medium, color = Color.White)

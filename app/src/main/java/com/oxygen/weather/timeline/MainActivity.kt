@@ -18,6 +18,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.oxygen.weather.timeline.data.SkyCondition
+import com.oxygen.weather.timeline.data.PrecipitationType
 import com.oxygen.weather.timeline.presentation.SkyFrame
 import com.oxygen.weather.timeline.presentation.atmosphere.AtmosphereInput
 import com.oxygen.weather.timeline.presentation.atmosphere.AtmospherePreview
@@ -45,9 +46,12 @@ private fun SyntheticSnowPreview() {
     val input = AtmosphereInput(
         sky = SkyFrame(
             condition = SkyCondition.CLOUDY,
+            baseSkyCondition = SkyCondition.CLOUDY,
+            precipitationType = PrecipitationType.NONE,
+            precipitationAmount = null,
             temperatureC = 2.0,
             cloudPercent = 70.0,
-            rainChancePercent = 0.0,
+            precipitationChancePercent = 0.0,
             windKph = 0.0,
         ),
         precisionMode = false,

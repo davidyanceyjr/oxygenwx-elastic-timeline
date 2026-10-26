@@ -10,13 +10,31 @@ import kotlin.math.sin
 /** Demo fixture ONLY. No claim to represent live or historical conditions. */
 enum class SkyCondition { CLEAR, PARTLY_CLOUDY, CLOUDY, RAIN, STORM }
 
+enum class PrecipitationType { NONE, RAIN, SNOW }
+
+sealed interface PrecipitationAmount {
+    val value: Double
+
+    data class RainLiquidMm(override val value: Double) : PrecipitationAmount {
+        init { require(value.isFinite() && value >= 0.0) }
+    }
+
+    data class SnowDepthCm(override val value: Double) : PrecipitationAmount {
+        init { require(value.isFinite() && value >= 0.0) }
+    }
+}
+
 data class ForecastHour(
     val time: LocalDateTime,
     val temperatureC: Double,
     val cloudPercent: Double,
     val precipitationProbabilityPercent: Double,
     val windKph: Double,
+    /** Legacy atmosphere renderer input. Precipitation identity is [precipitationType]. */
     val condition: SkyCondition,
+    val baseSkyCondition: SkyCondition,
+    val precipitationType: PrecipitationType,
+    val precipitationAmount: PrecipitationAmount?,
 )
 
 data class ForecastDay(
@@ -59,12 +77,33 @@ object SampleForecast {
                     6 -> 4.0
                     else -> 15.0
                 }.coerceIn(0.0, 100.0)
+                // Preserve the accepted renderer's current fixture mapping during this data slice.
                 val condition = when {
                     chance >= 78.0 && cloud > 85.0 -> SkyCondition.STORM
                     chance >= 45.0 -> SkyCondition.RAIN
                     cloud >= 76.0 -> SkyCondition.CLOUDY
                     cloud >= 29.0 -> SkyCondition.PARTLY_CLOUDY
                     else -> SkyCondition.CLEAR
+                }
+                val baseSkyCondition = when {
+                    cloud >= 76.0 -> SkyCondition.CLOUDY
+                    cloud >= 29.0 -> SkyCondition.PARTLY_CLOUDY
+                    else -> SkyCondition.CLEAR
+                }
+                val index = d * 24 + h
+                val precipitationType = when (index) {
+                    in 0..23, in 24..25, in 96..119 -> PrecipitationType.RAIN
+                    in 72..74 -> PrecipitationType.SNOW
+                    else -> PrecipitationType.NONE
+                }
+                val precipitationAmount = when (index) {
+                    10 -> PrecipitationAmount.RainLiquidMm(0.6)
+                    11 -> PrecipitationAmount.RainLiquidMm(1.4)
+                    12 -> PrecipitationAmount.RainLiquidMm(2.8)
+                    72 -> PrecipitationAmount.SnowDepthCm(0.3)
+                    73 -> PrecipitationAmount.SnowDepthCm(0.8)
+                    74 -> PrecipitationAmount.SnowDepthCm(1.6)
+                    else -> null
                 }
                 val temp = 15.0 + (d % 3) * 1.8 +
                     5.3 * sin(((h - 8.0) / 24.0) * 2.0 * Math.PI) -
@@ -77,6 +116,9 @@ object SampleForecast {
                         precipitationProbabilityPercent = chance,
                         windKph = 9.0 + d * 1.7 + 3.0 * cos(h / 7.0),
                         condition = condition,
+                        baseSkyCondition = baseSkyCondition,
+                        precipitationType = precipitationType,
+                        precipitationAmount = precipitationAmount,
                     )
                 )
             }

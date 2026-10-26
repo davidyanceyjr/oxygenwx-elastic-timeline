@@ -226,12 +226,12 @@ Every visual enhancement must preserve timeline responsiveness, gesture predicta
 **Exit:** Cloud visuals respond smoothly and deterministically to supported cloud-cover and selected-time inputs without reseeding or popping at sample boundaries; phase changes are perceptible but restrained; the static path is legible. The exact selected moment remains authoritative and is consistently disclosed in the forecast summary and timeline semantics after release. Installed Pixel 3 XL review covers clear/overcast and daily/hourly states, compact/1.3 font, RTL and reduced motion; it confirms no clipping, coherent RTL chronology, timeline responsiveness, gesture predictability, accessible selected-time disclosure, and readable forecast facts.
 **Evidence:** Cycles `026-atm3-cloud-renderer` through `031-atm3-blocker-confirmation` are recorded in `.codex/history/`; installed evidence is in `.codex/test-artifacts/026-atm3-cloud-renderer/` through `.codex/test-artifacts/031-atm3-blocker-confirmation/`. Cycle 030 recorded 1.3-font clipping and a zero-motion idle pair; cycle 031 corrected the 8 PM capture and added a fractional sample. At that point, RTL still rendered LTR, release hid and rounded the selected time, and cloud phase movement was visually unconfirmed. Cycle `032-atm3-corrective-acceptance` resolved these findings and completed the selected-time, large-font, RTL, cloud-phase, reduced-motion, and TalkBack acceptance. The owner-confirmed TalkBack pass is recorded without a transcript. Evidence: `.codex/test-artifacts/032-atm3-corrective-acceptance/README.md`; closeout: `.codex/history/032-atm3-corrective-acceptance.md`; archived plan: `.codex/history/plans/032-atm3-corrective-acceptance.md`.
 
-### ATM.3b — Deterministic hourly precipitation demo data — NEXT
+### ATM.3b — Deterministic hourly precipitation demo data — DONE
 
 **Objective/scope:** Expand the deterministic DEMO DATA fixture and typed hourly forecast projection with precipitation inputs for visual design: stepped hourly chance values, explicit rain and snow identities, and explicit hourly precipitation totals where supplied. Keep chance and total as separate nullable/typed signals; never derive totals or snow from chance or temperature. Use a generic precipitation-chance label for both rain and snow. No renderer, timeline, gesture, or live-provider changes.
 **Depends on:** ATM.3.
 **Exit:** Normal hourly fixture navigation exposes dry and multiple precipitation-chance levels, rain hours with differing explicit totals, a missing-total case, and an explicitly typed snow case. Projection preserves chance, type, amount, and missingness independently; the visible chance label is accurate for rain and snow; the fixture remains deterministic and labeled DEMO DATA. No precipitation rendering or timeline behavior changes.
-**Evidence:** At planning, assign the next chronological cycle ID and use its `.codex/test-artifacts/<cycle-id>/`, `.codex/history/<cycle-id>.md`, and `.codex/history/plans/<cycle-id>.md`.
+**Evidence:** Cycle 034 (`034-atm3b-precipitation-demo-data`): `.codex/test-artifacts/034-atm3b-precipitation-demo-data/`; closeout: `.codex/history/034-atm3b-precipitation-demo-data.md`; archived plan: `.codex/history/plans/034-atm3b-precipitation-demo-data.md`.
 
 ### ATM.4 — Bounded rain and snow depiction — BLOCKED
 
@@ -241,7 +241,7 @@ Every visual enhancement must preserve timeline responsiveness, gesture predicta
 **Blocker:** The owner rejected cycle 033 because its precipitation was not noticeable in installed screenshots. Its faint, sparse edge marks do not meet the visual purpose, and its implementation and captures are not accepted. ATM.3b supplies the mock inputs needed for a new bounded ATM.4 plan; the visual blocker remains until a later attempt meets ATM.4's exit.
 **Evidence:** Failed attempt and captures: `.codex/history/033-atm4-bounded-precipitation.md` and `.codex/test-artifacts/033-atm4-bounded-precipitation/README.md`. ATM.3 baseline closure: `.codex/history/032-atm3-corrective-acceptance.md`. The owner will schedule app-wide accessibility/layout checks separately.
 
-### ATM.5 — Fog and wind effect primitives — PLANNED
+### ATM.5 — Fog and wind effect primitives — NEXT
 
 **Objective/scope:** Add reusable haze/turbulence primitives only as clearly labeled preview effects until supported typed visibility and wind-direction inputs exist. No fabricated live fog, wind direction, or visibility claims.
 **Depends on:** ATM.3.
