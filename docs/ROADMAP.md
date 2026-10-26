@@ -256,61 +256,121 @@ Every unfinished slice must have concept artwork specific to its own objective a
 **Concept artwork:** Owner approved 2026-10-25 at `.codex/concepts/ATM.5-fog-wind-preview.png`. The approved direction has a richer background and midground, no data box around forecast facts, clouds within scene bounds, and an increasingly perceptible haze effect as the distant ridge softens and loses contrast. Scrubbing should transition deterministically and smoothly with selected time; do not use wall-clock intensity changes or imply wind direction. Rain/snow intensity panels are reference material only and do not expand ATM.5 scope.
 **Evidence:** Incomplete cycle 036 (`036-atm5-fog-wind-primitives`): `.codex/test-artifacts/036-atm5-fog-wind-primitives/`; closeout: `.codex/history/036-atm5-fog-wind-primitives.md`; archived plan: `.codex/history/plans/036-atm5-fog-wind-primitives.md`. ATM.5 completed in cycle 037 (`037-atm5-selected-time-profile`): `.codex/test-artifacts/037-atm5-selected-time-profile/README.md`; closeout: `.codex/history/037-atm5-selected-time-profile.md`; archived plan: `.codex/history/plans/037-atm5-selected-time-profile.md`.
 
-### ATM.6 — Restrained storm and night refinements — NEXT
+### ATM.6 — Restrained storm and night refinements — DONE
 
-**Objective/scope:** Add muted storm and night artwork using supported condition/time cues. No alerts, solar/moon accuracy claims, or flashes behind critical text.
+**Objective/scope:** Add muted storm and night artwork using supported condition/time cues, adapted to the existing abstract landscape geometry. Keep that geometry; the approved concept's mountain/forest terrain is reference only for this slice. Add debug-build illustrative storm and clear-night scene previews needed for installed review; they must preserve selected fixture facts and be visibly labeled. No forecast fixture/provider changes, alerts, solar/moon accuracy claims, or flashes behind critical text.
 **Depends on:** ATM.5.
-**Exit:** Storm/night cues produce the intended restrained scene states, remain understandable in static/reduced-motion presentation, and introduce no strobing or text occlusion. Focused scene-projection tests cover the storm/night cue mappings and static state; installed Pixel 3 XL review covers only the affected storm/night states and their text-clearance behavior.
-**Concept artwork:** Pending owner-approved storm/night concept at `.codex/concepts/ATM.6-storm-night.png`, showing supported cue variants, restrained illumination, and protected forecast-text/timeline areas; no alert or astronomical-accuracy claims.
+**Exit:** Storm/night cues produce the intended restrained scene states, remain understandable in static/reduced-motion presentation, and introduce no strobing or text occlusion. Focused scene-projection tests cover the storm/night cue mappings and static state; debug-only illustrative storm and clear-night previews preserve fixture facts; installed Pixel 3 XL review covers only the affected storm/night states and their text-clearance behavior.
+**Concept artwork:** Owner approved 2026-10-25 at `.codex/concepts/ATM.6-storm-night.png`. The approved board shows clear night, cloudy night, and storm night with restrained blue-gray cloud scenes and protected forecast-text/timeline areas; no celestial objects, lightning, alerts, rain/snow effects, or astronomical-accuracy claims. On 2026-10-25 the owner resolved the depicted mountain/forest terrain mismatch by retaining the installed abstract landscape and adapting storm/night styling to it.
+**Evidence:** Cycle 038 (`038-atm6-storm-night-refinements`): `.codex/test-artifacts/038-atm6-storm-night-refinements/README.md`; closeout: `.codex/history/038-atm6-storm-night-refinements.md`; archived plan: `.codex/history/plans/038-atm6-storm-night-refinements.md`.
+
+## DFM — Debug forecast matrix
+
+This workstream establishes an explicit, debug-only set of typed forecast scenarios before adding more weather-scene behavior. It does not change the normal `SampleForecast`, claim provider data, or represent official alerts. Generic precipitation probability remains distinct from thunderstorm probability. Matrix coverage is representative and transition-oriented, not the full Cartesian product of every field.
+
+### DFM.1 — Define and approve the debug forecast matrix — DONE
+
+**Objective/scope:** Document the matrix scenario inventory and typed field contract. Cover clear, partly cloudy, cloudy, rain, snow, and storm; day/night variants where they change scene meaning; dry/wet probability and explicit/missing amount cases; and condition transitions. Define thunderstorm probability as a separate signal from generic precipitation probability, including a 27% illustrative case and a 90% illustrative case, plus a separate debug-only warning state. Specify expected forecast facts, provenance labels, and which values are intentionally missing. No application code or scene redesign.
+**Depends on:** ATM.6.
+**Exit:** An owner-reviewed matrix specification lists every scenario and variant, defines all typed fields and missingness, distinguishes illustrative warning state from official alerts, and states the expected time/condition transitions. The owner approves this matrix before fixture implementation begins.
+**Design artifact:** `.codex/concepts/DFM.1-debug-forecast-matrix.md` — an annotated coverage table and transition map; owner approval is required before DFM.2.
+**Evidence:** Owner-approved matrix and transition contract: `.codex/concepts/DFM.1-debug-forecast-matrix.md`. Cycle 039 (`039-dfm1-debug-forecast-matrix`): `.codex/test-artifacts/039-dfm1-debug-forecast-matrix/README.md`; closeout: `.codex/history/039-dfm1-debug-forecast-matrix.md`; archived plan: `.codex/history/plans/039-dfm1-debug-forecast-matrix.md`.
+
+### DFM.2 — Implement the approved debug forecast catalog — NEXT
+
+**Objective/scope:** Implement the approved matrix as deterministic, immutable typed debug forecast scenarios. Keep it separate from the normal forecast fixture and gate access to debuggable builds. Preserve generic precipitation chance, thunderstorm probability, typed precipitation identity/amount, optional debug warning state, and missingness as independent values. No matrix browser or visual mapping yet.
+**Depends on:** DFM.1.
+**Exit:** Focused data/projection checks demonstrate every approved matrix row is addressable and stable, every field retains its specified type/missingness, and normal fixture output is unchanged. A rendered inventory report or equivalent review artifact matches the approved matrix, and the owner approves the completed catalog before UI work starts.
+**Concept artifact:** The owner-approved DFM.1 matrix is the implementation contract; no additional scene artwork is in scope.
+**Evidence:** At planning, assign the next chronological cycle ID and use its `.codex/test-artifacts/<cycle-id>/`, `.codex/history/<cycle-id>.md`, and `.codex/history/plans/<cycle-id>.md`.
+
+### DFM.3 — Build the debug-only forecast matrix browser — PLANNED
+
+**Objective/scope:** Add an explicitly debug-only way to browse and select every approved catalog scenario and variant, with clear illustrative-data labels and its forecast facts visible. Selection must use the existing time/forecast presentation path. Do not redesign the weather scene in this slice.
+**Depends on:** DFM.2.
+**Exit:** Every approved row and variant can be selected on the installed reference device, the selected timestamp and forecast facts match the catalog, production builds expose no browser entry point, and timeline gestures remain responsive, predictable, and readable.
+**Concept artwork:** Pending owner-approved browser storyboard at `.codex/concepts/DFM.3-debug-forecast-matrix-browser.png`, showing scenario selection, selected time, and forecast facts without a permanent production control.
+**Evidence:** At planning, assign the next chronological cycle ID and use its `.codex/test-artifacts/<cycle-id>/`, `.codex/history/<cycle-id>.md`, and `.codex/history/plans/<cycle-id>.md`.
+
+## ATM — Matrix-driven atmosphere
+
+### ATM.8 — Map clear, cloudy and day/night matrix states — PLANNED
+
+**Objective/scope:** Review and implement the scene mapping for approved clear, partly cloudy, and cloudy scenarios across day, dusk, and night, using the retained abstract landscape. Preserve exact forecast facts and selected time; keep visual interpolation decorative and deterministic.
+**Depends on:** DFM.2 and DFM.3.
+**Exit:** Every approved sky/light matrix case is selectable and produces its specified scene state; transitions remain continuous across timeline scrubbing; selected time and forecast facts remain authoritative; static/reduced-motion scenes preserve meaning; installed evidence confirms responsiveness, gesture predictability, and readability.
+**Concept artwork:** Pending owner-approved annotated state board at `.codex/concepts/ATM.8-matrix-sky-mapping.png`, covering only the approved sky/light variants and the existing landscape.
+**Evidence:** At planning, assign the next chronological cycle ID and use its `.codex/test-artifacts/<cycle-id>/`, `.codex/history/<cycle-id>.md`, and `.codex/history/plans/<cycle-id>.md`.
+
+### ATM.9 — Map rain and snow matrix variants — PLANNED
+
+**Objective/scope:** Review and implement the scene mapping for the approved typed rain and snow scenarios, including probability steps, explicit amounts, and missing amounts. Probability remains distinct from precipitation intensity; do not infer snow or amount from other fields.
+**Depends on:** DFM.2, DFM.3, and ATM.8.
+**Exit:** Every approved rain/snow variant is selectable and visually distinguishable at its stated inputs; missing values remain unknown; forecast text and timeline remain readable; installed evidence covers representative day/night and reduced-motion states with responsiveness and gesture ownership retained.
+**Concept artwork:** Pending owner-approved annotated state board at `.codex/concepts/ATM.9-matrix-precipitation-mapping.png`, covering the approved rain/snow variants without implying unsupported measurements.
+**Evidence:** At planning, assign the next chronological cycle ID and use its `.codex/test-artifacts/<cycle-id>/`, `.codex/history/<cycle-id>.md`, and `.codex/history/plans/<cycle-id>.md`.
+
+### ATM.10 — Map storm likelihood and warning variants — PLANNED
+
+**Objective/scope:** Map the approved separate thunderstorm-probability and debug-warning signals to restrained storm visuals on the existing landscape. A low illustrative thunderstorm chance such as 27% may add localized darker clouds to an otherwise partly cloudy scene; a high chance such as 90% or a debug warning produces denser clouds and stronger dark contrast. Do not treat generic precipitation probability as thunderstorm probability or present a debug warning as an official alert. No lightning flashes or astronomical claims.
+**Depends on:** DFM.2, DFM.3, and ATM.8.
+**Exit:** Scrubbing through the approved clear/partly cloudy/cloudy-to-storm-and-clearing scenarios visibly enters and exits the intended graded storm states; the high/warning state is stronger than the low-probability state; source forecast facts remain accurate and visibly labeled; installed reduced-motion and ordinary-motion evidence confirms no strobing, text occlusion, or loss of timeline responsiveness/predictability/readability.
+**Concept artwork:** Pending owner-approved storm-state board at `.codex/concepts/ATM.10-storm-likelihood-mapping.png`, comparing baseline, 27%, 90%, and debug-warning scenes on the current abstract landscape.
 **Evidence:** At planning, assign the next chronological cycle ID and use its `.codex/test-artifacts/<cycle-id>/`, `.codex/history/<cycle-id>.md`, and `.codex/history/plans/<cycle-id>.md`.
 
 ### ATM.7 — Effects policy, lifecycle and performance gate — PLANNED
 
-**Objective/scope:** Add a single effects/quality policy, lifecycle-aware animation coordination, static fallback, and bounded performance review. Environment work is gated on this slice.
-**Depends on:** ATM.6.
+**Objective/scope:** Add a single effects/quality policy, lifecycle-aware animation coordination, static fallback, and bounded performance review after the matrix-driven atmosphere behavior is established. Environment work is gated on this slice.
+**Depends on:** ATM.8, ATM.9, and ATM.10.
 **Exit:** Focused policy and lifecycle tests establish `NONE`, `SUBTLE`, `FULL`, reduced-motion, and background/offscreen behavior. Pixel 3 XL frame-time, gesture-responsiveness, and lifecycle evidence for the effects coordinator is recorded. If effects performance evidence cannot be captured, record the blocker and keep ENV work ineligible; broad retesting of unrelated P.2 interactions is outside this slice.
-**Concept artwork:** Pending owner-approved effects-policy board at `.codex/concepts/ATM.7-effects-policy.png`, comparing `NONE`, `SUBTLE`, `FULL`, static/reduced-motion, and background/offscreen scene appearance for the same forecast state.
+**Concept artwork:** Pending owner-approved effects-policy board at `.codex/concepts/ATM.7-effects-policy.png`, comparing `NONE`, `SUBTLE`, `FULL`, static/reduced-motion, and background/offscreen scene appearance for the same approved matrix state.
 **Evidence:** At planning, assign the next chronological cycle ID and use its `.codex/test-artifacts/<cycle-id>/`, `.codex/history/<cycle-id>.md`, and `.codex/history/plans/<cycle-id>.md`.
 
 ## ENV — Interchangeable environment packs
 
-### ENV.1 — Environment contract and Neutral baseline — PLANNED
+The environment-pack experiments are intentionally outside the current path until the debug forecast matrix and its atmosphere mappings are complete and owner-approved.
+
+### ENV.1 — Environment contract and Neutral baseline — DEFERRED
 
 **Objective/scope:** Define immutable environment metadata and migrate existing scenic geometry behind a Neutral pack. No persistent selector or new screen.
 **Depends on:** ATM.7.
-**Exit:** Neutral appearance retains the accepted baseline. Focused pack-selection tests confirm Neutral changes only scenery metadata/geometry and preserves the supplied forecast and selected-time values. Installed Pixel 3 XL captures compare the Neutral scene with its current baseline; no app-wide font, RTL, TalkBack, gesture, or layout matrix is required.
+**Exit after re-entry:** Neutral appearance retains the accepted baseline. Focused pack-selection tests confirm Neutral changes only scenery metadata/geometry and preserves the supplied forecast and selected-time values. Installed Pixel 3 XL captures compare the Neutral scene with its current baseline.
 **Concept artwork:** Pending owner-approved Neutral-pack concept at `.codex/concepts/ENV.1-neutral-pack.png`, defining the baseline geometry, palette, and pack metadata without a selector or new screen.
-**Evidence:** At planning, assign the next chronological cycle ID and use its `.codex/test-artifacts/<cycle-id>/`, `.codex/history/<cycle-id>.md`, and `.codex/history/plans/<cycle-id>.md`.
+**Evidence:** No evidence claimed while deferred; re-entry cycle receives its chronological `.codex/test-artifacts/<cycle-id>/`, `.codex/history/<cycle-id>.md`, and `.codex/history/plans/<cycle-id>.md` paths when authorized.
+**Re-entry condition:** DFM.1–DFM.3 and ATM.8–ATM.10 are complete and owner-approved, ATM.7 meets its exit, and the owner explicitly reactivates environment-pack work.
 
-### ENV.2 — Alpine environment pack — PLANNED
+### ENV.2 — Alpine environment pack — DEFERRED
 
 **Objective/scope:** Add Alpine scenic geometry and palette using the shared atmosphere renderer. Snow visuals require an actual typed snow state or labeled preview.
 **Depends on:** ENV.1.
-**Exit:** Alpine clear/rain/night states and any permitted snow preview are coherent. Focused tests cover Alpine pack selection and require explicit typed snow or labeled preview input for snow artwork. Installed Pixel 3 XL captures cover only Alpine clear/rain/night and the permitted snow state, with forecast facts legible in those scenes.
+**Exit after re-entry:** Alpine clear/rain/night states and any permitted snow preview are coherent. Focused tests cover Alpine pack selection and require explicit typed snow or labeled preview input for snow artwork. Installed Pixel 3 XL captures cover the affected Alpine states with forecast facts legible.
 **Concept artwork:** Pending owner-approved Alpine-pack sheet at `.codex/concepts/ENV.2-alpine-pack.png`, showing clear/rain/night and explicit snow or labeled snow preview while preserving the shared scene information hierarchy.
-**Evidence:** At planning, assign the next chronological cycle ID and use its `.codex/test-artifacts/<cycle-id>/`, `.codex/history/<cycle-id>.md`, and `.codex/history/plans/<cycle-id>.md`.
+**Evidence:** No evidence claimed while deferred; re-entry cycle receives its chronological `.codex/test-artifacts/<cycle-id>/`, `.codex/history/<cycle-id>.md`, and `.codex/history/plans/<cycle-id>.md` paths when authorized.
+**Re-entry condition:** ENV.1 is complete and the owner explicitly reactivates the Alpine pack.
 
-### ENV.3 — Coastal environment pack — PLANNED
+### ENV.3 — Coastal environment pack — DEFERRED
 
 **Objective/scope:** Add Coastal scenic geometry and palette using the shared atmosphere renderer. No location lookup or geographic truth claims.
 **Depends on:** ENV.1.
-**Exit:** Coastal clear/rain/storm/night states are distinct without location lookup or geographic truth claims. Focused pack tests cover Coastal state selection and independence from location data; installed Pixel 3 XL captures cover only the Coastal states and their render budget.
+**Exit after re-entry:** Coastal clear/rain/storm/night states are distinct without location lookup or geographic truth claims. Focused pack tests cover Coastal state selection and independence from location data; installed Pixel 3 XL captures cover the affected Coastal states and render budget.
 **Concept artwork:** Pending owner-approved Coastal-pack sheet at `.codex/concepts/ENV.3-coastal-pack.png`, showing clear/rain/storm/night palette and scenery as an illustrative environment with no geographic claim.
-**Evidence:** At planning, assign the next chronological cycle ID and use its `.codex/test-artifacts/<cycle-id>/`, `.codex/history/<cycle-id>.md`, and `.codex/history/plans/<cycle-id>.md`.
+**Evidence:** No evidence claimed while deferred; re-entry cycle receives its chronological `.codex/test-artifacts/<cycle-id>/`, `.codex/history/<cycle-id>.md`, and `.codex/history/plans/<cycle-id>.md` paths when authorized.
+**Re-entry condition:** ENV.1 is complete and the owner explicitly reactivates the Coastal pack.
 
-### ENV.4 — Cross-pack transitions and acceptance matrix — PLANNED
+### ENV.4 — Cross-pack transitions and acceptance matrix — DEFERRED
 
 **Objective/scope:** Validate and implement only the bounded transition/fallback needed to move among Neutral, Alpine and Coastal, plus focused checks for the shared pack contract.
 **Depends on:** ENV.2 and ENV.3.
-**Exit:** Focused transition/fallback tests confirm switching among Neutral, Alpine, and Coastal preserves the supplied selected time, forecast facts, and provider state, and exercises static/reduced-motion and lower-quality paths. Installed Pixel 3 XL captures cover only the pack transitions and representative states needed to verify those contracts; no app-wide font, RTL, TalkBack, or timeline matrix is required.
+**Exit after re-entry:** Focused transition/fallback tests confirm switching among Neutral, Alpine, and Coastal preserves the supplied selected time, forecast facts, and provider state, and exercises static/reduced-motion and lower-quality paths. Installed Pixel 3 XL captures cover only the pack transitions and representative states needed to verify those contracts.
 **Concept artwork:** Pending owner-approved transition storyboard at `.codex/concepts/ENV.4-pack-transitions.png`, showing Neutral/Alpine/Coastal selection, transition, and static/lower-quality fallback states.
-**Evidence:** At planning, assign the next chronological cycle ID and use its `.codex/test-artifacts/<cycle-id>/`, `.codex/history/<cycle-id>.md`, and `.codex/history/plans/<cycle-id>.md`.
+**Evidence:** No evidence claimed while deferred; re-entry cycle receives its chronological `.codex/test-artifacts/<cycle-id>/`, `.codex/history/<cycle-id>.md`, and `.codex/history/plans/<cycle-id>.md` paths when authorized.
+**Re-entry condition:** ENV.2 and ENV.3 are complete and the owner explicitly reactivates pack-transition work.
 
 ### ENV.5 — Additional environment packs — DEFERRED
 
 **Objective/scope:** Consider Forest, Plains, Desert, or Urban only after Neutral/Alpine/Coastal acceptance. No commitment to implement all candidates.
 **Depends on:** ENV.4.
-**Exit after re-entry:** Owner-approved asset/reference plan and one specifically selected bounded pack slice with truthful weather mapping. The selected slice defines focused tests for its pack-selection and weather-mapping contract and installed evidence for only its affected scene states; no shared app-wide font, RTL, TalkBack, or layout matrix is implied.
+**Exit after re-entry:** Owner-approved asset/reference plan and one specifically selected bounded pack slice with truthful weather mapping. The selected slice defines focused checks for its pack-selection and weather-mapping contract and installed evidence for only its affected scene states.
 **Concept artwork:** Pending explicit pack choice and owner-approved concept at `.codex/concepts/ENV.5-selected-pack.png`; the concept must target only the selected additional pack and show truthful condition mapping. Do not create a generic multi-pack concept as a substitute.
 **Evidence:** No evidence claimed while deferred; re-entry cycle receives its chronological `.codex/test-artifacts/<cycle-id>/`, `.codex/history/<cycle-id>.md`, and `.codex/history/plans/<cycle-id>.md` paths when authorized.
 **Re-entry condition:** Explicit owner selection and approval of one additional pack after ENV.4 is complete.

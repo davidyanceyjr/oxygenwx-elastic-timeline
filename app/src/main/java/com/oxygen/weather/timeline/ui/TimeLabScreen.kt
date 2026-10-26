@@ -57,10 +57,11 @@ import kotlin.math.floor
 fun TimeLabScreen(
     effectPreview: AtmospherePreview = AtmospherePreview.NONE,
     initialSelectedHour: Double = 36.0,
+    initialPrecisionMode: Boolean = false,
 ) {
     // Absolute hour offset is the sole selection authority. Zoom never rewrites it.
     var selectedHour by rememberSaveable { mutableDoubleStateOf(initialSelectedHour) }
-    var precisionMode by rememberSaveable { mutableStateOf(false) }
+    var precisionMode by rememberSaveable { mutableStateOf(initialPrecisionMode) }
     var focusDay by rememberSaveable { mutableIntStateOf(1) }
     var forecastBrowserOpen by remember { mutableStateOf(false) }
     val haptics = LocalHapticFeedback.current
@@ -180,7 +181,7 @@ fun TimeLabScreen(
                             color = Color.White.copy(alpha = .79f),
                             style = TextStyle(textDirection = TextDirection.Ltr))
                         Spacer(Modifier.height(4.dp))
-                        Text(view.conditionsLabel, fontSize = 22.sp,
+                        Text(displayConditionsLabel(view.conditionsLabel, effectPreview), fontSize = 22.sp,
                             fontWeight = FontWeight.Light, color = Color.White)
                         Spacer(Modifier.height(3.dp))
                         Text("HIGH ${view.highF}°    /    LOW ${view.lowF}°", fontSize = 12.sp,
@@ -199,7 +200,7 @@ fun TimeLabScreen(
                     fontWeight = FontWeight.Light, color = Color.White,
                     modifier = Modifier.testTag("forecastTemperature"))
                 Spacer(Modifier.height(3.dp))
-                Text(view.conditionsLabel, fontSize = 23.sp,
+                Text(displayConditionsLabel(view.conditionsLabel, effectPreview), fontSize = 23.sp,
                     fontWeight = FontWeight.Light, color = Color.White,
                     textAlign = TextAlign.Center)
                 Spacer(Modifier.height(10.dp))
@@ -272,3 +273,10 @@ fun TimeLabScreen(
         }
     }
 }
+
+private fun displayConditionsLabel(label: String, preview: AtmospherePreview): String =
+    when (preview) {
+        AtmospherePreview.ILLUSTRATIVE_CLEAR_NIGHT -> "Illustrative clear night"
+        AtmospherePreview.ILLUSTRATIVE_STORM -> "Illustrative storm"
+        else -> label
+    }

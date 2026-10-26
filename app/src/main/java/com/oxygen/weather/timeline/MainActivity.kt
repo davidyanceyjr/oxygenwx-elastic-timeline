@@ -33,7 +33,17 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         val isDebuggable = applicationInfo.flags and ApplicationInfo.FLAG_DEBUGGABLE != 0
         val showSnowPreview = isDebuggable && intent.getBooleanExtra(EXTRA_PREVIEW_SNOW, false)
-        val effectPreview = if (isDebuggable) {
+        val showStormPreview = isDebuggable && intent.getBooleanExtra(EXTRA_ATM6_STORM, false)
+        val showClearNightPreview = isDebuggable && intent.getBooleanExtra(EXTRA_ATM6_CLEAR_NIGHT, false)
+        val debugSelectedHour = if (isDebuggable) {
+            intent.getStringExtra(EXTRA_ATM6_HOUR)?.toDoubleOrNull()
+                ?.takeIf { it.isFinite() && it in 0.0..SampleForecast.hours.lastIndex.toDouble() }
+        } else null
+        val effectPreview = if (showStormPreview) {
+            AtmospherePreview.ILLUSTRATIVE_STORM
+        } else if (showClearNightPreview) {
+            AtmospherePreview.ILLUSTRATIVE_CLEAR_NIGHT
+        } else if (isDebuggable) {
             when (intent.getStringExtra(EXTRA_ATM5_PREVIEW)) {
                 "haze" -> AtmospherePreview.ILLUSTRATIVE_HAZE
                 "turbulence" -> AtmospherePreview.ILLUSTRATIVE_TURBULENCE
@@ -55,7 +65,11 @@ class MainActivity : ComponentActivity() {
                     previewHour != null -> FixturePrecipitationPreview(previewHour)
                     else -> TimeLabScreen(
                         effectPreview = effectPreview,
-                        initialSelectedHour = effectPreviewHour ?: 36.0,
+                        initialSelectedHour = debugSelectedHour
+                            ?: if (showStormPreview) 0.0
+                            else if (showClearNightPreview) 48.0
+                            else effectPreviewHour ?: 36.0,
+                        initialPrecisionMode = showStormPreview || showClearNightPreview || debugSelectedHour != null,
                     )
                 }
             }
@@ -67,6 +81,9 @@ private const val EXTRA_PREVIEW_SNOW = "preview_snow"
 private const val EXTRA_PREVIEW_HOUR = "preview_hour"
 private const val EXTRA_ATM5_PREVIEW = "atm5_preview"
 private const val EXTRA_ATM5_HOUR = "atm5_hour"
+private const val EXTRA_ATM6_STORM = "atm6_storm"
+private const val EXTRA_ATM6_CLEAR_NIGHT = "atm6_clear_night"
+private const val EXTRA_ATM6_HOUR = "atm6_hour"
 
 @androidx.compose.runtime.Composable
 private fun FixturePrecipitationPreview(hourOffset: Int) {

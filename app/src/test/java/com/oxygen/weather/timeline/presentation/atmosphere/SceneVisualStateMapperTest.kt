@@ -123,6 +123,78 @@ class SceneVisualStateMapperTest {
     }
 
     @Test
+    fun illustrativeStormPreviewChangesOnlySceneDepiction() {
+        val frame = frame(condition = SkyCondition.RAIN, cloudPercent = 82.0, rainChance = 67.0).copy(
+            precipitationType = PrecipitationType.RAIN,
+            precipitationAmount = PrecipitationAmount.RainLiquidMm(1.4),
+        )
+        val input = AtmosphereInput(
+            sky = frame,
+            precisionMode = true,
+            localHour = 0.0,
+            preview = AtmospherePreview.ILLUSTRATIVE_STORM,
+            selectedHour = 24.5,
+        )
+
+        val state = SceneVisualStateMapper.map(input)
+
+        assertEquals(DepictionKind.STORM, state.depiction)
+        assertEquals(SkyCondition.RAIN, state.condition)
+        assertEquals(PrecipitationKind.RAIN, state.precipitation)
+        assertEquals(PrecipitationAmount.RainLiquidMm(1.4), state.precipitationAmount)
+        assertEquals(67.0, state.precipitationChancePercent, 0.0)
+        assertEquals(.82, state.cloudFraction!!, 0.0)
+        assertEquals(0.0, state.daylight!!, 0.0)
+        assertEquals(frame, input.sky)
+        assertEquals(24.5, input.selectedHour, 0.0)
+    }
+
+    @Test
+    fun illustrativeClearNightPreviewChangesOnlySceneCloudAndEffectDepiction() {
+        val frame = frame(condition = SkyCondition.CLOUDY, cloudPercent = 91.0, rainChance = 24.0).copy(
+            precipitationType = PrecipitationType.RAIN,
+            precipitationAmount = PrecipitationAmount.RainLiquidMm(0.6),
+        )
+        val input = AtmosphereInput(
+            sky = frame,
+            precisionMode = true,
+            localHour = 0.0,
+            preview = AtmospherePreview.ILLUSTRATIVE_CLEAR_NIGHT,
+            selectedHour = 48.0,
+        )
+
+        val state = SceneVisualStateMapper.map(input)
+
+        assertEquals(DepictionKind.NONE, state.depiction)
+        assertEquals(0.0, state.cloudFraction!!, 0.0)
+        assertEquals(0.0, state.daylight!!, 0.0)
+        assertEquals(SkyCondition.CLOUDY, state.condition)
+        assertEquals(PrecipitationKind.RAIN, state.precipitation)
+        assertEquals(24.0, state.precipitationChancePercent, 0.0)
+        assertEquals(PrecipitationAmount.RainLiquidMm(0.6), state.precipitationAmount)
+        assertEquals(frame, input.sky)
+        assertEquals(48.0, input.selectedHour, 0.0)
+    }
+
+    @Test
+    fun typedStormConditionCanCoexistWithTypedRainPrecipitation() {
+        val frame = frame(condition = SkyCondition.STORM, cloudPercent = 91.0, rainChance = 76.0).copy(
+            precipitationType = PrecipitationType.RAIN,
+            precipitationAmount = PrecipitationAmount.RainLiquidMm(2.8),
+        )
+
+        val state = SceneVisualStateMapper.map(
+            AtmosphereInput(sky = frame, precisionMode = true, localHour = 0.0)
+        )
+
+        assertEquals(SkyCondition.STORM, state.condition)
+        assertEquals(PrecipitationKind.RAIN, state.precipitation)
+        assertEquals(DepictionKind.ILLUSTRATIVE_RAIN, state.depiction)
+        assertEquals(76.0, state.precipitationChancePercent, 0.0)
+        assertEquals(PrecipitationAmount.RainLiquidMm(2.8), state.precipitationAmount)
+    }
+
+    @Test
     fun normalizesFiniteCloudAndDaylightValuesAndPreservesMissingness() {
         assertEquals(0.0, SceneVisualStateMapper.map(input(cloudPercent = -30.0)).cloudFraction!!, 0.0)
         assertEquals(1.0, SceneVisualStateMapper.map(input(cloudPercent = 130.0)).cloudFraction!!, 0.0)
@@ -134,6 +206,56 @@ class SceneVisualStateMapperTest {
 
         assertEquals(0.0, SceneVisualStateMapper.map(input(localHour = 6.0)).daylight!!, 1e-12)
         assertEquals(1.0, SceneVisualStateMapper.map(input(localHour = 12.0)).daylight!!, 1e-12)
+    }
+
+    @Test
+    fun stormAndNonStormNightKeepTypedIdentityAndExistingDaylightCue() {
+        val stormFrame = frame(SkyCondition.STORM, cloudPercent = 85.0, rainChance = 100.0)
+        val stormInput = AtmosphereInput(
+            sky = stormFrame,
+            precisionMode = true,
+            localHour = 0.0,
+            selectedHour = 48.5,
+        )
+        val storm = SceneVisualStateMapper.map(stormInput)
+        assertEquals(SkyCondition.STORM, storm.condition)
+        assertEquals(DepictionKind.STORM, storm.depiction)
+        assertEquals(PrecipitationKind.UNKNOWN, storm.precipitation)
+        assertEquals(85.0, storm.cloudFraction!! * 100.0, 0.0)
+        assertEquals(100.0, storm.precipitationChancePercent, 0.0)
+        assertEquals(0.0, storm.daylight!!, 0.0)
+        assertEquals(48.5, stormInput.selectedHour, 0.0)
+        assertEquals(stormFrame, stormInput.sky)
+
+        val cloudyNight = SceneVisualStateMapper.map(input(SkyCondition.CLOUDY, localHour = 0.0))
+        assertEquals(SkyCondition.CLOUDY, cloudyNight.condition)
+        assertEquals(DepictionKind.NONE, cloudyNight.depiction)
+        assertEquals(0.0, cloudyNight.daylight!!, 0.0)
+    }
+
+    @Test
+    fun daytimeStormRetainsStormIdentityWithoutInferringPrecipitation() {
+        val state = SceneVisualStateMapper.map(input(SkyCondition.STORM, localHour = 12.0))
+        assertEquals(DepictionKind.STORM, state.depiction)
+        assertEquals(PrecipitationKind.UNKNOWN, state.precipitation)
+        assertEquals(1.0, state.daylight!!, 0.0)
+    }
+
+    @Test
+    fun reducedMotionKeepsStormMeaningAndMissingScenicInputsMissing() {
+        val reduced = SceneVisualStateMapper.map(
+            AtmosphereInput(
+                sky = frame(SkyCondition.STORM, cloudPercent = Double.NaN),
+                precisionMode = false,
+                localHour = Double.NaN,
+                effects = EffectsLevel.FULL,
+                reducedMotion = true,
+            )
+        )
+        assertEquals(EffectsLevel.NONE, reduced.effects)
+        assertEquals(DepictionKind.STORM, reduced.depiction)
+        assertNull(reduced.cloudFraction)
+        assertNull(reduced.daylight)
     }
 
     @Test

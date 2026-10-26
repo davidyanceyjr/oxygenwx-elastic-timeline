@@ -19,6 +19,7 @@ import com.oxygen.weather.timeline.presentation.atmosphere.SceneVisualState
 import com.oxygen.weather.timeline.presentation.atmosphere.SceneVisualStateMapper
 import com.oxygen.weather.timeline.presentation.SkyFrame
 import com.oxygen.weather.timeline.data.PrecipitationAmount
+import com.oxygen.weather.timeline.data.SkyCondition
 import kotlin.math.PI
 import kotlin.math.cos
 import kotlin.math.sin
@@ -61,9 +62,16 @@ private fun AtmosphericScene(
     Canvas(modifier.fillMaxSize()) {
         drawSkyPalette(state)
         drawDiffuseLight(state)
-        drawIllustrativeCelestial(state, localHour)
-        drawCloudFields(state.cloudFraction?.toFloat()?.coerceIn(0f, 1f) ?: 0f, state.daylight, selectedHour)
-        drawLandscape(state.previewStrengths.haze.toFloat(), sceneHorizonColor(state))
+        // Keep the existing daytime sun cue, but omit a night marker: this scene has no
+        // celestial position, phase, or visibility model.
+        drawIllustrativeSun(state, localHour)
+        drawCloudFields(
+            state.cloudFraction?.toFloat()?.coerceIn(0f, 1f) ?: 0f,
+            state.daylight,
+            selectedHour,
+            isStorm = state.hasStormVisual(),
+        )
+        drawLandscape(state.previewStrengths.haze.toFloat(), sceneHorizonColor(state), state)
         when (state.preview) {
             AtmospherePreview.ILLUSTRATIVE_TURBULENCE,
             AtmospherePreview.ILLUSTRATIVE_HAZE_AND_TURBULENCE ->
@@ -145,9 +153,23 @@ private fun DrawScope.drawSkyPalette(state: SceneVisualState) {
         else -> .035f
     } * cloudiness
     val wash = Color(0xFF8293A8).copy(alpha = cloudWash)
-    val top = lerp(skyColor(nightTop, duskTop, dayTop), wash, cloudiness * .30f)
-    val mid = lerp(skyColor(nightMid, duskMid, dayMid), wash, cloudiness * .34f)
-    val horizon = sceneHorizonColor(state)
+    val storm = state.hasStormVisual()
+    val stormTop = Color(0xFF3B526B)
+    val stormMid = Color(0xFF697B8D)
+    val stormHorizon = Color(0xFF8A8990)
+    val topBase = skyColor(nightTop, duskTop, dayTop)
+    val midBase = skyColor(nightMid, duskMid, dayMid)
+    val top = lerp(
+        lerp(topBase, stormTop, if (storm) .28f else 0f),
+        wash,
+        cloudiness * .30f,
+    )
+    val mid = lerp(
+        lerp(midBase, stormMid, if (storm) .30f else 0f),
+        wash,
+        cloudiness * .34f,
+    )
+    val horizon = if (storm) lerp(sceneHorizonColor(state), stormHorizon, .24f) else sceneHorizonColor(state)
     drawRect(brush = Brush.verticalGradient(0f to top, .58f to mid, 1f to horizon))
 }
 
@@ -165,10 +187,15 @@ private fun sceneHorizonColor(state: SceneVisualState): Color {
         else -> .035f
     } * cloudiness
     val wash = Color(0xFF8293A8).copy(alpha = cloudWash)
-    return lerp(lerp(night, dusk, twilight), day, daylight).let {
+    val base = lerp(lerp(night, dusk, twilight), day, daylight).let {
         lerp(it, wash, cloudiness * .38f)
     }
+    return if (state.hasStormVisual()) lerp(base, Color(0xFF8A8990), .24f) else base
 }
+
+/** Storm styling follows the typed condition even when precipitation has its own depiction. */
+private fun SceneVisualState.hasStormVisual(): Boolean =
+    condition == SkyCondition.STORM || depiction == DepictionKind.STORM
 
 private fun DrawScope.drawDiffuseLight(state: SceneVisualState) {
     val daylight = state.daylight?.toFloat()?.coerceIn(0f, 1f) ?: 0f
@@ -187,7 +214,7 @@ private fun DrawScope.drawDiffuseLight(state: SceneVisualState) {
     )
 }
 
-private fun DrawScope.drawIllustrativeCelestial(state: SceneVisualState, localHour: Double) {
+private fun DrawScope.drawIllustrativeSun(state: SceneVisualState, localHour: Double) {
     val daylight = state.daylight?.toFloat()?.coerceIn(0f, 1f) ?: 0f
     val cloudiness = state.cloudFraction?.toFloat()?.coerceIn(0f, 1f) ?: 0f
     val w = size.width
@@ -198,19 +225,11 @@ private fun DrawScope.drawIllustrativeCelestial(state: SceneVisualState, localHo
     // Keep the small marker in the open upper sky, above the forecast text block.
     val y = h * (.19f - .045f * sin(arc * PI).toFloat())
     val sunAlpha = daylight * (1f - .55f * cloudiness)
-    if (sunAlpha > .025f) {
-        drawCircle(
-            color = Color(0xFFFFE6B9).copy(alpha = .76f * sunAlpha),
-            radius = w * .022f,
-            center = Offset(x, y),
-        )
-    } else {
-        // A simple crescent is an illustration; no phase or visibility model is implied.
-        val moonCenter = Offset(w * .73f, h * .19f)
-        val alpha = (1f - daylight).coerceIn(0f, 1f) * (1f - cloudiness * .35f)
-        drawCircle(Color(0xFFE4ECF5).copy(alpha = .82f * alpha), w * .024f, moonCenter)
-        drawCircle(Color(0xFF263B58).copy(alpha = .96f), w * .020f, Offset(moonCenter.x + w * .011f, moonCenter.y - h * .004f))
-    }
+    if (sunAlpha > .025f) drawCircle(
+        color = Color(0xFFFFE6B9).copy(alpha = .76f * sunAlpha),
+        radius = w * .022f,
+        center = Offset(x, y),
+    )
 }
 
 private data class CloudShape(
@@ -234,18 +253,23 @@ private val midClouds = listOf(
 )
 
 /** Stable decorative groups. Their phase is a pure function of selected fixture time. */
-private fun DrawScope.drawCloudFields(cloudiness: Float, daylight: Double?, selectedHour: Double) {
+private fun DrawScope.drawCloudFields(
+    cloudiness: Float,
+    daylight: Double?,
+    selectedHour: Double,
+    isStorm: Boolean,
+) {
     if (cloudiness <= 0f) return
     val daylight01 = daylight?.toFloat()?.coerceIn(0f, 1f) ?: 0f
-    val farColor = lerp(Color(0xFF91A7C1), Color(0xFFE2EDF4), daylight01)
-    val midColor = lerp(Color(0xFF7189A5), Color(0xFFD3E1EB), daylight01)
+    val farColor = if (isStorm) Color(0xFF8B98A8) else lerp(Color(0xFF91A7C1), Color(0xFFE2EDF4), daylight01)
+    val midColor = if (isStorm) Color(0xFF596A7E) else lerp(Color(0xFF7189A5), Color(0xFFD3E1EB), daylight01)
     drawCloudGroup(
         shapes = farClouds,
         cloudiness = cloudiness,
         selectedHour = selectedHour,
         rateDpPerHour = 2.0f,
         color = farColor,
-        alpha = .34f,
+        alpha = if (isStorm) .48f else .34f,
         detail = .58f,
     )
     drawCloudGroup(
@@ -254,7 +278,7 @@ private fun DrawScope.drawCloudFields(cloudiness: Float, daylight: Double?, sele
         selectedHour = selectedHour,
         rateDpPerHour = 3.5f,
         color = midColor,
-        alpha = .50f,
+        alpha = if (isStorm) .62f else .50f,
         detail = .90f,
     )
 }
@@ -312,7 +336,7 @@ private fun DrawScope.drawCloudGroup(
     }
 }
 
-private fun DrawScope.drawLandscape(hazeStrength: Float, horizon: Color) {
+private fun DrawScope.drawLandscape(hazeStrength: Float, horizon: Color, state: SceneVisualState) {
     val w = size.width
     val h = size.height
     val distant = Path().apply {
@@ -327,7 +351,14 @@ private fun DrawScope.drawLandscape(hazeStrength: Float, horizon: Color) {
         lineTo(0f, h)
         close()
     }
-    val ridgeBase = Color(0xFF4B7486)
+    val isNight = state.daylight == 0.0
+    val isStorm = state.hasStormVisual()
+    val ridgeBase = when {
+        isStorm && isNight -> Color(0xFF46566A)
+        isStorm -> Color(0xFF557080)
+        isNight -> Color(0xFF3E667D)
+        else -> Color(0xFF4B7486)
+    }
     val ridgeHaze = (hazeStrength.coerceIn(0f, 1f) * .30f).coerceIn(0f, .30f)
     drawPath(distant, lerp(ridgeBase, horizon, ridgeHaze).copy(alpha = 0x88 / 255f))
     val near = Path().apply {
@@ -338,7 +369,13 @@ private fun DrawScope.drawLandscape(hazeStrength: Float, horizon: Color) {
         lineTo(0f, h)
         close()
     }
-    drawPath(near, Color(0xFF244A58))
+    val nearColor = when {
+        isStorm && isNight -> Color(0xFF1C3448)
+        isStorm -> Color(0xFF244151)
+        isNight -> Color(0xFF1E4355)
+        else -> Color(0xFF244A58)
+    }
+    drawPath(near, nearColor)
 }
 
 private fun DrawScope.drawRain(chancePercent: Double, amount: PrecipitationAmount.RainLiquidMm?) {

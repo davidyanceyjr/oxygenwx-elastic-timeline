@@ -32,6 +32,10 @@ enum class DepictionKind { NONE, ILLUSTRATIVE_RAIN, ILLUSTRATIVE_SNOW, SYNTHETIC
 
 enum class AtmospherePreview {
     NONE,
+    /** Scene-only clear-night comparison for labeled debug review; forecast facts stay intact. */
+    ILLUSTRATIVE_CLEAR_NIGHT,
+    /** Scene-only storm treatment for labeled debug review; not a storm forecast claim. */
+    ILLUSTRATIVE_STORM,
     SYNTHETIC_SNOW,
     ILLUSTRATIVE_HAZE,
     ILLUSTRATIVE_TURBULENCE,
@@ -47,7 +51,7 @@ data class SceneVisualState(
     val precipitationChancePercent: Double,
     /** Explicit interval amount when supplied; null remains unknown. */
     val precipitationAmount: PrecipitationAmount?,
-    /** Cloud cover in the inclusive range [0, 1], or null when the source is invalid. */
+    /** Scene cloud cover in [0, 1], or null when invalid; clear-night preview forces zero. */
     val cloudFraction: Double?,
     /** Existing illustrative daylight cue in the inclusive range [0, 1], or null when invalid. */
     val daylight: Double?,
@@ -105,16 +109,26 @@ object SceneVisualStateMapper {
         }
         val (precipitation, depiction) = when (input.preview) {
             AtmospherePreview.NONE,
+            AtmospherePreview.ILLUSTRATIVE_CLEAR_NIGHT,
+            AtmospherePreview.ILLUSTRATIVE_STORM,
             AtmospherePreview.ILLUSTRATIVE_HAZE,
             AtmospherePreview.ILLUSTRATIVE_TURBULENCE,
             AtmospherePreview.ILLUSTRATIVE_HAZE_AND_TURBULENCE -> forecastPrecipitation to forecastDepiction
             AtmospherePreview.SYNTHETIC_SNOW ->
                 PrecipitationKind.SYNTHETIC_SNOW to DepictionKind.SYNTHETIC_SNOW_PREVIEW
         }
-        val cloudFraction = input.sky.cloudPercent
+        val finalDepiction = when (input.preview) {
+            AtmospherePreview.ILLUSTRATIVE_STORM -> DepictionKind.STORM
+            AtmospherePreview.ILLUSTRATIVE_CLEAR_NIGHT -> DepictionKind.NONE
+            else -> depiction
+        }
+        val sourceCloudFraction = input.sky.cloudPercent
             .takeIf(Double::isFinite)
             ?.coerceIn(0.0, 100.0)
             ?.div(100.0)
+        val cloudFraction = if (input.preview == AtmospherePreview.ILLUSTRATIVE_CLEAR_NIGHT) {
+            0.0
+        } else sourceCloudFraction
         val daylight = input.localHour
             .takeIf(Double::isFinite)
             ?.let { sin(((it - 6.0) / 12.0) * PI).coerceIn(0.0, 1.0) }
@@ -123,13 +137,16 @@ object SceneVisualStateMapper {
             AtmospherePreview.ILLUSTRATIVE_HAZE -> PreviewEffectStrengths(profile.haze, 0.0)
             AtmospherePreview.ILLUSTRATIVE_TURBULENCE -> PreviewEffectStrengths(0.0, profile.turbulence)
             AtmospherePreview.ILLUSTRATIVE_HAZE_AND_TURBULENCE -> profile
-            AtmospherePreview.NONE, AtmospherePreview.SYNTHETIC_SNOW -> PreviewEffectStrengths(0.0, 0.0)
+            AtmospherePreview.NONE,
+            AtmospherePreview.ILLUSTRATIVE_CLEAR_NIGHT,
+            AtmospherePreview.ILLUSTRATIVE_STORM,
+            AtmospherePreview.SYNTHETIC_SNOW -> PreviewEffectStrengths(0.0, 0.0)
         }
 
         return SceneVisualState(
             condition = input.sky.condition,
             precipitation = precipitation,
-            depiction = depiction,
+            depiction = finalDepiction,
             precipitationChancePercent = input.sky.precipitationChancePercent
                 .takeIf(Double::isFinite)?.coerceIn(0.0, 100.0) ?: 0.0,
             precipitationAmount = input.sky.precipitationAmount,
