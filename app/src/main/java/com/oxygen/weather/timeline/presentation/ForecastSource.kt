@@ -33,11 +33,15 @@ data class ForecastSourceHour(
     val warning: PresentedWarning = PresentedWarning.NOT_SUPPLIED,
     val provenance: ForecastProvenance,
     val scene: SkyFrame,
+    val windDirectionDegrees: Double? = null,
 ) {
     init {
         require(temperatureC.isFinite() && cloudPercent.isFinite() && windKph.isFinite())
         require(precipitationProbabilityPercent == null || precipitationProbabilityPercent in 0.0..100.0)
         require(thunderstormProbabilityPercent == null || thunderstormProbabilityPercent in 0.0..100.0)
+        require(windDirectionDegrees == null ||
+            (windDirectionDegrees.isFinite() && windDirectionDegrees >= 0.0 && windDirectionDegrees < 360.0)
+        )
     }
 }
 
@@ -97,6 +101,7 @@ private fun ForecastHour.toSourceHour() = ForecastSourceHour(
     },
     precipitationType = precipitationType,
     precipitationAmount = precipitationAmount,
+    windDirectionDegrees = windDirectionDegrees,
     provenance = ForecastProvenance.DEMO_DATA,
     scene = SkyFrame(
         condition = condition,

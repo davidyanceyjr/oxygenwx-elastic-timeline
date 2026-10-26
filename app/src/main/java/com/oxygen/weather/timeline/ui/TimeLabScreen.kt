@@ -1,6 +1,7 @@
 package com.oxygen.weather.timeline.ui
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.gestures.detectHorizontalDragGestures
 import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.foundation.layout.Arrangement
@@ -18,6 +19,7 @@ import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.foundation.layout.width
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableDoubleStateOf
 import androidx.compose.runtime.mutableIntStateOf
@@ -29,12 +31,18 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.geometry.Offset
+import androidx.compose.ui.graphics.Path
+import androidx.compose.ui.graphics.drawscope.Stroke
+import androidx.compose.ui.graphics.drawscope.rotate
 import androidx.compose.ui.hapticfeedback.HapticFeedbackType
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.platform.LocalLayoutDirection
 import androidx.compose.ui.platform.LocalHapticFeedback
 import androidx.compose.ui.platform.testTag
+import androidx.compose.ui.semantics.semantics
+import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.style.TextDirection
@@ -45,6 +53,7 @@ import androidx.compose.ui.unit.sp
 import com.oxygen.weather.timeline.presentation.ElasticTimeAxis
 import com.oxygen.weather.timeline.presentation.ForecastProjection
 import com.oxygen.weather.timeline.presentation.ForecastSource
+import com.oxygen.weather.timeline.presentation.CompassDirection
 import com.oxygen.weather.timeline.presentation.PresentedWarning
 import com.oxygen.weather.timeline.presentation.atmosphere.AtmosphereInput
 import com.oxygen.weather.timeline.presentation.atmosphere.AtmospherePreview
@@ -227,25 +236,39 @@ fun TimeLabScreen(
         Column(
             Modifier.fillMaxWidth().align(Alignment.BottomCenter).navigationBarsPadding(),
         ) {
-            Row(
-                Modifier.fillMaxWidth().padding(horizontal = 27.dp),
-                horizontalArrangement = Arrangement.SpaceBetween,
-                verticalAlignment = Alignment.Bottom,
-            ) {
-                Column {
-                    Text("PRECIP CHANCE", fontSize = 9.sp, letterSpacing = 1.4.sp,
-                        color = Color(0xCCDDEAF3))
-                    Text(view.precipitationPercent?.let { "$it%" } ?: "Unknown", fontSize = 19.sp,
-                        fontWeight = FontWeight.Medium, color = Color.White)
-                }
-                Column(horizontalAlignment = Alignment.End) {
-                    Text("WIND", fontSize = 9.sp, letterSpacing = 1.4.sp,
-                        color = Color(0xCCDDEAF3))
-                    Text("${view.windMph} mph", fontSize = 19.sp,
-                        fontWeight = FontWeight.Medium, color = Color.White)
+            CompositionLocalProvider(LocalLayoutDirection provides LayoutDirection.Ltr) {
+                Row(
+                    Modifier.fillMaxWidth().padding(horizontal = 27.dp),
+                    horizontalArrangement = Arrangement.SpaceBetween,
+                    verticalAlignment = Alignment.CenterVertically,
+                ) {
+                    Column(
+                        horizontalAlignment = Alignment.CenterHorizontally,
+                        modifier = Modifier.semantics(mergeDescendants = true) {
+                            contentDescription = "Precipitation chance ${view.precipitationPercent?.let { "$it percent" } ?: "unknown"}"
+                        },
+                    ) {
+                        RainSignalIcon()
+                        Text(view.precipitationPercent?.let { "$it%" } ?: "Unknown", fontSize = 19.sp,
+                            fontWeight = FontWeight.Medium, color = Color.White)
+                    }
+                    Column(
+                        horizontalAlignment = Alignment.CenterHorizontally,
+                        modifier = Modifier.semantics(mergeDescendants = true) {
+                            val direction = CompassDirection.fromBearing(view.windDirectionDegrees)
+                            contentDescription = buildString {
+                                append("Wind speed ${view.windMph} miles per hour")
+                                direction?.let { append(", from ${it.spokenName}") }
+                            }
+                        },
+                    ) {
+                        CompassIndicator(view.windDirectionDegrees)
+                        Text("${view.windMph} mph", fontSize = 19.sp,
+                            fontWeight = FontWeight.Medium, color = Color.White)
+                    }
                 }
             }
-            Spacer(Modifier.height(13.dp))
+            Spacer(Modifier.height(35.dp))
             ElasticForecastTimeline(
                 source = forecastSource,
                 selectedHour = selectedHour,
@@ -297,6 +320,75 @@ private fun displayConditionsLabel(label: String, preview: AtmospherePreview): S
         AtmospherePreview.ILLUSTRATIVE_STORM -> "Illustrative storm"
         else -> label
     }
+
+@Composable
+private fun RainSignalIcon() {
+    Canvas(Modifier.width(36.dp).height(36.dp)) {
+        val w = size.width
+        val h = size.height
+        val color = Color(0xFFBFE9F5)
+
+        fun drop(centerX: Float, top: Float, diameter: Float): Path = Path().apply {
+            moveTo(centerX, top)
+            cubicTo(centerX - diameter * .15f, top + diameter * .20f,
+                centerX - diameter * .52f, top + diameter * .56f,
+                centerX - diameter * .46f, top + diameter * .72f)
+            cubicTo(centerX - diameter * .39f, top + diameter * 1.05f,
+                centerX + diameter * .39f, top + diameter * 1.05f,
+                centerX + diameter * .46f, top + diameter * .72f)
+            cubicTo(centerX + diameter * .52f, top + diameter * .56f,
+                centerX + diameter * .15f, top + diameter * .20f,
+                centerX, top)
+            close()
+        }
+
+        drawPath(drop(w * .50f, h * .04f, w * .30f), color)
+        drawPath(drop(w * .26f, h * .48f, w * .27f), color)
+        drawPath(drop(w * .74f, h * .48f, w * .27f), color)
+    }
+}
+
+@Composable
+private fun CompassIndicator(bearingDegrees: Double?) {
+    Canvas(Modifier.width(32.dp).height(32.dp)) {
+        val center = Offset(size.width / 2f, size.height / 2f)
+        val radius = size.minDimension * .43f
+        val faceColor = Color(0xB8D7E4EE)
+        drawCircle(faceColor, radius, center, style = Stroke(width = 1.5.dp.toPx()))
+
+        repeat(8) { tick ->
+            rotate(tick * 45f, center) {
+                drawLine(
+                    color = faceColor,
+                    start = Offset(center.x, center.y - radius + 1.dp.toPx()),
+                    end = Offset(center.x, center.y - radius + if (tick % 2 == 0) 5.dp.toPx() else 3.dp.toPx()),
+                    strokeWidth = 1.dp.toPx(),
+                )
+            }
+        }
+
+        bearingDegrees?.let { bearing ->
+            rotate(bearing.toFloat(), center) {
+                val needle = Path().apply {
+                    moveTo(center.x, center.y - radius * .77f)
+                    lineTo(center.x + radius * .17f, center.y + radius * .10f)
+                    lineTo(center.x, center.y)
+                    lineTo(center.x - radius * .17f, center.y + radius * .10f)
+                    close()
+                }
+                val tail = Path().apply {
+                    moveTo(center.x, center.y + radius * .67f)
+                    lineTo(center.x + radius * .14f, center.y - radius * .02f)
+                    lineTo(center.x, center.y)
+                    lineTo(center.x - radius * .14f, center.y - radius * .02f)
+                    close()
+                }
+                drawPath(needle, Color(0xFFFFD985))
+                drawPath(tail, Color(0xB8D7E4EE))
+            }
+        }
+    }
+}
 
 @Composable
 private fun DebugFactLine(thunderstormChance: Int?, warning: PresentedWarning) {

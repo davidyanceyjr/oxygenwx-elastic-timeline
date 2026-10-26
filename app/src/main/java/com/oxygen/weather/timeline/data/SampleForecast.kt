@@ -35,7 +35,15 @@ data class ForecastHour(
     val baseSkyCondition: SkyCondition,
     val precipitationType: PrecipitationType,
     val precipitationAmount: PrecipitationAmount?,
-)
+    /** Optional synthetic wind-from bearing, clockwise from true north. */
+    val windDirectionDegrees: Double? = null,
+) {
+    init {
+        require(windDirectionDegrees == null ||
+            (windDirectionDegrees.isFinite() && windDirectionDegrees >= 0.0 && windDirectionDegrees < 360.0)
+        )
+    }
+}
 
 data class ForecastDay(
     val date: LocalDate,
@@ -119,6 +127,7 @@ object SampleForecast {
                         baseSkyCondition = baseSkyCondition,
                         precipitationType = precipitationType,
                         precipitationAmount = precipitationAmount,
+                        windDirectionDegrees = 45.0,
                     )
                 )
             }

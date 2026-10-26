@@ -157,6 +157,14 @@ Every unfinished slice must have concept artwork specific to its own objective a
 **Exit:** Installed RTL screenshots and direct-touch observations establish that chronology, gesture directions, fixture bounds, and visible labels remain understandable. Existing P.2.7/P.2.13 TalkBack outcomes are linked without retest; RTL-specific spoken behavior is recorded as unverified per the product owner's decision to revisit TalkBack before final production release. The required P.2 evidence and limitations are reconciled, the three cross-cutting visual-quality checks are recorded, and residual scope is explicitly dispositioned. Confirmed defects get separate implementation slices.
 **Evidence:** Cycle 021 (`021-p2-acceptance-closure`): `.codex/test-artifacts/021-p2-acceptance-closure/README.md` and installed captures; closeout: `.codex/history/021-p2-acceptance-closure.md`. Existing P.2 evidence is linked from the history record.
 
+### P.2.14 — Group precipitation and wind metrics with visual signals — DONE
+
+**Objective/scope:** Replace the visible `PRECIP CHANCE` and `WIND` headings with the approved rain-signal and compass indicators, keeping the precipitation value on the left and wind speed on the right as visible text grouped with their indicators. Add an optional synthetic wind-direction fact to the normal demo fixture so the compass needle is data-driven; represent unknown direction with a neutral compass. Preserve the full-screen scene, DEMO DATA provenance, selected-time behavior, and bottom timeline.
+**Depends on:** None.
+**Exit:** The installed Pixel 3 XL reference-state capture matches the approved metric arrangement: no visible metric headings; rain signal above its probability value; compass above wind speed; both values remain readable text. The compass face and placement remain fixed and north-up, while its non-animated needle reflects the selected sample's wind-from direction and is absent when direction is unknown. Focused tests cover bearing validation/projection, NE mapping, and unknown-direction handling; existing precipitation and wind formatting remains unchanged. This slice does not run application-wide accessibility/TalkBack, font-scale, RTL, reduced-motion, responsiveness, or gesture-ownership suites; those remain in their dedicated suite cycle(s).
+**Concept artwork:** Owner approved 2026-10-26 at `docs/mockups/approved-precipitation-wind-metrics.png`; installed source baseline at `docs/mockups/app_screen_original.png`.
+**Evidence:** Cycle 042 (`042-p2-wind-metrics`): `.codex/test-artifacts/042-p2-wind-metrics/README.md`, including installed baseline and target captures; closeout `.codex/history/042-p2-wind-metrics.md`; archived plan `.codex/history/plans/042-p2-wind-metrics.md`.
+
 ## P.3 — Integration feasibility spike — DEFERRED
 
 ### P.3.1 — Assess standalone timeline integration feasibility — DEFERRED
