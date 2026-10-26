@@ -276,15 +276,15 @@ This workstream establishes an explicit, debug-only set of typed forecast scenar
 **Design artifact:** `.codex/concepts/DFM.1-debug-forecast-matrix.md` — an annotated coverage table and transition map; owner approval is required before DFM.2.
 **Evidence:** Owner-approved matrix and transition contract: `.codex/concepts/DFM.1-debug-forecast-matrix.md`. Cycle 039 (`039-dfm1-debug-forecast-matrix`): `.codex/test-artifacts/039-dfm1-debug-forecast-matrix/README.md`; closeout: `.codex/history/039-dfm1-debug-forecast-matrix.md`; archived plan: `.codex/history/plans/039-dfm1-debug-forecast-matrix.md`.
 
-### DFM.2 — Implement the approved debug forecast catalog — NEXT
+### DFM.2 — Implement the approved debug forecast catalog — DONE
 
 **Objective/scope:** Implement the approved matrix as deterministic, immutable typed debug forecast scenarios. Keep it separate from the normal forecast fixture and gate access to debuggable builds. Preserve generic precipitation chance, thunderstorm probability, typed precipitation identity/amount, optional debug warning state, and missingness as independent values. No matrix browser or visual mapping yet.
 **Depends on:** DFM.1.
 **Exit:** Focused data/projection checks demonstrate every approved matrix row is addressable and stable, every field retains its specified type/missingness, and normal fixture output is unchanged. A rendered inventory report or equivalent review artifact matches the approved matrix, and the owner approves the completed catalog before UI work starts.
 **Concept artifact:** The owner-approved DFM.1 matrix is the implementation contract; no additional scene artwork is in scope.
-**Evidence:** At planning, assign the next chronological cycle ID and use its `.codex/test-artifacts/<cycle-id>/`, `.codex/history/<cycle-id>.md`, and `.codex/history/plans/<cycle-id>.md`.
+**Evidence:** Cycle 040 (`040-dfm2-debug-forecast-catalog`): `.codex/test-artifacts/040-dfm2-debug-forecast-catalog/README.md` and `forecast-catalog-inventory.md`; closeout: `.codex/history/040-dfm2-debug-forecast-catalog.md`; archived plan: `.codex/history/plans/040-dfm2-debug-forecast-catalog.md`. The full debug test task also exposed one unrelated existing time-label assertion failure, recorded in the cycle evidence.
 
-### DFM.3 — Build the debug-only forecast matrix browser — PLANNED
+### DFM.3 — Build the debug-only forecast matrix browser — NEXT
 
 **Objective/scope:** Add an explicitly debug-only way to browse and select every approved catalog scenario and variant, with clear illustrative-data labels and its forecast facts visible. Selection must use the existing time/forecast presentation path. Do not redesign the weather scene in this slice.
 **Depends on:** DFM.2.
