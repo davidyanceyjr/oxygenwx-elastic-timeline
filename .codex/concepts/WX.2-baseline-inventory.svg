@@ -1,0 +1,181 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1920" height="1080" viewBox="0 0 1920 1080">
+  <defs>
+    <marker id="arrow" markerWidth="10" markerHeight="10" refX="8" refY="5" orient="auto" markerUnits="strokeWidth">
+      <path d="M0,0 L10,5 L0,10 z" fill="#52637a"/>
+    </marker>
+    <marker id="futureArrow" markerWidth="10" markerHeight="10" refX="8" refY="5" orient="auto" markerUnits="strokeWidth">
+      <path d="M0,0 L10,5 L0,10 z" fill="#5675ad"/>
+    </marker>
+    <style>
+      text { font-family: Inter, "DejaVu Sans", sans-serif; fill: #17243a; }
+      .title { font-size: 34px; font-weight: 750; letter-spacing: .4px; }
+      .subtitle { font-size: 16px; fill: #5b6b80; }
+      .panelTitle { font-size: 20px; font-weight: 700; }
+      .panelSub { font-size: 13px; fill: #68788e; }
+      .nodeTitle { font-size: 15px; font-weight: 700; }
+      .nodeText { font-size: 12px; fill: #45566e; }
+      .tiny { font-size: 10px; fill: #607087; }
+      .badge { font-size: 10px; font-weight: 700; letter-spacing: .8px; }
+      .callTitle { font-size: 14px; font-weight: 700; }
+      .callText { font-size: 12px; fill: #475971; }
+      .solid { stroke: #52637a; stroke-width: 2.4; fill: none; marker-end: url(#arrow); }
+      .future { stroke: #5675ad; stroke-width: 2.4; stroke-dasharray: 8 6; fill: none; marker-end: url(#futureArrow); }
+    </style>
+  </defs>
+
+  <rect width="1920" height="1080" fill="#f3f6fa"/>
+  <text x="48" y="55" class="title">WX.2  |  CURRENT → TARGET DATAFLOW</text>
+  <text x="50" y="83" class="subtitle">Example inventory board • solid arrows = checked-in flow • dashed arrows = roadmap direction • dotted card = isolated inventory</text>
+
+  <!-- Current-state panel -->
+  <rect x="42" y="112" width="900" height="665" rx="18" fill="#ffffff" stroke="#d4dce7" stroke-width="1.5"/>
+  <rect x="42" y="112" width="900" height="62" rx="18" fill="#eaf0f7"/>
+  <path d="M42 156 V174 H942 V156" fill="#eaf0f7"/>
+  <text x="68" y="145" class="panelTitle">CURRENT • synthetic prototype</text>
+  <text x="68" y="164" class="panelSub">Normal sample and generated debug profiles share presentation input.</text>
+
+  <rect x="70" y="198" width="260" height="86" rx="11" fill="#f8fafc" stroke="#b9c7d8"/>
+  <text x="88" y="223" class="nodeTitle">Normal sample</text>
+  <text x="88" y="245" class="nodeText">SampleForecast</text>
+  <text x="88" y="266" class="nodeText">→ ForecastSource.sample</text>
+
+  <rect x="70" y="307" width="260" height="126" rx="11" fill="#f8fafc" stroke="#b9c7d8"/>
+  <text x="88" y="333" class="nodeTitle">Generated debug profiles</text>
+  <text x="88" y="355" class="nodeText">profileFacts → DebugProfileSample</text>
+  <text x="88" y="375" class="nodeText">→ adapter → ForecastSource</text>
+  <text x="88" y="411" class="tiny">debug/DebugForecastProfiles.kt</text>
+
+  <rect x="70" y="461" width="260" height="119" rx="11" fill="#fbfaf6" stroke="#bcae8a" stroke-dasharray="5 4"/>
+  <text x="88" y="487" class="nodeTitle">Debug catalog • separate</text>
+  <text x="88" y="509" class="nodeText">12 scenarios • 3 transition sequences</text>
+  <text x="88" y="531" class="nodeText">Inventory definition; no runtime edge</text>
+  <text x="88" y="559" class="tiny">debug/DebugForecastCatalog.kt</text>
+
+  <rect x="385" y="288" width="205" height="104" rx="12" fill="#edf5ff" stroke="#8ba9cf" stroke-width="1.5"/>
+  <text x="407" y="318" class="nodeTitle">ForecastSource</text>
+  <text x="407" y="341" class="nodeText">typed hourly facts</text>
+  <text x="407" y="364" class="nodeText">reference time • provenance</text>
+  <text x="407" y="381" class="tiny">presentation/ForecastSource.kt</text>
+
+  <rect x="631" y="288" width="270" height="104" rx="12" fill="#edf5ff" stroke="#8ba9cf" stroke-width="1.5"/>
+  <text x="653" y="318" class="nodeTitle">ForecastProjection</text>
+  <text x="653" y="341" class="nodeText">exact sample facts → ForecastView</text>
+  <text x="653" y="364" class="nodeText">scene continuity may interpolate</text>
+  <text x="653" y="381" class="tiny">presentation/ForecastProjection.kt</text>
+
+  <path d="M330 241 C354 241 356 318 385 318" class="solid"/>
+  <path d="M330 370 C354 370 356 361 385 361" class="solid"/>
+  <path d="M590 340 H631" class="solid"/>
+
+  <path d="M766 392 V424 H720 V445" class="solid"/>
+  <path d="M766 424 H827 V445" class="solid"/>
+  <rect x="631" y="445" width="179" height="84" rx="10" fill="#f5f8fc" stroke="#bbc8d8"/>
+  <text x="648" y="472" class="nodeTitle">Forecast facts</text>
+  <text x="648" y="494" class="nodeText">readable text + labels</text>
+  <text x="648" y="515" class="tiny">nullable values retained</text>
+  <rect x="822" y="445" width="79" height="84" rx="10" fill="#f5f8fc" stroke="#bbc8d8"/>
+  <text x="833" y="472" class="nodeTitle">Scene</text>
+  <text x="833" y="494" class="nodeText">SkyFrame</text>
+  <text x="833" y="515" class="tiny">illustration</text>
+
+  <rect x="631" y="550" width="270" height="82" rx="10" fill="#f5f8fc" stroke="#bbc8d8"/>
+  <text x="650" y="578" class="nodeTitle">TimeLabScreen</text>
+  <text x="650" y="601" class="nodeText">facts text + AtmosphericScene</text>
+  <text x="650" y="620" class="tiny">UI/TimeLabScreen.kt</text>
+  <path d="M720 529 V550" class="solid"/>
+  <path d="M861 529 V550" class="solid"/>
+
+  <rect x="70" y="625" width="520" height="102" rx="11" fill="#f7f6ff" stroke="#aaa2d2"/>
+  <text x="90" y="653" class="nodeTitle">Time selection path</text>
+  <text x="90" y="677" class="nodeText">selectedHour ↔ ElasticTimeAxis ↔ ElasticForecastTimeline</text>
+  <text x="90" y="704" class="nodeText">selected timestamp stays authoritative; zoom changes scale only</text>
+  <path d="M590 676 H615 V590 H631" class="solid"/>
+  <text x="598" y="666" class="tiny">selection</text>
+
+  <!-- Future-state panel -->
+  <rect x="978" y="112" width="900" height="665" rx="18" fill="#ffffff" stroke="#d4dce7" stroke-width="1.5"/>
+  <rect x="978" y="112" width="900" height="62" rx="18" fill="#edf1fb"/>
+  <path d="M978 156 V174 H1878 V156" fill="#edf1fb"/>
+  <text x="1004" y="145" class="panelTitle">TARGET • roadmap direction (future)</text>
+  <text x="1004" y="164" class="panelSub">Conceptual only; shared contract details belong to WX.3+.</text>
+
+  <rect x="1006" y="232" width="218" height="150" rx="12" fill="#f8faff" stroke="#9aaed4" stroke-dasharray="8 5" stroke-width="1.5"/>
+  <text x="1025" y="260" class="nodeTitle">Forecast sources</text>
+  <text x="1025" y="285" class="nodeText">Live</text>
+  <text x="1025" y="307" class="nodeText">Deterministic simulated</text>
+  <text x="1025" y="329" class="nodeText">Recorded replay</text>
+  <text x="1025" y="360" class="tiny">same successor data boundary</text>
+
+  <rect x="1260" y="232" width="270" height="150" rx="12" fill="#f8faff" stroke="#9aaed4" stroke-dasharray="8 5" stroke-width="1.5"/>
+  <text x="1280" y="260" class="nodeTitle">Shared catalog contract</text>
+  <rect x="1443" y="240" width="70" height="27" rx="13" fill="#e8eefb"/>
+  <text x="1455" y="258" class="badge" fill="#46649a">WX.3+</text>
+  <text x="1280" y="285" class="nodeText">identity • location • timezone • asOf</text>
+  <text x="1280" y="307" class="nodeText">absolute valid times • provenance</text>
+  <text x="1280" y="329" class="nodeText">canonical facts; missing stays missing</text>
+  <text x="1280" y="360" class="tiny">44 local dates • coverage may vary</text>
+
+  <rect x="1566" y="232" width="276" height="150" rx="12" fill="#f8faff" stroke="#9aaed4" stroke-dasharray="8 5" stroke-width="1.5"/>
+  <text x="1586" y="260" class="nodeTitle">Time-aware projection</text>
+  <text x="1586" y="285" class="nodeText">selected absolute time + available data</text>
+  <text x="1586" y="307" class="nodeText">typed facts remain source-grounded</text>
+  <text x="1586" y="329" class="nodeText">scene remains illustrative</text>
+  <text x="1586" y="360" class="tiny">future WX projection / axis slices</text>
+
+  <path d="M1224 307 H1260" class="future"/>
+  <path d="M1530 307 H1566" class="future"/>
+
+  <rect x="1566" y="427" width="276" height="117" rx="12" fill="#f8faff" stroke="#9aaed4" stroke-dasharray="8 5" stroke-width="1.5"/>
+  <text x="1586" y="455" class="nodeTitle">Experience output</text>
+  <text x="1586" y="480" class="nodeText">accessible forecast facts</text>
+  <text x="1586" y="502" class="nodeText">immersive scene + timeline</text>
+  <text x="1586" y="526" class="tiny">truthful source, time, and gaps</text>
+  <path d="M1704 382 V427" class="future"/>
+
+  <rect x="1006" y="427" width="270" height="117" rx="12" fill="#fff9f4" stroke="#d8a77e" stroke-dasharray="3 4" stroke-width="1.5"/>
+  <text x="1025" y="455" class="nodeTitle">Official alerts</text>
+  <text x="1025" y="480" class="nodeText">separate future subsystem</text>
+  <text x="1025" y="502" class="nodeText">not a catalog condition</text>
+  <text x="1025" y="526" class="tiny">no inferred warning flags</text>
+
+  <rect x="1260" y="427" width="270" height="117" rx="12" fill="#f8faff" stroke="#9aaed4" stroke-dasharray="8 5" stroke-width="1.5"/>
+  <text x="1280" y="455" class="nodeTitle">Time and location context</text>
+  <text x="1280" y="480" class="nodeText">IANA timezone • local-date window</text>
+  <text x="1280" y="502" class="nodeText">DST and actual coverage explicit</text>
+  <text x="1280" y="526" class="tiny">details remain bounded by WX plans</text>
+  <path d="M1395 427 V405 H1704 V382" class="future"/>
+
+  <rect x="1006" y="584" width="836" height="143" rx="12" fill="#f8faff" stroke="#c0cce0"/>
+  <text x="1025" y="612" class="nodeTitle">Ownership and decision boundary</text>
+  <text x="1025" y="638" class="nodeText">Data/debug catalog  •  presentation/time projection  •  UI/gesture  •  atmosphere mapping  •  verification/evidence</text>
+  <text x="1025" y="663" class="nodeText">Product owner decides cross-boundary product semantics; record named people only when repository evidence supports them.</text>
+  <rect x="1025" y="680" width="250" height="28" rx="14" fill="#fff2cf"/>
+  <text x="1040" y="699" class="badge" fill="#805d10">OPEN: owner assignment needed where unnamed</text>
+
+  <!-- Shared semantic callouts -->
+  <rect x="42" y="799" width="1836" height="227" rx="18" fill="#ffffff" stroke="#d4dce7" stroke-width="1.5"/>
+  <text x="68" y="835" class="panelTitle">What the annotations protect</text>
+
+  <rect x="68" y="858" width="415" height="96" rx="11" fill="#f1f7f4" stroke="#a8c9b6"/>
+  <text x="88" y="886" class="callTitle">Unknown ≠ zero</text>
+  <text x="88" y="910" class="callText">Nullable forecast probability stays null.</text>
+  <text x="88" y="932" class="callText">Profile adapter's 0.0 fallback is scene-only.</text>
+
+  <rect x="503" y="858" width="415" height="96" rx="11" fill="#f5f3fb" stroke="#b9aed5"/>
+  <text x="523" y="886" class="callTitle">Fact ≠ illustration</text>
+  <text x="523" y="910" class="callText">Exact samples supply forecast facts.</text>
+  <text x="523" y="932" class="callText">Interpolation is for scene continuity.</text>
+
+  <rect x="938" y="858" width="415" height="96" rx="11" fill="#fff7ef" stroke="#d8b596"/>
+  <text x="958" y="886" class="callTitle">Synthetic warning stays debug-only</text>
+  <text x="958" y="910" class="callText">Never label it an official alert.</text>
+  <text x="958" y="932" class="callText">Keep alert authority in a separate subsystem.</text>
+
+  <rect x="1373" y="858" width="479" height="96" rx="11" fill="#f1f5fb" stroke="#aebed3"/>
+  <text x="1393" y="886" class="callTitle">Time remains authoritative</text>
+  <text x="1393" y="910" class="callText">Zoom changes scale, not selected time.</text>
+  <text x="1393" y="932" class="callText">Current 24-hour assumptions are inventory findings.</text>
+
+  <text x="68" y="986" class="tiny">Evidence anchors: ForecastSource.kt:56–85 • ForecastProjection.kt:42–97 • DebugForecastProfiles.kt:62–108 • DebugForecastCatalog.kt:53–83 • TimeLabScreen.kt • ElasticTimeAxis.kt • SceneVisualState.kt</text>
+  <text x="68" y="1007" class="tiny">Board status: illustrative example only • product-owner approval and constraints must be recorded separately • not installed acceptance evidence</text>
+</svg>

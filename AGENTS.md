@@ -1,6 +1,6 @@
 # AGENTS.md — Oxygen Time Lab
 
-This is an isolated experimental application based on oxygenWX's workflow and build scaffold, not the production oxygenWX repository. The production navigation contract is unchanged.
+This repository is the successor OxygenWX app, developed in stages from an isolated synthetic-data prototype. It is separate from the deprecated oxygenWX application; the WX roadmap does not modify that application's files or navigation.
 
 ## Authority
 
@@ -45,8 +45,9 @@ Use `python scripts/dev.py workflow`, `contract`, `test`, `build`, `lint`, `run`
 - UI depends on typed projection values, never provider DTOs.
 - Zoom is not forecast time. The selected timestamp is authoritative and must not jump because of a zoom animation.
 - Preserve honest DEMO DATA labels and distinguish source-supplied observations from interpolated visual values.
-- No network, location, alert, caching, or production app integration in this prototype.
-- A prototype horizontal timeline must not be introduced into oxygenWX's outer pager without explicit redesign and gesture-ownership review.
+- The current prototype has no live network, location selection, official alerts, or real-data cache. Future successor capabilities require their own bounded WX plan and verification.
+- Official alerts remain a separate future subsystem, outside catalog weather conditions.
+- Keep the immersive timeline as the successor app's primary experience. Do not insert it into the deprecated oxygenWX application's outer pager.
 - Important forecast facts remain visible as text; decorative weather rendering is not a substitute for meteorological data or accessible semantics.
 
 ## UI slice constraints

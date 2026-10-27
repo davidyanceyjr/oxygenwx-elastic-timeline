@@ -7,6 +7,10 @@ Product and semantic boundaries: [`SPECIFICATION.md`](SPECIFICATION.md).
 
 Every visual enhancement must preserve timeline responsiveness, gesture predictability, and readability, as defined in `docs/SPECIFICATION.md`. Each visual cycle that changes or reviews visual behavior must include an acceptance check for all three.
 
+## Workstream priority
+
+WX is the current priority: `WX.1` is `DONE`, `WX.2` is `NEXT`, and `ATM.8` is `PLANNED`. After `WX.28` closes, return to `ATM.8` as the next workstream. This is an ordering decision, not a dependency; ATM slice dependencies remain unchanged.
+
 ## Concept-art gate for unfinished slices
 
 Every unfinished slice must have concept artwork specific to its own objective and approved by the product owner before implementation of that slice begins. For design-only slices, an interaction storyboard or annotated visual design is the concept artwork. Keep the artifact at the path named by the slice, and record owner approval and any constraints in that slice's plan. Concept art is a design input, not installed acceptance evidence. Existing screenshots and renderer output do not satisfy this gate. ATM.5 artwork is approved; approval remains pending for the other unfinished slices listed below. The user may run artwork creation and review in a separate session.
@@ -40,6 +44,229 @@ Every unfinished slice must have concept artwork specific to its own objective a
 **Depends on:** G.3.
 **Exit:** Authority precedence and adoption limits are explicit; every cited source path is compared with the proposal's baseline; conflicts and missing evidence are recorded; proposed ATM/ENV slices use this roadmap's leaf format; documentation checks pass without application changes.
 **Evidence:** `.codex/history/023-atmosphere-spec-intake.md`; `.codex/history/plans/023-atmosphere-spec-intake.md`; `.codex/test-artifacts/023-atmosphere-spec-intake/README.md`.
+
+## WX — OxygenWX unified 44-day weather catalog and production data path
+
+**Status:** Integrated into `docs/ROADMAP.md` after a format, dependency, authority, and provider-capability audit. WX.1 is DONE in cycle 043; no WX application implementation has started.
+
+**Authority transition:** WX.1 records the owner-approved successor direction. The current prototype remains the only implemented behavior until its bounded WX slices execute. The deprecated oxygenWX application is a reference only; do not copy its app structure or introduce its four-page Home pager. The immersive elastic timeline remains the successor app's primary experience.
+
+**Roadmap priority:** WX is the prioritized workstream. `WX.1` is `DONE` in cycle 043 and `WX.2` is the sole `NEXT` slice; later WX slices are `PLANNED`; `ATM.8` remains `PLANNED`. After `WX.28` closes, promote `ATM.8` to `NEXT` while preserving its existing dependencies and evidence. This records sequencing, not a dependency edge. The cycle pointer is IDLE after WX.1 closeout.
+
+**Concept-art gate:** The existing roadmap requires objective-specific owner-approved concept artwork for every unfinished slice, including data-only and design-only work. The proposed `.codex/concepts/WX.*.png` paths below are **targets, not existing or approved artifacts**. For model and service slices, use an annotated schema, flow, state, sequence, or boundary board rather than decorative UI art. The owner must approve each artifact and its constraints in that slice's execution plan before implementation. Device/installed acceptance evidence remains separate.
+
+**Cycle/evidence convention:** On starting a slice, assign the next **chronological** cycle ID by the repository's workflow. Each planned evidence line below means the following target paths are allocated **when that slice is planned**, not that files already exist: `.codex/plans/<cycle-id>.md`, `.codex/test-artifacts/<cycle-id>/`, `.codex/history/<cycle-id>.md`, and `.codex/history/plans/<cycle-id>.md` after closure. Record the roadmap slice ID in the plan and history. Run `python scripts/dev.py workflow` and the actual checks authorized by the bounded cycle. Do not invent passes, screenshots, tests, or evidence. The project `AGENTS.md` currently says not to add/run tests unless asked; these exits specify the **planned verification** for owner authorization in each cycle, not authorization to run tests now.
+
+**Delivery contract across all WX slices:**
+
+- **One canonical catalog schema** for live API, deterministic simulation, and recorded replay. Origin is metadata, not a parallel weather type system. Provider DTOs never enter Compose or the atmospheric engine.
+- Each catalog belongs to a stable locally assigned location ID, coordinates, and IANA `ZoneId`; it is anchored to an explicit `asOf: Instant`. The target **44 local dates** are `D-30` through `D-1` (history), then `D` through `D+13` (forecast), where `D` is the location's date at `asOf`. The current day is included in the forecast window. The window contains 44 **calendar dates**, not a guaranteed 1,056 hourly values; DST, incomplete coverage, and provider gaps are real.
+- Hour validity uses `Instant`; local date/labels use the location's timezone. Distinguish forecast, archived model forecast, reanalysis, actual observation, and synthetic meteorological products. Open-Meteo Forecast API `past_days` is **archived model/forecast data**, not verified station observation. Any omitted or unsupported field remains unavailable, never defaulted to zero.
+- Model clear/cloud/rain/snow/storm **and severe-weather facts** using independent typed conditions, quantitative fields, phenomena, and probabilities where supplied. Thunderstorm probability is not generic precipitation chance; snow depth is not new snowfall; precipitation probability is not precipitation amount/rate. No invented hail, lightning, tornado probability, intensity, or severity. **Official alerts are a separate future subsystem**, not catalog conditions or warning flags.
+- Preserve `DebugForecastCatalog`'s **12 existing scenario IDs**, **three transition sequences**, `DebugForecastProfiles`' **three complete 7/11/14-day loaded profiles**, `SampleForecast`, the current debug picker, and current screen/gesture/atmosphere behavior until individually regression-gated. The 12 rows are a starting test matrix, **not** the full weather-condition vocabulary. Keep the legacy `STORM_WARNING_PREVIEW` debug-only; never claim it represents an official warning.
+- Live and simulated data cannot be field-merged implicitly. Switching must atomically replace a validated whole dataset, preserve selection by absolute instant where possible, clamp otherwise, reject stale async responses, and keep real, simulated, and replay caches isolated. A cached real dataset retains real origin plus explicit cache/freshness state.
+- Preserve the atmospheric scene, selected-time authority, interactive timeline, screen-reader forecast browser, accessibility, RTL/reduced-motion semantics, and the hard triad of **responsiveness, predictable gesture ownership, and readability**. Decorative interpolation never fabricates hourly meteorological facts.
+- Do not start production integration with an Android application-ID/signing migration, unrelated UI redesign, an official-alert subsystem, or a port of the deprecated application's architecture. Manual location search comes before any optional device-location permission.
+
+**Owner-approved slice consolidation (2026-10-26):** These unstarted outcomes are combined into the retained earlier slice ID, with their requirements and acceptance coverage preserved: WX.4 into WX.3; WX.7 and WX.8 into WX.6; WX.14 into WX.13; WX.21 into WX.20. The absorbed IDs are retired and will not be reused. Completed IDs and outcomes are unchanged.
+
+**Checkpoint gates:** WX.1–WX.3 and WX.5–WX.6 = authority, baseline, canonical contracts, and unchanged legacy behavior; WX.9–WX.11 = common source contract plus simulated and recorded 44-day datasets; WX.12–WX.13 = real 44-day Open-Meteo ingestion with honest provenance; WX.15–WX.20 = persistence, location selection, and safe catalog activation; WX.22 = debug source selection; WX.23–WX.25 = integrated 44-day timeline; WX.29 = midstream cross-app experience suite; WX.26–WX.27 = production startup and release hygiene; WX.28 = final application-wide integration and acceptance suite. Passing an intermediate gate does **not** imply overall production acceptance.
+
+### WX.1 — Adopt successor-product authority and integration boundaries — DONE
+
+**Objective/scope:** Documentation-only owner decision that this repository is the successor OxygenWX app; amend `docs/SPECIFICATION.md`, `docs/OXYGEN_EXPERIENCE_SPECIFICATION.md`, `AGENTS.md`, `README.md`, and relevant roadmap language to authorize future live data, location, cache, 44-day chronology, and hot-swap without authorizing implementation yet. Record the future `scripts/dev.py` contract change for WX.12; do not change that script in this documentation-only slice. Reconcile stale prototype exclusions and deprecated `P.3`/`P.4` integration assumptions; leave completed slice/history claims intact. Decide precedence relative to `ATM.8` and preserve exactly one `NEXT`.
+**Depends on:** None.
+**Exit:** A signed-off authority/decision record names the successor app, 44-day date convention, simulation/live parity, separate official alerts, existing interaction invariants, roadmap precedence, and non-goals; conflicting statements are enumerated and reconciled; docs workflow/format validation and diff check are recorded; no app sources or active cycle were silently changed.
+**Concept artwork:** Waived by the owner on 2026-10-26 because WX.1 is a documentation-only change. No artwork is required for this cycle; the waiver does not change the general concept-art gate for other unfinished slices.
+**Evidence:** Cycle 043 (`043-wx1-successor-authority`): [decision and verification artifacts](../.codex/test-artifacts/043-wx1-successor-authority/README.md); [closeout](../.codex/history/043-wx1-successor-authority.md); [archived plan](../.codex/history/plans/043-wx1-successor-authority.md).
+
+### WX.2 — Inventory and regression-baseline the existing catalog and timeline — NEXT
+
+**Objective/scope:** Read-only audit of actual debug catalog, three transitions, profiles, eight-day normal sample, `ForecastSource`, `ForecastProjection`, `ElasticTimeAxis`, `TimeLabScreen`, atmosphere mapping, and present tests/device evidence. Document the independently generated `DebugForecastProfiles.profileFacts()` versus `DebugForecastCatalog.scenarios` relationship; current synthetic warning and snow/unknown visual mappings; `LocalDateTime`, 24-hour day, reference reset, and test-scaffold assumptions. No behavior changes.
+**Depends on:** WX.1.
+**Exit:** A source-path/line-grounded inventory, migration compatibility table, recorded snapshots or reproducibility plan, currently verified/unverified baseline, and specific owners for every legacy invariant exist; discrepancies and preexisting failures are dispositioned rather than silently fixed.
+**Concept artwork:** Pending owner-approved annotated current-versus-target dataflow board at `.codex/concepts/WX.2-baseline-inventory.png`.
+**Evidence:** Planned cycle 044 (`044-wx2-baseline-inventory`): `.codex/test-artifacts/044-wx2-baseline-inventory/README.md`, `inventory.md`, and `baseline.md`; closeout `.codex/history/044-wx2-baseline-inventory.md`; plan `.codex/plans/044-wx2-baseline-inventory.md`; archived plan `.codex/history/plans/044-wx2-baseline-inventory.md`. Owner-approved concept target: `.codex/concepts/WX.2-baseline-inventory.png`.
+
+### WX.3 — Define canonical catalog identity and weather facts — PLANNED
+
+**Objective/scope:** Define the provider-neutral catalog envelope and canonical nullable weather facts together. Include stable local location identity, coordinates/timezone, `asOf: Instant`, absolute valid times, dataset identity, source/product provenance, canonical units, ranges, and a composable condition/phenomena vocabulary. Cover existing clear, partly cloudy, cloudy, rain, snow, storm; distinguish precipitation and thunder probabilities, rain, total precipitation, snowfall, snow depth, wind/gust/direction, temperature, pressure, humidity, cloud, visibility, and optional severe-weather inputs only where supported. Keep official alerts and legacy synthetic warning outside canonical facts. Keep existing fixture and presentation paths unchanged; no storage, transport, or renderer changes.
+**Depends on:** WX.2.
+**Exit:** Pure construction and data-contract checks cover identity, timezone, reference instant, consistent source metadata, valid/ranged finite measurements, missing versus zero, distinct snowfall/depth, separate thunder and rain semantics, severe conditions without alerts, unsupported phenomena left absent, provider-neutral identity, identical live/simulated/replay envelopes, and no giant Cartesian-product condition enum. No provider DTO or synthetic-only field leaks into the canonical envelope.
+**Concept artwork:** Pending owner-approved catalog identity, weather-fact, and provenance contract board at `.codex/concepts/WX.3-canonical-catalog-contract.png`.
+**Evidence:** On planning, allocate chronological cycle paths and focused contract evidence. Target paths when planned: `.codex/test-artifacts/<cycle-id>/`; closeout `.codex/history/<cycle-id>.md`; plan `.codex/plans/<cycle-id>.md`; archived plan `.codex/history/plans/<cycle-id>.md`.
+
+### WX.5 — Define 44-day date windows, coverage, and daily aggregate rules — PLANNED
+
+**Objective/scope:** Introduce pure calendar window/coverage helpers, `CatalogDay`/daily aggregate rules, duplicate/out-of-order normalization policy, and explicit COMPLETE/PARTIAL/MISSING coverage at day/field level. Separate provider-supplied daily values from derived aggregates; do not infer complete totals from incomplete hours. No provider calls or renderer changes.
+**Depends on:** WX.3.
+**Exit:** Controlled-clock/location tests cover `D-30..D-1` and `D..D+13`, 44 date identities, midnight rollover, spring/fall DST, 23/25-hour local days, sparse hours, endpoint validation, duplicate-time policy, missing days and valid daily provenance; no tests require 24 hours per calendar day.
+**Concept artwork:** Pending owner-approved annotated time-window and DST board at `.codex/concepts/WX.5-window-completeness.png`.
+**Evidence:** On planning, allocate chronological cycle paths and temporal-boundary evidence. Target paths when planned: `.codex/test-artifacts/<cycle-id>/`; closeout `.codex/history/<cycle-id>.md`; plan `.codex/plans/<cycle-id>.md`; archived plan `.codex/history/plans/<cycle-id>.md`.
+
+### WX.6 — Migrate existing forecast fixtures through canonical adapters — PLANNED
+
+**Objective/scope:** Add pure canonical adapters for the existing immutable `DebugForecastCatalog`, its three transition sequences, all three generated debug profiles, and normal `SampleForecast`. Preserve the 12 scenario IDs and values, sequence step IDs/order/times, profile IDs/formulas and 7/11/14 loaded-day behavior, two-day buffers, reference times, and the eight-day normal fixture. Define scenario `validTime` versus sequence `sequenceTime`. Preserve existing forecast text, daily extrema, selected-time rules, atmospheric mappings, gesture ownership, app startup, and debug picker. Do not relocate debug fixtures into release sources, rewrite authored expectations, or make the app load a new source.
+**Depends on:** WX.3 and WX.5.
+**Exit:** Golden/snapshot comparisons show scenario facts and nulls, 27%/90% storm probabilities, transition identities/order, generated profile outputs/reference reset, synthetic warning preview, and normal sample presentation match the recorded baseline. Existing debug entry points remain usable, scenario tables remain absent from release, and the adapter does not introduce source DTOs into presentation. Document or guard intentional boundaries between catalog scenarios and independently generated `profileFacts`; build and contract checks pass.
+**Concept artwork:** Pending owner-approved fixture-to-canonical adapter and compatibility board at `.codex/concepts/WX.6-fixture-adapters.png`.
+**Evidence:** On planning, allocate chronological cycle paths, exact fixture comparisons, and compatibility evidence. Target paths when planned: `.codex/test-artifacts/<cycle-id>/`; closeout `.codex/history/<cycle-id>.md`; plan `.codex/plans/<cycle-id>.md`; archived plan `.codex/history/plans/<cycle-id>.md`.
+
+### WX.9 — Introduce one source and load-result contract — PLANNED
+
+**Objective/scope:** Define `WeatherCatalogSource.load(request): CatalogLoadResult` (or equivalent) for real, synthetic, and recorded providers, with request location/as-of/dataset ID, injectable clock, cancellation, typed success/partial/no-data/invalid/transport failure, and metadata. Implement source registration/injection without an active-source UI or data persistence. A cached LIVE dataset keeps LIVE origin with separate cache state.
+**Depends on:** WX.5 and WX.6.
+**Exit:** Stubbed independent live/simulated/replay providers return the same canonical type and identical consumer-facing result semantics; failed/no-data results cannot overwrite a valid active dataset; no transport DTO crosses the source boundary.
+**Concept artwork:** Pending owner-approved source contract/outcome board at `.codex/concepts/WX.9-source-interface.png`.
+**Evidence:** On planning, allocate chronological cycle paths and contract evidence. Target paths when planned: `.codex/test-artifacts/<cycle-id>/`; closeout `.codex/history/<cycle-id>.md`; plan `.codex/plans/<cycle-id>.md`; archived plan `.codex/history/plans/<cycle-id>.md`.
+
+### WX.10 — Generate deterministic 44-day simulated catalogs — PLANNED
+
+**Objective/scope:** Add a `SimulatedCatalogSource` extending the legacy scenario/profile vocabulary to 30 historical and 14 forecast local dates for a supplied location, `asOf`, scenario, and fixed seed; include normal, transitional, and severe-weather patterns and explicit missing/unsupported fields. Preserve original 7/11/14-day profile generators and their outputs unchanged. No UI or network changes.
+**Depends on:** WX.6 and WX.9.
+**Exit:** Same request/seed produces an identical catalog; changing scenario or location yields the prescribed deterministic variation; 44-date and DST policies pass; all data is marked synthetic; diverse weather events remain physically coherent enough for UI testing without false official-alert assertions.
+**Concept artwork:** Pending owner-approved 44-day generated-weather progression board at `.codex/concepts/WX.10-simulator.png`.
+**Evidence:** On planning, allocate chronological cycle paths and deterministic scenario fixtures. Target paths when planned: `.codex/test-artifacts/<cycle-id>/`; closeout `.codex/history/<cycle-id>.md`; plan `.codex/plans/<cycle-id>.md`; archived plan `.codex/history/plans/<cycle-id>.md`.
+
+### WX.11 — Implement versioned recorded-catalog replay — PLANNED
+
+**Objective/scope:** Define a stable serialized canonical catalog recording with schema version, location, source/provider/product timestamps, nullable fields, and deterministic replay loader. Support recording approved sanitized provider fixtures without network calls. No live transport, UI, or editing raw scenario tables.
+**Depends on:** WX.9 and WX.10.
+**Exit:** Sample recorded real-like and synthetic catalogs round-trip without losing units, timezones, source/product identity, severe-weather fields or missingness; malformed/old schemas fail or migrate explicitly; replay produces the same canonical type as simulation.
+**Concept artwork:** Pending owner-approved serialization and replay-state board at `.codex/concepts/WX.11-record-replay.png`.
+**Evidence:** On planning, allocate chronological cycle paths and versioned fixture evidence. Target paths when planned: `.codex/test-artifacts/<cycle-id>/`; closeout `.codex/history/<cycle-id>.md`; plan `.codex/plans/<cycle-id>.md`; archived plan `.codex/history/plans/<cycle-id>.md`.
+
+### WX.12 — Add the Open-Meteo transport and revise prototype isolation guard — PLANNED
+
+**Objective/scope:** Add minimal network transport with injectable HTTP client, timeouts/cancellation, request configuration, and mocked transport fixtures. Update manifest permissions as required and change `scripts/dev.py contract` from prohibiting any network/location capability to enforcing approved provider/release boundaries; do not remove unrelated package/gesture/isolation assertions. Verify current Open-Meteo variables, rate/attribution/license requirements, and product meaning. No provider-to-catalog mapping or app wiring.
+**Depends on:** WX.1 and WX.9.
+**Exit:** Recorded request/failure tests cover HTTP errors, cancellation, timeout and transport parsing boundaries; contract script no longer blocks approved Internet permission but rejects unintended location/background/debug exposure; provider policy/attribution assumptions and documented endpoint capabilities have auditable references.
+**Concept artwork:** Pending owner-approved transport/security boundary board at `.codex/concepts/WX.12-transport-guards.png`.
+**Evidence:** On planning, allocate chronological cycle paths and transport/policy evidence. Target paths when planned: `.codex/test-artifacts/<cycle-id>/`; closeout `.codex/history/<cycle-id>.md`; plan `.codex/plans/<cycle-id>.md`; archived plan `.codex/history/plans/<cycle-id>.md`.
+
+### WX.13 — Build the Open-Meteo catalog source — PLANNED
+
+**Objective/scope:** Implement `OpenMeteoCatalogSource` using the common source contract. Add provider DTO decoding, pure mapping, and catalog assembly for the agreed hourly/daily variables, canonical units, weather codes, nullable/unknown fields, timestamp validity, source/model provenance, and optional severe inputs. Request `past_days=30`, `forecast_days=14`, metric units, coordinates, `timeformat=unixtime`, and agreed hourly/daily fields. Convert returned instants through the location's IANA timezone and assemble target date identities with explicit partial coverage. Do not use a fixed request-time UTC offset to label dates across DST. Treat past Forecast API samples as **archived model/forecast data**, not station observations. Never infer independent thunder/hail/tornado values from WMO codes or generic precipitation. Support missing hours, short horizons, and failures without filling facts. No location UI or active-app wiring.
+**Depends on:** WX.3, WX.5, WX.9, and WX.12.
+**Exit:** Recorded complete, sparse, malformed, duplicate/out-of-order, unknown-code, and null-variable fixtures validate transport parsing, mapping, and assembly. Metrics match canonical units; unsupported severe probabilities remain null; daily provider-supplied versus derived summaries and per-segment product metadata are accurate. Request fixtures verify `D-30..D+13` membership, timezone/DST conversion using Unix instants and IANA rules, attribution, product distinctions, partial/no-data/failure outcomes, and no unsupported hazard claims. A bounded optional live smoke, when approved, records actual fields and coverage instead of assuming complete 44-date coverage.
+**Concept artwork:** Pending owner-approved provider fields, normalization, request, and 44-day assembly board at `.codex/concepts/WX.13-openmeteo-catalog-source.png`.
+**Evidence:** On planning, allocate chronological cycle paths and fixture/live-smoke evidence as authorized. Target paths when planned: `.codex/test-artifacts/<cycle-id>/`; closeout `.codex/history/<cycle-id>.md`; plan `.codex/plans/<cycle-id>.md`; archived plan `.codex/history/plans/<cycle-id>.md`.
+
+### WX.15 — Persist versioned per-location datasets and catalog history — PLANNED
+
+**Objective/scope:** Implement durable, versioned storage for canonical datasets keyed by stable location ID + origin/dataset ID; prefer an indexed database if incremental historical updates and multi-location queries justify it, otherwise document and validate an atomic serialized format. Preserve current source metadata, separate LIVE/SIMULATED/REPLAY namespaces, and define retention/schema migration. No UI, provider refresh, or geocoding.
+**Depends on:** WX.11 and WX.13.
+**Exit:** Persistence round-trips 44-day live/simulated/replay datasets, missing facts, per-record provenance, and DST timestamps; atomic writes prevent partial corruption; schema version failure/migration is explicit; removing one location/dataset leaves all others untouched; no simulation overwrites live cache.
+**Concept artwork:** Pending owner-approved location/dataset storage schema at `.codex/concepts/WX.15-storage.png`.
+**Evidence:** On planning, allocate chronological cycle paths and storage/migration evidence. Target paths when planned: `.codex/test-artifacts/<cycle-id>/`; closeout `.codex/history/<cycle-id>.md`; plan `.codex/plans/<cycle-id>.md`; archived plan `.codex/history/plans/<cycle-id>.md`.
+
+### WX.16 — Implement cache freshness, refresh, and partial recovery — PLANNED
+
+**Objective/scope:** Add catalog repository refresh/state policy for live data, preserving last useful cached data on network failure, distinguishing fresh/cached/stale/failed/partial outcomes and rolling the `asOf` local-date window explicitly. Keep history and forecast refresh schedules separable for future archive providers. Do not present a failed refresh as new live weather. No UI yet.
+**Depends on:** WX.13 and WX.15.
+**Exit:** Controlled-clock repository checks prove fresh fetch, cache-only startup, stale display, failed refresh with/without cache, corrupt cache, cache-write failure with still-usable live data, midnight rollover, and partial provider windows, preserving truthful provenance and location identity.
+**Concept artwork:** Pending owner-approved refresh/freshness state-transition board at `.codex/concepts/WX.16-cache-refresh.png`.
+**Evidence:** On planning, allocate chronological cycle paths and state-machine evidence. Target paths when planned: `.codex/test-artifacts/<cycle-id>/`; closeout `.codex/history/<cycle-id>.md`; plan `.codex/plans/<cycle-id>.md`; archived plan `.codex/history/plans/<cycle-id>.md`.
+
+### WX.17 — Add manual geocoding/location search provider contract — PLANNED
+
+**Objective/scope:** Define provider-neutral place-search results and implement an initial Open-Meteo geocoding adapter with usable stable local ID assignment, returned coordinates, correct IANA timezone, ambiguity/error/no-result behavior, and documented attribution. No Android device-location permission or saved-location UI.
+**Depends on:** WX.3 and WX.12.
+**Exit:** Recorded search fixtures cover duplicate place names, differing timezones, coordinate precision, empty/error results, and provider metadata; outputs can create a `CatalogLocation` without provider IDs becoming internal storage keys.
+**Concept artwork:** Pending owner-approved geocoding-to-location identity board at `.codex/concepts/WX.17-location-search-source.png`.
+**Evidence:** On planning, allocate chronological cycle paths and location mapping evidence. Target paths when planned: `.codex/test-artifacts/<cycle-id>/`; closeout `.codex/history/<cycle-id>.md`; plan `.codex/plans/<cycle-id>.md`; archived plan `.codex/history/plans/<cycle-id>.md`.
+
+### WX.18 — Persist selected and saved locations as application state — PLANNED
+
+**Objective/scope:** Add stable local saved-location records, add/remove/select persistence, selected-location restoration, and explicit location-to-catalog association independent of data origin. Implement domain/controller/storage contracts only; no search/switching UI, no foreground GPS permission.
+**Depends on:** WX.15 and WX.17.
+**Exit:** State/storage checks prove saved locations survive relaunch, distinct coordinate/timezone locations remain distinct, removing one location handles its catalog retention policy explicitly, and restored selection cannot accidentally point to a different provider place with the same display name.
+**Concept artwork:** Pending owner-approved saved-location domain/state board at `.codex/concepts/WX.18-saved-locations.png`.
+**Evidence:** On planning, allocate chronological cycle paths and location persistence evidence. Target paths when planned: `.codex/test-artifacts/<cycle-id>/`; closeout `.codex/history/<cycle-id>.md`; plan `.codex/plans/<cycle-id>.md`; archived plan `.codex/history/plans/<cycle-id>.md`.
+
+### WX.19 — Build accessible manual search and saved-location selector — PLANNED
+
+**Objective/scope:** Add a compact owner-reviewed location search/add/remove/select interface that coexists with, but does not replace, the immersive timeline. Handle progress, ambiguous matches, no results, request failure, current selection, and saved locations. This slice does not change the weather renderer or implement data-source hot-swap UI.
+**Depends on:** WX.17 and WX.18.
+**Exit:** Focused flow checks show searching, saving, selecting, deleting, and restoring locations without location permission; control labels and state semantics identify the selector's own actions and current selection; the selected location identity is unambiguous. Cross-app TalkBack, font-scale, orientation, RTL, and reduced-motion checks are assigned to WX.29.
+**Concept artwork:** Pending owner-approved interaction storyboard at `.codex/concepts/WX.19-location-selector.png`.
+**Evidence:** On planning, allocate chronological cycle paths, installed captures, and focused state/UI evidence. Target paths when planned: `.codex/test-artifacts/<cycle-id>/`; closeout `.codex/history/<cycle-id>.md`; plan `.codex/plans/<cycle-id>.md`; archived plan `.codex/history/plans/<cycle-id>.md`.
+
+### WX.20 — Load and atomically activate location-scoped catalogs — PLANNED
+
+**Objective/scope:** Wire selected-location identity to source loading and implement location-scoped `ActiveCatalogSelection` with atomic validated dataset activation. Add load state, cancellation/sequence tokens, per-location and per-origin cache namespaces, and location-aware refresh requests. Reject late results from previous locations or older same-location requests. Switching between live, simulated, and replay data replaces the whole catalog, preserves selected `Instant` when available or clamps to the nearest valid sample, and retains the previous valid state on failure. Keep storage/retrieval and renderer independent; no debug selector UI.
+**Depends on:** WX.10, WX.11, WX.15, WX.16, and WX.18.
+**Exit:** Controlled asynchronous checks cover A→B→A, repeated same-location refresh, failures, cache restore, and app recreation; only the newest matching location/request can publish active weather. LIVE↔SIMULATED↔REPLAY switches contain no mixed fields, metadata, or locations; failed replacement is safe; live cache survives simulation; selected-instant retention/clamping and view-generation markers are deterministic; non-selected datasets remain unchanged; switching requires no app restart.
+**Concept artwork:** Pending owner-approved location request, race handling, and atomic source-activation board at `.codex/concepts/WX.20-catalog-activation.png`.
+**Evidence:** On planning, allocate chronological cycle paths, source-race checks, and atomicity evidence. Target paths when planned: `.codex/test-artifacts/<cycle-id>/`; closeout `.codex/history/<cycle-id>.md`; plan `.codex/plans/<cycle-id>.md`; archived plan `.codex/history/plans/<cycle-id>.md`.
+
+### WX.22 — Expose debug-only dataset selection and replay controls — PLANNED
+
+**Objective/scope:** Add an isolated debug activity/picker to choose active location dataset and existing/new scenarios, replay IDs, and live mode; build on the existing working debug profile picker without adding permanent controls to the immersive timeline. Mark simulated provenance, show explicit load failures, and verify debug-only gating. No official-alert controls.
+**Depends on:** WX.20.
+**Exit:** Installed debug build selects all three origins and existing profiles, changes application data without process restart, shows source labels, recovers on rejected data, and passes release manifest/DEX/source-set isolation checks; timeline controls and legacy profile entry remain usable.
+**Concept artwork:** Pending owner-approved debug selector storyboard at `.codex/concepts/WX.22-source-picker.png`.
+**Evidence:** On planning, allocate chronological cycle paths, source-switch recordings, and release inspection. Target paths when planned: `.codex/test-artifacts/<cycle-id>/`; closeout `.codex/history/<cycle-id>.md`; plan `.codex/plans/<cycle-id>.md`; archived plan `.codex/history/plans/<cycle-id>.md`.
+
+### WX.23 — Implement time-indexed canonical presentation without 24-hour assumptions — PLANNED
+
+**Objective/scope:** Extend the presentation boundary to project sparse canonical `Instant`-keyed hours and local `CatalogDay`s, with nullable facts, source/product labels, daily extrema, exact nearest-hour meteorological samples, and interpolated *decorative scene only*. Retain the old `ForecastSource` adapter for the working fixtures until their migration completes; do not feed 44-day/DST data into the old full-24-hour validator. No touch or layout change.
+**Depends on:** WX.5, WX.6, WX.13, and WX.20.
+**Exit:** Pure projection tests cover 23/25-hour and missing-hour dates, unknown measurements, historical versus forecast semantics, exact sample selection, distinct snow visual identity, provenance, stable unit conversion, and unchanged existing fixture presentations; no precipitation unknown is silently displayed as measured zero.
+**Concept artwork:** Pending owner-approved legacy/new projection boundary board at `.codex/concepts/WX.23-time-projection.png`.
+**Evidence:** On planning, allocate chronological cycle paths and projection compatibility evidence. Target paths when planned: `.codex/test-artifacts/<cycle-id>/`; closeout `.codex/history/<cycle-id>.md`; plan `.codex/plans/<cycle-id>.md`; archived plan `.codex/history/plans/<cycle-id>.md`.
+
+### WX.24 — Migrate the pure ElasticTimeAxis to absolute instants — PLANNED
+
+**Objective/scope:** Refactor the pure time-axis/time-selection logic from local-day `selectedHour` assumptions to absolute time with local-calendar day navigation, duration-correct hour spacing, selected-instant persistence, and variable day lengths. Define repeated/nonexistent local-hour selection, daily overview anchors, source-swap preservation/clamping, and real-now versus debug-reference reset. Maintain the existing gesture owners; no visual redesign.
+**Depends on:** WX.23.
+**Exit:** Pure tests prove monotonic/clamped coordinate mapping, no selected-time jump on zoom, spring/fall DST, day shifts preserving local hour where possible, sparse interval navigation, tap/hold/drag/release semantics, and correct reset/clamp behavior. Previously verified fixture interactions continue to pass through compatibility routes.
+**Concept artwork:** Pending owner-approved DST/day-navigation time-axis storyboard at `.codex/concepts/WX.24-absolute-axis.png`.
+**Evidence:** On planning, allocate chronological cycle paths and time-axis interaction evidence. Target paths when planned: `.codex/test-artifacts/<cycle-id>/`; closeout `.codex/history/<cycle-id>.md`; plan `.codex/plans/<cycle-id>.md`; archived plan `.codex/history/plans/<cycle-id>.md`.
+
+### WX.25 — Bind the immersive timeline and forecast browser to 44 days — PLANNED
+
+**Objective/scope:** Connect `TimeLabScreen`, its visual tape, accessible forecast browser, and atmospheric projection to the active canonical catalog/time axis for 30 historical plus 14 forecast dates. Retain the current full-screen scene and gestures; display historical/forecast meaning, provenance, freshness, current missing data and selected time without source-based presentation branches. This slice integrates supported visual facts; it does **not** duplicate existing `ATM.8`–`ATM.10` scene-polish outcomes or implement official alerts.
+**Depends on:** WX.22, WX.23, and WX.24.
+**Exit:** Focused installed Pixel 3 XL checks scrub across history/today/forecast boundaries and dataset switches; exact timestamps/facts/source labels agree with the selected catalog; the forecast browser exposes usable day/hour rows to accessibility services; day/night/snow/storm mapping does not fabricate unsupported facts; responsiveness, gesture arbitration, and readability receive evidence-backed dispositions. Cross-app font-scale, orientation, RTL, TalkBack, and reduced-motion checks are assigned to WX.29.
+**Concept artwork:** Pending owner-approved 44-day immersive timeline/provenance storyboard at `.codex/concepts/WX.25-timeline-44-days.png`.
+**Evidence:** On planning, allocate chronological cycle paths, installed captures, and interaction evidence. Target paths when planned: `.codex/test-artifacts/<cycle-id>/`; closeout `.codex/history/<cycle-id>.md`; plan `.codex/plans/<cycle-id>.md`; archived plan `.codex/history/plans/<cycle-id>.md`.
+
+### WX.29 — Run cross-app experience and accessibility suite — PLANNED
+
+**Objective/scope:** Run a bounded installed suite across the integrated location selector, 44-day timeline, and forecast browser. Cover limited TalkBack traversal of the primary forecast summary, location selection, timeline scale action, and forecast day/hour rows; default and 1.3× font scale; portrait and landscape; RTL; reduced motion; and the established responsiveness, gesture-predictability, and readability checks. This slice records findings only; corrections belong in separately scoped implementation slices.
+**Depends on:** WX.19 and WX.25.
+**Exit:** A coverage matrix records each condition as **PASS/FAIL/NOT RUN**, with device/build details, actual installed captures, exact TalkBack actions and observed announcements, and evidence-backed triad dispositions. Any failure has a named follow-up slice or recorded blocker; no broad app changes are included here.
+**Concept artwork:** Pending owner-approved cross-app acceptance coverage storyboard at `.codex/concepts/WX.29-cross-app-experience-suite.png`.
+**Evidence:** On planning, allocate chronological cycle paths, installed captures, accessibility notes, and the coverage matrix. Target paths when planned: `.codex/test-artifacts/<cycle-id>/`; closeout `.codex/history/<cycle-id>.md`; plan `.codex/plans/<cycle-id>.md`; archived plan `.codex/history/plans/<cycle-id>.md`.
+
+### WX.26 — Compose production startup and selected-location experience — PLANNED
+
+**Objective/scope:** Replace the normal-app unconditional `SampleForecast` startup with a location-aware controller: restore selected saved location and valid cache, initiate optional manual location selection when none exists, allow explicit foreground refresh, and show loading/live/cached/stale/failed provenance. Keep `SampleForecast` accessible only as a clearly labeled development fallback, not attributed to searched locations. No background location tracking or real-alert system. Cross-app layout and accessibility conditions are exercised in WX.29 and repeated in WX.28 after startup changes.
+**Depends on:** WX.19, WX.20, and WX.25.
+**Exit:** Focused flow checks cover first launch, saved-location relaunch, offline launch, location switch, source refresh, and failed live fetch with/without cache. Each state shows truthful labels/data; no synthetic data masquerades as real local weather and the immersive timeline remains usable. Cross-app TalkBack, font-scale, orientation, RTL, and reduced-motion acceptance is scheduled in WX.29 and repeated in WX.28 after startup/branding changes.
+**Concept artwork:** Pending owner-approved startup/cache/location flow storyboard at `.codex/concepts/WX.26-startup-experience.png`.
+**Evidence:** On planning, allocate chronological cycle paths and installed state/evidence captures. Target paths when planned: `.codex/test-artifacts/<cycle-id>/`; closeout `.codex/history/<cycle-id>.md`; plan `.codex/plans/<cycle-id>.md`; archived plan `.codex/history/plans/<cycle-id>.md`.
+
+### WX.27 — Adopt OxygenWX product labels and audit release-data boundaries — PLANNED
+
+**Objective/scope:** Replace experimental user-facing Time Lab branding with owner-approved OxygenWX naming, align permissions, source attribution/modified-data notices, privacy and debug/release packaging with actual implemented capabilities, and make an explicit Android application-ID/signing/migration decision **without silently changing identity**. Do not copy the deprecated app or claim official alerts. Coordinate rather than duplicate deferred `P.4` slices.
+**Depends on:** WX.26 and the owner-approved WX.1 product decision.
+**Exit:** Release-installed app presents approved OxygenWX labels and accurate provider/freshness context; manifests, permissions, source/DEX scan, security/attribution and legacy-app coexistence or replacement decision are recorded; synthetic data and debug picker are absent from release; no unsupported weather warning claims or misleading DEMO DATA labels exist.
+**Concept artwork:** Pending owner-approved product identity/source placement storyboard at `.codex/concepts/WX.27-release-identity.png`.
+**Evidence:** On planning, allocate chronological cycle paths and release manifest/APK/installed evidence. Target paths when planned: `.codex/test-artifacts/<cycle-id>/`; closeout `.codex/history/<cycle-id>.md`; plan `.codex/plans/<cycle-id>.md`; archived plan `.codex/history/plans/<cycle-id>.md`.
+
+### WX.28 — Run final application-wide integration and release acceptance — PLANNED
+
+**Objective/scope:** Execute the final bounded integration and release acceptance for the implemented catalog and app experience; publish a coverage/limitations matrix without hiding fixes in the verification cycle. Exercise real/recorded/simulated sources, 30+14 date coverage, archived-past labeling, DST, nullable severe fields, source hot-swap and races, multi-location persistence, offline/lifecycle behavior, and debug/release isolation. Repeat the WX.29 cross-app suite after startup/branding changes: limited TalkBack paths, default and large font scale, portrait and landscape, RTL, reduced motion, and the responsiveness/gesture/readability checks. Confirm registered devices during planning; Pixel 3 XL remains the reference. Handle defects as separate corrective slices.
+**Depends on:** WX.10, WX.11, WX.13, WX.16, WX.19, WX.22, WX.25, WX.26, WX.27, and WX.29.
+**Exit:** An owner-reviewable report records each scoped scenario as **PASS/FAIL/NOT RUN**, with exact commands/builds/device details, installed captures, source/units/provenance agreement, target-versus-actual date coverage, UX-suite results, remaining blockers, and release risks. Mark DONE only when the recorded release acceptance criteria pass; fixes require separate slices.
+**Concept artwork:** Pending owner-approved acceptance coverage and evidence storyboard at `.codex/concepts/WX.28-acceptance-matrix.png`.
+**Evidence:** On planning, allocate chronological cycle paths and integrated verification matrix/captures. Target paths when planned: `.codex/test-artifacts/<cycle-id>/`; closeout `.codex/history/<cycle-id>.md`; plan `.codex/plans/<cycle-id>.md`; archived plan `.codex/history/plans/<cycle-id>.md`.
+
+**Definition of this workstream's completion:** The successor OxygenWX app can search/save/select multiple locations; retrieve and persist a per-location 44-local-date **target** catalog with truthful complete/partial/missing coverage; display 30 past dates (archived model forecast initially, not falsely labeled observation) and 14 forecast dates on its immersive timeline; generate fully canonical 44-day simulated scenarios from the preserved working debug system; replay recorded datasets; atomically hot-swap all three sources in debug builds; retain accurate weather/severe-field/provenance semantics; support offline restoration and safe concurrent requests; preserve timeline/atmosphere/accessibility quality; and exclude developer simulation tools from the production build. Official weather alerts, GPS/background tracking, and a dedicated station-observation/reanalysis source are separate future decisions, **not silently included here**.
+
+**Primary source references for planning (revalidate during source implementation):** `docs/ROADMAP_SPECIFICATION.md`, `AGENTS.md`, `docs/SPECIFICATION.md`, `docs/OXYGEN_EXPERIENCE_SPECIFICATION.md`, `docs/UI_DEVELOPMENT_WORKFLOW.md`, `.codex/README.md`, `.codex/current.md`, current `app/src/debug/.../DebugForecastCatalog.kt` and `DebugForecastProfiles.kt`, current `app/src/main/.../presentation/ForecastSource.kt` / `ForecastProjection.kt` / `ElasticTimeAxis.kt`, and `scripts/dev.py`. Provider documents: https://open-meteo.com/en/docs , https://open-meteo.com/en/docs/historical-weather-api , and https://open-meteo.com/en/docs/historical-forecast-api .
 
 ## P.1 — Standalone elastic time tape
 
@@ -165,45 +392,45 @@ Every unfinished slice must have concept artwork specific to its own objective a
 **Concept artwork:** Owner approved 2026-10-26 at `docs/mockups/approved-precipitation-wind-metrics.png`; installed source baseline at `docs/mockups/app_screen_original.png`.
 **Evidence:** Cycle 042 (`042-p2-wind-metrics`): `.codex/test-artifacts/042-p2-wind-metrics/README.md`, including installed baseline and target captures; closeout `.codex/history/042-p2-wind-metrics.md`; archived plan `.codex/history/plans/042-p2-wind-metrics.md`.
 
-## P.3 — Integration feasibility spike — DEFERRED
+## P.3 — Deprecated oxygenWX integration feasibility — DEFERRED
 
-### P.3.1 — Assess standalone timeline integration feasibility — DEFERRED
+### P.3.1 — Assess integration into the deprecated oxygenWX app — DEFERRED
 
-**Objective/scope:** Evaluate a future integration with oxygenWX's `Now -> Hourly -> Daily -> Details` navigation, normalized forecast presentation, provenance, and gesture ownership. No production integration or navigation edits are included.
-**Depends on:** Explicit owner approval to begin integration design.
-**Exit after re-entry:** An owner-reviewed design documents pager/timeline gesture ownership, typed normalized presentation binding, source/provenance semantics, and a bounded integration plan that preserves existing network/cache/provider flows. Evidence is the design and a focused source-contract review of those integration boundaries; no application-wide test matrix is required for this design slice.
-**Concept artwork:** Pending owner-approved interaction storyboard at `.codex/concepts/P.3.1-integration-feasibility.png`, showing the existing outer pager and proposed timeline boundary, forecast binding, and gesture ownership without implying a production navigation change.
+**Objective/scope:** Keep integration into the deprecated oxygenWX application's `Now -> Hourly -> Daily -> Details` navigation outside the successor WX roadmap. WX builds the successor experience in this repository and preserves the immersive timeline; this deferred slice is only for a separately authorized future reconsideration of changing the deprecated app.
+**Depends on:** None.
+**Exit after re-entry:** If the owner explicitly reopens deprecated-app integration, an owner-reviewed design documents pager/timeline gesture ownership, typed normalized presentation binding, source/provenance semantics, and a bounded integration plan that preserves that app's existing network/cache/provider flows. Evidence is the design and a focused source-contract review; no application-wide test matrix is required for this design slice.
+**Concept artwork:** Pending owner-approved interaction storyboard at `.codex/concepts/P.3.1-integration-feasibility.png`, showing the deprecated app's outer pager and proposed timeline boundary without implying a production navigation change.
 **Evidence:** On re-entry, assign the next chronological cycle ID and use `.codex/test-artifacts/<cycle-id>/`, `.codex/history/<cycle-id>.md`, and `.codex/history/plans/<cycle-id>.md`; no evidence is claimed while deferred.
-**Re-entry condition:** The oxygenWX owner explicitly authorizes an integration feasibility design and gesture-ownership review.
+**Re-entry condition:** The owner explicitly reverses the current successor boundary and authorizes a separate design for modifying the deprecated oxygenWX application. WX implementation alone does not satisfy this condition.
 
 ## P.4 — Production-release presentation cleanup — DEFERRED
 
 ### P.4.1 — Remove experimental branding for production release — DEFERRED
 
-**Objective/scope:** Remove `OXYGEN / TIME LAB` experimental branding from a production-release presentation.
-**Depends on:** An approved production integration and release candidate.
-**Exit after re-entry:** Release-candidate screens use approved product branding, and installed captures record only the affected branding surfaces. A focused presentation check confirms the approved brand is used at those surfaces; unrelated app layout, font, RTL, or assistive-technology matrices are outside this slice.
+**Objective/scope:** Preserve the deprecated app's branding task as legacy-only. Successor OxygenWX branding and release identity are owned by WX.27.
+**Depends on:** None.
+**Exit after re-entry:** If a separate release of the deprecated app is explicitly authorized, release-candidate screens use its approved branding and installed captures record the affected surfaces. The successor's WX.27 outcome does not close this legacy task.
 **Concept artwork:** Pending owner-approved release-surface concept at `.codex/concepts/P.4.1-production-branding.png`, showing the approved identity replacing `OXYGEN / TIME LAB` on each affected surface.
 **Evidence:** On re-entry, assign the next chronological cycle ID and use `.codex/test-artifacts/<cycle-id>/`, `.codex/history/<cycle-id>.md`, and `.codex/history/plans/<cycle-id>.md`; no evidence is claimed while deferred.
-**Re-entry condition:** A production-release cycle is explicitly authorized for the integrated application.
+**Re-entry condition:** A separate production-release cycle is explicitly authorized for the deprecated oxygenWX application.
 
 ### P.4.2 — Replace DEMO DATA only with accurate provenance — DEFERRED
 
-**Objective/scope:** Replace the synthetic-data label only after the app presents production forecast data and accurate source/provenance information.
-**Depends on:** P.3.1 and a production data path with verified provenance.
-**Exit after re-entry:** Installed release UI identifies the actual data/source status accurately, with semantics and source evidence reviewed. Focused projection tests cover source identity, freshness/status labeling, and missing-provenance behavior; installed captures cover the affected source-label surfaces only.
+**Objective/scope:** Preserve the deprecated app's synthetic-data label task as legacy-only. Successor data/provenance labels are owned by WX.25–WX.27.
+**Depends on:** A separately authorized deprecated-app integration and a production data path with verified provenance.
+**Exit after re-entry:** Installed legacy release UI identifies actual data/source status accurately, with semantics and source evidence reviewed. Focused projection checks cover source identity, freshness/status labeling, and missing-provenance behavior; captures cover the affected source-label surfaces only.
 **Concept artwork:** Pending owner-approved source/freshness treatment at `.codex/concepts/P.4.2-provenance-labels.png`, showing source identity, freshness, and unavailable-provenance states without invented provider claims.
 **Evidence:** On re-entry, assign the next chronological cycle ID and use `.codex/test-artifacts/<cycle-id>/`, `.codex/history/<cycle-id>.md`, and `.codex/history/plans/<cycle-id>.md`; no evidence is claimed while deferred.
-**Re-entry condition:** Production forecast data and verified provenance are available in an explicitly approved integration cycle.
+**Re-entry condition:** Production forecast data and verified provenance are available in an explicitly approved integration cycle for the deprecated app. Successor data work does not imply legacy-app integration.
 
 ### P.4.3 — Define production timeline reset behavior — DEFERRED
 
-**Objective/scope:** Decide how timeline reset/realignment fits production navigation and interaction ownership before integration.
+**Objective/scope:** Preserve reset behavior design for the deprecated app as legacy-only. Successor reset semantics are handled in WX.24's absolute-time-axis contract.
 **Depends on:** P.3.1.
-**Exit after re-entry:** An owner-approved interaction contract states reset gesture/action, relationship to the outer pager, and accessibility semantics before implementation begins. Evidence is the approved contract plus a focused review of reset and pager gesture ownership; no broad application interaction or accessibility matrix is part of this design slice.
+**Exit after re-entry:** An owner-approved legacy interaction contract states reset gesture/action, relationship to the outer pager, and accessibility semantics before implementation begins. Evidence is the approved contract plus a focused review of reset and pager gesture ownership; no broad application interaction or accessibility matrix is part of this design slice.
 **Concept artwork:** Pending owner-approved interaction storyboard at `.codex/concepts/P.4.3-production-reset.png`, showing reset entry, selected-time result, and outer-pager gesture boundary.
 **Evidence:** On re-entry, assign the next chronological cycle ID and use `.codex/test-artifacts/<cycle-id>/`, `.codex/history/<cycle-id>.md`, and `.codex/history/plans/<cycle-id>.md`; no evidence is claimed while deferred.
-**Re-entry condition:** The owner authorizes production navigation design following the integration feasibility review.
+**Re-entry condition:** The owner authorizes a separate deprecated-app navigation design following P.3.1. WX.24 does not satisfy this legacy re-entry condition.
 
 ## ATM — Living atmosphere engine
 
@@ -302,7 +529,7 @@ This workstream establishes an explicit, debug-only set of typed forecast scenar
 
 ## ATM — Matrix-driven atmosphere
 
-### ATM.8 — Map clear, cloudy and day/night matrix states — NEXT
+### ATM.8 — Map clear, cloudy and day/night matrix states — PLANNED
 
 **Objective/scope:** Review and implement the scene mapping for approved clear, partly cloudy, and cloudy scenarios across day, dusk, and night, using the retained abstract landscape. Preserve exact forecast facts and selected time; keep visual interpolation decorative and deterministic.
 **Depends on:** DFM.2 and DFM.3.

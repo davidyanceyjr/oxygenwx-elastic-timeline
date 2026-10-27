@@ -1,8 +1,8 @@
 # Oxygen Time Lab — Elastic Forecast Timeline
 
-**An installable, standalone Jetpack Compose UI experiment based on the development scaffold and engineering conventions of [oxygenWX](https://github.com/davidyanceyjr/oxygenWX), pinned at commit `ec3f93976f037fbb206089d8b9d9fa1f6f93918b`.**
+**The successor OxygenWX app, developed in stages from an installable, standalone Jetpack Compose prototype using the development scaffold and engineering conventions of the deprecated [oxygenWX application](https://github.com/davidyanceyjr/oxygenWX), pinned at commit `ec3f93976f037fbb206089d8b9d9fa1f6f93918b`.**
 
-This is intentionally **not** a full copy of the production weather app. It installs alongside oxygenWX as `com.oxygen.weather.timeline`, uses no location/network permissions, and cannot change production preferences, saved locations, providers, cache, or navigation.
+This repository is the successor product boundary, not a modification of the deprecated oxygenWX application's source tree. The current build remains a synthetic-data prototype that installs alongside it as `com.oxygen.weather.timeline`; it has no live provider, location selection, or real-data cache. Successor capabilities are staged through the WX roadmap. The deprecated application's production preferences, saved locations, providers, cache, and navigation are outside this repository's change boundary.
 
 ## Quick start
 
@@ -77,14 +77,14 @@ python3 scripts/dev.py screenshot --output .codex/test-artifacts/manual.png
 
 The workflow files under `.codex/` preserve a bounded prototype plan, closure notes, and unverified installation/visual acceptance criteria, consistent with oxygenWX development discipline.
 
-## Production integration decision (not included)
+## Successor boundary and staged data path
 
-oxygenWX currently requires the four-page `Now -> Hourly -> Daily -> Details` Home pager to be the sole horizontal swipe owner. This prototype is an **explicit experimental exception in a separate application**, so it must not simply be pasted into the production Home pager. Integrating it requires an owner-approved presentation/navigation change and clear gesture arbitration with the outer pager. No production source files were changed.
+The successor app keeps the immersive elastic timeline as its primary experience. The deprecated oxygenWX application's four-page `Now -> Hourly -> Daily -> Details` navigation is not inherited or modified. The WX roadmap stages a canonical 44-local-date catalog for live, simulated, and replay data, while retaining honest provenance, missing-data semantics, selected-time authority, accessibility, and predictable gesture ownership. Official alerts remain a separate future subsystem. No live data, location, real-data cache, or alert service is present in the current build, and no deprecated oxygenWX production files were changed.
 
 ## Known limitations
 
 - Not built or installed in the creation environment (Android SDK, Gradle cache, and device unavailable); actual on-device visual acceptance is **not claimed**.
-- Fixture rather than production repository/cache; no location, network, alerts, preferences, or unit toggle.
+- Synthetic fixture in the successor app; the current build has no live network, location selection, real-data cache, alerts, preferences, or unit toggle.
 - Effects are lightweight/procedural, not true 3D or physically accurate clouds.
 - Large-font, TalkBack, RTL, compact viewport, device performance, and reduced-motion behavior have cycle-specific installed evidence and documented limitations under `.codex/history/`; review those records before making broader acceptance claims.
 - The scene uses a fixed sample landscape and continuous decorative transitions; not a scientifically validated sky simulation.

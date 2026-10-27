@@ -28,11 +28,12 @@ A user should be able to answer, without hunting through screens:
 
 ### 2.1 Source-of-truth boundary
 
-This is a specification for **the new elastic-timeline project**, not a replacement for the original [`oxygenWX`](https://github.com/davidyanceyjr/oxygenWX) application or its four-page navigation contract.
+This is the experience specification for the **successor OxygenWX app** in this repository. The current app remains an isolated synthetic-data prototype while the approved WX roadmap stages successor capabilities. The deprecated [`oxygenWX`](https://github.com/davidyanceyjr/oxygenWX) application and its production files are outside this repository's change boundary; its four-page navigation is not the successor app's navigation contract.
 
 - The new project's `AGENTS.md`, `docs/SPECIFICATION.md`, `docs/ROADMAP.md`, `docs/UI_DEVELOPMENT_WORKFLOW.md`, and `.codex/` lifecycle remain binding during review.
 - This document supplies **adopted experience-level acceptance criteria** and future product direction. The adoption and baseline reconciliation are recorded in `.codex/history/022-experience-spec-adoption.md`.
-- No current statement here authorizes modifying the original application's navigation, weather services, or data cache.
+- The WX roadmap authorizes future successor capabilities only through their bounded plans; this specification alone does not authorize implementation.
+- No WX work authorizes modifying the deprecated application's navigation, weather services, or data cache.
 - Read actual code and the latest local working tree before implementation: the GitHub snapshot may lag active local Codex work.
 
 ### 2.2 Status terminology
@@ -42,9 +43,11 @@ This is a specification for **the new elastic-timeline project**, not a replacem
 - **Candidate enhancement:** an interesting direction but not committed scope.
 - **Production gate:** a prerequisite for removing demo limitations or claiming release readiness.
 
-### 2.3 Explicit non-goals for the present prototype
+### 2.3 Current prototype limits and successor scope
 
-Production forecast integration, location permissions, caching, official alerts, multi-location support, physically simulated weather, social features, advertising, accounts, and large-scale screen/navigation redesign are **not prerequisites for validating the new UI**. Treat them as separate decisions, not hidden requirements of a polish cycle.
+The current prototype still has synthetic data and no live forecast integration, location selection, real-data cache, or official alerts. The WX roadmap stages live data, manual location search, persistence, and source switching as separate bounded successor slices; those capabilities are not implied to exist today. Official alerts remain a separate future subsystem. Background GPS tracking, social features, advertising, accounts, and unbounded screen/navigation redesign remain outside the approved successor direction.
+
+The successor's target catalog uses 44 local calendar dates: D-30 through D-1 as historical dates and D through D+13 as forecast dates, with D derived from `asOf` in the selected location's IANA timezone. Live, simulated, and replay data share one canonical schema and provenance rules. Missing fields remain missing, archived model forecasts are not station observations, and official alerts are not catalog conditions. The immersive timeline and its selected-time, gesture, accessibility, RTL, reduced-motion, and readability invariants remain binding as data capabilities are added.
 
 ## 3. Non-negotiable experience principles
 

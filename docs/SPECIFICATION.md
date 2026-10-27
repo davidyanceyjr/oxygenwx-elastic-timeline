@@ -1,10 +1,10 @@
 # Oxygen Time Lab — prototype specification
 
-Experience-level principles and acceptance criteria are maintained in the adopted companion [`OXYGEN_EXPERIENCE_SPECIFICATION.md`](OXYGEN_EXPERIENCE_SPECIFICATION.md). This document remains controlling for prototype scope and hard semantic/architecture constraints; any conflict requires an explicit bounded owner decision recorded here before implementation.
+Experience-level principles and acceptance criteria are maintained in the adopted companion [`OXYGEN_EXPERIENCE_SPECIFICATION.md`](OXYGEN_EXPERIENCE_SPECIFICATION.md). This document remains controlling for the current prototype's behavior and hard semantic/architecture constraints. The owner-approved product direction makes this repository the successor OxygenWX app; staged successor work is authorized only through the bounded WX roadmap and its active cycle plan. This authority update authorizes future work to be planned and implemented in this repository, but does not itself authorize implementation outside an active bounded plan.
 
-The adopted [`OXYGEN_ATMOSPHERE_ENGINE_SPECIFICATION.md`](OXYGEN_ATMOSPHERE_ENGINE_SPECIFICATION.md) is a subordinate architecture proposal for possible atmospheric and environment work in this standalone prototype. It cannot override this document or the experience contract, authorize application changes by itself, or authorize production oxygenWX integration. Its adoption boundary and current-tree review are recorded in `.codex/history/023-atmosphere-spec-intake.md`.
+The adopted [`OXYGEN_ATMOSPHERE_ENGINE_SPECIFICATION.md`](OXYGEN_ATMOSPHERE_ENGINE_SPECIFICATION.md) is a subordinate architecture proposal for atmospheric and environment work. It cannot override this document or the experience contract, or authorize application changes by itself. Its adoption boundary and current-tree review are recorded in `.codex/history/023-atmosphere-spec-intake.md`.
 
-Status: one bounded standalone UI experiment. Authority intentionally limited to this sibling project.
+Status: successor OxygenWX app in staged development. The current installed application remains an isolated synthetic-data prototype; future catalog, live-data, location, cache, and source-switching capabilities require their own approved roadmap cycles. This repository is the successor product boundary. The deprecated oxygenWX application and its production files are not modified by this roadmap.
 Reference: oxygenWX commit `ec3f93976f037fbb206089d8b9d9fa1f6f93918b`.
 
 ## Goal
@@ -32,9 +32,16 @@ The UI layer consumes typed `ForecastView`, which is derived from sample canonic
 
 Every visual enhancement must preserve the timeline's responsiveness, gesture predictability, and readability. A weather-scene change is incomplete if it makes scrubbing feel delayed, changes gesture ownership or arbitration unexpectedly, or obscures forecast values or timeline labels.
 
-## Exclusions
+## Successor direction and durable boundaries
 
-No production oxygenWX files or navigation changes, no third-party data feed, no official alerts, no persisted preferences, no cached real forecast, no maps, no external services.
+- **Date window:** a location-scoped catalog targets 44 local calendar dates: D-30 through D-1 as historical dates, followed by D through D+13 as forecast dates. D is the local date at the catalog's `asOf: Instant` in the location's IANA timezone. The 44 dates do not promise 1,056 hourly values; DST, provider gaps, and partial coverage remain explicit.
+- **Canonical data and parity:** live, deterministic simulated, and recorded replay datasets use one canonical schema. Origin and product provenance are metadata; switching replaces a whole validated dataset atomically. Missing values remain unavailable, never defaulted to zero. Archived model forecasts are not described as verified observations.
+- **Official alerts:** official weather alerts remain a separate future subsystem and are not catalog conditions or inferred warning flags.
+- **Retained invariants:** absolute selected-time authority; no time jump from zoom; predictable ownership between the timeline and other gestures; readable forecast facts and accessible alternatives; RTL/reduced-motion meaning; truthful source, product, freshness, and missing-data semantics; decorative rendering does not invent meteorological facts.
+- **Predecessor boundary:** the deprecated oxygenWX application's files and four-page navigation are not changed by this successor roadmap. This app keeps its immersive timeline as the primary experience; no timeline is inserted into the predecessor's outer pager.
+- **Explicit exclusions:** no official-alert implementation, background GPS tracking, production changes to the deprecated oxygenWX repository, or unbounded integration/release redesign. Each future capability remains gated by its own WX plan and verification.
+
+The current prototype still has no live provider, location selection, real-data cache, or official alerts. Those are future roadmap outcomes, not current capabilities.
 
 ## Production-release presentation requirements
 
