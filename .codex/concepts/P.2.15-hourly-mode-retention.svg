@@ -1,0 +1,105 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1600" height="920" viewBox="0 0 1600 920" role="img" aria-labelledby="title desc">
+  <title id="title">P.2.15 Hourly mode remains active until a tap</title>
+  <desc id="desc">Three phone storyboards show release preserving hourly mode, a main forecast tap returning to daily mode at the same selected time, and a timeline tap returning to daily mode at the tapped hour.</desc>
+  <defs>
+    <linearGradient id="sky" x2="0" y2="1">
+      <stop stop-color="#315a7c"/>
+      <stop offset="1" stop-color="#a5c2cc"/>
+    </linearGradient>
+    <linearGradient id="ground" x2="0" y2="1">
+      <stop stop-color="#123247"/>
+      <stop offset="1" stop-color="#081a28"/>
+    </linearGradient>
+    <marker id="arrow" markerWidth="12" markerHeight="12" refX="9" refY="6" orient="auto">
+      <path d="M1 1 10 6 1 11" fill="none" stroke="#627a8d" stroke-width="2"/>
+    </marker>
+    <style>
+      .panel { fill:#f4f7fa; stroke:#c6d2dc; stroke-width:2 }
+      .phone { fill:#14293b; stroke:#0b1d2c; stroke-width:3 }
+      .label { font:700 23px sans-serif; fill:#20384b }
+      .body { font:18px sans-serif; fill:#334e63 }
+      .tiny { font:15px sans-serif; fill:#eef5f7 }
+      .tag { font:700 15px sans-serif; fill:#183449; letter-spacing:1px }
+      .hour { font:700 17px sans-serif; fill:#ffe0a1 }
+    </style>
+  </defs>
+  <rect width="1600" height="920" fill="#e8eef3"/>
+  <text x="800" y="55" text-anchor="middle" class="label" font-size="30">P.2.15 · Hourly mode stays active until an explicit tap</text>
+  <text x="800" y="88" text-anchor="middle" class="body">No new control row. The selected forecast time remains authoritative.</text>
+
+  <g transform="translate(50 125)">
+    <rect class="panel" width="470" height="735" rx="18"/>
+    <text x="28" y="45" class="tag">1 · RELEASE THE TAPE</text>
+    <text x="28" y="78" class="body">Lift after hold-and-drag:</text>
+    <text x="28" y="106" class="body">the gesture ends; hourly mode stays.</text>
+    <rect class="phone" x="105" y="142" width="260" height="525" rx="28"/>
+    <rect x="119" y="171" width="232" height="447" rx="8" fill="url(#sky)"/>
+    <text x="136" y="205" class="tiny" font-weight="700">OXYGEN / TIME LAB</text>
+    <text x="235" y="331" text-anchor="middle" fill="#fff" font-size="48">71°</text>
+    <text x="235" y="362" text-anchor="middle" class="tiny">Partly cloudy</text>
+    <text x="235" y="421" text-anchor="middle" fill="#fff" font-size="17" font-weight="700">SAT, OCT 24</text>
+    <text x="235" y="450" text-anchor="middle" fill="#f3f7f8" font-size="17">10 AM</text>
+    <rect x="119" y="535" width="232" height="83" fill="url(#ground)"/>
+    <text x="235" y="555" text-anchor="middle" class="tiny">SAT</text>
+    <path d="M128 583H342" stroke="#8ba0ac" stroke-width="2"/>
+    <g stroke="#dce8ee" stroke-width="2">
+      <path d="M145 571v24M172 577v15M199 571v24M226 577v15M253 571v24M280 577v15M307 571v24M334 577v15"/>
+    </g>
+    <circle cx="235" cy="583" r="5" fill="#ffe0a1"/>
+    <text x="145" y="610" text-anchor="middle" class="tiny">6a</text>
+    <text x="235" y="610" text-anchor="middle" class="hour">10 AM</text>
+    <text x="307" y="610" text-anchor="middle" class="tiny">6p</text>
+    <text x="235" y="704" text-anchor="middle" class="body">Selected time: 10 AM · hourly scale</text>
+  </g>
+
+  <path d="M530 490h35" stroke="#627a8d" stroke-width="3" marker-end="url(#arrow)"/>
+
+  <g transform="translate(565 125)">
+    <rect class="panel" width="470" height="735" rx="18"/>
+    <text x="28" y="45" class="tag">2 · TAP MAIN FORECAST</text>
+    <text x="28" y="78" class="body">Exit hourly; keep the same</text>
+    <text x="28" y="106" class="body">selected time.</text>
+    <rect class="phone" x="105" y="142" width="260" height="525" rx="28"/>
+    <rect x="119" y="171" width="232" height="447" rx="8" fill="url(#sky)"/>
+    <text x="136" y="205" class="tiny" font-weight="700">OXYGEN / TIME LAB</text>
+    <text x="235" y="331" text-anchor="middle" fill="#fff" font-size="48">71°</text>
+    <text x="235" y="362" text-anchor="middle" class="tiny">Partly cloudy</text>
+    <text x="235" y="421" text-anchor="middle" fill="#fff" font-size="17" font-weight="700">SAT, OCT 24</text>
+    <text x="235" y="448" text-anchor="middle" fill="#f3f7f8" font-size="12">DAY OVERVIEW</text>
+    <text x="235" y="466" text-anchor="middle" fill="#f3f7f8" font-size="12">SELECTED 10 AM</text>
+    <ellipse cx="235" cy="340" rx="84" ry="65" fill="none" stroke="#ffe0a1" stroke-width="3" stroke-dasharray="8 7"/>
+    <rect x="119" y="535" width="232" height="83" fill="url(#ground)"/>
+    <text x="155" y="565" text-anchor="middle" class="tiny">FRI</text>
+    <text x="235" y="565" text-anchor="middle" fill="#fff" font-size="19" font-weight="700">SAT</text>
+    <text x="310" y="565" text-anchor="middle" class="tiny">SUN</text>
+    <path d="M128 583H342" stroke="#8ba0ac" stroke-width="2"/>
+    <g stroke="#dce8ee" stroke-width="2"><path d="M155 570v25M198 570v25M272 570v25M315 570v25"/></g>
+    <circle cx="235" cy="583" r="5" fill="#ffe0a1"/>
+    <text x="235" y="704" text-anchor="middle" class="body">Timestamp unchanged · daily overview</text>
+  </g>
+
+  <path d="M1045 490h35" stroke="#627a8d" stroke-width="3" marker-end="url(#arrow)"/>
+
+  <g transform="translate(1080 125)">
+    <rect class="panel" width="470" height="735" rx="18"/>
+    <text x="28" y="45" class="tag">3 · TAP THE HOURLY TAPE</text>
+    <text x="28" y="78" class="body">Exit hourly and select the hour</text>
+    <text x="28" y="106" class="body">under the tap.</text>
+    <rect class="phone" x="105" y="142" width="260" height="525" rx="28"/>
+    <rect x="119" y="171" width="232" height="447" rx="8" fill="url(#sky)"/>
+    <text x="136" y="205" class="tiny" font-weight="700">OXYGEN / TIME LAB</text>
+    <text x="235" y="331" text-anchor="middle" fill="#fff" font-size="48">71°</text>
+    <text x="235" y="362" text-anchor="middle" class="tiny">Partly cloudy</text>
+    <text x="235" y="421" text-anchor="middle" fill="#fff" font-size="17" font-weight="700">SAT, OCT 24</text>
+    <text x="235" y="448" text-anchor="middle" fill="#f3f7f8" font-size="12">DAY OVERVIEW</text>
+    <text x="235" y="466" text-anchor="middle" fill="#f3f7f8" font-size="12">SELECTED 11 AM</text>
+    <rect x="119" y="535" width="232" height="83" fill="url(#ground)"/>
+    <text x="235" y="565" text-anchor="middle" fill="#fff" font-size="19" font-weight="700">SAT</text>
+    <path d="M128 583H342" stroke="#8ba0ac" stroke-width="2"/>
+    <g stroke="#dce8ee" stroke-width="2"><path d="M145 571v24M172 577v15M199 571v24M226 577v15M253 571v24M280 577v15M307 571v24M334 577v15"/></g>
+    <circle cx="235" cy="583" r="5" fill="#ffe0a1"/>
+    <circle cx="253" cy="583" r="15" fill="none" stroke="#e48d58" stroke-width="3"/>
+    <text x="253" y="610" text-anchor="middle" class="hour">11a</text>
+    <text x="235" y="704" text-anchor="middle" class="body">Tap target: 11 AM · daily overview</text>
+  </g>
+</svg>

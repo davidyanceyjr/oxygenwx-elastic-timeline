@@ -113,6 +113,9 @@ fun TimeLabScreen(
     }
     val latestReturnToNow by rememberUpdatedState<() -> Unit> { returnToNow() }
     val latestShiftDay by rememberUpdatedState<(Int) -> Unit> { days -> shiftDay(days) }
+    val latestExitPrecision by rememberUpdatedState<() -> Unit> {
+        if (precisionMode) leavePrecision(true)
+    }
 
     BoxWithConstraints(Modifier.fillMaxSize().background(Color(0xFF11263D))) {
         val compactLandscape = maxHeight < 400.dp
@@ -185,7 +188,10 @@ fun TimeLabScreen(
                     )
                 }
                 .pointerInput(Unit) {
-                    detectTapGestures(onDoubleTap = { latestReturnToNow() })
+                    detectTapGestures(
+                        onTap = { latestExitPrecision() },
+                        onDoubleTap = { latestReturnToNow() },
+                    )
                 },
             horizontalAlignment = Alignment.CenterHorizontally,
         ) {
@@ -279,18 +285,20 @@ fun TimeLabScreen(
                     if (precisionMode) focusDay = ElasticTimeAxis.dayIndex(it).coerceIn(0, forecastSource.days.lastIndex)
                 },
                 onPrecisionStarted = { day, atHour -> enterPrecision(day, atHour) },
+                onTimelineTap = { hourOffset ->
+                    selectedHour = hourOffset.coerceIn(0.0, forecastSource.lastIndex.toDouble())
+                    focusDay = ElasticTimeAxis.dayIndex(selectedHour).coerceIn(0, forecastSource.days.lastIndex)
+                    precisionMode = false
+                },
                 onTogglePrecision = {
                     if (precisionMode) leavePrecision(true)
                     else enterPrecision(ElasticTimeAxis.dayIndex(selectedHour), selectedHour)
                 },
                 onBrowseForecasts = { forecastBrowserOpen = true },
                 onGestureEnded = { wasPrecision ->
-                    // A hold completed an hour scrub. For an ordinary drag, snap to the
-                    // middle of the selected day, leaving the represented DAY unchanged.
-                    // If expanded by an accessibility action, keep precision active.
-                    if (wasPrecision) leavePrecision(true)
-                    else if (!precisionMode) leavePrecision(false)
-                    else Unit
+                    // Precision remains active after release. Only a later explicit
+                    // main-area or timeline tap exits it. Daily drags still settle at noon.
+                    if (!wasPrecision && !precisionMode) leavePrecision(false)
                 },
             )
         }

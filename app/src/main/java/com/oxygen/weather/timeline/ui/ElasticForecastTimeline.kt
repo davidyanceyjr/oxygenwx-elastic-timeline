@@ -56,6 +56,7 @@ fun ElasticForecastTimeline(
     expanded: Boolean,
     onSelectedHour: (Double) -> Unit,
     onPrecisionStarted: (Int, Double) -> Unit,
+    onTimelineTap: (Double) -> Unit,
     onTogglePrecision: () -> Unit,
     onBrowseForecasts: () -> Unit,
     onGestureEnded: (Boolean) -> Unit,
@@ -72,9 +73,11 @@ fun ElasticForecastTimeline(
     val maxHour = source.lastIndex.toDouble()
     val expandedPx = with(density) { 16.dp.toPx().toDouble() }
     val latestSelected by rememberUpdatedState(selectedHour)
+    val latestExpanded by rememberUpdatedState(expanded)
     val latestAnimation by rememberUpdatedState(animation)
     val latestSetHour by rememberUpdatedState(onSelectedHour)
     val latestPrecision by rememberUpdatedState(onPrecisionStarted)
+    val latestTimelineTap by rememberUpdatedState(onTimelineTap)
     val latestTogglePrecision by rememberUpdatedState(onTogglePrecision)
     val latestBrowseForecasts by rememberUpdatedState(onBrowseForecasts)
     val latestEnded by rememberUpdatedState(onGestureEnded)
@@ -124,8 +127,9 @@ fun ElasticForecastTimeline(
                     var gestureSelection = latestSelected
                     var peakDistance = 0f
                     var dragging = false
-                    var inPrecision = false
-                    var longPressArmed = true
+                    var inPrecision = latestExpanded
+                    var holdActivated = false
+                    var longPressArmed = !latestExpanded
                     var finished = false
                     while (!finished) {
                         val remainingMs = (HOLD_DURATION_MS -
@@ -146,12 +150,20 @@ fun ElasticForecastTimeline(
                             latestPrecision(day, exactHour)
                             gestureSelection = exactHour
                             inPrecision = true
+                            holdActivated = true
                             longPressArmed = false
                             continue
                         }
                         val change = event.changes.firstOrNull { it.id == down.id }
                         if (change == null || !change.pressed) {
-                            if (!dragging && !inPrecision) {
+                            if (!dragging && inPrecision && !holdActivated) {
+                                val logicalDownX = if (isRtl) size.width - downX else downX
+                                val target = ElasticTimeAxis.hourAtX(
+                                    logicalDownX, latestSelected, playhead, null,
+                                    compactDayPx, widthForHour(latestAnimation),
+                                ).coerceIn(0.0, maxHour).roundToInt().toDouble()
+                                latestTimelineTap(target)
+                            } else if (!dragging && !inPrecision) {
                                 val logicalDownX = if (isRtl) size.width - downX else downX
                                 val target = ElasticTimeAxis.hourAtX(
                                     logicalDownX, latestSelected, playhead, null,

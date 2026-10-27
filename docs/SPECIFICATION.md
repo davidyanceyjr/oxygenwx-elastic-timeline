@@ -16,7 +16,7 @@ A full-screen atmospheric scene controlled by a minimalist bottom time tape. Thr
 1. **Tap** a day on the tape: select that day's representative summary.
 2. **Immediate horizontal drag:** browse daily time, with the tape moving beneath the playhead.
 3. **Stationary hold (~480ms) then drag:** switch the whole tape to a uniform hourly scale (`16dp/hour`) and scrub hour by hour. Do not locally expand one day into a focus window.
-4. **Collapse/release:** preserve absolute selected timestamp. A presentation-only switch from hourly to daily overview is permitted; hourly ticks/labels and accessibility semantics distinguish the scales without a visible mode-control row.
+4. **Hourly mode lifetime:** releasing after hourly activation ends the current drag but leaves the timeline in hourly mode. A tap on the main forecast area exits hourly mode while preserving the selected timestamp. A tap on the timeline exits hourly mode and selects the time under the tap. Hourly ticks/labels and accessibility semantics distinguish the scales without a visible mode-control row.
 5. **No coordinate jump on scale change:** the selected timestamp always projects to the center playhead, regardless of expansion factor.
 6. **Time bounds:** clamp at the actual fixture horizon; never invent forecast intervals beyond it.
 7. **Accessibility route:** the time tape exposes a screen-reader action to switch daily/hourly scales; do not add a visible mode-control row.

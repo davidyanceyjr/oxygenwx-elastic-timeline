@@ -98,10 +98,10 @@ The single authoritative value is the **selected forecast moment**. UI position,
 - The entire tape transitions to **uniform hourly spacing**, currently around **16 dp per hour**, rather than expanding one isolated day.
 - An animated scale transition (currently around **260 ms**) reveals hourly ticks and selective major-hour labels. Avoid drawing all 24 hour labels simultaneously.
 - Dragging now explores hour-level forecast samples under the fixed playhead; the selected hour label is emphasized.
-- On release, the gesture's precision mode returns to daily navigation while preserving the selected absolute hour. The hourly sampling and a later daily overview must remain semantically distinct.
+- Releasing ends the current gesture but leaves hourly precision active. A tap on the main forecast area exits precision while preserving the selected absolute hour; a tap on the timeline exits precision and selects the time under the tap. The hourly sampling and a later daily overview must remain semantically distinct.
 - A haptic confirmation of entering precision is appropriate; it must not be the only indication of the change.
 
-**Acceptance:** there is no clock jump caused solely by entering, animating, or leaving precision. No gesture is recognized as both an ordinary day drag and a hold-to-hour drag.
+**Acceptance:** there is no clock jump caused solely by entering, animating, or leaving precision. Releasing a hold-then-drag leaves hourly precision active. A main-area tap exits precision without changing selected time; a timeline tap exits precision and selects its target time. No gesture is recognized as both an ordinary day drag and a hold-to-hour drag.
 
 ### 4.4 Main atmospheric view — shortcut navigation
 

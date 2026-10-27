@@ -392,6 +392,14 @@ Every unfinished slice must have concept artwork specific to its own objective a
 **Concept artwork:** Owner approved 2026-10-26 at `docs/mockups/approved-precipitation-wind-metrics.png`; installed source baseline at `docs/mockups/app_screen_original.png`.
 **Evidence:** Cycle 042 (`042-p2-wind-metrics`): `.codex/test-artifacts/042-p2-wind-metrics/README.md`, including installed baseline and target captures; closeout `.codex/history/042-p2-wind-metrics.md`; archived plan `.codex/history/plans/042-p2-wind-metrics.md`.
 
+### P.2.15 — Keep hourly precision active until an explicit tap — DONE
+
+**Objective/scope:** Preserve hourly precision after the activating hold-and-drag is released. A tap on the main forecast area exits hourly mode without changing the selected time; a tap on the timeline exits hourly mode and selects the time under the tap. Update the adopted interaction contract and implement the bounded gesture-state change without new visible controls.
+**Depends on:** P.2.1, P.2.3, and P.2.5.
+**Exit:** Installed Pixel 3 XL interaction evidence confirms hold-and-drag enters hourly mode, release ends dragging while hourly mode remains visible, main-area tap returns to daily mode with the same selected time, and timeline tap returns to daily mode at the tapped time. Existing timeline labels, forecast values, gesture ownership, and accessibility scale semantics remain intact. Workflow, contract, debug build/install, and `git diff --check` pass. No tests are added or run in this cycle.
+**Concept artwork:** Owner waived the UI artwork requirement for this slice only on 2026-10-27. `.codex/concepts/P.2.15-hourly-mode-retention.svg` is retained as an unapproved interaction storyboard, not a gate or acceptance artifact.
+**Evidence:** Cycle 046 (`046-p2-hourly-mode-retention`): `.codex/test-artifacts/046-p2-hourly-mode-retention/README.md`; closeout `.codex/history/046-p2-hourly-mode-retention.md`; archived plan `.codex/history/plans/046-p2-hourly-mode-retention.md`.
+
 ## P.3 — Deprecated oxygenWX integration feasibility — DEFERRED
 
 ### P.3.1 — Assess integration into the deprecated oxygenWX app — DEFERRED
