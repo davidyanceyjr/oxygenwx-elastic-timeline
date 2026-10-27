@@ -9,7 +9,7 @@ Every visual enhancement must preserve timeline responsiveness, gesture predicta
 
 ## Workstream priority
 
-WX is the current priority: `WX.1` is `DONE`, `WX.2` is `NEXT`, and `ATM.8` is `PLANNED`. After `WX.28` closes, return to `ATM.8` as the next workstream. This is an ordering decision, not a dependency; ATM slice dependencies remain unchanged.
+WX is the current priority: `WX.1` and `WX.2` are `DONE`, `WX.3` is `NEXT`, and `ATM.8` is `PLANNED`. After `WX.28` closes, return to `ATM.8` as the next workstream. This is an ordering decision, not a dependency; ATM slice dependencies remain unchanged.
 
 ## Concept-art gate for unfinished slices
 
@@ -51,7 +51,7 @@ Every unfinished slice must have concept artwork specific to its own objective a
 
 **Authority transition:** WX.1 records the owner-approved successor direction. The current prototype remains the only implemented behavior until its bounded WX slices execute. The deprecated oxygenWX application is a reference only; do not copy its app structure or introduce its four-page Home pager. The immersive elastic timeline remains the successor app's primary experience.
 
-**Roadmap priority:** WX is the prioritized workstream. `WX.1` is `DONE` in cycle 043 and `WX.2` is the sole `NEXT` slice; later WX slices are `PLANNED`; `ATM.8` remains `PLANNED`. After `WX.28` closes, promote `ATM.8` to `NEXT` while preserving its existing dependencies and evidence. This records sequencing, not a dependency edge. The cycle pointer is IDLE after WX.1 closeout.
+**Roadmap priority:** WX is the prioritized workstream. `WX.1` is `DONE` in cycle 043 and `WX.2` is `DONE` in cycle 044; `WX.3` is the sole `NEXT` slice; later WX slices are `PLANNED`; `ATM.8` remains `PLANNED`. After `WX.28` closes, promote `ATM.8` to `NEXT` while preserving its existing dependencies and evidence. This records sequencing, not a dependency edge. The cycle pointer is IDLE after WX.2 closeout.
 
 **Concept-art gate:** The existing roadmap requires objective-specific owner-approved concept artwork for every unfinished slice, including data-only and design-only work. The proposed `.codex/concepts/WX.*.png` paths below are **targets, not existing or approved artifacts**. For model and service slices, use an annotated schema, flow, state, sequence, or boundary board rather than decorative UI art. The owner must approve each artifact and its constraints in that slice's execution plan before implementation. Device/installed acceptance evidence remains separate.
 
@@ -80,15 +80,15 @@ Every unfinished slice must have concept artwork specific to its own objective a
 **Concept artwork:** Waived by the owner on 2026-10-26 because WX.1 is a documentation-only change. No artwork is required for this cycle; the waiver does not change the general concept-art gate for other unfinished slices.
 **Evidence:** Cycle 043 (`043-wx1-successor-authority`): [decision and verification artifacts](../.codex/test-artifacts/043-wx1-successor-authority/README.md); [closeout](../.codex/history/043-wx1-successor-authority.md); [archived plan](../.codex/history/plans/043-wx1-successor-authority.md).
 
-### WX.2 — Inventory and regression-baseline the existing catalog and timeline — NEXT
+### WX.2 — Inventory and regression-baseline the existing catalog and timeline — DONE
 
 **Objective/scope:** Read-only audit of actual debug catalog, three transitions, profiles, eight-day normal sample, `ForecastSource`, `ForecastProjection`, `ElasticTimeAxis`, `TimeLabScreen`, atmosphere mapping, and present tests/device evidence. Document the independently generated `DebugForecastProfiles.profileFacts()` versus `DebugForecastCatalog.scenarios` relationship; current synthetic warning and snow/unknown visual mappings; `LocalDateTime`, 24-hour day, reference reset, and test-scaffold assumptions. No behavior changes.
 **Depends on:** WX.1.
 **Exit:** A source-path/line-grounded inventory, migration compatibility table, recorded snapshots or reproducibility plan, currently verified/unverified baseline, and specific owners for every legacy invariant exist; discrepancies and preexisting failures are dispositioned rather than silently fixed.
-**Concept artwork:** Pending owner-approved annotated current-versus-target dataflow board at `.codex/concepts/WX.2-baseline-inventory.png`.
-**Evidence:** Planned cycle 044 (`044-wx2-baseline-inventory`): `.codex/test-artifacts/044-wx2-baseline-inventory/README.md`, `inventory.md`, and `baseline.md`; closeout `.codex/history/044-wx2-baseline-inventory.md`; plan `.codex/plans/044-wx2-baseline-inventory.md`; archived plan `.codex/history/plans/044-wx2-baseline-inventory.md`. Owner-approved concept target: `.codex/concepts/WX.2-baseline-inventory.png`.
+**Concept artwork:** Product-owner approved annotated current-versus-target dataflow board at `.codex/concepts/WX.2-baseline-inventory.png` (approval and constraints recorded in cycle 044 evidence).
+**Evidence:** Cycle 044 (`044-wx2-baseline-inventory`): `.codex/test-artifacts/044-wx2-baseline-inventory/README.md`, `inventory.md`, `baseline.md`, and post-closeout owner disposition `owner-disposition.md`; closeout `.codex/history/044-wx2-baseline-inventory.md`; archived plan `.codex/history/plans/044-wx2-baseline-inventory.md`; approved board `.codex/concepts/WX.2-baseline-inventory.png`.
 
-### WX.3 — Define canonical catalog identity and weather facts — PLANNED
+### WX.3 — Define canonical catalog identity and weather facts — NEXT
 
 **Objective/scope:** Define the provider-neutral catalog envelope and canonical nullable weather facts together. Include stable local location identity, coordinates/timezone, `asOf: Instant`, absolute valid times, dataset identity, source/product provenance, canonical units, ranges, and a composable condition/phenomena vocabulary. Cover existing clear, partly cloudy, cloudy, rain, snow, storm; distinguish precipitation and thunder probabilities, rain, total precipitation, snowfall, snow depth, wind/gust/direction, temperature, pressure, humidity, cloud, visibility, and optional severe-weather inputs only where supported. Keep official alerts and legacy synthetic warning outside canonical facts. Keep existing fixture and presentation paths unchanged; no storage, transport, or renderer changes.
 **Depends on:** WX.2.

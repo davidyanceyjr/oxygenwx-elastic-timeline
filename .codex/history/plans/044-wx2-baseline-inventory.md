@@ -1,6 +1,6 @@
 # Cycle plan — 044-wx2-baseline-inventory
 
-State: PLANNED
+State: COMPLETE
 Roadmap: WX.2
 Objective: Produce a source-grounded, read-only inventory and regression baseline for the existing catalog, projections, timeline, atmosphere, tests, and device evidence.
 
