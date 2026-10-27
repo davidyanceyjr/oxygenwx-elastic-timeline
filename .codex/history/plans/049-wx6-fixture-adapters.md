@@ -1,6 +1,6 @@
 # Cycle plan — 049-wx6-fixture-adapters
 
-State: PLANNED
+State: COMPLETE
 Cycle ID: 049-wx6-fixture-adapters
 Roadmap: WX.6
 Objective: Add pure canonical adapters for the existing normal fixture, debug scenarios and sequences, and generated debug profiles while preserving their established facts, identities, and runtime behavior.
@@ -8,6 +8,8 @@ Objective: Add pure canonical adapters for the existing normal fixture, debug sc
 ## Scope and production boundary
 
 Implement adapters only. Existing fixtures remain the source of truth; the app does not load a canonical catalog, select a new source, or change startup behavior.
+
+Owner direction on 2026-10-27 keeps WX.6 limited to these fixture adapters. The separately approved single linear DEMO 44-day troubleshooting timeline belongs to WX.10 and does not add generation, app wiring, or timeline UI to this cycle.
 
 Expected affected areas, subject to source inspection before implementation:
 
@@ -31,7 +33,7 @@ Do not edit fixture definitions/formulas, `ForecastSource`, `ForecastProjection`
 - Missing probabilities/amounts remain absent. The debug warning preview remains a debug-only legacy state and must not be represented as an official alert or inserted into canonical weather facts.
 - Existing normal/debug presentation adapters, fixture values, 7/11/14 profile bounds, reference reset behavior, debug picker, selected-time rules, and app startup remain unchanged.
 
-## Owner-approved adapter contracts and remaining gate
+## Owner-approved adapter contracts and concept approval
 
 The owner approved the following contracts on 2026-10-27. They settle the adapter semantics without changing WX.3 canonical types:
 
@@ -39,9 +41,10 @@ The owner approved the following contracts on 2026-10-27. They settle the adapte
 - **Strict local-time conversion:** Resolve every fixture `LocalDateTime` with the supplied location timezone. Convert only when `ZoneRules.getValidOffsets(localDateTime)` returns exactly one offset. Zero offsets is a DST gap; multiple offsets is a DST overlap. Return a clear typed adapter failure identifying the local time, zone, and failure kind. If any required fixture time fails, return failure for the whole adapter operation; do not return partial catalogs, shift a local time, select an overlap offset, or use system defaults. Apply the same rule to scenario `validTime`, sequence `sequenceTime`, profile sample/reference times, normal hourly times, and daily representative times.
 - **Loss-aware source-only values:** Leave a legacy `RainLiquidMm` out of canonical `rainAmountMillimeters` because it has no explicit accumulation interval. Retain its exact typed value in adapter metadata with a stable reason such as `ACCUMULATION_INTERVAL_UNAVAILABLE`. Keep canonical rain amount null for that record. Map `SnowDepthCm` to `snowDepthCentimeters`, never to snowfall. Preserve other legacy values not represented by canonical facts (including the synthetic warning preview and independent precipitation identity) in adapter metadata, with their synthetic/debug meaning explicit; do not turn warning state into an alert or imply a canonical fact that the schema cannot represent.
 - **Adapter-level compatibility metadata:** Keep debug scenario/profile/sequence IDs, names, order, sequence times, profile reference times, and normal daily summaries (date, extrema, max precipitation probability, representative sample identity/time) in adapter result types outside `CanonicalCatalog` and `CanonicalWeatherFacts`. A fact's canonical `validTime` is derived only from its fixture valid/sample time; a sequence's `sequenceTime` remains separate metadata. Do not widen the canonical schema to carry these fixture-specific concepts.
+- **Sequence identity resolution (owner decision 2026-10-27):** `DebugForecastSequence` has no source ID, only a name and ordered steps. Preserve the fixture unchanged and derive an adapter-level stable ID from its name by lowercasing with `Locale.ROOT`, replacing every run of characters outside ASCII `a-z`/`0-9` with `-`, and trimming leading/trailing `-`. Reject the whole debug catalog adaptation with a typed identity-collision failure if two names produce the same ID or a name produces an empty ID. The current names yield `cloud-build-rain-clearing`, `snow-entry-and-exit`, and `graded-storm-and-warning-preview`.
 - **Fixed test context:** Tests use fixed, explicit locations/timezones, dataset IDs, and `asOf` instants. They do not depend on wall clock, host timezone, geolocation, network, or Android services. Include UTC success cases and explicit timezone cases that exercise valid, gap, and overlap conversion behavior.
 
-If the concept board review reveals a need to widen or revise the canonical contract, stop and record the issue; do not edit WX.3 types inside this slice without a bounded roadmap/plan revision. The semantic decisions are approved, but the required objective-specific concept-art gate remains unmet until the board at `.codex/concepts/WX.6-fixture-adapters.png` and `.svg` is produced and approved, with these constraints recorded before implementation.
+If later source inspection reveals a need to widen or revise the canonical contract, stop and record the issue; do not edit WX.3 types inside this slice without a bounded roadmap/plan revision. The objective-specific WX.6 concept board at `.codex/concepts/WX.6-fixture-adapters.png` and `.svg` was approved by the owner on 2026-10-27. Its explicit-input, strict-time, loss-aware mapping, compatibility-metadata, provenance, and no-app-wiring constraints are recorded in `.codex/test-artifacts/049-wx6-fixture-adapters/README.md` before implementation.
 
 ## Functional invariants
 
@@ -60,7 +63,7 @@ If the concept board review reveals a need to widen or revise the canonical cont
 ## Ordered steps
 
 1. Review WX.2 source-grounded inventory, WX.3 canonical contract, WX.5 coverage rules, current fixtures, and existing regression checks; record exact anchors in cycle evidence.
-2. Create the annotated WX.6 adapter/compatibility board showing fixture inputs, adapters, canonical envelope/facts, retained legacy IDs/sequence metadata, the scenario-time distinction, provenance, nullable values, and out-of-scope app wiring. Obtain owner approval and record constraints here before coding.
+2. Confirm the owner-approved WX.6 adapter/compatibility board covers fixture inputs, canonical envelope/facts, retained fixture IDs/sequence metadata, scenario-time distinction, provenance, nullable values, and the no-app-wiring boundary; the approval and constraints are recorded in the cycle artifact README.
 3. Implement adapter result/error contracts that require explicit `CatalogLocation`, `DatasetId`, and `asOf`; return typed whole-operation failures for DST gaps/overlaps; and preserve unsupported source values and fixture metadata in adapter-level wrappers.
 4. Implement pure main-source adapter for `SampleForecast` and debug-source adapters for the scenario catalog/sequences and independently generated profiles. Preserve debug source-set isolation and avoid modifying fixture generators or runtime consumers.
 5. Add focused exact-output/golden checks for every preserved item in the WX.6 exit using fixed explicit adapter inputs. Cover canonical null/zero/probability/condition/amount comparisons, loss-aware rain and warning metadata, DST unique/gap/overlap outcomes and whole-operation failure, sequence-time distinction, profile horizon/reference/formula snapshots, normal sample values/summaries, and release isolation. The owner authorized these focused adapter tests by directing that tests use fixed inputs; no full-suite run is authorized.
