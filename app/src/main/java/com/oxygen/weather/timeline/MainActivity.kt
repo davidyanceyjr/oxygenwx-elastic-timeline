@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.content.pm.ApplicationInfo
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
@@ -59,18 +60,20 @@ class MainActivity : ComponentActivity() {
             intent.getIntExtra(EXTRA_PREVIEW_HOUR, -1).takeIf { it in SampleForecast.hours.indices }
         } else null
         setContent {
-            MaterialTheme {
-                when {
-                    showSnowPreview -> SyntheticSnowPreview()
-                    previewHour != null -> FixturePrecipitationPreview(previewHour)
-                    else -> TimeLabScreen(
-                        effectPreview = effectPreview,
-                        initialSelectedHour = debugSelectedHour
-                            ?: if (showStormPreview) 0.0
-                            else if (showClearNightPreview) 48.0
-                            else effectPreviewHour ?: 36.0,
-                        initialPrecisionMode = showStormPreview || showClearNightPreview || debugSelectedHour != null,
-                    )
+            CompositionLocalProvider(LocalAppClock provides AppClock.clock) {
+                MaterialTheme {
+                    when {
+                        showSnowPreview -> SyntheticSnowPreview()
+                        previewHour != null -> FixturePrecipitationPreview(previewHour)
+                        else -> TimeLabScreen(
+                            effectPreview = effectPreview,
+                            initialSelectedHour = debugSelectedHour
+                                ?: if (showStormPreview) 0.0
+                                else if (showClearNightPreview) 48.0
+                                else effectPreviewHour ?: 36.0,
+                            initialPrecisionMode = showStormPreview || showClearNightPreview || debugSelectedHour != null,
+                        )
+                    }
                 }
             }
         }
