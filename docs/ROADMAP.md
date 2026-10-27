@@ -110,7 +110,7 @@ Every unfinished slice must have concept artwork specific to its own objective a
 **Depends on:** WX.3 and WX.5.
 **Exit:** Golden/snapshot comparisons show scenario facts and nulls, 27%/90% storm probabilities, transition identities/order, generated profile outputs/reference reset, synthetic warning preview, and normal sample presentation match the recorded baseline. Existing debug entry points remain usable, scenario tables remain absent from release, and the adapter does not introduce source DTOs into presentation. Document or guard intentional boundaries between catalog scenarios and independently generated `profileFacts`; build and contract checks pass.
 **Concept artwork:** Pending owner-approved fixture-to-canonical adapter and compatibility board at `.codex/concepts/WX.6-fixture-adapters.png`.
-**Evidence:** On planning, allocate chronological cycle paths, exact fixture comparisons, and compatibility evidence. Target paths when planned: `.codex/test-artifacts/<cycle-id>/`; closeout `.codex/history/<cycle-id>.md`; plan `.codex/plans/<cycle-id>.md`; archived plan `.codex/history/plans/<cycle-id>.md`.
+**Evidence:** Planned cycle 049 (`049-wx6-fixture-adapters`): `.codex/test-artifacts/049-wx6-fixture-adapters/`; closeout `.codex/history/049-wx6-fixture-adapters.md`; plan `.codex/plans/049-wx6-fixture-adapters.md`; archived plan `.codex/history/plans/049-wx6-fixture-adapters.md`. Concept board approval remains a prerequisite to implementation.
 
 ### WX.9 — Introduce one source and load-result contract — PLANNED
 
