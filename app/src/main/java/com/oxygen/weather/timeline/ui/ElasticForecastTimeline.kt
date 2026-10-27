@@ -183,13 +183,18 @@ fun ElasticForecastTimeline(
                                 longPressArmed = false
                             }
                             if (dragging && dx != 0.0) {
+                                // Once hourly precision is active, keep its drag mapping fixed
+                                // while the visual scale animation settles. Otherwise identical
+                                // pointer deltas produce different time changes from frame to frame.
+                                val scrubZoom = if (inPrecision) 1f else latestAnimation
                                 val next = ElasticTimeAxis.scrub(
                                     gestureSelection, if (isRtl) -dx else dx, null,
-                                    compactDayPx, widthForHour(latestAnimation), maxHour,
+                                    compactDayPx, widthForHour(scrubZoom), maxHour,
                                 )
-                                val selected = if (inPrecision) next.roundToInt().toDouble() else next
-                                gestureSelection = selected
-                                latestSetHour(selected)
+                                // Keep sub-hour movement so small pointer events accumulate;
+                                // labels and ticks continue to use the nearest-hour convention.
+                                gestureSelection = next
+                                latestSetHour(next)
                             }
                             change.consume()
                         }

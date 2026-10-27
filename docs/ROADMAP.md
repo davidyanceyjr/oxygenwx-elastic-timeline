@@ -9,7 +9,7 @@ Every visual enhancement must preserve timeline responsiveness, gesture predicta
 
 ## Workstream priority
 
-WX is the current priority: `WX.1`, `WX.2`, `WX.3`, and `WX.5` are `DONE`; `WX.6` is the sole `NEXT` slice; and `ATM.8` is `PLANNED`. After `WX.28` closes, return to `ATM.8` as the next workstream. This is an ordering decision, not a dependency; ATM slice dependencies remain unchanged.
+WX is the current priority: `WX.1`, `WX.2`, `WX.3`, and `WX.5` are `DONE`; `WX.6` is the sole `NEXT` slice; and `ATM.8` is `PLANNED`. The owner-directed P.2.16 correction is DONE in cycle 048. After `WX.28` closes, return to `ATM.8` as the next workstream. This is an ordering decision, not a dependency; ATM slice dependencies remain unchanged.
 
 ## Concept-art gate for unfinished slices
 
@@ -51,7 +51,7 @@ Every unfinished slice must have concept artwork specific to its own objective a
 
 **Authority transition:** WX.1 records the owner-approved successor direction. The current prototype remains the only integrated app behavior; bounded WX data-domain work may proceed without changing app behavior. The deprecated oxygenWX application is a reference only; do not copy its app structure or introduce its four-page Home pager. The immersive elastic timeline remains the successor app's primary experience.
 
-**Roadmap priority:** WX is the prioritized workstream. `WX.1` is `DONE` in cycle 043 and `WX.2` is `DONE` in cycle 044; `WX.3` is `DONE` in cycle 045 and `WX.5` is `DONE` in cycle 047; `WX.6` is the sole `NEXT` slice; later WX slices are `PLANNED`; `ATM.8` remains `PLANNED`. After `WX.28` closes, promote `ATM.8` to `NEXT` while preserving its existing dependencies and evidence. This records sequencing, not a dependency edge. Cycle 045 closed for WX.3; its contract board was owner-approved on 2026-10-27.
+**Roadmap priority:** WX is the prioritized workstream. `WX.1` is `DONE` in cycle 043 and `WX.2` is `DONE` in cycle 044; `WX.3` is `DONE` in cycle 045 and `WX.5` is `DONE` in cycle 047; `WX.6` is the sole `NEXT` slice; later WX slices are `PLANNED`; `ATM.8` remains `PLANNED`. P.2.16 is DONE in cycle 048. After `WX.28` closes, promote `ATM.8` to `NEXT` while preserving its existing dependencies and evidence. This records sequencing, not a dependency edge. Cycle 045 closed for WX.3; its contract board was owner-approved on 2026-10-27.
 
 **Concept-art gate:** The existing roadmap requires objective-specific owner-approved concept artwork for every unfinished slice, including data-only and design-only work. Concept paths below are not evidence of owner approval. The WX.3 annotated catalog-contract board was approved on 2026-10-27 as shown, with its constraints recorded in the active plan/evidence before implementation. The WX.5 annotated window-completeness board was approved on 2026-10-27 as shown, with its constraints recorded in plan 047 before implementation. Other proposed `.codex/concepts/WX.*.png` paths remain targets. For model and service slices, use an annotated schema, flow, state, sequence, or boundary board rather than decorative UI art. The owner must approve each artifact and its constraints in that slice's execution plan before implementation. Device/installed acceptance evidence remains separate.
 
@@ -399,6 +399,14 @@ Every unfinished slice must have concept artwork specific to its own objective a
 **Exit:** Installed Pixel 3 XL interaction evidence confirms hold-and-drag enters hourly mode, release ends dragging while hourly mode remains visible, main-area tap returns to daily mode with the same selected time, and timeline tap returns to daily mode at the tapped time. Existing timeline labels, forecast values, gesture ownership, and accessibility scale semantics remain intact. Workflow, contract, debug build/install, and `git diff --check` pass. No tests are added or run in this cycle.
 **Concept artwork:** Owner waived the UI artwork requirement for this slice only on 2026-10-27. `.codex/concepts/P.2.15-hourly-mode-retention.svg` is retained as an unapproved interaction storyboard, not a gate or acceptance artifact.
 **Evidence:** Cycle 046 (`046-p2-hourly-mode-retention`): `.codex/test-artifacts/046-p2-hourly-mode-retention/README.md`; closeout `.codex/history/046-p2-hourly-mode-retention.md`; archived plan `.codex/history/plans/046-p2-hourly-mode-retention.md`.
+
+### P.2.16 — Make hourly scrubbing continuous and directionally consistent — DONE
+
+**Objective/scope:** Correct the reported lag and uneven forward/backward response while scrubbing the uniform hourly timeline. Keep the selected timestamp authoritative and make finger movement produce continuous, predictable hourly selection in both directions. Preserve the 480 ms hold, uniform hourly spacing, sticky precision mode, gesture ownership, timeline layout, and all accessibility actions. Limit source changes to the timeline gesture/projection and drawing path needed to meet the responsiveness objective; do not redesign the experience or change forecast data.
+**Depends on:** P.2.15.
+**Exit:** On the installed Pixel 3 XL, repeated forward and backward scrubs show continuous selected-time movement with comparable response to equal finger travel, no visible lag during and after precision entry, and no time jump from scale animation. Hold activation, selected-time stability, clamping, release persistence, explicit tap exits, timeline readability, and forecast values remain intact. Record responsiveness, predictable gesture ownership, and readability with installed evidence. Workflow, contract, debug build/install, and `git diff --check` pass. Do not add or run tests unless requested.
+**Concept artwork:** Owner waived the concept artwork requirement for P.2.16 only on 2026-10-27. `.codex/concepts/P.2.16-hourly-scrub-responsiveness.svg` remains an unapproved planning aid, not a gate or acceptance artifact. The waiver does not apply to other slices.
+**Evidence:** Cycle 048 (`048-p2-hourly-scrub-responsiveness`): `.codex/test-artifacts/048-p2-hourly-scrub-responsiveness/README.md`; closeout `.codex/history/048-p2-hourly-scrub-responsiveness.md`; archived plan `.codex/history/plans/048-p2-hourly-scrub-responsiveness.md`.
 
 ## P.3 — Deprecated oxygenWX integration feasibility — DEFERRED
 

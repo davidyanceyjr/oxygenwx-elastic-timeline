@@ -1,0 +1,74 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="760" viewBox="0 0 1200 760" role="img" aria-labelledby="title desc">
+  <title id="title">Hourly timeline scrub responsiveness storyboard</title>
+  <desc id="desc">Three annotated states show entering hourly precision, continuous scrubbing in either direction, and the selected instant staying fixed while the scale settles.</desc>
+  <defs>
+    <linearGradient id="bg" x2="0" y2="1"><stop stop-color="#17283a"/><stop offset="1" stop-color="#091521"/></linearGradient>
+    <linearGradient id="sky" x2="0" y2="1"><stop stop-color="#69849b"/><stop offset="1" stop-color="#283b4f"/></linearGradient>
+    <marker id="arrow" markerWidth="10" markerHeight="10" refX="8" refY="5" orient="auto"><path d="M0 0L10 5L0 10Z" fill="#ffe2a7"/></marker>
+    <style>
+      .title{font:700 30px sans-serif;fill:#f5f8fb}.sub{font:16px sans-serif;fill:#c3d2df}.head{font:700 20px sans-serif;fill:#ffe2a7}.label{font:15px sans-serif;fill:#edf4fa}.small{font:13px sans-serif;fill:#c3d2df}.tick{stroke:#eaf3fa;stroke-width:2}.panel{fill:#112131;stroke:#3b5268;stroke-width:1.5}.axis{stroke:#bdd0df;stroke-width:2}.selected{fill:#ffe2a7}.muted{fill:#8fa7b9}
+    </style>
+  </defs>
+  <rect width="1200" height="760" fill="url(#bg)"/>
+  <text x="48" y="54" class="title">Hourly timeline · responsiveness contract</text>
+  <text x="48" y="84" class="sub">Design input for P.2.16 · preserve the current immersive scene and bottom tape</text>
+
+  <g transform="translate(40 120)">
+    <rect class="panel" width="350" height="570" rx="18"/>
+    <text x="24" y="42" class="head">1 · Enter precision</text>
+    <text x="24" y="70" class="small">Hold, then drag; selection stays tied to touch.</text>
+    <rect x="24" y="100" width="302" height="175" rx="12" fill="url(#sky)"/>
+    <circle cx="100" cy="151" r="34" fill="#f4d79c" opacity=".82"/>
+    <path d="M24 235Q105 205 173 231T326 220V275H24Z" fill="#344b5b"/>
+    <text x="225" y="139" text-anchor="middle" class="label">68° · Partly cloudy</text>
+    <text x="225" y="165" text-anchor="middle" class="small">Friday · 10 AM</text>
+    <line x1="36" y1="365" x2="314" y2="365" class="axis"/>
+    <g class="tick"><path d="M54 350v30M91 356v18M128 350v30M165 356v18M202 350v30M239 356v18M276 350v30"/></g>
+    <line x1="165" y1="332" x2="165" y2="389" stroke="#ffe2a7" stroke-width="2"/>
+    <circle cx="165" cy="365" r="5" class="selected"/>
+    <text x="165" y="414" text-anchor="middle" class="label">10 AM stays selected</text>
+    <path d="M215 335Q193 320 174 335" fill="none" stroke="#ffe2a7" stroke-width="3" marker-end="url(#arrow)"/>
+    <text x="24" y="476" class="small">Scale settles around the selected instant;</text>
+    <text x="24" y="498" class="small">the playhead does not pull time by itself.</text>
+  </g>
+
+  <g transform="translate(425 120)">
+    <rect class="panel" width="350" height="570" rx="18"/>
+    <text x="24" y="42" class="head">2 · Scrub either way</text>
+    <text x="24" y="70" class="small">Equal travel gives equal time change.</text>
+    <line x1="38" y1="220" x2="312" y2="220" class="axis"/>
+    <g class="tick"><path d="M48 206v28M83 212v16M118 206v28M153 212v16M188 206v28M223 212v16M258 206v28M293 212v16"/></g>
+    <line x1="188" y1="180" x2="188" y2="246" stroke="#ffe2a7" stroke-width="2"/>
+    <circle cx="188" cy="220" r="6" class="selected"/>
+    <text x="188" y="270" text-anchor="middle" class="label">1 PM</text>
+    <path d="M272 137H205" fill="none" stroke="#ffe2a7" stroke-width="3" marker-end="url(#arrow)"/>
+    <text x="236" y="124" text-anchor="middle" class="small">toward later</text>
+    <path d="M78 310H145" fill="none" stroke="#ffe2a7" stroke-width="3" marker-end="url(#arrow)"/>
+    <text x="111" y="338" text-anchor="middle" class="small">toward earlier</text>
+    <text x="24" y="411" class="label">Continuous selection</text>
+    <text x="24" y="438" class="small">No whole-hour stepping while the finger moves.</text>
+    <text x="24" y="476" class="label">Balanced response</text>
+    <text x="24" y="503" class="small">Same distance, same elapsed-time delta in</text>
+    <text x="24" y="525" class="small">either direction; clamp only at real bounds.</text>
+  </g>
+
+  <g transform="translate(810 120)">
+    <rect class="panel" width="350" height="570" rx="18"/>
+    <text x="24" y="42" class="head">3 · Keep it responsive</text>
+    <text x="24" y="70" class="small">The scale animation cannot change scrub rate.</text>
+    <rect x="24" y="105" width="302" height="42" rx="8" fill="#263c50"/>
+    <text x="40" y="132" class="small">daily scale</text>
+    <rect x="24" y="162" width="302" height="42" rx="8" fill="#263c50"/>
+    <text x="40" y="189" class="small">scale settling</text>
+    <rect x="24" y="219" width="302" height="42" rx="8" fill="#263c50"/>
+    <text x="40" y="246" class="small">hourly scale</text>
+    <path d="M58 282V304H290V282" fill="none" stroke="#ffe2a7" stroke-width="2"/>
+    <text x="174" y="329" text-anchor="middle" class="label">constant hourly mapping</text>
+    <line x1="50" y1="386" x2="300" y2="386" class="axis"/>
+    <line x1="175" y1="354" x2="175" y2="414" stroke="#ffe2a7" stroke-width="2"/>
+    <circle cx="175" cy="386" r="6" class="selected"/>
+    <text x="175" y="444" text-anchor="middle" class="label">selected instant remains anchored</text>
+    <text x="24" y="500" class="small">Keep hold/release and tap exits unchanged.</text>
+    <text x="24" y="524" class="small">Forecast values and labels stay readable.</text>
+  </g>
+</svg>
