@@ -8,5 +8,5 @@ if errorlevel 1 (
 )
 python "%APP_HOME%scripts\bootstrap_wrapper.py"
 if errorlevel 1 exit /b 1
-java -Dorg.gradle.appname=gradlew -classpath "%APP_HOME%gradle\wrapper\gradle-wrapper.jar" org.gradle.wrapper.GradleWrapperMain %*
+python "%APP_HOME%scripts\gradle_launcher.py" %*
 exit /b %ERRORLEVEL%

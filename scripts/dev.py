@@ -63,6 +63,7 @@ def contract() -> None:
         baseline_components = {
             ("provider", "androidx.startup.InitializationProvider"),
             ("receiver", "androidx.profileinstaller.ProfileInstallReceiver"),
+            ("service", "androidx.room.MultiInstanceInvalidationService"),
         } if "build/intermediates" in str(path) else set()
         allowed_activities = {".MainActivity", PACKAGE + ".MainActivity"}
         if "debug" in str(path):

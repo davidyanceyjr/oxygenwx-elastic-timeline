@@ -6,4 +6,4 @@ if ! command -v python3 >/dev/null 2>&1; then
   exit 1
 fi
 python3 "$APP_HOME/scripts/bootstrap_wrapper.py" || exit $?
-exec java -Dorg.gradle.appname=gradlew -classpath "$APP_HOME/gradle/wrapper/gradle-wrapper.jar" org.gradle.wrapper.GradleWrapperMain "$@"
+exec python3 "$APP_HOME/scripts/gradle_launcher.py" "$@"

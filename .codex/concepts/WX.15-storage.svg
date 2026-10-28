@@ -1,0 +1,74 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1500" height="1100" viewBox="0 0 1500 1100">
+  <rect width="1500" height="1100" fill="#101a24"/>
+  <text x="70" y="78" fill="#f5f7fa" font-family="sans-serif" font-size="38" font-weight="700">WX.15 · Room storage for complete catalog datasets</text>
+  <text x="72" y="120" fill="#b9c6d3" font-family="sans-serif" font-size="21">Owner review board · one versioned recording payload per location and storage origin · local only</text>
+
+  <rect x="70" y="160" width="1360" height="145" rx="18" fill="#192938" stroke="#4a6579" stroke-width="2"/>
+  <text x="105" y="202" fill="#85d7c5" font-family="sans-serif" font-size="23" font-weight="700">Three isolated storage namespaces</text>
+  <rect x="105" y="215" width="375" height="75" rx="12" fill="#203b48" stroke="#4a8290" stroke-width="2"/>
+  <text x="130" y="246" fill="#f5f7fa" font-family="monospace" font-size="22">LIVE namespace</text>
+  <text x="130" y="275" fill="#b9c6d3" font-family="sans-serif" font-size="17">stored product origin remains LIVE</text>
+  <rect x="562" y="215" width="375" height="75" rx="12" fill="#203b48" stroke="#4a8290" stroke-width="2"/>
+  <text x="587" y="246" fill="#f5f7fa" font-family="monospace" font-size="22">SIMULATED</text>
+  <text x="587" y="275" fill="#b9c6d3" font-family="sans-serif" font-size="17">separate key; cannot replace LIVE</text>
+  <rect x="1019" y="215" width="375" height="75" rx="12" fill="#342b2b" stroke="#da987f" stroke-width="2"/>
+  <text x="1044" y="246" fill="#f5f7fa" font-family="monospace" font-size="22">REPLAY namespace</text>
+  <text x="1044" y="275" fill="#d5c6c1" font-family="sans-serif" font-size="17">retain origin; delivery provenance REPLAY</text>
+
+  <path d="M750 307 L750 350" fill="none" stroke="#85d7c5" stroke-width="4" marker-end="url(#arrow)"/>
+
+  <rect x="70" y="370" width="1360" height="292" rx="20" fill="#1c3440" stroke="#85d7c5" stroke-width="3"/>
+  <text x="105" y="414" fill="#85d7c5" font-family="sans-serif" font-size="24" font-weight="700">One Room row = one complete, validated dataset</text>
+  <rect x="105" y="440" width="575" height="170" rx="14" fill="#20384b" stroke="#64869b" stroke-width="2"/>
+  <text x="132" y="478" fill="#f5f7fa" font-family="sans-serif" font-size="22" font-weight="700">Indexed envelope metadata</text>
+  <text x="132" y="518" fill="#b9c6d3" font-family="monospace" font-size="18">locationId · namespace · datasetId</text>
+  <text x="132" y="552" fill="#b9c6d3" font-family="monospace" font-size="18">asOf · payloadFormatVersion</text>
+  <text x="132" y="586" fill="#85d7c5" font-family="sans-serif" font-size="18">Unique key: location + namespace + dataset</text>
+
+  <rect x="710" y="440" width="685" height="170" rx="14" fill="#203b38" stroke="#5ba58e" stroke-width="2"/>
+  <text x="740" y="478" fill="#f5f7fa" font-family="sans-serif" font-size="22" font-weight="700">Opaque recording payload · RecordedCatalogCodec</text>
+  <text x="740" y="518" fill="#b9c6d3" font-family="sans-serif" font-size="18">44 dates · canonical units · explicit nulls; zero stays zero.</text>
+  <text x="740" y="551" fill="#b9c6d3" font-family="sans-serif" font-size="18">Daily summaries, product segments, and source metadata.</text>
+  <text x="740" y="580" fill="#b9c6d3" font-family="sans-serif" font-size="18">Provenance · nanosecond instants · IANA timezone and DST.</text>
+  <line x1="695" y1="452" x2="695" y2="600" stroke="#85d7c5" stroke-width="2" stroke-dasharray="7 7"/>
+  <text x="679" y="635" fill="#85d7c5" font-family="sans-serif" font-size="15" text-anchor="end">metadata / payload boundary</text>
+
+  <rect x="70" y="692" width="425" height="205" rx="18" fill="#192938" stroke="#4a6579" stroke-width="2"/>
+  <text x="100" y="733" fill="#85d7c5" font-family="sans-serif" font-size="22" font-weight="700">WRITE · validate then replace</text>
+  <text x="100" y="772" fill="#b9c6d3" font-family="sans-serif" font-size="18">Validate identity and catalog; encode</text>
+  <text x="100" y="800" fill="#b9c6d3" font-family="sans-serif" font-size="18">the full recording before a transaction.</text>
+  <text x="100" y="839" fill="#b9c6d3" font-family="sans-serif" font-size="18">Atomic upsert: failure leaves prior row</text>
+  <text x="100" y="867" fill="#b9c6d3" font-family="sans-serif" font-size="18">readable; other namespaces stay isolated.</text>
+
+  <rect x="537" y="692" width="425" height="205" rx="18" fill="#192938" stroke="#4a6579" stroke-width="2"/>
+  <text x="567" y="733" fill="#85d7c5" font-family="sans-serif" font-size="22" font-weight="700">READ · key and verify</text>
+  <text x="567" y="772" fill="#b9c6d3" font-family="sans-serif" font-size="18">Fetch by complete key; decode whole</text>
+  <text x="567" y="800" fill="#b9c6d3" font-family="sans-serif" font-size="18">payload, then compare row identity,</text>
+  <text x="567" y="828" fill="#b9c6d3" font-family="sans-serif" font-size="18">asOf and captured provenance must match.</text>
+  <text x="567" y="851" fill="#b9c6d3" font-family="sans-serif" font-size="18">Never return a partial catalog.</text>
+  <text x="567" y="878" fill="#f2b49f" font-family="sans-serif" font-size="17">Corrupt, unsupported or mismatched → fail.</text>
+
+  <rect x="1004" y="692" width="426" height="205" rx="18" fill="#192938" stroke="#4a6579" stroke-width="2"/>
+  <text x="1034" y="733" fill="#85d7c5" font-family="sans-serif" font-size="22" font-weight="700">HISTORY · query and delete</text>
+  <text x="1034" y="772" fill="#b9c6d3" font-family="sans-serif" font-size="18">Index location + namespace + asOf</text>
+  <text x="1034" y="800" fill="#b9c6d3" font-family="sans-serif" font-size="18">for ordered per-origin history.</text>
+  <text x="1034" y="839" fill="#b9c6d3" font-family="sans-serif" font-size="18">Delete a dataset or location only;</text>
+  <text x="1034" y="867" fill="#b9c6d3" font-family="sans-serif" font-size="18">retain all others untouched.</text>
+
+  <rect x="70" y="925" width="865" height="112" rx="17" fill="#192938" stroke="#4a6579" stroke-width="2"/>
+  <text x="100" y="964" fill="#f5f7fa" font-family="sans-serif" font-size="21" font-weight="700">Two independent version tracks</text>
+  <text x="100" y="997" fill="#b9c6d3" font-family="sans-serif" font-size="18">Room schema: explicit migrations, no destructive fallback.</text>
+  <text x="100" y="1024" fill="#b9c6d3" font-family="sans-serif" font-size="18">Payload: codec v1/v2 support; unsupported versions fail explicitly.</text>
+
+  <rect x="965" y="925" width="465" height="112" rx="17" fill="#342b2b" stroke="#da987f" stroke-width="2"/>
+  <text x="995" y="964" fill="#f2b49f" font-family="sans-serif" font-size="21" font-weight="700">Retention · explicit delete/prune only</text>
+  <text x="995" y="998" fill="#d5c6c1" font-family="sans-serif" font-size="18">No silent eviction on write. Automatic</text>
+  <text x="995" y="1025" fill="#d5c6c1" font-family="sans-serif" font-size="18">bounded retention needs a later decision.</text>
+
+  <text x="72" y="1075" fill="#b9c6d3" font-family="sans-serif" font-size="17">Scope: app-private persistence only · no refresh, UI, geocoding, or active catalog publication · owner approval pending</text>
+  <defs>
+    <marker id="arrow" markerWidth="12" markerHeight="12" refX="8" refY="4" orient="auto">
+      <path d="M0,0 L0,8 L10,4 z" fill="#85d7c5"/>
+    </marker>
+  </defs>
+</svg>

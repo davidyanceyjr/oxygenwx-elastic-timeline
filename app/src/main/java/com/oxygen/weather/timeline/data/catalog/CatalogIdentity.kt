@@ -2,7 +2,6 @@ package com.oxygen.weather.timeline.data.catalog
 
 import java.time.ZoneId
 import java.time.ZoneOffset
-import java.time.zone.ZoneRulesProvider
 
 /** Delivery channel metadata. It does not select a different catalog schema. */
 enum class CatalogOrigin { LIVE, SIMULATED, REPLAY }
@@ -67,7 +66,7 @@ data class CatalogLocation(
     val timeZone: ZoneId,
 ) {
     init {
-        require(timeZone !is ZoneOffset && timeZone.id in ZoneRulesProvider.getAvailableZoneIds()) {
+        require(timeZone !is ZoneOffset && timeZone.id in ZoneId.getAvailableZoneIds()) {
             "Timezone must be an IANA zone ID"
         }
     }

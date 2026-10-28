@@ -1,7 +1,11 @@
 plugins {
     id("com.android.application")
     id("org.jetbrains.kotlin.plugin.compose")
+    id("com.google.devtools.ksp")
+    id("androidx.room")
 }
+
+room { schemaDirectory("$projectDir/schemas") }
 
 android {
     namespace = "com.oxygen.weather.timeline"
@@ -42,6 +46,11 @@ dependencies {
     implementation("com.fasterxml.jackson.core:jackson-databind:2.19.2")
     implementation("com.squareup.okhttp3:okhttp:4.12.0")
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.10.2")
+    implementation("androidx.room:room-runtime:2.8.5")
+    implementation("androidx.room:room-ktx:2.8.5")
+    // Room migration bundles use serialization-json 1.8.1; keep its core runtime aligned.
+    implementation("org.jetbrains.kotlinx:kotlinx-serialization-core:1.8.1")
+    ksp("androidx.room:room-compiler:2.8.5")
 
     debugImplementation("androidx.compose.ui:ui-tooling")
     debugImplementation("androidx.compose.ui:ui-test-manifest")
@@ -49,4 +58,5 @@ dependencies {
     testImplementation("com.squareup.okhttp3:mockwebserver:4.12.0")
     androidTestImplementation("androidx.compose.ui:ui-test-junit4:1.12.1")
     androidTestImplementation("androidx.test:runner:1.7.0")
+    androidTestImplementation("androidx.room:room-testing:2.8.5")
 }

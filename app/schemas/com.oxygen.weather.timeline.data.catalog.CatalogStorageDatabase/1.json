@@ -1,0 +1,95 @@
+{
+  "formatVersion": 1,
+  "database": {
+    "version": 1,
+    "identityHash": "5ba34a9d0ece5425ba5ac674c92a1479",
+    "entities": [
+      {
+        "tableName": "catalog_datasets",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`locationId` TEXT NOT NULL, `storageNamespace` TEXT NOT NULL, `datasetId` TEXT NOT NULL, `asOf` TEXT NOT NULL, `asOfEpochSecond` INTEGER NOT NULL, `asOfNano` INTEGER NOT NULL, `capturedOrigin` TEXT NOT NULL, `payloadFormatVersion` INTEGER NOT NULL, `payload` BLOB NOT NULL, PRIMARY KEY(`locationId`, `storageNamespace`, `datasetId`))",
+        "fields": [
+          {
+            "fieldPath": "locationId",
+            "columnName": "locationId",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "storageNamespace",
+            "columnName": "storageNamespace",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "datasetId",
+            "columnName": "datasetId",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "asOf",
+            "columnName": "asOf",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "asOfEpochSecond",
+            "columnName": "asOfEpochSecond",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "asOfNano",
+            "columnName": "asOfNano",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "capturedOrigin",
+            "columnName": "capturedOrigin",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "payloadFormatVersion",
+            "columnName": "payloadFormatVersion",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "payload",
+            "columnName": "payload",
+            "affinity": "BLOB",
+            "notNull": true
+          }
+        ],
+        "primaryKey": {
+          "autoGenerate": false,
+          "columnNames": [
+            "locationId",
+            "storageNamespace",
+            "datasetId"
+          ]
+        },
+        "indices": [
+          {
+            "name": "index_catalog_datasets_locationId_storageNamespace_asOfEpochSecond_asOfNano",
+            "unique": false,
+            "columnNames": [
+              "locationId",
+              "storageNamespace",
+              "asOfEpochSecond",
+              "asOfNano"
+            ],
+            "orders": [],
+            "createSql": "CREATE INDEX IF NOT EXISTS `index_catalog_datasets_locationId_storageNamespace_asOfEpochSecond_asOfNano` ON `${TABLE_NAME}` (`locationId`, `storageNamespace`, `asOfEpochSecond`, `asOfNano`)"
+          }
+        ]
+      }
+    ],
+    "setupQueries": [
+      "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '5ba34a9d0ece5425ba5ac674c92a1479')"
+    ]
+  }
+}

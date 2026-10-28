@@ -24,7 +24,7 @@ Android Studio: **Open** the extracted `oxygenwx-elastic-timeline` folder. Allow
 
 Matches the referenced project's Android scaffold:
 
-- JDK 17+; Gradle 9.7.0
+- JDK 17+; Gradle 9.7.0. The project wrapper selects a compatible installed JDK from `JAVA_HOME`, `PATH`, or common local JDK directories and reports a clear error if none is found.
 - Android Gradle Plugin 9.4.0; Kotlin Compose plugin 2.4.20
 - Android SDK API 37 / build tools available through the Android SDK manager
 - Compose BOM `2026.09.00`, min SDK 26, target SDK 37
