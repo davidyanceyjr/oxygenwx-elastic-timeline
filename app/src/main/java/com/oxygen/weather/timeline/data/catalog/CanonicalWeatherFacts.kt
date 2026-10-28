@@ -162,7 +162,7 @@ class CanonicalWeatherFacts(
 enum class WeatherCondition { CLEAR, PARTLY_CLOUDY, CLOUDY, RAIN, SNOW, STORM }
 
 /** Additional supported phenomena; absence means the source did not supply the phenomenon. */
-enum class WeatherPhenomenon { FOG, FREEZING_RAIN, ICE_PELLETS }
+enum class WeatherPhenomenon { FOG, FREEZING_RAIN, ICE_PELLETS, HAZE }
 
 private fun Double.requireRange(range: ClosedFloatingPointRange<Double>, message: String) {
     require(isFinite() && this in range) { message }
