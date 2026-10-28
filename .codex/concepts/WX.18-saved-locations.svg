@@ -19,7 +19,7 @@
   <text x="70" y="67" class="title">WX.18 · Saved locations as durable application state</text>
   <text x="72" y="103" class="sub">Concept board · stable local identity, explicit selection, and location-scoped catalog ownership</text>
   <rect x="1434" y="42" width="194" height="42" rx="21" fill="#3a3028" stroke="#f2b27f"/>
-  <text x="1531" y="69" text-anchor="middle" font-size="15" font-weight="700" fill="#f2c994">DRAFT · REVIEW</text>
+  <text x="1531" y="69" text-anchor="middle" font-size="15" font-weight="700" fill="#f2c994">OWNER APPROVED</text>
 
   <rect x="70" y="138" width="1560" height="236" rx="18" class="panel"/>
   <text x="98" y="178" class="head">01  Accept a place once; keep app identity local</text>
@@ -104,5 +104,5 @@
   <rect x="70" y="1147" width="1560" height="105" rx="16" class="deep"/>
   <text x="98" y="1183" class="label">Reference lineage</text>
   <text x="305" y="1183" class="body">WX.15 Room keys and migrations  ·  WX.13R fixed catalog identity/window  ·  WX.17 local ID handoff</text>
-  <text x="98" y="1220" class="small">No UI, GPS permission, provider ID as storage key, weather fetch, catalog activation, or deprecated-app changes. Review artwork only; not implementation or acceptance evidence.</text>
+  <text x="98" y="1220" class="small">No UI, GPS permission, provider ID as storage key, weather fetch, catalog activation, or deprecated-app changes. Approved design input; not implementation or acceptance evidence.</text>
 </svg>

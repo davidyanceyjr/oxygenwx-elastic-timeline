@@ -190,7 +190,7 @@ Every unfinished slice must have concept artwork specific to its own objective a
 **Objective/scope:** Add stable local saved-location records, add/remove/select persistence, selected-location restoration, and explicit location-to-catalog association independent of data origin. Implement domain/controller/storage contracts only; no search/switching UI, no foreground GPS permission.
 **Depends on:** WX.15 and WX.17.
 **Exit:** State/storage checks prove saved locations survive relaunch, distinct coordinate/timezone locations remain distinct, removing one location handles its catalog retention policy explicitly, and restored selection cannot accidentally point to a different provider place with the same display name.
-**Concept artwork:** Pending owner-approved saved-location domain/state board at `.codex/concepts/WX.18-saved-locations.png`.
+**Concept artwork:** Owner approved 2026-10-28 at `.codex/concepts/WX.18-saved-locations.png` (editable `.svg`). Grounded in WX.15 Room identity/migration boundaries, WX.13R's fixed catalog identity/window, and WX.17's caller-supplied local-ID handoff. The bounded plan must resolve selected-location removal/fallback, catalog-retention, duplicate-ID, and invalid-restore policies. This is design input, not implementation or acceptance evidence.
 **Evidence:** On planning, allocate chronological cycle paths and location persistence evidence. Target paths when planned: `.codex/test-artifacts/<cycle-id>/`; closeout `.codex/history/<cycle-id>.md`; plan `.codex/plans/<cycle-id>.md`; archived plan `.codex/history/plans/<cycle-id>.md`.
 
 ### WX.19 — Build accessible manual search and saved-location selector — PLANNED
