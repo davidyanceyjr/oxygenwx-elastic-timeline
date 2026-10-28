@@ -1,6 +1,6 @@
 # Cycle plan — 055-wx13r-buffered-capture
 
-State: ACTIVE
+State: COMPLETE
 Cycle ID: 055-wx13r-buffered-capture
 Roadmap: WX.13R
 Objective: Add a one-day provider forecast buffer while preserving exactly the canonical D−30..D+13 window, then produce and review a replacement Chicago v2 recording with full target-window hourly support where the provider supplies it.
@@ -30,7 +30,7 @@ Proposed annotated boundary board: `.codex/concepts/WX.13R-buffered-capture.png`
 4. [x] Capture a fresh public Chicago response using the exact request. Preserve raw bytes and its timestamp, query, units, row counts, response hash, and attribution manifest. No meteorological values were redacted or edited.
 5. [x] Produce a new canonical v2 candidate with the approved codec. Compare expected target support against returned facts and intervals; record the coverage inventory. The extra provider date remains only in raw evidence, not the canonical target catalog.
 6. [x] Run scoped data tests, workflow, contract, build, lint, and `git diff --check`. Verify the cycle 054 canonical still has its approved SHA-256. Exact outputs and reports are retained under `.codex/test-artifacts/055-wx13r-buffered-capture/`.
-7. [ ] Present the new canonical hash, provenance, transformations, coverage inventory, limitations, and deterministic codec evidence for separate owner approval. Do not close WX.13R until approval is recorded for this exact candidate hash.
+7. [x] Present the new canonical hash, provenance, transformations, coverage inventory, limitations, and deterministic codec evidence. Owner approved the exact candidate hash on 2026-10-28; decision and limitations are in `recording-review.md`.
 
 ## Acceptance and evidence
 
