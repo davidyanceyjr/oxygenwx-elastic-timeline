@@ -47,6 +47,38 @@ class OpenMeteoCatalogMapperTest {
         assertTrue(sourceReview.contains("\"sha256\""))
     }
 
+    @Test fun `buffer date facts and daily summaries are clipped at the 44-date boundary`() {
+        val date = LocalDate.parse("2026-07-10")
+        val request = request(date.atTime(12, 0).atZone(chicago.timeZone).toInstant())
+        val targetEnd = date.plusDays(14).atStartOfDay(chicago.timeZone).toInstant()
+        val extraForecastHour = targetEnd.plusSeconds(3600)
+        val response = fixture(
+            request,
+            -5 * 3600,
+            listOf(date.atTime(12, 0).atZone(chicago.timeZone).toInstant(), targetEnd, extraForecastHour),
+            listOf(date, date.plusDays(14)),
+        )
+
+        val mapped = mapBytes(response, request).success()
+        assertEquals(44, mapped.expectedSupport.size)
+        assertEquals(44, mapped.dailyExpectedSupport.size)
+        assertEquals(mapped.expectedSupport.keys, mapped.dailyExpectedSupport.keys)
+        assertEquals(2, mapped.catalog.facts.size)
+        assertEquals(targetEnd, mapped.catalog.facts.last().validTime)
+        assertNull(mapped.catalog.facts.last().temperatureC)
+        assertEquals(targetEnd.minusSeconds(3600), mapped.catalog.facts.last().rainAmountMillimeters!!.interval.start)
+        assertEquals(targetEnd, mapped.catalog.facts.last().rainAmountMillimeters!!.interval.end)
+        assertFalse(mapped.catalog.facts.any { it.validTime == extraForecastHour })
+        assertEquals(listOf(date), mapped.catalog.dailySummaries.map { it.date })
+        assertEquals(listOf(date), mapped.catalog.productSegments.map { it.startDateInclusive })
+        assertEquals(date.plusDays(1), mapped.catalog.productSegments.single().endDateExclusive)
+
+        val lastTargetDate = date.plusDays(13)
+        assertEquals(24, (mapped.expectedSupport.getValue(lastTargetDate).getValue(CatalogField.TEMPERATURE_C) as ExpectedFieldSupport.Points).instants.size)
+        assertEquals(24, (mapped.expectedSupport.getValue(lastTargetDate).getValue(CatalogField.RAIN_AMOUNT_MILLIMETERS) as ExpectedFieldSupport.Intervals).intervals.size)
+        assertFalse(mapped.expectedSupport.containsKey(date.plusDays(14)))
+    }
+
     @Test fun `captured provider catalog round trips losslessly through v2 and can emit the approval artifact`() {
         val request = request(Instant.parse("2026-10-28T14:57:55.714828Z"))
         val input = javaClass.getResourceAsStream("/openmeteo/provider-response-public-chicago.json")!!.use { it.readBytes() }
@@ -71,6 +103,68 @@ class OpenMeteoCatalogMapperTest {
         }
         val hash = MessageDigest.getInstance("SHA-256").digest(encoded).joinToString("") { "%02x".format(it) }
         assertTrue(hash.matches(Regex("[a-f0-9]{64}")))
+    }
+
+    @Test fun `buffered live capture can emit a clipped v2 candidate and coverage report`() {
+        val inputPath = System.getProperty("WX13R_RESPONSE_INPUT") ?: System.getenv("WX13R_RESPONSE_INPUT")
+        val outputPath = System.getProperty("WX13R_RECORDING_OUTPUT") ?: System.getenv("WX13R_RECORDING_OUTPUT")
+        val asOf = System.getProperty("WX13R_AS_OF_UTC") ?: System.getenv("WX13R_AS_OF_UTC")
+        val reportPath = System.getProperty("WX13R_COVERAGE_OUTPUT") ?: System.getenv("WX13R_COVERAGE_OUTPUT")
+        org.junit.Assume.assumeTrue("requires an explicitly supplied live capture", inputPath != null && outputPath != null && asOf != null && reportPath != null)
+
+        val request = request(Instant.parse(asOf!!))
+        val mapped = OpenMeteoCatalogMapper.decode(File(inputPath!!).readBytes(), request).success()
+        val targetDates = (-30L..13L).map(request.asOf.atZone(chicago.timeZone).toLocalDate()::plusDays).toSet()
+        val end = request.asOf.atZone(chicago.timeZone).toLocalDate().plusDays(14).atStartOfDay(chicago.timeZone).toInstant()
+        assertEquals(targetDates, mapped.expectedSupport.keys)
+        assertTrue(mapped.catalog.facts.all { it.validTime >= targetDates.min().atStartOfDay(chicago.timeZone).toInstant() && it.validTime <= end })
+        assertTrue(mapped.catalog.dailySummaries.all { it.date in targetDates })
+        assertTrue(mapped.catalog.productSegments.all { it.startDateInclusive in targetDates && it.endDateExclusive <= targetDates.max().plusDays(1) })
+
+        val original = CatalogRecording(mapped.catalog, mapped.expectedSupport, mapped.dailyExpectedSupport)
+        val encoded = RecordedCatalogCodec.encode(original)
+        val decoded = (RecordedCatalogCodec.decode(encoded) as RecordingDecodeResult.Success).recording
+        assertEquals(original.catalog, decoded.catalog)
+        assertEquals(original.expectedSupport.keys, decoded.expectedSupport.keys)
+        assertEquals(original.dailyExpectedSupport, decoded.dailyExpectedSupport)
+        assertArrayEquals(encoded, RecordedCatalogCodec.encode(decoded))
+        File(outputPath!!).apply { parentFile?.mkdirs(); writeBytes(encoded) }
+
+        val window = (CatalogWindow.create(mapped.catalog, mapped.expectedSupport, dailyExpectedSupport = mapped.dailyExpectedSupport) as CatalogWindowResult.Success).window
+        val coverage = buildString {
+            appendLine("# Buffered Chicago capture coverage")
+            appendLine("Target dates: ${targetDates.min()} through ${targetDates.max()} (${targetDates.size} local dates)")
+            appendLine("Canonical facts: ${mapped.catalog.facts.size}; daily summaries: ${mapped.catalog.dailySummaries.size}")
+            appendLine("Expected support entries: hourly=${mapped.expectedSupport.values.sumOf { it.size }}, daily=${mapped.dailyExpectedSupport.values.sumOf { it.size }}")
+            appendLine("Expected temporal support per hourly field:")
+            mapped.expectedSupport.values.flatMap { it.entries }
+                .groupBy({ it.key }, { it.value }).toSortedMap(compareBy { it.name })
+                .forEach { (field, supports) ->
+                    val count = supports.sumOf { support -> when (support) {
+                        is ExpectedFieldSupport.Points -> support.instants.size
+                        is ExpectedFieldSupport.Intervals -> support.intervals.size
+                    } }
+                    appendLine("- $field: $count")
+                }
+            val fallDate = LocalDate.parse("2026-11-01")
+            val finalDate = targetDates.max()
+            appendLine("DST fall-back date $fallDate: points=${(mapped.expectedSupport.getValue(fallDate).getValue(CatalogField.TEMPERATURE_C) as ExpectedFieldSupport.Points).instants.size}; intervals=${(mapped.expectedSupport.getValue(fallDate).getValue(CatalogField.RAIN_AMOUNT_MILLIMETERS) as ExpectedFieldSupport.Intervals).intervals.size}")
+            appendLine("Final target date $finalDate: points=${(mapped.expectedSupport.getValue(finalDate).getValue(CatalogField.TEMPERATURE_C) as ExpectedFieldSupport.Points).instants.size}; intervals=${(mapped.expectedSupport.getValue(finalDate).getValue(CatalogField.RAIN_AMOUNT_MILLIMETERS) as ExpectedFieldSupport.Intervals).intervals.size}")
+            appendLine("Hourly point/interval coverage by field:")
+            window.days.flatMap { day -> day.fieldCoverage.map { (field, status) -> field to status } }
+                .groupBy({ it.first }, { it.second }).toSortedMap(compareBy { it.name })
+                .forEach { (field, statuses) -> appendLine("- $field: complete=${statuses.count { it == CoverageStatus.COMPLETE }}, partial=${statuses.count { it == CoverageStatus.PARTIAL }}, missing=${statuses.count { it == CoverageStatus.MISSING }}") }
+            appendLine("Daily coverage by field:")
+            window.days.flatMap { day -> day.dailyCoverage.map { (field, status) -> field to status } }
+                .groupBy({ it.first }, { it.second }).toSortedMap(compareBy { it.name })
+                .forEach { (field, statuses) -> appendLine("- $field: complete=${statuses.count { it == CoverageStatus.COMPLETE }}, partial=${statuses.count { it == CoverageStatus.PARTIAL }}, missing=${statuses.count { it == CoverageStatus.MISSING }}") }
+            appendLine("Incomplete date/field entries:")
+            window.days.forEach { day ->
+                day.fieldCoverage.filterValues { it != CoverageStatus.COMPLETE }.forEach { (field, status) -> appendLine("- ${day.date} $field $status") }
+                day.dailyCoverage.filterValues { it != CoverageStatus.COMPLETE }.forEach { (field, status) -> appendLine("- ${day.date} daily/$field $status") }
+            }
+        }
+        File(reportPath!!).apply { parentFile?.mkdirs(); writeText(coverage) }
     }
 
     @Test fun `spring forward and fall back use 23 and 25 hour support with fixed-offset daily identity`() {

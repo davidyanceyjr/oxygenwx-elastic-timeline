@@ -58,7 +58,7 @@ class OpenMeteoTransport(
             .addQueryParameter("longitude", location.coordinates.longitudeDegrees.toString())
             .addQueryParameter("timezone", location.timeZone.id)
             .addQueryParameter("past_days", "30")
-            .addQueryParameter("forecast_days", "14")
+            .addQueryParameter("forecast_days", "15")
             .addQueryParameter("timeformat", "unixtime")
             .addQueryParameter("temperature_unit", "celsius")
             .addQueryParameter("wind_speed_unit", "kmh")

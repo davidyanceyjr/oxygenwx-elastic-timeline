@@ -62,6 +62,7 @@ object OpenMeteoCatalogMapper {
             val dateSet = dates.toSet()
             val start = dates.first().atStartOfDay(zone).toInstant()
             val end = anchor.plusDays(14).atStartOfDay(zone).toInstant()
+            val providerEnd = anchor.plusDays(15).atStartOfDay(zone).toInstant()
 
             val hourly = root.required("hourly").also { require(it.isObject) }
             val hourlyTimes = hourly.required("time").longArray().map { Instant.ofEpochSecond(it) }
@@ -74,9 +75,13 @@ object OpenMeteoCatalogMapper {
                 hourlyTimes[index] to hourlyValues.filterKeys { it != "time" }.mapValues { (_, values) -> values[index] }
             }
             val hDistinct = dedupeRows(hRows)
-            val hDates = hDistinct.keys.map { it.atZone(zone).toLocalDate() }
-            require(hDistinct.keys.all { it in start..<end || it == end }) { "Hourly timestamp outside request window" }
-            require(hDates.all { it in dateSet || it == anchor.plusDays(14) && hDistinct.keys.any { time -> time == end } }) { "Hourly timestamp outside target 44-date window" }
+            require(hDistinct.keys.all { it >= start && it <= providerEnd }) { "Hourly timestamp outside request window" }
+            // The provider request includes D+14 as a buffer, but canonical facts and
+            // product segments stop at the D+14 midnight boundary. Keep that boundary
+            // row because its preceding-hour accumulation belongs to D+13.
+            val targetHourly = hDistinct.filterKeys { it <= end }
+            val hDates = targetHourly.keys.map { it.atZone(zone).toLocalDate() }
+            require(hDates.all { it in dateSet || it == anchor.plusDays(14) && targetHourly.keys.any { time -> time == end } }) { "Hourly timestamp outside target 44-date window" }
 
             val daily = root.required("daily").also { require(it.isObject) }
             val dailyTimes = daily.required("time").longArray().map { Instant.ofEpochSecond(it) }
@@ -85,11 +90,12 @@ object OpenMeteoCatalogMapper {
             }
             val dailyOffsetDates = dailyTimes.map { it.plusSeconds(offset).atZone(ZoneOffset.UTC).toLocalDate() }
             require(dailyOffsetDates.zipWithNext().all { (a, b) -> b.isAfter(a) }) { "Daily nominal dates must be strictly increasing" }
-            require(dailyOffsetDates.all { it in dateSet }) { "Daily nominal date outside target 44-date window" }
+            require(dailyOffsetDates.all { it in dates.first()..anchor.plusDays(14) }) { "Daily nominal date outside request window" }
             val dailyValues = readSeries(daily, root.required("daily_units"), OpenMeteoTransport.DAILY, dailyTimes.size, ::dailyUnit)
             require(dailyValues.values.all { it.size == dailyTimes.size }) { "Daily variable array length does not match daily.time" }
+            val targetDailyRows = dailyOffsetDates.indices.filter { dailyOffsetDates[it] in dateSet }
 
-            val hasAnchor = hDates.any { it == anchor } || dailyOffsetDates.any { it == anchor }
+            val hasAnchor = hDates.any { it == anchor } || targetDailyRows.any { dailyOffsetDates[it] == anchor }
             require(hasAnchor) { "Response does not contain the request asOf local date" }
 
             val expected = linkedMapOf<LocalDate, MutableMap<CatalogField, ExpectedFieldSupport>>()
@@ -111,7 +117,7 @@ object OpenMeteoCatalogMapper {
 
             val factsByTime = linkedMapOf<Instant, CanonicalWeatherFacts>()
             val usableDates = mutableSetOf<LocalDate>()
-            for ((time, values) in hDistinct.toSortedMap()) {
+            for ((time, values) in targetHourly.toSortedMap()) {
                 val isWindowBoundary = time == end
                 if (isWindowBoundary && listOf("rain", "precipitation", "snowfall").all { values[it] == null }) continue
                 val localDate = if (isWindowBoundary) anchor.plusDays(13) else time.atZone(zone).toLocalDate()
@@ -138,7 +144,7 @@ object OpenMeteoCatalogMapper {
                         rainAmountMillimeters = values["rain"]?.let { AccumulatedMillimeters(it, interval) },
                         totalPrecipitationMillimeters = values["precipitation"]?.let { AccumulatedMillimeters(it, interval) },
                         snowfallCentimeters = values["snowfall"]?.let { AccumulatedSnowfallCentimeters(it, interval) },
-                        snowDepthCentimeters = values["snow_depth"]?.times(100.0),
+                        snowDepthCentimeters = if (isWindowBoundary) null else values["snow_depth"]?.times(100.0),
                     )
                 } catch (e: Exception) { throw IllegalArgumentException("Invalid hourly value at $time: ${e.message}") }
                 factsByTime[time] = fact
@@ -150,12 +156,13 @@ object OpenMeteoCatalogMapper {
                         fact.snowfallCentimeters?.valueCentimeters, fact.snowDepthCentimeters,
                     ).isNotEmpty())) usableDates += localDate
             }
-            if (hDistinct.isEmpty() || usableDates.isEmpty()) return OpenMeteoMappingResult.NoData
+            if (targetHourly.isEmpty() || usableDates.isEmpty()) return OpenMeteoMappingResult.NoData
 
             val summaries = mutableListOf<ProviderDailySummary>()
             val dailyExpected = linkedMapOf<LocalDate, Set<DailyCatalogField>>()
             dates.forEach { date -> dailyExpected[date] = DAILY_EXPECTED }
-            dailyOffsetDates.forEachIndexed { index, date ->
+            targetDailyRows.forEach { index ->
+                val date = dailyOffsetDates[index]
                 val values = dailyValues.mapValues { (_, series) -> series[index] }
                 val code = values["weather_code"]?.let { mapWmo(it.toWmoInt()) }
                 val support = AccumulationInterval(date.atStartOfDay(zone).toInstant(), date.plusDays(1).atStartOfDay(zone).toInstant())
@@ -174,7 +181,7 @@ object OpenMeteoCatalogMapper {
                 } catch (e: Exception) { throw IllegalArgumentException("Invalid daily value on $date: ${e.message}") }
             }
 
-            val presentDates = (hDistinct.keys.map { it.atZone(zone).toLocalDate() } + dailyOffsetDates).toSet()
+            val presentDates = (targetHourly.keys.map { it.atZone(zone).toLocalDate() } + targetDailyRows.map { dailyOffsetDates[it] }).toSet()
             val segments = buildSegments(dates, presentDates, anchor)
             val kinds = segments.map { it.productKind }.distinct()
             val productKind = if (kinds.size > 1) CatalogProductKind.MIXED else kinds.singleOrNull() ?: CatalogProductKind.FORECAST

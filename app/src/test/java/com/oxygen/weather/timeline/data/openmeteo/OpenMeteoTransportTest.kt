@@ -27,7 +27,7 @@ class OpenMeteoTransportTest {
         assertEquals("/v1/forecast", request.url.encodedPath)
         assertEquals("America/Chicago", request.url.queryParameter("timezone"))
         assertEquals("30", request.url.queryParameter("past_days"))
-        assertEquals("14", request.url.queryParameter("forecast_days"))
+        assertEquals("15", request.url.queryParameter("forecast_days"))
         assertEquals(OpenMeteoTransport.HOURLY.joinToString(","), request.url.queryParameter("hourly"))
         assertEquals(OpenMeteoTransport.DAILY.joinToString(","), request.url.queryParameter("daily"))
         assertNull(request.url.queryParameter("apikey"))
