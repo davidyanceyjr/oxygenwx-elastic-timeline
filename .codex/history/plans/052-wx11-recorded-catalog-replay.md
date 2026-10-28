@@ -1,0 +1,59 @@
+# Cycle plan — 052-wx11-recorded-catalog-replay
+
+State: ACTIVE
+Cycle ID: 052-wx11-recorded-catalog-replay
+Roadmap: WX.11
+Objective: Define versioned recorded-catalog format and deterministic replay loader
+
+## Production boundary
+
+Add a provider-neutral recording codec and replay source under `app/src/main/java/com/oxygen/weather/timeline/data/catalog/`, an approved versioned synthetic fixture, and focused checks under `app/src/test/.../data/catalog/`. Change Gradle dependencies only if the selected serialization format needs a library. WX.11's concept board at `.codex/concepts/WX.11-record-replay.png` was owner-approved on 2026-10-27 as shown. Its approved constraints are versioned provider-neutral bytes, lossless canonical facts and declared support, explicit replay validation and failures, preserved original product meaning, and no disk/network/clock dependency. The board explicitly leaves the four contract and fixture decisions in its section 04 unresolved; approval does not settle those choices. No Android disk repository is included.
+
+Verified dependencies: WX.9 and WX.10 are DONE. `CanonicalCatalog` holds location, dataset ID, provenance, `asOf`, and immutable facts. Location requires an IANA zone; facts use absolute instants, metric units, nullable values, and explicit accumulation intervals. WX.9's source registry validates request identity, origin, expected field support, and the 44-date window. WX.15 owns device persistence and atomic writes. No serialization library is currently declared.
+
+## Functional invariants
+
+- A documented v1 recording must reconstruct location ID, coordinates, IANA zone, dataset ID, original source/product identity, product kind, `asOf`, optional `issuedAt`, all canonical facts and severe fields, intervals, declared field support, null versus zero, and partial/missing coverage. Record support rather than inferring completeness from present facts.
+- `REPLAY` identifies the delivery channel while original source/product identity remains distinguishable. Preserve synthetic and archived-model provenance; do not relabel either as observations or live data. Define the mapping explicitly before implementation.
+- Encode instants with precision and retain local-zone identity across DST. The same recording and request produce the same canonical result without network, clock reads, or field merging.
+- Malformed, unsupported-version, invalid-enum/timezone/value, and identity-mismatched recordings fail explicitly. Older schemas either migrate by documented rule or return an unsupported-version result.
+- WX.10 generation, legacy debug fixtures/profiles, app startup, DEMO DATA, UI, selected-time behavior, accessibility, RTL, reduced motion, and atmosphere remain unchanged.
+
+## Resolved v1 contract decisions
+
+These decisions apply the approved board to `CatalogIdentity.kt`, `CanonicalCatalog.kt`, `CanonicalWeatherFacts.kt`, `CatalogWindow.kt`, and `WeatherCatalogSource.kt`. They do not approve a fixture that has not been reviewed.
+
+- **Recording and replay provenance:** The recording stores the source catalog's original `CatalogOrigin`, `CatalogProductKind`, nullable `sourceId`, nullable `productId`, and nullable `issuedAt` exactly. Pure decode reconstructs that original `CanonicalCatalog`; encode/decode round-trip compares against the original catalog and declared support. The replay source constructs a separate canonical snapshot with identical location, dataset, `asOf`, facts, product kind, source/product IDs, and `issuedAt`, changing only `provenance.origin` to `REPLAY` for the WX.9 registry. Its result must also retain the original origin as distinct, explicit replay metadata, not bury it in or derive it from a source ID. A replayed synthetic product remains `SYNTHETIC_METEOROLOGICAL_PRODUCT`; an archived model remains `ARCHIVED_MODEL_FORECAST`. Never convert either to `ACTUAL_OBSERVATION` or describe replay as live. A recording whose original origin is already `REPLAY` is rejected: v1 represents a captured original catalog, not a chain of replays.
+- **Times:** `asOf` remains the source snapshot assembly/reference instant and the exact WX.9 request anchor; `issuedAt` remains the optional product issue/initialization instant. V1 has no separate recording-envelope timestamp because no recording time is part of the current canonical source contract, and adding one would require either inventing a value or a new caller-supplied fact. Do not substitute provider update time for either field. Preserve each `Instant` at nanosecond precision and the location's IANA zone ID; dates and DST behavior derive from `asOf` plus that zone. If a selected approved provider fixture has another genuine timestamp essential to product meaning, stop and obtain a bounded contract revision before recording it.
+- **Identity:** A supplied recording is selected by exact location ID, coordinate values, IANA zone ID, dataset ID, and `asOf` instant; no nearest-time, location-only, or fallback selection. The source receives bytes from its caller, with no disk, network, or clock access. Missing bytes give `NoData(EMPTY_SOURCE)`; any mismatch fails without publishing a catalog. `CatalogSourceRegistry` remains the final origin, identity, and 44-date coverage gate. The replay source validates before returning a usable result, rather than relying on registry exceptions for ordinary bad input.
+- **Version and unknowns:** V1 is a documented UTF-8 JSON recording with an integer `schemaVersion: 1`. A missing/noninteger version is malformed; every other version, including zero, negative, and future versions, is unsupported. No migration is claimed for an older schema that has never existed. Reject unknown object fields at every level and unknown enum names; this prevents silently dropping future facts or support. Required fields must be present; optional canonical values are represented as explicit JSON null so absence cannot become zero or an empty set. Reject duplicate object keys, duplicate fact times, duplicate support entries, invalid values, and non-IANA zones. Decode uses typed malformed/unsupported-version/invalid-value/identity-mismatch failures. The WX.9-facing source maps malformed, unsupported-version, and invalid-value failures to `TransportFailure(INVALID_RESPONSE)` with a stable replay error code in metadata; location or dataset mismatch to the corresponding `InvalidRequest` reason; and coordinate, zone, or `asOf` mismatch to `TransportFailure(INVALID_RESPONSE)` with an identity-mismatch code because WX.9 has no matching invalid-request enum. None publishes a catalog. Do not change the shared WX.9 result vocabulary solely for replay.
+- **Determinism and completeness:** V1 records every field of `CanonicalWeatherFacts`, including condition/phenomenon sets, all nullable metric values, precipitation-rate mean interval, and each accumulated amount's interval; it records declared support by local date and field with point or interval kind. Coverage is derived from that support by `CatalogWindow`, never serialized as an authoritative completeness flag. The writer uses a fixed field order, facts ordered by `validTime`, support ordered by date and `CatalogField`, and sets/intervals ordered by enum name or instant bounds. Decode accepts valid input ordering but encode produces identical bytes for equivalent catalog/support values. Do not round decimal values or truncate instant precision; equality of all typed values, nulls, support entries, and local-zone identity is the losslessness criterion.
+- **Source outcome:** After decode and exact identity checks, validate via `CatalogWindow.create`. Return WX.9 `Success` only when every declared field coverage is complete; otherwise return `Partial`, including a wholly missing declared field. Empty facts or no declared support cannot be usable. Cancellation propagates. Encoding is pure and does not read time or infer support.
+
+## Steps
+
+1. Apply the resolved v1 contract above to the WX.3/WX.5/WX.9/WX.10 types. Document exact JSON field names, metric units, error-to-source-result mapping, and fixture identity in the wire-format record before implementation. Board approval is recorded above; fixture selection/approval remains open.
+2. Implement pure encode/decode and a request-bound replay source supplied with recording bytes; filesystem ownership belongs to WX.15.
+3. Prepare one approved deterministic synthetic fixture recording with provenance and declared-support notes, without network calls or edits to legacy raw scenario tables. Provider-derived fixture selection and round-trip evidence move to WX.13 under the owner's option 3 decision on 2026-10-27.
+4. Owner-authorized: add/run focused round-trip and replay checks for DST, units, severe facts, support, provenance, null/zero, partial coverage, malformed/old versions, and request identity. Run workflow, contract, and build; record exact output and limitations.
+5. Inspect `git diff --check` and final diff. Close only when roadmap exit is met; archive plan/evidence and advance roadmap ordering.
+
+## Acceptance/evidence
+
+Exit: an approved synthetic recording round-trips without loss of units, timezones, source/product identity, severe fields, support, or missingness; replay returns the canonical type; malformed/old versions fail or migrate explicitly. Provider-derived recording verification remains for WX.13 and is not claimed here. Evidence targets: `.codex/test-artifacts/052-wx11-recorded-catalog-replay/`, `.codex/history/052-wx11-recorded-catalog-replay.md`, and `.codex/history/plans/052-wx11-recorded-catalog-replay.md` after closure.
+
+Planned verification: `python scripts/dev.py workflow`, `python scripts/dev.py contract`, focused tests only if separately authorized, `python scripts/dev.py build`, `git diff --check`, and final diff review. AGENTS.md says not to add or run tests unless asked; this draft does not authorize them. Data-only work has no installed screenshot or visual/device acceptance claim. Compact, large-font, RTL, and reduced-motion states are unaffected unless scope changes.
+
+## Risks / assumptions
+
+- The roadmap's source/provider/product timestamp wording is satisfied only for actual canonical `asOf` and optional product `issuedAt`; a provider-specific update timestamp is not present in this contract. If fixture truth requires one, seek a bounded owner decision rather than inventing it.
+- Exact JSON field names and stable replay error-code spelling remain wire-format documentation work under the fixed failure categories and source-result mapping above.
+- The owner approved the full WX.10 44-day sequence with a fixed Chicago location and March 2026 DST anchor, plus focused replay tests, on 2026-10-27. Fixture identity: `wx11-chicago-synthetic`, coordinates `41.8781,-87.6298`, `America/Chicago`, dataset `wx11-full-sequence-v1`, `asOf=2026-03-08T12:00:00.123456789Z`; original origin SIMULATED, synthetic product, WX.10 source/product IDs, no `issuedAt`. These are invented facts; the 88 values and declared support come from WX.10 without editing its raw sequence. WX.13 owns provider-derived fixture approval and verification.
+
+## Out of scope
+
+On-device persistence, atomic writes, cache freshness/recovery, network transport, live provider mapping, app source selection/startup, UI, official alerts, raw scenario-table edits, and changes to the deprecated oxygenWX app.
+
+## Draft difficulty and model fit
+
+Difficulty: 6/10. Data-only scope, but a stable wire contract spans all canonical fields, support types, provenance, version/error policy, and deterministic verification. Recommend `gpt-6.1-sol` as the least costly listed Codex model with a credible path; use `gpt-6-astra` if timestamp/provenance decisions or migration needs force broader contract changes. This compares relative model fit, not pricing or runtime billing.

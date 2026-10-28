@@ -1,0 +1,78 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1440" height="1860" viewBox="0 0 1440 1860" role="img" aria-labelledby="title desc">
+<title id="title">WX.11 — Versioned catalog recording and deterministic replay</title>
+<desc id="desc">Draft approval board showing the recording envelope, lossless canonical facts and support, replay validation, provenance boundary, explicit failures, owner decisions, and excluded later work.</desc>
+<defs>
+  <linearGradient id="bg" x2="1" y2="1"><stop stop-color="#101d2b"/><stop offset="1" stop-color="#182d3c"/></linearGradient>
+  <marker id="arrow" markerWidth="9" markerHeight="9" refX="7" refY="4" orient="auto"><path d="M0 0 L0 8 L8 4 Z" fill="#8ee2cf"/></marker>
+  <style>.s{font-family:Inter,Roboto,Arial,sans-serif}.m{font-family:'Roboto Mono',monospace}.ink{fill:#f3f5f2}.muted{fill:#a8bac4}.teal{fill:#8ee2cf}.blue{fill:#a6caff}.amber{fill:#f1c477}.red{fill:#f29b91}.card{fill:#1e3443;stroke:#355263;stroke-width:1.5}.inner{fill:#162a38;stroke:#304b5c;stroke-width:1}.pill{fill:#294555;stroke:#496878;stroke-width:1}</style>
+</defs>
+<rect width="1440" height="1860" fill="url(#bg)"/>
+<g class="s">
+<text x="84" y="76" class="teal" font-size="18" font-weight="700" letter-spacing="3">OXYGEN WX  /  RECORDED CATALOG  /  WX.11</text>
+<text x="84" y="143" class="ink" font-size="47" font-weight="700">A catalog that replays faithfully.</text>
+<text x="84" y="186" class="muted" font-size="21">A versioned, provider-neutral record; deterministic loading through the WX.9 source contract.</text>
+<rect x="1074" y="61" width="280" height="44" rx="22" class="pill"/><text x="1214" y="89" text-anchor="middle" class="teal" font-size="14" font-weight="700">APPROVED · 2026-10-27</text>
+
+<rect x="72" y="224" width="1296" height="286" rx="22" class="card"/>
+<text x="106" y="267" class="teal" font-size="15" font-weight="700" letter-spacing="2">01  /  THE RECORDING BOUNDARY</text>
+<rect x="105" y="294" width="350" height="137" rx="15" class="inner"/>
+<text x="130" y="326" class="blue" font-size="16" font-weight="700">CANONICAL CATALOG</text>
+<text x="130" y="358" class="ink" font-size="17">location · dataset · asOf</text>
+<text x="130" y="388" class="ink" font-size="17">provenance · metric facts</text>
+<text x="130" y="416" class="muted" font-size="15">WX.3 / WX.5 shape</text>
+<path d="M457 362 H522" stroke="#8ee2cf" stroke-width="3" fill="none" marker-end="url(#arrow)"/>
+<rect x="536" y="294" width="350" height="137" rx="15" class="inner"/>
+<text x="561" y="326" class="blue" font-size="16" font-weight="700">VERSIONED BYTES</text>
+<text x="561" y="358" class="ink" font-size="17">schema v1 + catalog identity</text>
+<text x="561" y="388" class="ink" font-size="17">facts + declared support</text>
+<text x="561" y="416" class="muted" font-size="15">stable ordering and encoding</text>
+<path d="M888 362 H953" stroke="#8ee2cf" stroke-width="3" fill="none" marker-end="url(#arrow)"/>
+<rect x="967" y="294" width="366" height="137" rx="15" class="inner"/>
+<text x="992" y="326" class="blue" font-size="16" font-weight="700">REPLAY SOURCE</text>
+<text x="992" y="358" class="ink" font-size="17">recording bytes + request</text>
+<text x="992" y="388" class="ink" font-size="17">canonical result or explicit failure</text>
+<text x="992" y="416" class="muted" font-size="15">no disk, network, or clock read</text>
+<text x="106" y="476" class="amber" font-size="16">The record stores the source's declared support; replay never infers completeness from facts alone.</text>
+
+<rect x="72" y="534" width="1296" height="396" rx="22" class="card"/>
+<text x="106" y="578" class="teal" font-size="15" font-weight="700" letter-spacing="2">02  /  LOSSLESS V1 CONTENT</text>
+<text x="106" y="617" class="ink" font-size="24" font-weight="650">Preserve meaning, absence, and original product identity.</text>
+<rect x="105" y="646" width="590" height="213" rx="15" class="inner"/>
+<text x="132" y="682" class="blue" font-size="17" font-weight="700">IDENTITY + PROVENANCE</text>
+<text x="132" y="717" class="ink" font-size="16">Location ID, coordinates, IANA zone, dataset ID</text>
+<text x="132" y="748" class="ink" font-size="16">Original source/product IDs, product kind, origin</text>
+<text x="132" y="779" class="ink" font-size="16">asOf instant; optional product issuedAt</text>
+<text x="132" y="810" class="muted" font-size="15">Keep instant precision and zone ID through DST.</text>
+<rect x="713" y="646" width="620" height="213" rx="15" class="inner"/>
+<text x="740" y="682" class="blue" font-size="17" font-weight="700">FACTS + COVERAGE</text>
+<text x="740" y="717" class="ink" font-size="16">All typed facts, severe fields, interval bounds</text>
+<text x="740" y="748" class="ink" font-size="16">Canonical metric units and valid instants</text>
+<text x="740" y="779" class="ink" font-size="16">Per-date, per-field declared support</text>
+<text x="740" y="810" class="muted" font-size="15">Null ≠ zero; partial coverage ≠ complete.</text>
+<text x="106" y="899" class="amber" font-size="16">Synthetic stays synthetic. Archived model forecasts stay model forecasts; neither becomes an observation.</text>
+
+<rect x="72" y="954" width="1296" height="338" rx="22" class="card"/>
+<text x="106" y="999" class="teal" font-size="15" font-weight="700" letter-spacing="2">03  /  REPLAY STATE AND ERROR PATH</text>
+<rect x="106" y="1028" width="1228" height="87" rx="15" class="inner"/>
+<text x="132" y="1062" class="blue m" font-size="17">decode v1  →  validate values + identity  →  WX.9 coverage gate  →  Success / Partial</text>
+<text x="132" y="1093" class="muted" font-size="15">Same bytes and request yield the same canonical values. REPLAY marks the delivery channel.</text>
+<rect x="106" y="1135" width="1228" height="112" rx="15" class="inner"/>
+<text x="132" y="1170" class="red" font-size="17" font-weight="700">EXPLICIT FAILURE</text>
+<text x="132" y="1202" class="ink" font-size="16">Malformed bytes · unsupported version · invalid enum, zone, or value · request identity mismatch</text>
+<text x="132" y="1230" class="muted" font-size="15">Older versions migrate only by a documented rule; otherwise return unsupported version.</text>
+<text x="106" y="1271" class="amber" font-size="15">A recording mismatch must never silently load another location, dataset, or asOf.</text>
+
+<rect x="72" y="1316" width="1296" height="290" rx="22" class="card"/>
+<text x="106" y="1360" class="teal" font-size="15" font-weight="700" letter-spacing="2">04  /  OWNER DECISIONS BEFORE IMPLEMENTATION</text>
+<text x="106" y="1400" class="ink" font-size="23" font-weight="650">Freeze these contract choices in the cycle plan before implementation.</text>
+<text x="106" y="1441" class="amber" font-size="17">1. Does v1 need a distinct recording-envelope timestamp? Do not invent provider time or relabel asOf.</text>
+<text x="106" y="1478" class="amber" font-size="17">2. Exact REPLAY / original-origin mapping, including how original origin survives round-trip.</text>
+<text x="106" y="1515" class="amber" font-size="17">3. Unknown-field policy, version failures, ordering, and request-to-recording identity key.</text>
+<text x="106" y="1552" class="amber" font-size="17">4. Approve sanitized real-like and synthetic recordings with provenance notes.</text>
+
+<rect x="72" y="1630" width="1296" height="159" rx="22" class="card"/>
+<text x="106" y="1674" class="teal" font-size="15" font-weight="700" letter-spacing="2">05  /  SCOPE AND EVIDENCE</text>
+<text x="106" y="1714" class="ink" font-size="17">Exit: approved fixtures round-trip; replay returns the canonical type; invalid and old schemas fail or migrate explicitly.</text>
+<text x="106" y="1750" class="red" font-size="15">No device persistence, live transport, app startup, UI change, official alerts, or visual acceptance claim.</text>
+<text x="84" y="1832" class="muted" font-size="14" letter-spacing="1">WX.11 RECORD / REPLAY BOARD  ·  OWNER-APPROVED DESIGN INPUT  ·  CYCLE 052 REMAINS PLANNED</text>
+</g></svg>

@@ -25,6 +25,8 @@ enum class CatalogCacheState { FRESH, CACHED }
 data class CatalogLoadMetadata(
     val cacheState: CatalogCacheState = CatalogCacheState.FRESH,
     val detail: String? = null,
+    /** Original captured delivery origin when this result is delivered through replay. */
+    val replayOriginalOrigin: CatalogOrigin? = null,
 ) {
     init { require(detail == null || detail.isNotBlank()) }
 }
