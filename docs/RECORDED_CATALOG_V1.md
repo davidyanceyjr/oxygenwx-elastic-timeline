@@ -1,5 +1,7 @@
 # Canonical catalog recording v1
 
+The extension in [`RECORDED_CATALOG_V2.md`](RECORDED_CATALOG_V2.md) adds date-level product segments, provider-supplied daily summaries, and daily support. V1 remains readable and its writer output remains byte-compatible for v1-shaped recordings.
+
 WX.11 records a captured original canonical product as UTF-8 JSON. The writer is pure and has no disk, network, or clock access. WX.15 owns persistence. The one approved WX.11 fixture is `app/src/test/resources/catalog/wx11-full-sequence-v1.json`; it was generated from `SimulatedCatalogSource` with location ID `wx11-chicago-synthetic`, coordinates `41.8781,-87.6298`, zone `America/Chicago`, dataset ID `wx11-full-sequence-v1`, and `asOf` `2026-03-08T12:00:00.123456789Z`. Coordinates locate the synthetic reference only; the weather is invented. Its 88 facts span 44 local dates, including a DST transition. `issuedAt` is null because the synthetic product has no issue time. Support is copied from WX.10's declared fields and is complete for those fields; absent fields, including total precipitation, remain unsupported. It contains independent thunder probability, freezing rain, ice pellets, fog, zero rain/snow amounts, and null amounts. No provider truth or observation claim is made.
 
 ## Exact shape

@@ -13,7 +13,11 @@ import java.util.Collections
 import kotlinx.coroutines.ensureActive
 
 /** A captured original product and its declared support. The codec has no I/O or clock. */
-data class CatalogRecording(val catalog: CanonicalCatalog, val expectedSupport: CatalogExpectedSupport)
+data class CatalogRecording(
+    val catalog: CanonicalCatalog,
+    val expectedSupport: CatalogExpectedSupport,
+    val dailyExpectedSupport: DailyExpectedSupport = emptyMap(),
+)
 
 sealed interface RecordingDecodeResult {
     data class Success(val recording: CatalogRecording) : RecordingDecodeResult
@@ -36,10 +40,11 @@ object RecordedCatalogCodec {
         require(recording.catalog.provenance.origin != CatalogOrigin.REPLAY) { "Recording must capture an original catalog" }
         require(recording.catalog.facts.map { it.validTime }.distinct().size == recording.catalog.facts.size)
         require(recording.catalog.facts.isNotEmpty() && recording.expectedSupport.values.any { it.isNotEmpty() })
-        require(CatalogWindow.create(recording.catalog, recording.expectedSupport) is CatalogWindowResult.Success)
+        require(CatalogWindow.create(recording.catalog, recording.expectedSupport, dailyExpectedSupport = recording.dailyExpectedSupport) is CatalogWindowResult.Success)
         val catalog = recording.catalog
         val root = mapper.createObjectNode()
-        root.put("schemaVersion", 1)
+        val version = if (catalog.productSegments.isEmpty() && catalog.dailySummaries.isEmpty() && recording.dailyExpectedSupport.isEmpty()) 1 else 2
+        root.put("schemaVersion", version)
         root.set<JsonNode>("location", mapper.createObjectNode().apply {
             put("id", catalog.location.id.value)
             set<JsonNode>("coordinates", mapper.createObjectNode().apply {
@@ -84,6 +89,38 @@ object RecordedCatalogCodec {
                 }
             }
         })
+        if (version == 2) {
+            root.set<JsonNode>("productSegments", mapper.createArrayNode().apply {
+                catalog.productSegments.forEach { segment -> add(mapper.createObjectNode().apply {
+                    put("startDateInclusive", segment.startDateInclusive.toString())
+                    put("endDateExclusive", segment.endDateExclusive.toString())
+                    put("productKind", segment.productKind.name)
+                    putNullable("sourceId", segment.sourceId)
+                    putNullable("productId", segment.productId)
+                    putNullable("issuedAt", segment.issuedAt?.toString())
+                }) }
+            })
+            root.set<JsonNode>("dailySummaries", mapper.createArrayNode().apply {
+                catalog.dailySummaries.sortedBy { it.date }.forEach { summary -> add(mapper.createObjectNode().apply {
+                    put("date", summary.date.toString())
+                    set<JsonNode>("support", writeInterval(summary.support))
+                    putNumber("temperatureMaxC", summary.temperatureMaxC)
+                    putNumber("temperatureMinC", summary.temperatureMinC)
+                    putNumber("precipitationProbabilityMaxPercent", summary.precipitationProbabilityMaxPercent)
+                    set<JsonNode>("conditions", mapper.createArrayNode().apply { summary.conditions.map { it.name }.sorted().forEach(::add) })
+                    set<JsonNode>("phenomena", mapper.createArrayNode().apply { summary.phenomena.map { it.name }.sorted().forEach(::add) })
+                    putNumber("rainAmountMillimeters", summary.rainAmountMillimeters)
+                    putNumber("totalPrecipitationMillimeters", summary.totalPrecipitationMillimeters)
+                    putNumber("snowfallCentimeters", summary.snowfallCentimeters)
+                    put("origin", summary.origin.name)
+                }) }
+            })
+            root.set<JsonNode>("dailyExpectedSupport", mapper.createArrayNode().apply {
+                recording.dailyExpectedSupport.toSortedMap().forEach { (date, fields) -> fields.sortedBy { it.name }.forEach { field ->
+                    add(mapper.createObjectNode().apply { put("date", date.toString()); put("field", field.name) })
+                } }
+            })
+        }
         return mapper.writeValueAsBytes(root)
     }
 
@@ -100,11 +137,12 @@ object RecordedCatalogCodec {
         if (root == null || !root.isObject || !root.has("schemaVersion") || !root["schemaVersion"].isIntegralNumber) {
             return RecordingDecodeResult.Failure(RecordingError.MALFORMED, "schemaVersion must be an integer")
         }
-        if (root["schemaVersion"].bigIntegerValue() != java.math.BigInteger.ONE) {
+        val version = root["schemaVersion"].takeIf { it.canConvertToInt() }?.intValue() ?: 0
+        if (version !in 1..2) {
             return RecordingDecodeResult.Failure(RecordingError.UNSUPPORTED_VERSION, "Unsupported schemaVersion")
         }
         return try {
-            root.fieldsExact("schemaVersion", "location", "datasetId", "provenance", "asOf", "facts", "expectedSupport")
+            root.fieldsExact(*(if (version == 1) arrayOf("schemaVersion", "location", "datasetId", "provenance", "asOf", "facts", "expectedSupport") else arrayOf("schemaVersion", "location", "datasetId", "provenance", "asOf", "facts", "expectedSupport", "productSegments", "dailySummaries", "dailyExpectedSupport")))
             val locationNode = root.required("location").fieldsExact("id", "coordinates", "timeZone")
             val coordinates = locationNode.required("coordinates").fieldsExact("latitudeDegrees", "longitudeDegrees")
             val location = CatalogLocation(
@@ -123,8 +161,23 @@ object RecordedCatalogCodec {
             require(provenance.origin != CatalogOrigin.REPLAY) { "Captured origin cannot be REPLAY" }
             val facts = root.required("facts").array().map(::readFact)
             require(facts.isNotEmpty() && facts.map { it.validTime }.distinct().size == facts.size) { "Facts must have unique times" }
+            val segments = if (version == 2) root.required("productSegments").array().map { node ->
+                node.fieldsExact("startDateInclusive", "endDateExclusive", "productKind", "sourceId", "productId", "issuedAt")
+                CatalogProductSegment(LocalDate.parse(node.required("startDateInclusive").string()), LocalDate.parse(node.required("endDateExclusive").string()),
+                    enum(node.required("productKind")), node.required("sourceId").nullableString(), node.required("productId").nullableString(), node.required("issuedAt").nullableString()?.let(Instant::parse))
+            } else emptyList()
+            val summaries = if (version == 2) root.required("dailySummaries").array().map { node ->
+                node.fieldsExact("date", "support", "temperatureMaxC", "temperatureMinC", "precipitationProbabilityMaxPercent", "conditions", "phenomena", "rainAmountMillimeters", "totalPrecipitationMillimeters", "snowfallCentimeters", "origin")
+                val conditions = node.required("conditions").array().map { enum<WeatherCondition>(it) }
+                val phenomena = node.required("phenomena").array().map { enum<WeatherPhenomenon>(it) }
+                require(conditions.size == conditions.distinct().size && phenomena.size == phenomena.distinct().size) { "Duplicate daily enum value" }
+                ProviderDailySummary(LocalDate.parse(node.required("date").string()), readInterval(node.required("support")),
+                    node.required("temperatureMaxC").nullableNumber(), node.required("temperatureMinC").nullableNumber(), node.required("precipitationProbabilityMaxPercent").nullableNumber(),
+                    conditions.toSet(), phenomena.toSet(),
+                    node.required("rainAmountMillimeters").nullableNumber(), node.required("totalPrecipitationMillimeters").nullableNumber(), node.required("snowfallCentimeters").nullableNumber(), enum(node.required("origin")))
+            } else emptyList()
             val catalog = CanonicalCatalog(location, DatasetId(root.required("datasetId").string()), provenance,
-                Instant.parse(root.required("asOf").string()), facts)
+                Instant.parse(root.required("asOf").string()), facts, segments, summaries)
             val support = linkedMapOf<LocalDate, MutableMap<CatalogField, ExpectedFieldSupport>>()
             root.required("expectedSupport").array().forEach { node ->
                 require(node.isObject) { "Support entry must be an object" }
@@ -149,8 +202,15 @@ object RecordedCatalogCodec {
                 require(support.getOrPut(date) { linkedMapOf() }.putIfAbsent(field, value) == null) { "Duplicate support field" }
             }
             require(support.values.any { it.isNotEmpty() }) { "No declared support" }
-            require(CatalogWindow.create(catalog, support) is CatalogWindowResult.Success) { "Invalid window or support" }
-            RecordingDecodeResult.Success(CatalogRecording(catalog, Collections.unmodifiableMap(support)))
+            val dailySupport = linkedMapOf<LocalDate, MutableSet<DailyCatalogField>>()
+            if (version == 2) root.required("dailyExpectedSupport").array().forEach { node ->
+                node.fieldsExact("date", "field")
+                val date = LocalDate.parse(node.required("date").string())
+                require(dailySupport.getOrPut(date) { linkedSetOf() }.add(enum(node.required("field")))) { "Duplicate daily support field" }
+            }
+            require(summaries.all { it.date in dailySupport }) { "Daily summaries require declared daily support" }
+            require(CatalogWindow.create(catalog, support, dailyExpectedSupport = dailySupport) is CatalogWindowResult.Success) { "Invalid window or support" }
+            RecordingDecodeResult.Success(CatalogRecording(catalog, Collections.unmodifiableMap(support), dailySupport.mapValues { it.value.toSet() }))
         } catch (e: Exception) {
             RecordingDecodeResult.Failure(RecordingError.INVALID_VALUE, e.message ?: "Invalid canonical value")
         }
@@ -258,14 +318,15 @@ class RecordedCatalogSource(bytes: ByteArray?) : WeatherCatalogSource {
             return CatalogLoadResult.TransportFailure(TransportFailureReason.INVALID_RESPONSE, CatalogLoadMetadata(detail = "replay:identity_mismatch"))
         }
         val replay = CanonicalCatalog(original.location, original.datasetId,
-            original.provenance.copy(origin = CatalogOrigin.REPLAY), original.asOf, original.facts)
-        val window = CatalogWindow.create(replay, recording.expectedSupport)
+            original.provenance.copy(origin = CatalogOrigin.REPLAY), original.asOf, original.facts,
+            original.productSegments, original.dailySummaries)
+        val window = CatalogWindow.create(replay, recording.expectedSupport, dailyExpectedSupport = recording.dailyExpectedSupport)
         if (window !is CatalogWindowResult.Success) {
             return CatalogLoadResult.TransportFailure(TransportFailureReason.INVALID_RESPONSE, CatalogLoadMetadata(detail = "replay:invalid_value"))
         }
         val metadata = CatalogLoadMetadata(replayOriginalOrigin = original.provenance.origin)
-        val complete = window.window.days.all { day -> day.fieldCoverage.values.all { it == CoverageStatus.COMPLETE } }
-        return if (complete) CatalogLoadResult.Success(replay, recording.expectedSupport, metadata)
-            else CatalogLoadResult.Partial(replay, recording.expectedSupport, metadata)
+        val complete = window.window.days.all { day -> day.fieldCoverage.values.all { it == CoverageStatus.COMPLETE } && day.dailyCoverage.values.all { it == CoverageStatus.COMPLETE } }
+        return if (complete) CatalogLoadResult.Success(replay, recording.expectedSupport, metadata, recording.dailyExpectedSupport)
+            else CatalogLoadResult.Partial(replay, recording.expectedSupport, metadata, recording.dailyExpectedSupport)
     }
 }

@@ -94,6 +94,7 @@ class CatalogWindow private constructor(
             catalog: CanonicalCatalog,
             expectedSupport: Map<LocalDate, Map<CatalogField, ExpectedFieldSupport>>,
             providerDailyAmounts: Map<LocalDate, List<DailyAccumulatedAmount>> = emptyMap(),
+            dailyExpectedSupport: DailyExpectedSupport = emptyMap(),
         ): CatalogWindowResult {
             val zone = catalog.location.timeZone
             val anchor = catalog.asOf.atZone(zone).toLocalDate()
@@ -102,10 +103,42 @@ class CatalogWindow private constructor(
             val end = anchor.plusDays(14).atStartOfDay(zone).toInstant()
             val dateSet = dates.toSet()
 
-            if ((expectedSupport.keys + providerDailyAmounts.keys).any { it !in dateSet }) {
+            if ((expectedSupport.keys + providerDailyAmounts.keys + dailyExpectedSupport.keys + catalog.dailySummaries.map { it.date }).any { it !in dateSet }) {
                 return CatalogWindowResult.Failure(
                     CatalogWindowError.INVALID_EXPECTED_SUPPORT("Support or daily values name a date outside the 44-day window"),
                 )
+            }
+
+            if (catalog.dailySummaries.map { it.date }.distinct().size != catalog.dailySummaries.size ||
+                catalog.dailySummaries.any { summary ->
+                    summary.support.start != summary.date.atStartOfDay(zone).toInstant() ||
+                        summary.support.end != summary.date.plusDays(1).atStartOfDay(zone).toInstant() ||
+                        summary.date !in dailyExpectedSupport
+                }) return invalidSupport("Daily summaries must be unique and use true local-day support")
+
+            var previousEnd: LocalDate? = null
+            var previousSegment: CatalogProductSegment? = null
+            for (segment in catalog.productSegments) {
+                if (segment.startDateInclusive !in dateSet || segment.endDateExclusive > anchor.plusDays(14) ||
+                    segment.startDateInclusive >= segment.endDateExclusive ||
+                    (previousEnd != null && segment.startDateInclusive < previousEnd!!)) {
+                    return invalidSupport("Product segments must be ordered, disjoint, and within the 44-date window")
+                }
+                if (previousSegment?.let { it.endDateExclusive == segment.startDateInclusive &&
+                        it.productKind == segment.productKind && it.sourceId == segment.sourceId &&
+                        it.productId == segment.productId && it.issuedAt == segment.issuedAt } == true) {
+                    return invalidSupport("Adjacent product segments with identical identity must be coalesced")
+                }
+                previousEnd = segment.endDateExclusive
+                previousSegment = segment
+            }
+            if (catalog.productSegments.isNotEmpty()) {
+                val segmentKinds = catalog.productSegments.map { it.productKind }.distinct()
+                val expectedEnvelopeKind = if (segmentKinds.size > 1) CatalogProductKind.MIXED else segmentKinds.single()
+                if (catalog.provenance.productKind != expectedEnvelopeKind) return invalidSupport("Catalog product kind must match its product segments")
+                val assignedDates = catalog.productSegments.flatMap { segment -> generateSequence(segment.startDateInclusive) { it.plusDays(1) }.takeWhile { it < segment.endDateExclusive }.toList() }.toSet()
+                val returnedDates = (catalog.facts.mapNotNull { fact -> fact.validTime.atZone(zone).toLocalDate().takeIf { it in dateSet } } + catalog.dailySummaries.map { it.date }).toSet()
+                if (assignedDates != returnedDates) return invalidSupport("Product segments must cover exactly dates with returned rows")
             }
 
             for ((date, fields) in expectedSupport) {
@@ -168,15 +201,21 @@ class CatalogWindow private constructor(
                         CatalogWindowError.INVALID_DAILY_VALUE(date, "Provider daily values must be unique by field and cover the complete local date"),
                     )
                 }
+                val suppliedSummary = catalog.dailySummaries.singleOrNull { it.date == date }
+                val dailyCoverage = dailyExpectedSupport[date].orEmpty().associateWith { field ->
+                    if (suppliedSummary?.has(field) == true) CoverageStatus.COMPLETE else CoverageStatus.MISSING
+                }
                 CatalogDay(
                     date = date,
                     localStart = localStart,
                     localEnd = localEnd,
                     facts = dayFacts,
                     fieldCoverage = coverage,
-                    dayCoverage = aggregateDayCoverage(coverage.values),
+                    dayCoverage = aggregateDayCoverage(coverage.values + dailyCoverage.values),
                     expectedSupport = fieldSupport,
                     providerDailyAmounts = dailyValues,
+                    dailySummary = suppliedSummary,
+                    dailyCoverage = dailyCoverage,
                 )
             }
             return CatalogWindowResult.Success(CatalogWindow(anchor, zone, start, end, days))
@@ -290,10 +329,13 @@ class CatalogDay internal constructor(
     val dayCoverage: CoverageStatus,
     expectedSupport: Map<CatalogField, ExpectedFieldSupport>,
     providerDailyAmounts: List<DailyAccumulatedAmount>,
+    val dailySummary: ProviderDailySummary?,
+    dailyCoverage: Map<DailyCatalogField, CoverageStatus>,
 ) {
     val facts: List<CanonicalWeatherFacts> = Collections.unmodifiableList(facts.toList())
     val fieldCoverage: Map<CatalogField, CoverageStatus> = Collections.unmodifiableMap(fieldCoverage.toMap())
     val providerDailyAmounts: List<DailyAccumulatedAmount> = Collections.unmodifiableList(providerDailyAmounts.toList())
+    val dailyCoverage: Map<DailyCatalogField, CoverageStatus> = Collections.unmodifiableMap(dailyCoverage.toMap())
     private val expectedSupport: Map<CatalogField, ExpectedFieldSupport> = Collections.unmodifiableMap(
         expectedSupport.mapValues { (_, support) ->
             when (support) {
@@ -349,7 +391,7 @@ private val ACCUMULATED_FIELDS = setOf(
 
 private fun CanonicalWeatherFacts.hasValue(field: CatalogField): Boolean = when (field) {
     CatalogField.CONDITIONS -> conditions.isNotEmpty()
-    CatalogField.PHENOMENA -> phenomena.isNotEmpty()
+    CatalogField.PHENOMENA -> conditions.isNotEmpty() || phenomena.isNotEmpty()
     CatalogField.TEMPERATURE_C -> temperatureC != null
     CatalogField.PRECIPITATION_PROBABILITY_PERCENT -> precipitationProbabilityPercent != null
     CatalogField.THUNDERSTORM_PROBABILITY_PERCENT -> thunderstormProbabilityPercent != null

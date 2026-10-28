@@ -14,6 +14,24 @@ enum class CatalogProductKind {
     REANALYSIS,
     ACTUAL_OBSERVATION,
     SYNTHETIC_METEOROLOGICAL_PRODUCT,
+    MIXED,
+}
+
+/** Product identity assigned only to dates for which the source returned a row. */
+data class CatalogProductSegment(
+    val startDateInclusive: java.time.LocalDate,
+    val endDateExclusive: java.time.LocalDate,
+    val productKind: CatalogProductKind,
+    val sourceId: String?,
+    val productId: String?,
+    val issuedAt: java.time.Instant?,
+) {
+    init {
+        require(startDateInclusive.isBefore(endDateExclusive))
+        require(productKind != CatalogProductKind.MIXED && productKind != CatalogProductKind.SYNTHETIC_METEOROLOGICAL_PRODUCT)
+        require(sourceId == null || sourceId.isNotBlank())
+        require(productId == null || productId.isNotBlank())
+    }
 }
 
 @JvmInline

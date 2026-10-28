@@ -41,12 +41,14 @@ sealed interface CatalogLoadResult {
         val catalog: CanonicalCatalog,
         val expectedSupport: CatalogExpectedSupport,
         override val metadata: CatalogLoadMetadata = CatalogLoadMetadata(),
+        val dailyExpectedSupport: DailyExpectedSupport = emptyMap(),
     ) : CatalogLoadResult
 
     data class Partial(
         val catalog: CanonicalCatalog,
         val expectedSupport: CatalogExpectedSupport,
         override val metadata: CatalogLoadMetadata = CatalogLoadMetadata(),
+        val dailyExpectedSupport: DailyExpectedSupport = emptyMap(),
     ) : CatalogLoadResult
 
     data class NoData(val reason: NoDataReason, override val metadata: CatalogLoadMetadata = CatalogLoadMetadata()) : CatalogLoadResult
@@ -95,10 +97,16 @@ class CatalogSourceRegistry(sources: Collection<WeatherCatalogSource>) {
                 else -> error("Unreachable")
             }
             require(support.values.any { it.isNotEmpty() }) { "Usable source results require declared field support" }
-            val window = CatalogWindow.create(catalog, support)
+            val dailySupport = when (result) {
+                is CatalogLoadResult.Success -> result.dailyExpectedSupport
+                is CatalogLoadResult.Partial -> result.dailyExpectedSupport
+                else -> error("Unreachable")
+            }
+            val window = CatalogWindow.create(catalog, support, dailyExpectedSupport = dailySupport)
             require(window is CatalogWindowResult.Success) { "Source result has invalid expected support or facts" }
             val complete = window.window.days.all { day ->
-                day.fieldCoverage.values.all { it == CoverageStatus.COMPLETE }
+                day.fieldCoverage.values.all { it == CoverageStatus.COMPLETE } &&
+                    day.dailyCoverage.values.all { it == CoverageStatus.COMPLETE }
             }
             require((result is CatalogLoadResult.Success) == complete) {
                 "Success must have complete declared support; incomplete support requires Partial"

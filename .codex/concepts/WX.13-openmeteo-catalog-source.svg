@@ -1,0 +1,71 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1600" height="1510" viewBox="0 0 1600 1510">
+<rect width="1600" height="1510" fill="#101c2c"/>
+<text x="64" y="70" fill="#eaf4fa" font-family="DejaVu Sans" font-size="37" font-weight="bold">WX.13  /  Open-Meteo to the weather catalog</text>
+<text x="64" y="108" fill="#a7c8d7" font-family="DejaVu Sans" font-size="21" font-weight="normal">A review board for how one provider response becomes truthful local weather data</text>
+<rect x="64" y="145" width="720" height="400" rx="18" fill="#1d3349" stroke="#678fa3" stroke-width="2"/>
+<text x="90" y="189" fill="#62dac7" font-family="DejaVu Sans" font-size="27" font-weight="bold">1  Request one bounded response</text>
+<text x="90" y="233" fill="#eaf4fa" font-family="DejaVu Sans" font-size="20" font-weight="normal">Use the existing Open-Meteo transport with a</text>
+<text x="90" y="262" fill="#eaf4fa" font-family="DejaVu Sans" font-size="20" font-weight="normal">location, its IANA time zone, and the request time.</text>
+<text x="90" y="303" fill="#eaf4fa" font-family="DejaVu Sans" font-size="20" font-weight="normal">Ask for 30 past days and 14 forecast days, the</text>
+<text x="90" y="332" fill="#eaf4fa" font-family="DejaVu Sans" font-size="20" font-weight="normal">agreed hourly and daily fields, metric units, and</text>
+<text x="90" y="361" fill="#eaf4fa" font-family="DejaVu Sans" font-size="20" font-weight="normal">Unix timestamps.</text>
+<text x="90" y="402" fill="#eaf4fa" font-family="DejaVu Sans" font-size="20" font-weight="normal">This source stays dormant; it does not start a</text>
+<text x="90" y="431" fill="#eaf4fa" font-family="DejaVu Sans" font-size="20" font-weight="normal">network call from the app screen.</text>
+<rect x="816" y="145" width="720" height="400" rx="18" fill="#1d3349" stroke="#678fa3" stroke-width="2"/>
+<text x="842" y="189" fill="#62dac7" font-family="DejaVu Sans" font-size="27" font-weight="bold">2  Translate values without guessing</text>
+<text x="842" y="233" fill="#eaf4fa" font-family="DejaVu Sans" font-size="20" font-weight="normal">Convert each returned Unix timestamp to an absolute</text>
+<text x="842" y="262" fill="#eaf4fa" font-family="DejaVu Sans" font-size="20" font-weight="normal">instant. Put measurements into the existing</text>
+<text x="842" y="291" fill="#eaf4fa" font-family="DejaVu Sans" font-size="20" font-weight="normal">canonical metric fields.</text>
+<text x="842" y="332" fill="#eaf4fa" font-family="DejaVu Sans" font-size="20" font-weight="normal">Keep a missing value missing. Zero is used only when</text>
+<text x="842" y="361" fill="#eaf4fa" font-family="DejaVu Sans" font-size="20" font-weight="normal">the provider actually returns zero. Hourly rain,</text>
+<text x="842" y="390" fill="#eaf4fa" font-family="DejaVu Sans" font-size="20" font-weight="normal">total precipitation, and snow keep their one-hour</text>
+<text x="842" y="419" fill="#eaf4fa" font-family="DejaVu Sans" font-size="20" font-weight="normal">accumulation interval.</text>
+<text x="842" y="460" fill="#eaf4fa" font-family="DejaVu Sans" font-size="20" font-weight="normal">A weather code can name a condition; it cannot</text>
+<text x="842" y="489" fill="#eaf4fa" font-family="DejaVu Sans" font-size="20" font-weight="normal">create an alert or an independent thunderstorm,</text>
+<text x="842" y="518" fill="#eaf4fa" font-family="DejaVu Sans" font-size="20" font-weight="normal">hail, or tornado probability.</text>
+<rect x="64" y="575" width="720" height="400" rx="18" fill="#1d3349" stroke="#678fa3" stroke-width="2"/>
+<text x="90" y="619" fill="#62dac7" font-family="DejaVu Sans" font-size="27" font-weight="bold">3  Build the 44 local dates</text>
+<text x="90" y="663" fill="#eaf4fa" font-family="DejaVu Sans" font-size="20" font-weight="normal">The request time defines local day D. The catalog</text>
+<text x="90" y="692" fill="#eaf4fa" font-family="DejaVu Sans" font-size="20" font-weight="normal">contains D−30 through D−1, then D through D+13.</text>
+<text x="90" y="733" fill="#eaf4fa" font-family="DejaVu Sans" font-size="20" font-weight="normal">Use the location’s IANA time-zone rules for every</text>
+<text x="90" y="762" fill="#eaf4fa" font-family="DejaVu Sans" font-size="20" font-weight="normal">timestamp and day boundary. A daylight-saving day</text>
+<text x="90" y="791" fill="#eaf4fa" font-family="DejaVu Sans" font-size="20" font-weight="normal">may have 23 or 25 hours.</text>
+<text x="90" y="832" fill="#eaf4fa" font-family="DejaVu Sans" font-size="20" font-weight="normal">Missing hours, null fields, and short provider</text>
+<text x="90" y="861" fill="#eaf4fa" font-family="DejaVu Sans" font-size="20" font-weight="normal">horizons stay visible as partial coverage. No</text>
+<text x="90" y="890" fill="#eaf4fa" font-family="DejaVu Sans" font-size="20" font-weight="normal">placeholder forecast hours are invented.</text>
+<rect x="816" y="575" width="720" height="400" rx="18" fill="#1d3349" stroke="#678fa3" stroke-width="2"/>
+<text x="842" y="619" fill="#62dac7" font-family="DejaVu Sans" font-size="27" font-weight="bold">4  Keep daily summaries honest</text>
+<text x="842" y="663" fill="#eaf4fa" font-family="DejaVu Sans" font-size="20" font-weight="normal">Daily maxima, minima, weather code, probability</text>
+<text x="842" y="692" fill="#eaf4fa" font-family="DejaVu Sans" font-size="20" font-weight="normal">maximum, and precipitation totals are supplied by</text>
+<text x="842" y="721" fill="#eaf4fa" font-family="DejaVu Sans" font-size="20" font-weight="normal">the provider when present.</text>
+<text x="842" y="762" fill="#eaf4fa" font-family="DejaVu Sans" font-size="20" font-weight="normal">Keep those supplied values distinct from any summary</text>
+<text x="842" y="791" fill="#eaf4fa" font-family="DejaVu Sans" font-size="20" font-weight="normal">calculated from hourly samples. Do not replace a</text>
+<text x="842" y="820" fill="#eaf4fa" font-family="DejaVu Sans" font-size="20" font-weight="normal">missing supplied value with a derived one without</text>
+<text x="842" y="849" fill="#eaf4fa" font-family="DejaVu Sans" font-size="20" font-weight="normal">labeling it.</text>
+<text x="842" y="890" fill="#eaf4fa" font-family="DejaVu Sans" font-size="20" font-weight="normal">The present catalog holds only some daily values;</text>
+<text x="842" y="919" fill="#eaf4fa" font-family="DejaVu Sans" font-size="20" font-weight="normal">the plan resolves the narrow typed home for the</text>
+<text x="842" y="948" fill="#eaf4fa" font-family="DejaVu Sans" font-size="20" font-weight="normal">others before coding.</text>
+<rect x="64" y="1005" width="720" height="400" rx="18" fill="#1d3349" stroke="#678fa3" stroke-width="2"/>
+<text x="90" y="1049" fill="#62dac7" font-family="DejaVu Sans" font-size="27" font-weight="bold">5  State what product each date is</text>
+<text x="90" y="1093" fill="#eaf4fa" font-family="DejaVu Sans" font-size="20" font-weight="normal">Past samples from the Forecast API are archived</text>
+<text x="90" y="1122" fill="#eaf4fa" font-family="DejaVu Sans" font-size="20" font-weight="normal">model forecasts, not verified observations. Current</text>
+<text x="90" y="1151" fill="#eaf4fa" font-family="DejaVu Sans" font-size="20" font-weight="normal">and future samples are forecasts.</text>
+<text x="90" y="1192" fill="#eaf4fa" font-family="DejaVu Sans" font-size="20" font-weight="normal">The existing catalog has one product label for the</text>
+<text x="90" y="1221" fill="#eaf4fa" font-family="DejaVu Sans" font-size="20" font-weight="normal">whole dataset. WX.13 must add a clear way to retain</text>
+<text x="90" y="1250" fill="#eaf4fa" font-family="DejaVu Sans" font-size="20" font-weight="normal">the historical and forecast segments separately.</text>
+<text x="90" y="1291" fill="#eaf4fa" font-family="DejaVu Sans" font-size="20" font-weight="normal">Only record a model ID or issue time when the</text>
+<text x="90" y="1320" fill="#eaf4fa" font-family="DejaVu Sans" font-size="20" font-weight="normal">response actually provides one.</text>
+<rect x="816" y="1005" width="720" height="400" rx="18" fill="#1d3349" stroke="#678fa3" stroke-width="2"/>
+<text x="842" y="1049" fill="#62dac7" font-family="DejaVu Sans" font-size="27" font-weight="bold">6  Prove the conversion</text>
+<text x="842" y="1093" fill="#eaf4fa" font-family="DejaVu Sans" font-size="20" font-weight="normal">Recorded responses cover complete, sparse,</text>
+<text x="842" y="1122" fill="#eaf4fa" font-family="DejaVu Sans" font-size="20" font-weight="normal">malformed, duplicated, out-of-order, unknown-code,</text>
+<text x="842" y="1151" fill="#eaf4fa" font-family="DejaVu Sans" font-size="20" font-weight="normal">and null-value cases.</text>
+<text x="842" y="1192" fill="#eaf4fa" font-family="DejaVu Sans" font-size="20" font-weight="normal">One sanitized provider-derived catalog recording</text>
+<text x="842" y="1221" fill="#eaf4fa" font-family="DejaVu Sans" font-size="20" font-weight="normal">needs owner approval. It must round-trip through the</text>
+<text x="842" y="1250" fill="#eaf4fa" font-family="DejaVu Sans" font-size="20" font-weight="normal">WX.11 recording codec without losing units,</text>
+<text x="842" y="1279" fill="#eaf4fa" font-family="DejaVu Sans" font-size="20" font-weight="normal">missingness, time zone, or product meaning.</text>
+<text x="842" y="1320" fill="#eaf4fa" font-family="DejaVu Sans" font-size="20" font-weight="normal">The concept board needs owner approval before</text>
+<text x="842" y="1349" fill="#eaf4fa" font-family="DejaVu Sans" font-size="20" font-weight="normal">implementation; recorded fixtures and checks are</text>
+<text x="842" y="1378" fill="#eaf4fa" font-family="DejaVu Sans" font-size="20" font-weight="normal">separate acceptance evidence.</text>
+<text x="64" y="1465" fill="#a7c8d7" font-family="DejaVu Sans" font-size="20" font-weight="normal">Scope: provider mapping and catalog assembly only. No location UI, active-app wiring, cache, or official alerts.</text>
+</svg>
