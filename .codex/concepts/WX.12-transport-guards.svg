@@ -1,0 +1,34 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="720" viewBox="0 0 1200 720">
+<rect width="1200" height="720" fill="#0b1420"/>
+<text x="60" y="72" fill="#eef5fa" font-family="DejaVu Sans" font-size="32" font-weight="bold">WX.12  |  Transport boundary</text>
+<text x="60" y="108" fill="#9eb5c7" font-family="DejaVu Sans" font-size="17">Planning board for owner review · 2026-10-28 · no live app wiring</text>
+<rect x="58" y="150" width="325" height="250" rx="18" fill="#173449" stroke="#3a7590" stroke-width="2"/>
+<text x="82" y="190" fill="#e4f6ff" font-family="DejaVu Sans" font-size="22" font-weight="bold">Typed request</text>
+<text x="82" y="227" fill="#cfdee8" font-family="DejaVu Sans" font-size="17">One coordinate pair + IANA zone</text>
+<text x="82" y="259" fill="#cfdee8" font-family="DejaVu Sans" font-size="17">D−30 through D+13</text>
+<text x="82" y="291" fill="#cfdee8" font-family="DejaVu Sans" font-size="17">Unix time + metric units</text>
+<text x="82" y="323" fill="#cfdee8" font-family="DejaVu Sans" font-size="17">Fixed hourly/daily field list</text>
+<text x="82" y="367" fill="#8de1cd" font-family="DejaVu Sans" font-size="16">No caller URL or extra parameters</text>
+<path d="M390 275 H427" stroke="#8de1cd" stroke-width="4" marker-end="url(#arrow)"/>
+<rect x="435" y="150" width="325" height="250" rx="18" fill="#18453f" stroke="#58a794" stroke-width="2"/>
+<text x="459" y="190" fill="#e4fff7" font-family="DejaVu Sans" font-size="19" font-weight="bold">Bounded HTTP transport</text>
+<text x="459" y="227" fill="#d2e8e3" font-family="DejaVu Sans" font-size="17">Injectable OkHttp · async call</text>
+<text x="459" y="259" fill="#d2e8e3" font-family="DejaVu Sans" font-size="17">5 / 15 / 30 s proposed limits</text>
+<text x="459" y="291" fill="#d2e8e3" font-family="DejaVu Sans" font-size="17">2 MiB decoded-body cap</text>
+<text x="459" y="323" fill="#d2e8e3" font-family="DejaVu Sans" font-size="17">Cancel call; close response</text>
+<text x="459" y="367" fill="#8de1cd" font-family="DejaVu Sans" font-size="14">HTTPS endpoint only · no redirects out</text>
+<path d="M767 275 H804" stroke="#8de1cd" stroke-width="4" marker-end="url(#arrow)"/>
+<rect x="812" y="150" width="325" height="250" rx="18" fill="#173449" stroke="#3a7590" stroke-width="2"/>
+<text x="836" y="190" fill="#e4f6ff" font-family="DejaVu Sans" font-size="22" font-weight="bold">Transport result</text>
+<text x="836" y="227" fill="#cfdee8" font-family="DejaVu Sans" font-size="17">Raw valid JSON envelope</text>
+<text x="836" y="259" fill="#cfdee8" font-family="DejaVu Sans" font-size="17">Typed HTTP / network / timeout</text>
+<text x="836" y="291" fill="#cfdee8" font-family="DejaVu Sans" font-size="17">Parse / oversized outcomes</text>
+<text x="836" y="323" fill="#cfdee8" font-family="DejaVu Sans" font-size="17">Cancellation propagates</text>
+<text x="836" y="367" fill="#8de1cd" font-family="DejaVu Sans" font-size="16">No catalog publication in WX.12</text>
+<rect x="58" y="455" width="1079" height="190" rx="18" fill="#2b2635" stroke="#a17cae" stroke-width="2"/>
+<text x="82" y="493" fill="#f7eaff" font-family="DejaVu Sans" font-size="22" font-weight="bold">Release and policy guard</text>
+<text x="82" y="527" fill="#e4d8e8" font-family="DejaVu Sans" font-size="16">Only INTERNET permission · merged debug + release manifests inspected · no location, cleartext, or background components</text>
+<text x="82" y="560" fill="#e4d8e8" font-family="DejaVu Sans" font-size="16">No startup/UI fetch or debug exposure in release · free API evaluation only · attribution and commercial terms recorded</text>
+<text x="82" y="607" fill="#f2c8bb" font-family="DejaVu Sans" font-size="17">Owner board approval pending. Mocked acceptance tests need separate authorization under AGENTS.md.</text>
+<defs><marker id="arrow" markerWidth="10" markerHeight="10" refX="8" refY="5" orient="auto"><path d="M0 0 L10 5 L0 10 Z" fill="#8de1cd"/></marker></defs>
+</svg>

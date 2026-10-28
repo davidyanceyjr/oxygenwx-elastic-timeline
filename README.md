@@ -6,6 +6,8 @@ This repository is the successor product boundary, not a modification of the dep
 
 ## Quick start
 
+The local Android SDK is in `.android-sdk/` and is ignored by Git. From the repository root, set `ANDROID_HOME` and `ANDROID_SDK_ROOT` to `$PWD/.android-sdk`. The local `local.properties` points Gradle at this SDK. Use a connected Pixel for installed checks; the former virtual device and its system image were removed to save disk space.
+
 Extract `oxygenwx-elastic-timeline/` next to your existing Oxygen project, then:
 
 ```bash

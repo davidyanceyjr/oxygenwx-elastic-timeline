@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android">
-    <!-- Intentionally no location or network permissions: demo fixture only. -->
+    <!-- Dormant WX.12 transport; no live request is wired to startup or UI. -->
+    <uses-permission android:name="android.permission.INTERNET" />
     <application
         android:allowBackup="false"
         android:label="Oxygen · Time Lab"

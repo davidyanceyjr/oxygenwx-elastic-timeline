@@ -6,6 +6,7 @@ import pathlib
 import shutil
 import subprocess
 import sys
+import xml.etree.ElementTree as ET
 
 ROOT = pathlib.Path(__file__).resolve().parents[1]
 PACKAGE = "com.oxygen.weather.timeline"
@@ -31,14 +32,56 @@ def workflow() -> None:
 
 
 def contract() -> None:
-    manifest = (ROOT / "app/src/main/AndroidManifest.xml").read_text()
     build = (ROOT / "app/build.gradle.kts").read_text()
     projection = (ROOT / "app/src/main/java/com/oxygen/weather/timeline/presentation/ElasticTimeAxis.kt").read_text()
+    transport = (ROOT / "app/src/main/java/com/oxygen/weather/timeline/data/openmeteo/OpenMeteoTransport.kt").read_text()
     assert 'applicationId = "com.oxygen.weather.timeline"' in build
-    assert "android.permission.INTERNET" not in manifest
-    assert "ACCESS_COARSE_LOCATION" not in manifest
     assert "fun xForHour" in projection and "fun scrub" in projection
-    print("Prototype contract: isolated package, no network/location permission, pure time projection — OK")
+    assert 'https://api.open-meteo.com/v1/forecast' in transport
+    assert 'followRedirects(false)' in transport and 'followSslRedirects(false)' in transport
+    assert 'newCall(request(location))' in transport
+
+    android = "{http://schemas.android.com/apk/res/android}"
+    manifests = [ROOT / "app/src/main/AndroidManifest.xml", ROOT / "app/src/debug/AndroidManifest.xml"]
+    manifests += sorted((ROOT / "app/build/intermediates/merged_manifests").glob("*/process*Manifest/AndroidManifest.xml"))
+    manifests += sorted((ROOT / "app/build/intermediates/merged_manifest").glob("*/process*Manifest/AndroidManifest.xml"))
+    for path in manifests:
+        tree = ET.parse(path)
+        root = tree.getroot()
+        permissions = {node.get(android + "name") for node in root if node.tag.startswith("uses-permission")}
+        baseline_permission = PACKAGE + ".DYNAMIC_RECEIVER_NOT_EXPORTED_PERMISSION"
+        allowed = {"android.permission.INTERNET"}
+        if "build/intermediates" in str(path):
+            allowed.add(baseline_permission)
+        assert permissions <= allowed, (path, permissions)
+        if path.name == "AndroidManifest.xml" and ("src/main" in str(path) or "build/intermediates" in str(path)):
+            assert "android.permission.INTERNET" in permissions, path
+        app = root.find("application")
+        assert app is not None
+        assert app.get(android + "usesCleartextTraffic") != "true", path
+        assert app.get(android + "networkSecurityConfig") is None, path
+        baseline_components = {
+            ("provider", "androidx.startup.InitializationProvider"),
+            ("receiver", "androidx.profileinstaller.ProfileInstallReceiver"),
+        } if "build/intermediates" in str(path) else set()
+        allowed_activities = {".MainActivity", PACKAGE + ".MainActivity"}
+        if "debug" in str(path):
+            allowed_activities |= {
+                ".data.debug.DebugForecastActivity",
+                PACKAGE + ".data.debug.DebugForecastActivity",
+                "androidx.activity.ComponentActivity",
+                "androidx.compose.ui.tooling.PreviewActivity",
+            }
+        for node in app:
+            if node.tag in {"service", "receiver", "provider"}:
+                assert (node.tag, node.get(android + "name")) in baseline_components, (path, node.tag, node.get(android + "name"))
+            if node.tag == "activity":
+                assert node.get(android + "name") in allowed_activities, (path, node.get(android + "name"))
+            if "release" in str(path):
+                assert "debug" not in (node.get(android + "name") or "").lower(), path
+        if "release" in str(path):
+            assert all("debug" not in (node.get(android + "name") or "").lower() for node in app), path
+    print("Transport contract: isolated package, approved Internet only, no location/background/cleartext/release debug exposure, pure projection — OK")
 
 
 def adb(*args: str) -> None:
