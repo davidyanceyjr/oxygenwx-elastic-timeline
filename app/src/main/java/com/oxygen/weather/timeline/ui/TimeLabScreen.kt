@@ -61,6 +61,7 @@ import com.oxygen.weather.timeline.presentation.PresentedWarning
 import com.oxygen.weather.timeline.presentation.atmosphere.AtmosphereInput
 import com.oxygen.weather.timeline.presentation.atmosphere.AtmospherePreview
 import com.oxygen.weather.timeline.data.catalog.PlaceSearcher
+import com.oxygen.weather.timeline.data.catalog.SavedLocation
 import java.time.Duration
 import java.time.LocalDateTime
 import kotlin.math.abs
@@ -76,6 +77,7 @@ fun TimeLabScreen(
     initialPrecisionMode: Boolean = false,
     placeSearcher: PlaceSearcher? = null,
     locationStore: LocationSelectorStore? = null,
+    onCommittedLocationSelection: (SavedLocation) -> Unit = {},
     openLocationSelectorOnLaunch: Boolean = false,
     showDebugLocationLauncher: Boolean = false,
 ) {
@@ -88,9 +90,12 @@ fun TimeLabScreen(
     var forecastBrowserOpen by remember { mutableStateOf(false) }
     var locationSelectorOpen by rememberSaveable { mutableStateOf(openLocationSelectorOnLaunch) }
     val locationSelectorScope = androidx.compose.runtime.rememberCoroutineScope()
+    val currentSelectionCallback = androidx.compose.runtime.rememberUpdatedState(onCommittedLocationSelection)
     val locationSelectorController = if (placeSearcher != null && locationStore != null) {
         remember(placeSearcher, locationStore, locationSelectorScope) {
-            LocationSelectorController(locationSelectorScope, placeSearcher, locationStore)
+            LocationSelectorController(locationSelectorScope, placeSearcher, locationStore) {
+                currentSelectionCallback.value(it)
+            }
         }
     } else null
     val haptics = LocalHapticFeedback.current

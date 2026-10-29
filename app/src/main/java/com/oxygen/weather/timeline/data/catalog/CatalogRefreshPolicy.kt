@@ -39,6 +39,7 @@ data class CatalogRepositoryResult(
     val persistence: CatalogPersistenceStatus,
     val sourceOutcome: CatalogLoadResult? = null,
     val cacheInvalidity: List<String> = emptyList(),
+    val storedAt: Instant? = null,
 ) {
     init { require((recording == null) == (delivery == CatalogDelivery.NONE)); require(recording != null || freshness == null) }
 }
@@ -62,9 +63,10 @@ class LiveCatalogRepository(
         val cachedRecording = cached?.recording
         val shouldRefresh = policy.shouldRefresh(cached?.storedAt, cachedRecording?.catalog?.asOf, location.timeZone, operationInstant, forceRefresh)
         if (!shouldRefresh) {
-            return CatalogRepositoryResult(cachedRecording, CatalogDelivery.CACHE,
-                policy.freshness(cached?.storedAt, operationInstant), CatalogRefreshStatus.SKIPPED,
-                CatalogPersistenceStatus.NOT_ATTEMPTED, cacheInvalidity = invalidity)
+            val cachedSnapshot = requireNotNull(cached)
+            return CatalogRepositoryResult(cachedSnapshot.recording, CatalogDelivery.CACHE,
+                policy.freshness(cachedSnapshot.storedAt, operationInstant), CatalogRefreshStatus.SKIPPED,
+                CatalogPersistenceStatus.NOT_ATTEMPTED, cacheInvalidity = invalidity, storedAt = cachedSnapshot.storedAt)
         }
 
         val request = CatalogLoadRequest(location, datasetId, operationInstant)
@@ -77,7 +79,7 @@ class LiveCatalogRepository(
         if (usable == null) {
             return if (cachedRecording != null) CatalogRepositoryResult(cachedRecording, CatalogDelivery.CACHE,
                 CatalogFreshness.STALE, statusOf(sourceOutcome), CatalogPersistenceStatus.NOT_ATTEMPTED,
-                sourceOutcome, invalidity)
+                sourceOutcome, invalidity, requireNotNull(cached).storedAt)
             else CatalogRepositoryResult(null, CatalogDelivery.NONE, null, statusOf(sourceOutcome),
                 CatalogPersistenceStatus.NOT_ATTEMPTED, sourceOutcome, invalidity)
         }
@@ -98,7 +100,7 @@ class LiveCatalogRepository(
             CatalogPersistenceStatus.WRITE_FAILURE
         }
         return CatalogRepositoryResult(recording, CatalogDelivery.LIVE, CatalogFreshness.FRESH,
-            statusOf(sourceOutcome), persistence, sourceOutcome, invalidity)
+            statusOf(sourceOutcome), persistence, sourceOutcome, invalidity, retrievedAt)
     }
 
     private fun statusOf(result: CatalogLoadResult): CatalogRefreshStatus = when (result) {

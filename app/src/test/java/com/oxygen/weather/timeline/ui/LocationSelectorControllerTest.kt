@@ -25,6 +25,28 @@ import java.util.concurrent.CopyOnWriteArrayList
 
 class LocationSelectorControllerTest {
     @Test
+    fun committedSelectionDispatchesOnlyAfterPersistenceSucceeds() = runBlocking {
+        val location = saved(candidate("Chicago", 31))
+        val store = FakeStore(mutableListOf(location))
+        val committed = mutableListOf<SavedLocation>()
+        val controller = LocationSelectorController(
+            this,
+            RecordingSearcher { _, _ -> PlaceSearchResult.NoMatches },
+            store,
+            onCommittedSelection = committed::add,
+        )
+
+        controller.select(location)
+        await { committed.size == 1 }
+        assertEquals(location, committed.single())
+
+        store.selectOverride = SavedLocationResult.MissingLocation
+        controller.select(location)
+        await { controller.state.value.message?.contains("no longer available") == true }
+        assertEquals(1, committed.size)
+    }
+
+    @Test
     fun searchRunsOnlyOnSubmitAndEditsClearPreviousResults() = runBlocking {
         val searcher = RecordingSearcher { _, query ->
             PlaceSearchResult.Matches(listOf(candidate(query, 1)), 0)
@@ -216,6 +238,7 @@ class LocationSelectorControllerTest {
         var removeCalls = 0
         var failList = false
         var addOverride: SavedLocationResult? = null
+        var selectOverride: SavedLocationResult? = null
 
         override suspend fun list(): SavedLocationListResult {
             if (failList) error("storage unavailable")
@@ -237,6 +260,7 @@ class LocationSelectorControllerTest {
 
         override suspend fun select(id: LocationId): SavedLocationResult {
             selectCalls++
+            selectOverride?.let { return it }
             val found = values.firstOrNull { it.location.id == id } ?: return SavedLocationResult.MissingLocation
             selectedId = id.value
             return SavedLocationResult.Selected(found)

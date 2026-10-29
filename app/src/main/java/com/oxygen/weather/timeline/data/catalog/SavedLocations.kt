@@ -95,7 +95,7 @@ sealed interface SavedLocationListResult {
 class SavedLocationRepository(
     private val database: CatalogStorageDatabase,
     private val mapper: ObjectMapper = ObjectMapper(),
-) {
+) : StartupLocationRestorer {
     private val dao get() = database.savedLocations()
 
     suspend fun add(candidate: PlaceSearchCandidate): SavedLocationResult {
@@ -137,7 +137,7 @@ class SavedLocationRepository(
         SavedLocationResult.Removed
     }
 
-    suspend fun restore(): SavedLocationResult = database.withTransaction {
+    override suspend fun restore(): SavedLocationResult = database.withTransaction {
         val selectedId = dao.selectedId()
         if (selectedId == null) return@withTransaction SavedLocationResult.Selected(null)
         val row = dao.find(selectedId)

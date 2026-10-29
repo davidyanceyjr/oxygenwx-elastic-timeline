@@ -33,6 +33,15 @@ import com.oxygen.weather.timeline.data.catalog.PlaceSearcher
 import com.oxygen.weather.timeline.ui.RepositoryLocationSelectorStore
 import com.oxygen.weather.timeline.data.openmeteo.OpenMeteoPlaceSearcher
 import androidx.room.Room
+import androidx.lifecycle.lifecycleScope
+import java.time.Clock
+import com.oxygen.weather.timeline.data.catalog.CatalogActivationCoordinator
+import com.oxygen.weather.timeline.data.catalog.CatalogDatasetStorage
+import com.oxygen.weather.timeline.data.catalog.CatalogSourceRegistry
+import com.oxygen.weather.timeline.data.catalog.SimulatedCatalogSource
+import com.oxygen.weather.timeline.data.catalog.RecordedCatalogSource
+import com.oxygen.weather.timeline.data.catalog.LiveCatalogRepository
+import com.oxygen.weather.timeline.data.openmeteo.OpenMeteoCatalogSource
 
 /** Standalone experiment. Does not replace Oxygen Weather's production Home pager. */
 class MainActivity : ComponentActivity() {
@@ -49,7 +58,24 @@ class MainActivity : ComponentActivity() {
             CatalogStorageDatabase.MIGRATION_1_2,
             CatalogStorageDatabase.MIGRATION_2_3,
         ).build()
-        val selectorStore = RepositoryLocationSelectorStore(SavedLocationRepository(catalogDatabase))
+        val savedLocations = SavedLocationRepository(catalogDatabase)
+        val selectorStore = RepositoryLocationSelectorStore(savedLocations)
+        val catalogStorage = CatalogDatasetStorage(catalogDatabase.datasets())
+        val catalogSources = CatalogSourceRegistry(listOf(
+            OpenMeteoCatalogSource(),
+            SimulatedCatalogSource(),
+            RecordedCatalogSource(null),
+        ))
+        val clock = Clock.systemUTC()
+        val activationCoordinator = CatalogActivationCoordinator(
+            scope = lifecycleScope,
+            savedLocations = savedLocations,
+            storage = catalogStorage,
+            liveRepository = LiveCatalogRepository(catalogSources, catalogStorage, clock),
+            sources = catalogSources,
+            clock = clock,
+        )
+        activationCoordinator.restoreStartup()
         val placeSearcher = if (isDebuggable && intent.getBooleanExtra(EXTRA_LOCATION_FIXTURE_SEARCH, false)) {
             runCatching {
                 Class.forName("com.oxygen.weather.timeline.data.debug.DebugLocationSearchFactory")
@@ -99,6 +125,7 @@ class MainActivity : ComponentActivity() {
                             initialPrecisionMode = showStormPreview || showClearNightPreview || debugSelectedHour != null,
                             placeSearcher = placeSearcher,
                             locationStore = selectorStore,
+                            onCommittedLocationSelection = { activationCoordinator.committedLocationSelection(it.location) },
                             openLocationSelectorOnLaunch = openLocationSelector,
                             showDebugLocationLauncher = isDebuggable,
                         )

@@ -59,6 +59,7 @@ class LocationSelectorController(
     private val scope: CoroutineScope,
     private val searcher: PlaceSearcher,
     private val store: LocationSelectorStore,
+    private val onCommittedSelection: (SavedLocation) -> Unit = {},
 ) {
     private val mutableState = MutableStateFlow(LocationSelectorState())
     val state: StateFlow<LocationSelectorState> = mutableState.asStateFlow()
@@ -153,6 +154,7 @@ class LocationSelectorController(
             try {
                 when (val result = withContext(Dispatchers.IO) { store.select(location.location.id) }) {
                     is SavedLocationResult.Selected -> {
+                        result.location?.let(onCommittedSelection)
                         mutableState.value = mutableState.value.copy(
                             selectedId = result.location?.location?.id,
                             message = result.location?.let { "${it.candidate.name} selected. Demo forecast remains unchanged." }
