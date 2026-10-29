@@ -362,7 +362,7 @@ private fun displayConditionsLabel(label: String, preview: AtmospherePreview): S
     }
 
 @Composable
-private fun RainSignalIcon() {
+internal fun RainSignalIcon() {
     Canvas(Modifier.width(36.dp).height(36.dp)) {
         val w = size.width
         val h = size.height
@@ -389,7 +389,7 @@ private fun RainSignalIcon() {
 }
 
 @Composable
-private fun CompassIndicator(bearingDegrees: Double?) {
+internal fun CompassIndicator(bearingDegrees: Double?) {
     Canvas(Modifier.width(32.dp).height(32.dp)) {
         val center = Offset(size.width / 2f, size.height / 2f)
         val radius = size.minDimension * .43f

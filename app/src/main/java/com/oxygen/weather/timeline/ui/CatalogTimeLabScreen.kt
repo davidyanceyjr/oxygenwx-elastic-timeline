@@ -31,6 +31,7 @@ import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -62,6 +63,7 @@ import androidx.compose.ui.unit.LayoutDirection
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.oxygen.weather.timeline.presentation.CatalogTimelineView
+import com.oxygen.weather.timeline.presentation.CompassDirection
 import com.oxygen.weather.timeline.presentation.InstantTimeAxis
 import java.time.Instant
 import java.time.format.DateTimeFormatter
@@ -156,17 +158,51 @@ fun CatalogTimeLabScreen(
                 modifier = Modifier.testTag("catalogFactTime"))
             Text("HIGH ${view.high ?: "—"}    /    LOW ${view.low ?: "—"}",
                 color = Color(0xFFECF3F8), fontSize = 12.sp)
-            Text("Precipitation chance ${view.precipitationChance ?: "unavailable"} · Wind ${view.wind ?: "unavailable"}",
-                color = Color(0xFFECF3F8), fontSize = 12.sp, textAlign = TextAlign.Center)
         }
-        CatalogForecastTimeline(
-            view = view,
-            precision = precision,
-            onSelect = { onSelectInstant(it, view.generation) },
-            onSetPrecision = { precision = it },
-            onBrowse = { browserOpen = true },
-            modifier = Modifier.align(Alignment.BottomCenter).navigationBarsPadding(),
-        )
+        Column(Modifier.fillMaxWidth().align(Alignment.BottomCenter).navigationBarsPadding()) {
+            CompositionLocalProvider(LocalLayoutDirection provides LayoutDirection.Ltr) {
+                Row(
+                    Modifier.fillMaxWidth().padding(horizontal = 27.dp),
+                    horizontalArrangement = Arrangement.SpaceBetween,
+                    verticalAlignment = Alignment.CenterVertically,
+                ) {
+                    Column(
+                        horizontalAlignment = Alignment.CenterHorizontally,
+                        modifier = Modifier.semantics(mergeDescendants = true) {
+                            contentDescription = "Precipitation chance ${view.precipitationChance ?: "unavailable"}"
+                        },
+                    ) {
+                        RainSignalIcon()
+                        Text(view.precipitationChance ?: "Unknown", color = Color.White,
+                            fontSize = 19.sp, fontWeight = FontWeight.Medium,
+                            modifier = Modifier.testTag("catalogPrecipitationChance"))
+                    }
+                    Column(
+                        horizontalAlignment = Alignment.CenterHorizontally,
+                        modifier = Modifier.semantics(mergeDescendants = true) {
+                            val direction = CompassDirection.fromBearing(view.windDirectionDegrees)
+                            contentDescription = buildString {
+                                append("Wind speed ${view.wind ?: "unavailable"}")
+                                direction?.let { append(", from ${it.spokenName}") }
+                            }
+                        },
+                    ) {
+                        CompassIndicator(view.windDirectionDegrees)
+                        Text(view.wind ?: "Unknown", color = Color.White,
+                            fontSize = 19.sp, fontWeight = FontWeight.Medium,
+                            modifier = Modifier.testTag("catalogWind"))
+                    }
+                }
+            }
+            Spacer(Modifier.height(35.dp))
+            CatalogForecastTimeline(
+                view = view,
+                precision = precision,
+                onSelect = { onSelectInstant(it, view.generation) },
+                onSetPrecision = { precision = it },
+                onBrowse = { browserOpen = true },
+            )
+        }
         if (browserOpen) {
             CatalogForecastBrowser(
                 view = view,

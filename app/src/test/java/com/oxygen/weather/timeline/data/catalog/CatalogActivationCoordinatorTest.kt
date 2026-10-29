@@ -268,7 +268,7 @@ class CatalogActivationCoordinatorTest {
         assertEquals(a, coordinator.state.value.active?.location)
     }
 
-    @Test fun nearestSampleTieChoosesEarlierAndReplayIdentityIsExplicit() = runBlocking {
+    @Test fun exactSelectionAtSampleTieAndReplayIdentityIsExplicit() = runBlocking {
         val tieInstant = Instant.parse("2026-03-08T20:00:00Z")
         val h = harness(clockInstant = tieInstant)
         val coordinator = h.coordinator(this)
@@ -279,7 +279,7 @@ class CatalogActivationCoordinatorTest {
         val later = facts.first { it.isAfter(tieInstant) }
         assertEquals(6L, java.time.Duration.between(earlier, tieInstant).toHours())
         assertEquals(6L, java.time.Duration.between(tieInstant, later).toHours())
-        assertEquals(earlier, coordinator.state.value.active?.selectedInstant)
+        assertEquals(tieInstant, coordinator.state.value.active?.selectedInstant)
         try {
             CatalogActivationRequest(a, CatalogOrigin.REPLAY, DatasetId("r"))
             fail("Replay must name its recording")
