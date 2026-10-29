@@ -1,0 +1,247 @@
+{
+  "formatVersion": 1,
+  "database": {
+    "version": 3,
+    "identityHash": "653bcaa32a9b62ec9bb1da2101e13fd3",
+    "entities": [
+      {
+        "tableName": "catalog_datasets",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`locationId` TEXT NOT NULL, `storageNamespace` TEXT NOT NULL, `datasetId` TEXT NOT NULL, `asOf` TEXT NOT NULL, `asOfEpochSecond` INTEGER NOT NULL, `asOfNano` INTEGER NOT NULL, `storedAtEpochSecond` INTEGER, `storedAtNano` INTEGER, `capturedOrigin` TEXT NOT NULL, `payloadFormatVersion` INTEGER NOT NULL, `payload` BLOB NOT NULL, PRIMARY KEY(`locationId`, `storageNamespace`, `datasetId`, `asOfEpochSecond`, `asOfNano`))",
+        "fields": [
+          {
+            "fieldPath": "locationId",
+            "columnName": "locationId",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "storageNamespace",
+            "columnName": "storageNamespace",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "datasetId",
+            "columnName": "datasetId",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "asOf",
+            "columnName": "asOf",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "asOfEpochSecond",
+            "columnName": "asOfEpochSecond",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "asOfNano",
+            "columnName": "asOfNano",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "storedAtEpochSecond",
+            "columnName": "storedAtEpochSecond",
+            "affinity": "INTEGER"
+          },
+          {
+            "fieldPath": "storedAtNano",
+            "columnName": "storedAtNano",
+            "affinity": "INTEGER"
+          },
+          {
+            "fieldPath": "capturedOrigin",
+            "columnName": "capturedOrigin",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "payloadFormatVersion",
+            "columnName": "payloadFormatVersion",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "payload",
+            "columnName": "payload",
+            "affinity": "BLOB",
+            "notNull": true
+          }
+        ],
+        "primaryKey": {
+          "autoGenerate": false,
+          "columnNames": [
+            "locationId",
+            "storageNamespace",
+            "datasetId",
+            "asOfEpochSecond",
+            "asOfNano"
+          ]
+        },
+        "indices": [
+          {
+            "name": "index_catalog_datasets_locationId_storageNamespace_asOfEpochSecond_asOfNano",
+            "unique": false,
+            "columnNames": [
+              "locationId",
+              "storageNamespace",
+              "asOfEpochSecond",
+              "asOfNano"
+            ],
+            "orders": [],
+            "createSql": "CREATE INDEX IF NOT EXISTS `index_catalog_datasets_locationId_storageNamespace_asOfEpochSecond_asOfNano` ON `${TABLE_NAME}` (`locationId`, `storageNamespace`, `asOfEpochSecond`, `asOfNano`)"
+          },
+          {
+            "name": "index_catalog_datasets_locationId_storageNamespace_datasetId_asOfEpochSecond_asOfNano",
+            "unique": false,
+            "columnNames": [
+              "locationId",
+              "storageNamespace",
+              "datasetId",
+              "asOfEpochSecond",
+              "asOfNano"
+            ],
+            "orders": [],
+            "createSql": "CREATE INDEX IF NOT EXISTS `index_catalog_datasets_locationId_storageNamespace_datasetId_asOfEpochSecond_asOfNano` ON `${TABLE_NAME}` (`locationId`, `storageNamespace`, `datasetId`, `asOfEpochSecond`, `asOfNano`)"
+          },
+          {
+            "name": "index_catalog_datasets_locationId_storageNamespace_storedAtEpochSecond_storedAtNano",
+            "unique": false,
+            "columnNames": [
+              "locationId",
+              "storageNamespace",
+              "storedAtEpochSecond",
+              "storedAtNano"
+            ],
+            "orders": [],
+            "createSql": "CREATE INDEX IF NOT EXISTS `index_catalog_datasets_locationId_storageNamespace_storedAtEpochSecond_storedAtNano` ON `${TABLE_NAME}` (`locationId`, `storageNamespace`, `storedAtEpochSecond`, `storedAtNano`)"
+          }
+        ]
+      },
+      {
+        "tableName": "saved_locations",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`locationId` TEXT NOT NULL, `name` TEXT NOT NULL, `countryName` TEXT, `countryCode` TEXT, `administrativeAreasJson` TEXT NOT NULL, `latitudeDegrees` REAL NOT NULL, `longitudeDegrees` REAL NOT NULL, `timeZoneId` TEXT NOT NULL, `sourceReference` TEXT, `attributionSourceName` TEXT NOT NULL, `attributionSourceUrl` TEXT NOT NULL, `attributionLicenseName` TEXT NOT NULL, `attributionLicenseUrl` TEXT NOT NULL, `attributionChangesMadeNotice` TEXT, PRIMARY KEY(`locationId`))",
+        "fields": [
+          {
+            "fieldPath": "locationId",
+            "columnName": "locationId",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "name",
+            "columnName": "name",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "countryName",
+            "columnName": "countryName",
+            "affinity": "TEXT"
+          },
+          {
+            "fieldPath": "countryCode",
+            "columnName": "countryCode",
+            "affinity": "TEXT"
+          },
+          {
+            "fieldPath": "administrativeAreasJson",
+            "columnName": "administrativeAreasJson",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "latitudeDegrees",
+            "columnName": "latitudeDegrees",
+            "affinity": "REAL",
+            "notNull": true
+          },
+          {
+            "fieldPath": "longitudeDegrees",
+            "columnName": "longitudeDegrees",
+            "affinity": "REAL",
+            "notNull": true
+          },
+          {
+            "fieldPath": "timeZoneId",
+            "columnName": "timeZoneId",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "sourceReference",
+            "columnName": "sourceReference",
+            "affinity": "TEXT"
+          },
+          {
+            "fieldPath": "attributionSourceName",
+            "columnName": "attributionSourceName",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "attributionSourceUrl",
+            "columnName": "attributionSourceUrl",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "attributionLicenseName",
+            "columnName": "attributionLicenseName",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "attributionLicenseUrl",
+            "columnName": "attributionLicenseUrl",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "attributionChangesMadeNotice",
+            "columnName": "attributionChangesMadeNotice",
+            "affinity": "TEXT"
+          }
+        ],
+        "primaryKey": {
+          "autoGenerate": false,
+          "columnNames": [
+            "locationId"
+          ]
+        }
+      },
+      {
+        "tableName": "selected_location",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`singletonId` INTEGER NOT NULL, `selectedLocationId` TEXT, PRIMARY KEY(`singletonId`))",
+        "fields": [
+          {
+            "fieldPath": "singletonId",
+            "columnName": "singletonId",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "selectedLocationId",
+            "columnName": "selectedLocationId",
+            "affinity": "TEXT"
+          }
+        ],
+        "primaryKey": {
+          "autoGenerate": false,
+          "columnNames": [
+            "singletonId"
+          ]
+        }
+      }
+    ],
+    "setupQueries": [
+      "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '653bcaa32a9b62ec9bb1da2101e13fd3')"
+    ]
+  }
+}

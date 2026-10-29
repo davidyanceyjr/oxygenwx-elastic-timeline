@@ -3,6 +3,7 @@ package com.oxygen.weather.timeline.data.openmeteo
 import com.fasterxml.jackson.databind.JsonNode
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.oxygen.weather.timeline.data.catalog.GeoCoordinates
+import com.oxygen.weather.timeline.data.catalog.CanonicalPlaceId
 import com.oxygen.weather.timeline.data.catalog.PlaceSearchAttribution
 import com.oxygen.weather.timeline.data.catalog.PlaceSearchCandidate
 import com.oxygen.weather.timeline.data.catalog.PlaceSearchResult
@@ -173,7 +174,9 @@ class OpenMeteoPlaceSearcher(
         if (timezone is ZoneOffset || timezone.id !in ZoneId.getAvailableZoneIds()) return null
         val adminAreas = listOf("admin1", "admin2", "admin3", "admin4")
             .mapNotNull { key -> row.textOrNull(key)?.takeIf(String::isNotBlank) }
-        val reference = row.get("id")?.takeIf { it.isIntegralNumber }?.asText()
+        val providerId = row.get("id")?.takeIf { it.isIntegralNumber }?.asText()
+        val canonicalPlaceId = row.get("id")?.takeIf { it.isIntegralNumber && it.canConvertToLong() }
+            ?.longValue()?.takeIf { it > 0 }?.let(CanonicalPlaceId::geonames)
         PlaceSearchCandidate(
             name = name,
             countryName = country,
@@ -181,8 +184,9 @@ class OpenMeteoPlaceSearcher(
             administrativeAreas = adminAreas,
             coordinates = GeoCoordinates(latitude, longitude),
             timeZone = timezone,
-            sourceReference = reference,
+            sourceReference = providerId,
             attribution = ATTRIBUTION,
+            canonicalPlaceId = canonicalPlaceId,
         )
     } catch (_: Exception) {
         null

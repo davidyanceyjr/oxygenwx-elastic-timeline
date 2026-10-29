@@ -14,6 +14,8 @@ data class PlaceSearchCandidate(
     val timeZone: ZoneId,
     val sourceReference: String?,
     val attribution: PlaceSearchAttribution,
+    /** Canonical registry identity, separate from provider/source metadata. */
+    val canonicalPlaceId: CanonicalPlaceId? = null,
 ) {
     init {
         require(name.isNotBlank())

@@ -1,6 +1,7 @@
 package com.oxygen.weather.timeline.data.openmeteo
 
 import com.oxygen.weather.timeline.data.catalog.LocationId
+import com.oxygen.weather.timeline.data.catalog.CanonicalPlaceId
 import com.oxygen.weather.timeline.data.catalog.PlaceSearchResult
 import kotlinx.coroutines.Dispatchers
 import java.util.concurrent.TimeUnit
@@ -65,6 +66,8 @@ class OpenMeteoPlaceSearcherTest {
         assertEquals("loc-local-1", location.id.value)
         assertNotEquals(result.candidates[0].sourceReference, location.id.value)
         assertEquals("America/Chicago", location.timeZone.id)
+        assertEquals(CanonicalPlaceId.geonames(2950159), result.candidates[0].canonicalPlaceId)
+        assertEquals("2950159", result.candidates[0].sourceReference)
     }
 
     @Test fun supportsCountryNameOnlyAndCountryCodeOnlyAndRejectsRowsWithoutEither() = runBlocking {
@@ -93,6 +96,7 @@ class OpenMeteoPlaceSearcherTest {
         assertEquals(1, mixed.candidates.size)
         assertEquals(1, mixed.rejectedCandidateCount)
         assertEquals(1.123456789, mixed.candidates.single().coordinates.latitudeDegrees, 0.0)
+        assertNull(mixed.candidates.single().canonicalPlaceId)
 
         server.enqueue(MockResponse().setBody("""{"results":[{"name":"Bad","latitude":1000,"longitude":2,"timezone":"Europe/Paris","country":"France"}]}"""))
         assertEquals(

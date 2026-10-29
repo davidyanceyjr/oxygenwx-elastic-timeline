@@ -78,9 +78,10 @@ interface CatalogDatasetDao {
         if (aSecond != bSecond) aSecond.compareTo(bSecond) else aNano.compareTo(bNano)
 }
 
-@Database(entities = [CatalogDatasetRow::class], version = 2, exportSchema = true)
+@Database(entities = [CatalogDatasetRow::class, SavedLocationRow::class, SelectedLocationRow::class], version = 3, exportSchema = true)
 abstract class CatalogStorageDatabase : RoomDatabase() {
     abstract fun datasets(): CatalogDatasetDao
+    abstract fun savedLocations(): SavedLocationDao
 
     companion object {
         val MIGRATION_1_2 = object : androidx.room.migration.Migration(1, 2) {
@@ -92,6 +93,13 @@ abstract class CatalogStorageDatabase : RoomDatabase() {
                 db.execSQL("CREATE INDEX index_catalog_datasets_locationId_storageNamespace_asOfEpochSecond_asOfNano ON catalog_datasets(locationId,storageNamespace,asOfEpochSecond,asOfNano)")
                 db.execSQL("CREATE INDEX index_catalog_datasets_locationId_storageNamespace_datasetId_asOfEpochSecond_asOfNano ON catalog_datasets(locationId,storageNamespace,datasetId,asOfEpochSecond,asOfNano)")
                 db.execSQL("CREATE INDEX index_catalog_datasets_locationId_storageNamespace_storedAtEpochSecond_storedAtNano ON catalog_datasets(locationId,storageNamespace,storedAtEpochSecond,storedAtNano)")
+            }
+        }
+
+        val MIGRATION_2_3 = object : androidx.room.migration.Migration(2, 3) {
+            override fun migrate(db: androidx.sqlite.db.SupportSQLiteDatabase) {
+                db.execSQL("CREATE TABLE IF NOT EXISTS saved_locations (locationId TEXT NOT NULL, name TEXT NOT NULL, countryName TEXT, countryCode TEXT, administrativeAreasJson TEXT NOT NULL, latitudeDegrees REAL NOT NULL, longitudeDegrees REAL NOT NULL, timeZoneId TEXT NOT NULL, sourceReference TEXT, attributionSourceName TEXT NOT NULL, attributionSourceUrl TEXT NOT NULL, attributionLicenseName TEXT NOT NULL, attributionLicenseUrl TEXT NOT NULL, attributionChangesMadeNotice TEXT, PRIMARY KEY(locationId))")
+                db.execSQL("CREATE TABLE IF NOT EXISTS selected_location (singletonId INTEGER NOT NULL, selectedLocationId TEXT, PRIMARY KEY(singletonId))")
             }
         }
     }
