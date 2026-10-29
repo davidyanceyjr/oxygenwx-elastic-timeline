@@ -57,7 +57,7 @@ class ElasticTimeAxisTest {
         assertTrue(SampleForecast.hours.zipWithNext().all { (a,b) -> a.time.isBefore(b.time) })
         val day = ForecastProjection.fromHourOffset(36.0, false)
         val hour = ForecastProjection.fromHourOffset(36.0, true)
-        assertEquals("DAY OVERVIEW", day.timeLabel)
+        assertEquals("DAY OVERVIEW · SELECTED 12 PM", day.timeLabel)
         assertTrue(hour.timeLabel.contains("PM"))
     }
 }

@@ -1,0 +1,118 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1800" height="1200" viewBox="0 0 1800 1200" role="img" aria-labelledby="title desc">
+  <title id="title">WX.24 — Absolute-instant time axis</title>
+  <desc id="desc">Proposed time-axis contract: one selected instant maps continuously to the axis, local dates only govern calendar navigation, DST gaps and overlaps are explicit, and zoom cannot change selection.</desc>
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#0b1725"/><stop offset="1" stop-color="#102b3b"/></linearGradient>
+    <linearGradient id="mint" x1="0" y1="0" x2="1" y2="0"><stop stop-color="#53c9b2"/><stop offset="1" stop-color="#83e0c9"/></linearGradient>
+    <marker id="arrow" markerWidth="10" markerHeight="10" refX="8" refY="5" orient="auto"><path d="M0 0L10 5L0 10Z" fill="#7b9aad"/></marker>
+    <marker id="arrowMint" markerWidth="10" markerHeight="10" refX="8" refY="5" orient="auto"><path d="M0 0L10 5L0 10Z" fill="#62d5bb"/></marker>
+    <style>
+      text{font-family:Inter,'DejaVu Sans',sans-serif;fill:#edf4f7}
+      .muted{fill:#abc0cc}.dim{fill:#819cab}.mint{fill:#7be0c9}.blue{fill:#a6caff}.amber{fill:#f2bd78}.red{fill:#ef9c94}
+      .panel{fill:#132c3c;stroke:#375a6c;stroke-width:2}.card{fill:#19384a;stroke:#42687a;stroke-width:2}
+      .subcard{fill:#102637;stroke:#355768;stroke-width:1.5}.line{stroke:#708e9f;stroke-width:3;fill:none;marker-end:url(#arrow)}
+      .mintline{stroke:#62d5bb;stroke-width:3;fill:none;marker-end:url(#arrowMint)}
+      .title{font-size:39px;font-weight:750;letter-spacing:.3px}.h{font-size:21px;font-weight:700;letter-spacing:.4px}
+      .eyebrow{font-size:14px;font-weight:700;letter-spacing:1.7px}.body{font-size:17px}.small{font-size:15px}.tiny{font-size:13px}.mono{font-family:'DejaVu Sans Mono',monospace;font-size:14px}
+    </style>
+  </defs>
+  <rect width="1800" height="1200" fill="url(#bg)"/>
+  <circle cx="1690" cy="85" r="185" fill="#1b3a49" opacity=".34"/>
+  <text x="58" y="42" class="eyebrow mint">OXYGEN WX / TIME-AXIS CONTRACT / 24</text>
+  <text x="58" y="91" class="title">Absolute instants keep selection stable through DST.</text>
+  <text x="60" y="123" class="body muted">Use elapsed time for the axis; use the location’s time zone for calendar labels and day navigation.</text>
+  <rect x="1460" y="35" width="280" height="40" rx="20" fill="#593f25" stroke="#bd8c52" stroke-width="1.5"/>
+  <text x="1600" y="61" text-anchor="middle" class="eyebrow amber">APPROVED · 2026-10-29</text>
+
+  <!-- Core invariant -->
+  <rect x="55" y="155" width="1690" height="220" rx="22" class="panel"/>
+  <text x="82" y="198" class="eyebrow mint">01 · ONE SOURCE OF TIME TRUTH</text>
+  <rect x="82" y="220" width="440" height="112" rx="15" class="card"/>
+  <text x="107" y="253" class="eyebrow amber">AUTHORITATIVE SELECTION</text>
+  <text x="107" y="287" class="mono">selectedInstant: 2026-11-01T06:30Z</text>
+  <text x="107" y="315" class="small muted">An exact moment, independent of zoom or sample density.</text>
+  <path d="M540 276h72" class="mintline"/>
+  <rect x="630" y="220" width="540" height="112" rx="15" class="subcard"/>
+  <text x="655" y="253" class="eyebrow blue">AXIS POSITION</text>
+  <text x="655" y="287" class="body">elapsed seconds × current pixels-per-second</text>
+  <text x="655" y="315" class="small muted">A one-hour interval is always 3,600 elapsed seconds.</text>
+  <path d="M1188 276h60" class="line"/>
+  <rect x="1265" y="220" width="450" height="112" rx="15" fill="#153e3c" stroke="#4eb7a4" stroke-width="2"/>
+  <text x="1290" y="253" class="eyebrow mint">ZOOM CHANGES SCALE ONLY</text>
+  <text x="1290" y="287" class="body">same selectedInstant before / after</text>
+  <text x="1290" y="315" class="small muted">No forecast-time jump during zoom animation.</text>
+
+  <!-- DST cards -->
+  <rect x="55" y="398" width="820" height="370" rx="22" class="panel"/>
+  <text x="82" y="440" class="eyebrow mint">02 · FALL BACK · REPEATED LOCAL HOUR</text>
+  <text x="82" y="472" class="h">Two 01:30 labels are two different instants.</text>
+  <text x="82" y="499" class="small muted">America/Chicago · 2026-11-01 · 25 elapsed hours</text>
+  <line x1="137" y1="572" x2="790" y2="572" stroke="#6d8998" stroke-width="4"/>
+  <line x1="137" y1="558" x2="137" y2="586" stroke="#8aa5b2" stroke-width="3"/>
+  <line x1="790" y1="558" x2="790" y2="586" stroke="#8aa5b2" stroke-width="3"/>
+  <line x1="340" y1="536" x2="340" y2="612" stroke="#f2bd78" stroke-width="3" stroke-dasharray="5 5"/>
+  <circle cx="340" cy="572" r="11" fill="#f2bd78" stroke="#fff1d6" stroke-width="2"/>
+  <circle cx="493" cy="572" r="8" fill="#7b9aad"/>
+  <circle cx="650" cy="572" r="9" fill="#7be0c9"/>
+  <text x="137" y="614" text-anchor="middle" class="mono muted">01:00 −05</text>
+  <text x="340" y="642" text-anchor="middle" class="mono amber">01:30 −05</text>
+  <text x="493" y="614" text-anchor="middle" class="mono muted">01:00 −06</text>
+  <text x="650" y="642" text-anchor="middle" class="mono mint">01:30 −06</text>
+  <text x="790" y="614" text-anchor="middle" class="mono muted">02:00 −06</text>
+  <rect x="82" y="671" width="766" height="66" rx="12" class="subcard"/>
+  <text x="104" y="698" class="small">Keep both occurrences ordered by Instant; include the UTC offset in ambiguous labels.</text>
+  <text x="104" y="722" class="small mint">Day shift: retain the prior offset when that local time exists; otherwise choose the earlier occurrence.</text>
+
+  <rect x="895" y="398" width="850" height="370" rx="22" class="panel"/>
+  <text x="922" y="440" class="eyebrow mint">03 · SPRING FORWARD · MISSING LOCAL HOUR</text>
+  <text x="922" y="472" class="h">A wall-clock time in the gap resolves forward explicitly.</text>
+  <text x="922" y="499" class="small muted">America/Chicago · 2026-03-08 · 23 elapsed hours</text>
+  <line x1="970" y1="572" x2="1670" y2="572" stroke="#6d8998" stroke-width="4"/>
+  <circle cx="1020" cy="572" r="8" fill="#7b9aad"/><circle cx="1190" cy="572" r="8" fill="#7b9aad"/>
+  <circle cx="1390" cy="572" r="11" fill="#7be0c9" stroke="#d9fff5" stroke-width="2"/>
+  <circle cx="1580" cy="572" r="8" fill="#7b9aad"/>
+  <line x1="1270" y1="540" x2="1270" y2="608" stroke="#ef9c94" stroke-width="3" stroke-dasharray="5 5"/>
+  <path d="M1270 550C1310 530 1350 530 1380 550" fill="none" stroke="#62d5bb" stroke-width="3" marker-end="url(#arrowMint)"/>
+  <text x="1020" y="614" text-anchor="middle" class="mono muted">01:30 −06:00</text>
+  <text x="1270" y="642" text-anchor="middle" class="mono red">02:30 · no such time</text>
+  <text x="1390" y="614" text-anchor="middle" class="mono mint">03:00 −05:00</text>
+  <text x="1580" y="642" text-anchor="middle" class="mono muted">03:30 −05:00</text>
+  <rect x="922" y="671" width="796" height="66" rx="12" class="subcard"/>
+  <text x="944" y="698" class="small">For day shift into a gap, resolve to the first valid local time after the gap.</text>
+  <text x="944" y="722" class="small mint">Never invent a 02:30 instant; keep the target day’s true 23-hour extent.</text>
+
+  <!-- Policies and interaction -->
+  <rect x="55" y="790" width="1040" height="310" rx="22" class="panel"/>
+  <text x="82" y="832" class="eyebrow mint">04 · CALENDAR NAVIGATION &amp; RANGE CHANGES</text>
+  <rect x="82" y="854" width="478" height="88" rx="14" class="card"/>
+  <text x="104" y="882" class="eyebrow blue">PREVIOUS / NEXT DAY</text>
+  <text x="104" y="911" class="small">Move by local date; preserve wall-clock time where valid.</text>
+  <text x="104" y="932" class="tiny muted">Gap → first valid time · overlap → prior offset, else earlier occurrence.</text>
+  <rect x="580" y="854" width="487" height="88" rx="14" class="card"/>
+  <text x="602" y="882" class="eyebrow blue">DAILY OVERVIEW ANCHOR</text>
+  <text x="602" y="911" class="small">Local noon on that date, resolved by the same valid-time rules.</text>
+  <text x="602" y="932" class="tiny muted">A view anchor, not a forecast sample or a change to day boundaries.</text>
+  <rect x="82" y="958" width="478" height="112" rx="14" class="subcard"/>
+  <text x="104" y="986" class="eyebrow amber">DATASET / SOURCE SWAP</text>
+  <text x="104" y="1015" class="small">Keep the exact instant when target range supports it;</text>
+  <text x="104" y="1039" class="small">otherwise clamp to nearest supported edge (tie → earlier).</text>
+  <text x="104" y="1060" class="tiny muted">No reset or snap to a different source’s sample.</text>
+  <rect x="580" y="958" width="487" height="112" rx="14" class="subcard"/>
+  <text x="602" y="986" class="eyebrow amber">RESET TARGET</text>
+  <text x="602" y="1015" class="small">LIVE → real clock now · DEBUG → scenario reference instant.</text>
+  <text x="602" y="1039" class="small">Clamp to active supported range when target is outside it.</text>
+  <text x="602" y="1060" class="tiny muted">Reset changes selection by explicit action only.</text>
+
+  <rect x="1115" y="790" width="630" height="310" rx="22" class="panel"/>
+  <text x="1142" y="832" class="eyebrow mint">05 · GESTURE OWNERSHIP &amp; SCOPE</text>
+  <rect x="1142" y="854" width="576" height="120" rx="14" fill="#153e3c" stroke="#4eb7a4" stroke-width="2"/>
+  <text x="1165" y="885" class="eyebrow mint">PRESERVE EXISTING OWNERS</text>
+  <text x="1165" y="916" class="body">Tap / drag / hold keep their current meanings.</text>
+  <text x="1165" y="944" class="small muted">Sparse facts do not snap selection; coordinate mapping remains continuous.</text>
+  <rect x="1142" y="991" width="576" height="79" rx="14" fill="#382c2c" stroke="#865c52" stroke-width="1.5"/>
+  <text x="1165" y="1021" class="eyebrow red">OUT OF SCOPE</text>
+  <text x="1165" y="1048" class="small">Visual redesign · new gesture owners · timeline/catalog UI integration (WX.25).</text>
+
+  <text x="60" y="1142" class="small muted">INTENT · Pure axis and selection contract · selection is an Instant; local dates provide navigation labels and boundaries.</text>
+  <text x="60" y="1175" class="tiny dim">WX.24 CONCEPT · OWNER-APPROVED POLICIES · 2026-10-29 · DESIGN INPUT ONLY · NOT IMPLEMENTATION OR ACCEPTANCE EVIDENCE</text>
+</svg>
