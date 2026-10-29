@@ -1,0 +1,126 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1500" height="1120" viewBox="0 0 1500 1120">
+  <defs>
+    <marker id="arrow" markerWidth="12" markerHeight="12" refX="10" refY="6" orient="auto" markerUnits="strokeWidth">
+      <path d="M1,1 L11,6 L1,11 Z" fill="#81d8c3"/>
+    </marker>
+    <marker id="arrow-muted" markerWidth="12" markerHeight="12" refX="10" refY="6" orient="auto" markerUnits="strokeWidth">
+      <path d="M1,1 L11,6 L1,11 Z" fill="#7190a4"/>
+    </marker>
+    <style>
+      text { font-family: Inter, "DejaVu Sans", Arial, sans-serif; fill: #eef3f7; }
+      .title { font-size: 38px; font-weight: 700; }
+      .sub { font-size: 19px; fill: #b8c6d2; }
+      .head { font-size: 20px; font-weight: 700; fill: #81d8c3; }
+      .label { font-size: 17px; font-weight: 700; }
+      .body { font-size: 16px; fill: #c0ccd6; }
+      .small { font-size: 14px; fill: #b8c6d2; }
+      .mono { font-family: "DejaVu Sans Mono", monospace; font-size: 17px; fill: #eef3f7; }
+      .panel { fill: #192a39; stroke: #4b687b; stroke-width: 2; }
+      .panel-mint { fill: #1a343b; stroke: #81d8c3; stroke-width: 2.5; }
+      .panel-warm { fill: #332b2c; stroke: #f2a184; stroke-width: 2; }
+      .panel-blue { fill: #1b3041; stroke: #66869c; stroke-width: 2; }
+      .line { fill: none; stroke: #81d8c3; stroke-width: 3; marker-end: url(#arrow); }
+      .line-muted { fill: none; stroke: #7190a4; stroke-width: 2.5; marker-end: url(#arrow-muted); }
+    </style>
+  </defs>
+  <rect width="1500" height="1120" fill="#101a24"/>
+
+  <text x="70" y="66" class="title">WX.16 · Cache freshness, refresh and partial recovery</text>
+  <text x="72" y="101" class="sub">Owner review board · keep useful weather available while preserving honest source, age and coverage</text>
+
+  <!-- Window and clock contract -->
+  <rect x="70" y="132" width="1360" height="122" rx="18" class="panel"/>
+  <text x="96" y="166" class="head">Location clock defines the catalog window</text>
+  <text x="96" y="201" class="body">asOf: Instant → local date D in the location's IANA timezone → recalculate the 44-date window</text>
+  <rect x="1000" y="153" width="394" height="74" rx="12" fill="#223b4a" stroke="#4e8290" stroke-width="1.5"/>
+  <text x="1022" y="181" class="mono">D−30 … D−1  |  D … D+13</text>
+  <text x="1022" y="208" class="small">30 history dates · today plus 13 forecast dates</text>
+
+  <!-- Repository decision pipeline -->
+  <rect x="70" y="282" width="274" height="130" rx="17" class="panel-blue"/>
+  <text x="94" y="316" class="head">Startup / refresh</text>
+  <text x="94" y="348" class="body">Read location's LIVE cache</text>
+  <text x="94" y="375" class="body">Fetch when policy says due</text>
+  <text x="94" y="398" class="small">Bound retained refresh history</text>
+
+  <path d="M344 347 H390" class="line"/>
+  <rect x="402" y="282" width="306" height="130" rx="17" class="panel"/>
+  <text x="426" y="316" class="head">Validate the candidate</text>
+  <text x="426" y="348" class="body">Verify identity and provenance</text>
+  <text x="426" y="375" class="body">Check integrity and coverage</text>
+  <text x="426" y="398" class="small">Old window alone is not corruption</text>
+
+  <path d="M708 347 H754" class="line"/>
+  <rect x="766" y="282" width="290" height="130" rx="17" class="panel-mint"/>
+  <text x="790" y="316" class="head">Classify the result</text>
+  <text x="790" y="348" class="body">Fresh · cached · stale · failed</text>
+  <text x="790" y="375" class="body">Coverage: complete or partial</text>
+  <text x="790" y="398" class="small">Persistence status is separate</text>
+
+  <path d="M1056 347 H1102" class="line"/>
+  <rect x="1114" y="282" width="316" height="130" rx="17" class="panel-blue"/>
+  <text x="1138" y="316" class="head">Publish usable data</text>
+  <text x="1138" y="348" class="body">Keep each validated dataset intact</text>
+  <text x="1138" y="375" class="body">Retain its asOf and provenance</text>
+  <text x="1138" y="398" class="small">No old/new field mixing</text>
+
+  <!-- Result states -->
+  <text x="72" y="463" class="head">Observable outcomes</text>
+  <rect x="70" y="482" width="322" height="152" rx="16" class="panel-mint"/>
+  <text x="94" y="516" class="label" fill="#81d8c3">FRESH · validated live fetch</text>
+  <text x="94" y="550" class="body">Matches location and refresh policy.</text>
+  <text x="94" y="577" class="body">Usable in session as soon as valid.</text>
+  <text x="94" y="611" class="small">Cache write success is independent.</text>
+
+  <rect x="412" y="482" width="322" height="152" rx="16" class="panel-blue"/>
+  <text x="436" y="516" class="label">CACHED · cache-only startup</text>
+  <text x="436" y="550" class="body">Load a valid saved dataset before</text>
+  <text x="436" y="577" class="body">any network result is available.</text>
+  <text x="436" y="611" class="small">Keep its asOf and source provenance.</text>
+
+  <rect x="754" y="482" width="322" height="152" rx="16" class="panel-warm"/>
+  <text x="778" y="516" class="label" fill="#f2a184">STALE · refresh overdue</text>
+  <text x="778" y="550" class="body">Keep a valid older-window dataset.</text>
+  <text x="778" y="577" class="body">Mark stale; retain its original asOf.</text>
+  <text x="778" y="611" class="small">Do not claim current-window coverage.</text>
+
+  <rect x="1096" y="482" width="334" height="152" rx="16" class="panel-warm"/>
+  <text x="1120" y="516" class="label" fill="#f2a184">FAILED · no usable dataset</text>
+  <text x="1120" y="550" class="body">No valid live result or usable cache.</text>
+  <text x="1120" y="577" class="body">Report failure; claim no new weather.</text>
+  <text x="1120" y="611" class="small">Retry or wait for a valid result.</text>
+
+  <text x="72" y="658" class="body">Coverage is independent: COMPLETE or PARTIAL can accompany fresh, cached, or stale data. Keep missing facts absent.</text>
+
+  <!-- Failure and recovery cases -->
+  <rect x="70" y="670" width="878" height="239" rx="18" class="panel"/>
+  <text x="96" y="708" class="head">Failure paths preserve the best truthful result</text>
+  <rect x="96" y="731" width="386" height="75" rx="12" class="panel-warm"/>
+  <text x="118" y="761" class="label" fill="#f2a184">Fetch fails + valid cache</text>
+  <text x="118" y="788" class="small">Keep cache; report CACHED or STALE from its age.</text>
+  <rect x="510" y="731" width="390" height="75" rx="12" class="panel-warm"/>
+  <text x="532" y="761" class="label" fill="#f2a184">Fetch fails + no usable cache</text>
+  <text x="532" y="788" class="small">FAILED · no forecast is presented as available.</text>
+  <rect x="96" y="818" width="386" height="67" rx="12" class="panel-blue"/>
+  <text x="118" y="847" class="label">Live fetch works + cache write fails</text>
+  <text x="118" y="872" class="small">Keep fresh live data; flag write failure.</text>
+  <rect x="510" y="818" width="390" height="67" rx="12" class="panel-blue"/>
+  <text x="532" y="847" class="label">Cache is corrupt or mismatched</text>
+  <text x="532" y="872" class="small">Reject corrupt data; use live data or fail.</text>
+
+  <rect x="974" y="670" width="456" height="239" rx="18" class="panel-mint"/>
+  <text x="1000" y="708" class="head">At location-local midnight</text>
+  <text x="1000" y="744" class="body">1 · Recompute D and target D−30 … D+13.</text>
+  <text x="1000" y="774" class="body">2 · Preserve cached window, asOf, provenance.</text>
+  <text x="1000" y="804" class="body">3 · If valid, serve old window as STALE;</text>
+  <text x="1020" y="828" class="body">never imply it covers the new target window.</text>
+  <text x="1000" y="858" class="body">4 · Separate history and forecast schedules.</text>
+  <text x="1000" y="888" class="body">5 · Bound retained history before recurring refresh.</text>
+
+  <!-- Invariants -->
+  <rect x="70" y="937" width="1360" height="129" rx="18" class="panel"/>
+  <text x="96" y="974" class="head">Invariants</text>
+  <text x="96" y="1010" class="body">One whole validated dataset per location and LIVE namespace · failed refresh never replaces useful data</text>
+  <text x="96" y="1040" class="body">Freshness state is separate from product origin · missing coverage stays missing · no UI changes in WX.16</text>
+  <text x="72" y="1093" class="small">Concept board for review · define freshness thresholds, refresh cadence and bounded retention in the plan.</text>
+</svg>

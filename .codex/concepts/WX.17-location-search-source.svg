@@ -1,0 +1,103 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1600" height="1320" viewBox="0 0 1600 1320" role="img" aria-labelledby="title desc">
+  <title id="title">WX.17 · Place search to local location identity</title>
+  <desc id="desc">Logic and code contract board for provider-neutral geocoding results, ambiguity, local identity assignment, failure outcomes, and the boundary to saved locations and UI.</desc>
+  <defs>
+    <marker id="arrow" markerWidth="10" markerHeight="10" refX="8" refY="5" orient="auto"><path d="M1 1 L9 5 L1 9 Z" fill="#82dac7"/></marker>
+    <style>
+      text{font-family:Inter,"DejaVu Sans",Arial,sans-serif;fill:#eef4f5}
+      .title{font-size:40px;font-weight:700}.subtitle{font-size:19px;fill:#b9cad2}
+      .section{font-size:21px;font-weight:700;fill:#82dac7}.label{font-size:17px;font-weight:700}
+      .body{font-size:17px;fill:#d0dce0}.small{font-size:15px;fill:#abc0c9}
+      .mono{font-family:"DejaVu Sans Mono",monospace;font-size:17px}
+      .card{fill:#1a3040;stroke:#58798a;stroke-width:2}.deep{fill:#122536;stroke:#476477;stroke-width:1.5}
+      .mint{fill:#173d40;stroke:#82dac7;stroke-width:2}.amber{fill:#3a3231;stroke:#e7b274;stroke-width:2}
+      .line{fill:none;stroke:#82dac7;stroke-width:3;marker-end:url(#arrow)}
+    </style>
+  </defs>
+  <rect width="1600" height="1320" fill="#0d1b29"/>
+  <text x="72" y="66" class="title">WX.17 · Place search to local location identity</text>
+  <text x="74" y="101" class="subtitle">Owner review board · provider boundary, result meaning, and identity handoff</text>
+  <rect x="1275" y="42" width="255" height="40" rx="20" fill="#244052" stroke="#6a93a2"/>
+  <text x="1402" y="68" text-anchor="middle" class="small">CONCEPT · FOR APPROVAL</text>
+
+  <text x="72" y="151" class="section">01  Search contract</text>
+  <rect x="72" y="177" width="335" height="205" rx="18" class="card"/>
+  <text x="98" y="214" class="label">Typed query</text>
+  <text x="98" y="251" class="mono">PlaceSearch.search(text)</text>
+  <text x="98" y="291" class="body">Manual place name input</text>
+  <text x="98" y="322" class="body">Bounded request and result count</text>
+  <text x="98" y="353" class="small">No device location permission</text>
+
+  <path d="M407 277 H447" class="line"/>
+  <rect x="448" y="177" width="335" height="205" rx="18" class="card"/>
+  <text x="474" y="214" class="label">Open-Meteo adapter</text>
+  <text x="474" y="251" class="mono">Geocoding response</text>
+  <text x="474" y="291" class="body">HTTPS and cancellable I/O</text>
+  <text x="474" y="322" class="body">Provider fields stay here</text>
+  <text x="474" y="353" class="small">Record attribution and terms</text>
+
+  <path d="M783 277 H823" class="line"/>
+  <rect x="824" y="177" width="335" height="205" rx="18" class="mint"/>
+  <text x="850" y="214" class="label">Provider-neutral result</text>
+  <text x="850" y="251" class="mono">PlaceSearchResult</text>
+  <text x="850" y="291" class="body">Name and disambiguation</text>
+  <text x="850" y="322" class="body">Full-precision coordinates</text>
+  <text x="850" y="353" class="body">Validated IANA timezone</text>
+
+  <path d="M1159 277 H1199" class="line"/>
+  <rect x="1200" y="177" width="330" height="205" rx="18" class="card"/>
+  <text x="1226" y="214" class="label">Explicit conversion</text>
+  <text x="1226" y="251" class="mono">toCatalogLocation(id)</text>
+  <text x="1226" y="291" class="body">App assigns opaque local ID</text>
+  <text x="1226" y="322" class="body">Coordinates + timezone</text>
+  <text x="1226" y="353" class="small">No provider ID as storage key</text>
+
+  <rect x="72" y="423" width="1458" height="222" rx="18" class="card"/>
+  <text x="99" y="462" class="section">02  Ambiguous names remain distinct candidates</text>
+  <rect x="99" y="487" width="680" height="126" rx="13" class="deep"/>
+  <text x="123" y="520" class="label">Springfield · Illinois · United States</text>
+  <text x="123" y="554" class="mono">39.8017, −89.6437</text>
+  <text x="123" y="585" class="body">America/Chicago</text>
+  <rect x="801" y="487" width="702" height="126" rx="13" class="deep"/>
+  <text x="825" y="520" class="label">Springfield · Massachusetts · United States</text>
+  <text x="825" y="554" class="mono">42.1015, −72.5898</text>
+  <text x="825" y="585" class="body">America/New_York</text>
+  <text x="99" y="633" class="small">Illustrative candidates · names do not decide identity · retain returned coordinate precision when mapping</text>
+
+  <text x="72" y="694" class="section">03  Identity handoff</text>
+  <rect x="72" y="720" width="710" height="222" rx="18" class="mint"/>
+  <text x="100" y="757" class="label">Accepted candidate → CatalogLocation</text>
+  <text x="100" y="794" class="mono">LocationId("loc_…")</text>
+  <text x="100" y="825" class="mono">GeoCoordinates(lat, lon)</text>
+  <text x="100" y="856" class="mono">ZoneId.of("America/Chicago")</text>
+  <text x="100" y="906" class="body">Create a new local ID once; retain it for later saves.</text>
+  <rect x="804" y="720" width="726" height="222" rx="18" class="amber"/>
+  <text x="832" y="757" class="label">Identity boundary</text>
+  <text x="832" y="794" class="body">Provider result ID: source reference only</text>
+  <text x="832" y="825" class="body">Display name: human-readable context only</text>
+  <text x="832" y="856" class="body">Rounded coordinates: never a storage key</text>
+  <text x="832" y="906" class="small">WX.18 owns persistence, selection, and retained identity.</text>
+
+  <text x="72" y="992" class="section">04  Result and failure paths</text>
+  <rect x="72" y="1018" width="348" height="150" rx="17" class="card"/>
+  <text x="98" y="1055" class="label">Matches</text>
+  <text x="98" y="1091" class="body">Return distinct candidates</text>
+  <text x="98" y="1121" class="body">with source metadata</text>
+  <rect x="442" y="1018" width="348" height="150" rx="17" class="card"/>
+  <text x="468" y="1055" class="label">No results</text>
+  <text x="468" y="1091" class="body">Explicit empty outcome</text>
+  <text x="468" y="1121" class="body">No invented fallback place</text>
+  <rect x="812" y="1018" width="348" height="150" rx="17" class="amber"/>
+  <text x="838" y="1055" class="label">Request failure</text>
+  <text x="838" y="1091" class="body">Transport, timeout, HTTP</text>
+  <text x="838" y="1121" class="body">and invalid response remain distinct</text>
+  <rect x="1182" y="1018" width="348" height="150" rx="17" class="amber"/>
+  <text x="1208" y="1055" class="label">Unusable candidate</text>
+  <text x="1208" y="1091" class="body">Missing/invalid coordinates</text>
+  <text x="1208" y="1121" class="body">or IANA zone: reject it</text>
+
+  <rect x="72" y="1200" width="1458" height="76" rx="16" class="deep"/>
+  <text x="98" y="1232" class="label">Slice boundary</text>
+  <text x="255" y="1232" class="body">WX.17: search contract and adapter  ·  WX.18: saved state  ·  WX.19: search and selector UI</text>
+  <text x="98" y="1258" class="small">Board is a design input for owner approval. Fixtures and contract checks establish implementation behavior.</text>
+</svg>
