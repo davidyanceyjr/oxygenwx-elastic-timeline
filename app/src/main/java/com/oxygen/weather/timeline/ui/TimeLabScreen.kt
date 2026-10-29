@@ -18,8 +18,11 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.foundation.layout.width
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableDoubleStateOf
 import androidx.compose.runtime.mutableIntStateOf
@@ -57,6 +60,7 @@ import com.oxygen.weather.timeline.presentation.CompassDirection
 import com.oxygen.weather.timeline.presentation.PresentedWarning
 import com.oxygen.weather.timeline.presentation.atmosphere.AtmosphereInput
 import com.oxygen.weather.timeline.presentation.atmosphere.AtmospherePreview
+import com.oxygen.weather.timeline.data.catalog.PlaceSearcher
 import java.time.Duration
 import java.time.LocalDateTime
 import kotlin.math.abs
@@ -70,6 +74,10 @@ fun TimeLabScreen(
     effectPreview: AtmospherePreview = AtmospherePreview.NONE,
     initialSelectedHour: Double = forecastSource.referenceIndex.toDouble(),
     initialPrecisionMode: Boolean = false,
+    placeSearcher: PlaceSearcher? = null,
+    locationStore: LocationSelectorStore? = null,
+    openLocationSelectorOnLaunch: Boolean = false,
+    showDebugLocationLauncher: Boolean = false,
 ) {
     // Absolute hour offset is the sole selection authority. Zoom never rewrites it.
     var selectedHour by rememberSaveable(forecastSource.id) {
@@ -78,6 +86,13 @@ fun TimeLabScreen(
     var precisionMode by rememberSaveable { mutableStateOf(initialPrecisionMode) }
     var focusDay by rememberSaveable { mutableIntStateOf(1) }
     var forecastBrowserOpen by remember { mutableStateOf(false) }
+    var locationSelectorOpen by rememberSaveable { mutableStateOf(openLocationSelectorOnLaunch) }
+    val locationSelectorScope = androidx.compose.runtime.rememberCoroutineScope()
+    val locationSelectorController = if (placeSearcher != null && locationStore != null) {
+        remember(placeSearcher, locationStore, locationSelectorScope) {
+            LocationSelectorController(locationSelectorScope, placeSearcher, locationStore)
+        }
+    } else null
     val haptics = LocalHapticFeedback.current
     val swipeThresholdPx = with(LocalDensity.current) { 48.dp.toPx() }
     val isRtl = LocalLayoutDirection.current == LayoutDirection.Rtl
@@ -163,6 +178,12 @@ fun TimeLabScreen(
                         fontWeight = FontWeight.SemiBold, color = Color(0xFFFFE2A7))
                     if (compactPresentation && view.provenanceDetail.isNotEmpty()) {
                         Text(view.provenanceDetail, fontSize = 8.sp, color = Color(0xFFFFE2A7))
+                    }
+                    if (showDebugLocationLauncher && locationSelectorController != null) {
+                        TextButton(
+                            onClick = { locationSelectorOpen = true },
+                            colors = ButtonDefaults.textButtonColors(contentColor = Color(0xFFECF5FD)),
+                        ) { Text("LOCATIONS · DEBUG", fontSize = 10.sp, letterSpacing = .6.sp) }
                     }
                 }
             }
@@ -317,6 +338,12 @@ fun TimeLabScreen(
                     focusDay = ElasticTimeAxis.dayIndex(selectedHour)
                 },
                 onDismiss = { forecastBrowserOpen = false },
+            )
+        }
+        if (locationSelectorOpen && locationSelectorController != null) {
+            LocationSelectorPanel(
+                controller = locationSelectorController,
+                onDismiss = { locationSelectorOpen = false },
             )
         }
     }

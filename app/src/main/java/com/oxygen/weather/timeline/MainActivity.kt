@@ -27,12 +27,37 @@ import com.oxygen.weather.timeline.presentation.atmosphere.AtmosphereInput
 import com.oxygen.weather.timeline.presentation.atmosphere.AtmospherePreview
 import com.oxygen.weather.timeline.ui.AtmosphericScene
 import com.oxygen.weather.timeline.ui.TimeLabScreen
+import com.oxygen.weather.timeline.data.catalog.CatalogStorageDatabase
+import com.oxygen.weather.timeline.data.catalog.SavedLocationRepository
+import com.oxygen.weather.timeline.data.catalog.PlaceSearcher
+import com.oxygen.weather.timeline.ui.RepositoryLocationSelectorStore
+import com.oxygen.weather.timeline.data.openmeteo.OpenMeteoPlaceSearcher
+import androidx.room.Room
 
 /** Standalone experiment. Does not replace Oxygen Weather's production Home pager. */
 class MainActivity : ComponentActivity() {
+    private lateinit var catalogDatabase: CatalogStorageDatabase
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         val isDebuggable = applicationInfo.flags and ApplicationInfo.FLAG_DEBUGGABLE != 0
+        catalogDatabase = Room.databaseBuilder(
+            applicationContext,
+            CatalogStorageDatabase::class.java,
+            "oxygen-time-lab-catalog.db",
+        ).addMigrations(
+            CatalogStorageDatabase.MIGRATION_1_2,
+            CatalogStorageDatabase.MIGRATION_2_3,
+        ).build()
+        val selectorStore = RepositoryLocationSelectorStore(SavedLocationRepository(catalogDatabase))
+        val placeSearcher = if (isDebuggable && intent.getBooleanExtra(EXTRA_LOCATION_FIXTURE_SEARCH, false)) {
+            runCatching {
+                Class.forName("com.oxygen.weather.timeline.data.debug.DebugLocationSearchFactory")
+                    .getMethod("create")
+                    .invoke(null) as PlaceSearcher
+            }.getOrElse { OpenMeteoPlaceSearcher() }
+        } else OpenMeteoPlaceSearcher()
+        val openLocationSelector = isDebuggable && intent.getBooleanExtra(EXTRA_LOCATION_SELECTOR, false)
         val showSnowPreview = isDebuggable && intent.getBooleanExtra(EXTRA_PREVIEW_SNOW, false)
         val showStormPreview = isDebuggable && intent.getBooleanExtra(EXTRA_ATM6_STORM, false)
         val showClearNightPreview = isDebuggable && intent.getBooleanExtra(EXTRA_ATM6_CLEAR_NIGHT, false)
@@ -72,11 +97,20 @@ class MainActivity : ComponentActivity() {
                                 else if (showClearNightPreview) 48.0
                                 else effectPreviewHour ?: 36.0,
                             initialPrecisionMode = showStormPreview || showClearNightPreview || debugSelectedHour != null,
+                            placeSearcher = placeSearcher,
+                            locationStore = selectorStore,
+                            openLocationSelectorOnLaunch = openLocationSelector,
+                            showDebugLocationLauncher = isDebuggable,
                         )
                     }
                 }
             }
         }
+    }
+
+    override fun onDestroy() {
+        if (::catalogDatabase.isInitialized) catalogDatabase.close()
+        super.onDestroy()
     }
 }
 
@@ -87,6 +121,8 @@ private const val EXTRA_ATM5_HOUR = "atm5_hour"
 private const val EXTRA_ATM6_STORM = "atm6_storm"
 private const val EXTRA_ATM6_CLEAR_NIGHT = "atm6_clear_night"
 private const val EXTRA_ATM6_HOUR = "atm6_hour"
+private const val EXTRA_LOCATION_SELECTOR = "location_selector"
+private const val EXTRA_LOCATION_FIXTURE_SEARCH = "location_fixture_search"
 
 @androidx.compose.runtime.Composable
 private fun FixturePrecipitationPreview(hourOffset: Int) {
