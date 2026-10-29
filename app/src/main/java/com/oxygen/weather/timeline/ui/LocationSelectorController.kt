@@ -157,7 +157,7 @@ class LocationSelectorController(
                         result.location?.let(onCommittedSelection)
                         mutableState.value = mutableState.value.copy(
                             selectedId = result.location?.location?.id,
-                            message = result.location?.let { "${it.candidate.name} selected. Demo forecast remains unchanged." }
+                            message = result.location?.let { "${it.candidate.name} selected. Loading its forecast catalog." }
                                 ?: "No location is selected.",
                         )
                     }

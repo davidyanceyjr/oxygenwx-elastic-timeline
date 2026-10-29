@@ -1,8 +1,9 @@
 package com.oxygen.weather.timeline.data.catalog
 
 import java.time.Clock
-import java.time.Duration
 import java.time.Instant
+import com.oxygen.weather.timeline.presentation.InstantTimeAxis
+import com.oxygen.weather.timeline.presentation.SupportedTimeInterval
 import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Job
@@ -72,6 +73,7 @@ class CatalogActivationCoordinator(
     private var sequence = 0L
     private var requestJob: Job? = null
     private var lastRequest: CatalogActivationRequest? = null
+    private var activeInterval: SupportedTimeInterval? = null
 
     /** Restore independently of selector visibility. A newer committed choice wins the race. */
     fun restoreStartup() {
@@ -147,6 +149,18 @@ class CatalogActivationCoordinator(
         }
     }
 
+    /** A selection from the currently displayed dataset; stale UI callbacks are ignored. */
+    fun selectInstant(instant: Instant, viewGeneration: Long) {
+        synchronized(this) {
+            val active = mutableState.value.active ?: return
+            if (active.viewGeneration != viewGeneration) return
+            val interval = activeInterval ?: return
+            mutableState.value = mutableState.value.copy(
+                active = active.copy(selectedInstant = interval.clamp(instant)),
+            )
+        }
+    }
+
     private fun beginRequest(request: CatalogActivationRequest) {
         sequence++
         val requestSequence = sequence
@@ -159,8 +173,10 @@ class CatalogActivationCoordinator(
                 synchronized(this@CatalogActivationCoordinator) {
                     if (isCurrent(request, requestSequence)) {
                         val previous = mutableState.value.active
-                        val selectedInstant = chooseSelectedInstant(previous?.selectedInstant, staged.recording)
+                        val interval = selectionInterval(staged.recording)
+                        val selectedInstant = chooseSelectedInstant(previous?.selectedInstant, interval, staged.recording, request.origin)
                         val nextGeneration = (previous?.viewGeneration ?: 0L) + 1L
+                        activeInterval = interval
                         mutableState.value = mutableState.value.copy(
                             selectedLocation = request.location,
                             active = ActiveCatalogSelection(
@@ -280,11 +296,22 @@ class CatalogActivationCoordinator(
         catalog.facts, catalog.productSegments, catalog.dailySummaries,
     )
 
-    private fun chooseSelectedInstant(previous: Instant?, recording: CatalogRecording): Instant {
-        val instants = recording.catalog.facts.map { it.validTime }.distinct().sorted()
-        require(instants.isNotEmpty()) { "Cannot activate a catalog without valid samples" }
-        val target = previous ?: clock.instant()
-        return instants.minWithOrNull(compareBy<Instant>({ Duration.between(target, it).abs() }, { it }))!!
+    private fun chooseSelectedInstant(previous: Instant?, interval: SupportedTimeInterval, recording: CatalogRecording, origin: CatalogOrigin): Instant {
+        return if (previous != null) InstantTimeAxis.preserveOrClampSelection(previous, interval)
+        else InstantTimeAxis.resolveResetTarget(
+            if (origin == CatalogOrigin.LIVE) clock.instant() else recording.catalog.asOf,
+            interval,
+        )
+    }
+
+    private fun selectionInterval(recording: CatalogRecording): SupportedTimeInterval {
+        val result = CatalogWindow.create(
+            recording.catalog, recording.expectedSupport,
+            dailyExpectedSupport = recording.dailyExpectedSupport,
+        )
+        val window = (result as? CatalogWindowResult.Success)?.window
+            ?: error("Validated recording has no valid catalog window")
+        return SupportedTimeInterval(window.startInclusive, window.endExclusive.minusNanos(1))
     }
 
     private fun currentCoroutineSequence(request: CatalogActivationRequest, requestSequence: Long) {

@@ -15,6 +15,7 @@ interface ActivityVariantDelegate {
     fun onMainActivityNewIntent(host: Host, intent: Intent): Boolean = false
     fun onCatalogActivationState(host: Host, state: CatalogActivationState) = Unit
     fun createFixturePlaceSearcher(host: Host): PlaceSearcher? = null
+    fun openCatalogPicker(host: Host): Boolean = false
 
     interface Host {
         val activity: Activity

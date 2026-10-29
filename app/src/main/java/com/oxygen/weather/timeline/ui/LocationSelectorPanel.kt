@@ -181,7 +181,7 @@ fun LocationSelectorPanel(
                     }
                 }
                 Spacer(Modifier.height(8.dp))
-                Text("Search does not request device location. Selecting a place saves its identity; the DEMO DATA forecast stays unchanged.",
+                Text("Search does not request device location. Selecting a place saves its identity and loads its forecast catalog.",
                     style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
             }
             }

@@ -5,12 +5,21 @@ import android.content.pm.ApplicationInfo
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.runtime.CompositionLocalProvider
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.setValue
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -27,6 +36,10 @@ import com.oxygen.weather.timeline.presentation.atmosphere.AtmosphereInput
 import com.oxygen.weather.timeline.presentation.atmosphere.AtmospherePreview
 import com.oxygen.weather.timeline.ui.AtmosphericScene
 import com.oxygen.weather.timeline.ui.TimeLabScreen
+import com.oxygen.weather.timeline.ui.CatalogTimeLabScreen
+import com.oxygen.weather.timeline.ui.LocationSelectorController
+import com.oxygen.weather.timeline.ui.LocationSelectorPanel
+import com.oxygen.weather.timeline.presentation.CatalogTimelinePresenter
 import com.oxygen.weather.timeline.data.catalog.CatalogStorageDatabase
 import com.oxygen.weather.timeline.data.catalog.SavedLocationRepository
 import com.oxygen.weather.timeline.data.catalog.PlaceSearcher
@@ -36,6 +49,7 @@ import androidx.room.Room
 import androidx.lifecycle.lifecycleScope
 import java.time.Clock
 import com.oxygen.weather.timeline.data.catalog.CatalogActivationCoordinator
+import com.oxygen.weather.timeline.data.catalog.CatalogOrigin
 import com.oxygen.weather.timeline.data.catalog.CatalogActivationState
 import com.oxygen.weather.timeline.data.catalog.CatalogDatasetStorage
 import com.oxygen.weather.timeline.data.catalog.CatalogSourceRegistry
@@ -121,12 +135,25 @@ class MainActivity : ComponentActivity(), ActivityVariantDelegate.Host {
             intent.getIntExtra(EXTRA_PREVIEW_HOUR, -1).takeIf { it in SampleForecast.hours.indices }
         } else null
         setContent {
+            val activation by activationCoordinator.state.collectAsState()
+            val active = activation.active
+            val presenter = remember(active?.viewGeneration) { active?.let(::CatalogTimelinePresenter) }
+            var catalogLocationSelectorOpen by remember { mutableStateOf(openLocationSelector) }
+            val selectorScope = rememberCoroutineScope()
+            val catalogSelector = remember(placeSearcher, selectorStore, selectorScope) {
+                LocationSelectorController(selectorScope, placeSearcher, selectorStore) {
+                    activationCoordinator.committedLocationSelection(it.location)
+                }
+            }
+            val fixturePreview = isDebuggable && (showStormPreview || showClearNightPreview ||
+                debugSelectedHour != null || effectPreview != AtmospherePreview.NONE ||
+                effectPreviewHour != null)
             CompositionLocalProvider(LocalAppClock provides AppClock.clock) {
                 MaterialTheme {
                     when {
                         showSnowPreview -> SyntheticSnowPreview()
                         previewHour != null -> FixturePrecipitationPreview(previewHour)
-                        else -> TimeLabScreen(
+                        fixturePreview -> TimeLabScreen(
                             effectPreview = effectPreview,
                             initialSelectedHour = debugSelectedHour
                                 ?: if (showStormPreview) 0.0
@@ -139,6 +166,45 @@ class MainActivity : ComponentActivity(), ActivityVariantDelegate.Host {
                             openLocationSelectorOnLaunch = openLocationSelector,
                             showDebugLocationLauncher = isDebuggable,
                         )
+                        active != null && presenter != null -> CatalogTimeLabScreen(
+                            view = presenter.view(activation),
+                            onSelectInstant = activationCoordinator::selectInstant,
+                            onReturnToNow = {
+                                activationCoordinator.selectInstant(
+                                    if (active.origin == CatalogOrigin.LIVE) clock.instant()
+                                    else active.recording.catalog.asOf,
+                                    active.viewGeneration,
+                                )
+                            },
+                            onBrowseCatalogs = if (isDebuggable) {
+                                { variantDelegate?.openCatalogPicker(this@MainActivity) }
+                            } else null,
+                        )
+                        else -> Box(Modifier.fillMaxSize().background(Color(0xFF11263D))) {
+                            Column(
+                                Modifier.align(Alignment.Center).padding(25.dp),
+                                horizontalAlignment = Alignment.CenterHorizontally,
+                            ) {
+                                Text("OXYGEN  /  TIME LAB", color = Color.White)
+                                Text(
+                                    when {
+                                        activation.loading -> "Loading forecast…"
+                                        activation.lastError != null -> activation.lastError ?: "Forecast unavailable"
+                                        else -> "No active forecast catalog"
+                                    },
+                                    color = Color.White,
+                                )
+                                TextButton(
+                                    onClick = { catalogLocationSelectorOpen = true },
+                                    colors = ButtonDefaults.textButtonColors(contentColor = Color.White),
+                                ) {
+                                    Text("Choose location")
+                                }
+                            }
+                        }
+                    }
+                    if (!fixturePreview && catalogLocationSelectorOpen) {
+                        LocationSelectorPanel(catalogSelector) { catalogLocationSelectorOpen = false }
                     }
                 }
             }

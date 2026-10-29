@@ -34,6 +34,11 @@ class CatalogPickerDelegate : ActivityVariantDelegate {
     override fun createFixturePlaceSearcher(host: ActivityVariantDelegate.Host): PlaceSearcher =
         DebugLocationSearchFactory.create()
 
+    override fun openCatalogPicker(host: ActivityVariantDelegate.Host): Boolean {
+        showPicker(host)
+        return true
+    }
+
     private fun hasCatalogRequest(intent: Intent): Boolean =
         intent.action == ACTION_ACTIVATE_CATALOG || intent.hasExtra(EXTRA_VERSION) ||
             intent.hasExtra(EXTRA_LOCATION_ID) || intent.hasExtra(EXTRA_ORIGIN) ||

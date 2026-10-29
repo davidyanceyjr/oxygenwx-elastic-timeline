@@ -42,6 +42,17 @@ fun AtmosphericScene(state: SceneVisualState, input: AtmosphereInput, modifier: 
     )
 }
 
+/** Catalog route: presentation has already supplied a typed decorative state. */
+@Composable
+fun CatalogAtmosphericScene(
+    state: SceneVisualState,
+    localHour: Double,
+    phaseHours: Double,
+    modifier: Modifier = Modifier,
+) {
+    AtmosphericScene(state, localHour, phaseHours, modifier)
+}
+
 /** Compatibility entry point for callers that still provide the original forecast frame. */
 @Composable
 fun AtmosphericScene(frame: SkyFrame, localHour: Double, modifier: Modifier = Modifier) {

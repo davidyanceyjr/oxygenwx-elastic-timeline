@@ -1,0 +1,87 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1800" height="1200" viewBox="0 0 1800 1200" role="img" aria-labelledby="title desc">
+  <title id="title">WX.25 — 44-day immersive timeline storyboard based on installed Pixel capture</title>
+  <desc id="desc">The left side is an unaltered screenshot from the connected Pixel 3 XL running the current app. The right side annotates the proposed WX.25 integration: extend the same timeline to the canonical 44-date window, preserve exact selection and sample facts, expose history and forecast provenance, and bind the accessible browser to the same moments.</desc>
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#0b1725"/><stop offset="1" stop-color="#102b3b"/></linearGradient>
+    <marker id="arrow" markerWidth="10" markerHeight="10" refX="8" refY="5" orient="auto"><path d="M0 0L10 5L0 10Z" fill="#7b9aad"/></marker>
+    <marker id="arrowMint" markerWidth="10" markerHeight="10" refX="8" refY="5" orient="auto"><path d="M0 0L10 5L0 10Z" fill="#62d5bb"/></marker>
+    <style>
+      text{font-family:Inter,'DejaVu Sans',sans-serif;fill:#edf4f7}
+      .muted{fill:#abc0cc}.dim{fill:#819cab}.mint{fill:#7be0c9}.blue{fill:#a6caff}.amber{fill:#f2bd78}.red{fill:#ef9c94}
+      .panel{fill:#132c3c;stroke:#375a6c;stroke-width:2}.card{fill:#19384a;stroke:#42687a;stroke-width:2}
+      .subcard{fill:#102637;stroke:#355768;stroke-width:1.5}.line{stroke:#708e9f;stroke-width:3;fill:none;marker-end:url(#arrow)}
+      .mintline{stroke:#62d5bb;stroke-width:3;fill:none;marker-end:url(#arrowMint)}
+      .title{font-size:37px;font-weight:750;letter-spacing:.2px}.h{font-size:20px;font-weight:700;letter-spacing:.3px}
+      .eyebrow{font-size:14px;font-weight:700;letter-spacing:1.5px}.body{font-size:17px}.small{font-size:15px}.tiny{font-size:13px}.mono{font-family:'DejaVu Sans Mono',monospace;font-size:14px}
+    </style>
+  </defs>
+  <rect width="1800" height="1200" fill="url(#bg)"/>
+  <circle cx="1690" cy="85" r="185" fill="#1b3a49" opacity=".34"/>
+  <text x="58" y="42" class="eyebrow mint">OXYGEN WX / IMMERSIVE CATALOG INTEGRATION / 25</text>
+  <text x="58" y="91" class="title">WX.25 extends the installed timeline to the full catalog.</text>
+  <text x="60" y="123" class="body muted">Installed Pixel screen at left · proposed integration and behavior annotated at right · no invented UI mockup.</text>
+  <rect x="1420" y="35" width="320" height="40" rx="20" fill="#263847" stroke="#6b8796" stroke-width="1.5"/>
+  <text x="1580" y="61" text-anchor="middle" class="eyebrow mint">OWNER APPROVED · 2026-10-29</text>
+
+  <!-- Unaltered installed capture from connected Pixel 3 XL -->
+  <rect x="55" y="145" width="535" height="1020" rx="20" fill="#0d1c29" stroke="#7b9aad" stroke-width="2"/>
+  <image href="WX.25-pixel-3-xl-current-screen.png" x="77" y="151" width="491" height="1010" preserveAspectRatio="none"/>
+  <rect x="76" y="150" width="493" height="1012" rx="5" fill="none" stroke="#607d8c" stroke-width="1"/>
+
+  <!-- Baseline facts and goal -->
+  <rect x="625" y="145" width="1120" height="285" rx="22" class="panel"/>
+  <text x="652" y="188" class="eyebrow mint">01 · WHAT THE CAPTURE SHOWS TODAY</text>
+  <text x="652" y="223" class="h">Keep the installed scene and its information hierarchy.</text>
+  <rect x="652" y="245" width="505" height="155" rx="15" class="card"/>
+  <text x="678" y="278" class="eyebrow blue">CURRENT IMMERSIVE VIEW</text>
+  <text x="678" y="311" class="body">DEMO DATA · location/debug entry</text>
+  <text x="678" y="341" class="body">Local day · selected 12 PM · 71°</text>
+  <text x="678" y="371" class="small muted">Partly cloudy · high/low · precip · wind</text>
+  <rect x="1180" y="245" width="535" height="155" rx="15" class="subcard"/>
+  <text x="1206" y="278" class="eyebrow amber">VISIBLE LIMIT IN THIS CAPTURE</text>
+  <text x="1206" y="311" class="body">Tape shows five day labels, Fri–Tue.</text>
+  <text x="1206" y="341" class="small muted">The active catalog is not yet bound to these</text>
+  <text x="1206" y="365" class="small muted">screen facts or the accessible browser.</text>
+
+  <!-- 44-date span -->
+  <rect x="625" y="450" width="1120" height="255" rx="22" class="panel"/>
+  <text x="652" y="493" class="eyebrow mint">02 · SAME TAPE, CATALOG WINDOW CONNECTED</text>
+  <text x="652" y="528" class="h">Navigate 44 local dates on the existing timeline.</text>
+  <rect x="652" y="558" width="1065" height="62" rx="14" class="subcard"/>
+  <rect x="674" y="581" width="690" height="12" rx="6" fill="#5688a4"/>
+  <rect x="1364" y="581" width="331" height="12" rx="6" fill="#4eb7a4"/>
+  <line x1="1364" y1="568" x2="1364" y2="606" stroke="#f2bd78" stroke-width="3" stroke-dasharray="5 5"/>
+  <circle cx="1434" cy="587" r="9" fill="#f2bd78" stroke="#fff0d2" stroke-width="2"/>
+  <text x="674" y="646" class="small muted">D−30</text>
+  <text x="1364" y="646" text-anchor="middle" class="small amber">D · TODAY</text>
+  <text x="1695" y="646" text-anchor="end" class="small muted">D+13</text>
+  <text x="652" y="680" class="tiny dim">30 historical dates · today is forecast · 13 future dates · 44 calendar dates, not guaranteed hourly coverage.</text>
+
+  <!-- Semantic binding and browser -->
+  <rect x="625" y="725" width="1120" height="395" rx="22" class="panel"/>
+  <text x="652" y="768" class="eyebrow mint">03 · BIND TIME, FACTS, PROVENANCE, AND ACCESSIBLE BROWSING</text>
+  <rect x="652" y="790" width="510" height="140" rx="15" class="card"/>
+  <text x="678" y="823" class="eyebrow amber">ONE EXACT SELECTION</text>
+  <text x="678" y="856" class="body">The selected Instant stays authoritative.</text>
+  <text x="678" y="886" class="small muted">Facts retain the exact catalog sample time;</text>
+  <text x="678" y="909" class="small muted">a sparse sample never moves selection.</text>
+  <rect x="1180" y="790" width="535" height="140" rx="15" class="subcard"/>
+  <text x="1206" y="823" class="eyebrow blue">TRUTHFUL WINDOW MEANING</text>
+  <text x="1206" y="856" class="body">History · archived model forecast</text>
+  <text x="1206" y="886" class="small muted">Today/future · forecast · show origin, freshness,</text>
+  <text x="1206" y="909" class="small muted">coverage and missing values without filling gaps.</text>
+
+  <rect x="652" y="950" width="510" height="135" rx="15" fill="#153e3c" stroke="#4eb7a4" stroke-width="2"/>
+  <text x="678" y="983" class="eyebrow mint">ACCESSIBLE FORECAST BROWSER</text>
+  <text x="678" y="1016" class="body">Day and hour rows expose the same facts,</text>
+  <text x="678" y="1046" class="small muted">selection, and source context as the tape.</text>
+  <text x="678" y="1070" class="tiny dim">Selecting a row updates the same selected Instant.</text>
+  <rect x="1180" y="950" width="535" height="135" rx="15" fill="#2d292b" stroke="#a66f69" stroke-width="2"/>
+  <text x="1206" y="983" class="eyebrow red">KEEP SCOPE BOUNDED</text>
+  <text x="1206" y="1016" class="small">No startup/location flow · no official alerts</text>
+  <text x="1206" y="1046" class="small">No ATM scene-polish duplication · WX.29 owns</text>
+  <text x="1206" y="1070" class="tiny muted">cross-app font, RTL, TalkBack, motion, orientation.</text>
+
+  <text x="58" y="1185" class="tiny dim">Unaltered installed screen capture · connected Pixel 3 XL · 2026-10-29.</text>
+  <text x="652" y="1155" class="tiny dim">OWNER-APPROVED CONCEPT · design input, not implementation or installed acceptance evidence.</text>
+</svg>

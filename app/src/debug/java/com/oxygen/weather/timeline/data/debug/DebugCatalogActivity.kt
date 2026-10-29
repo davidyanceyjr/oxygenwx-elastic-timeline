@@ -154,7 +154,7 @@ class DebugCatalogActivity : ComponentActivity() {
                 verticalArrangement = Arrangement.spacedBy(12.dp),
             ) {
                 Text("Debug dataset picker", style = MaterialTheme.typography.headlineSmall)
-                Text("Catalog activation status only · the immersive timeline still renders DEMO SampleForecast.")
+                Text("Catalog activation and 44-date timeline review")
                 val current = relay.activation.active
                 if (current != null) Text(
                     "Active catalog: ${current.origin} · ${current.location.id.value} · ${current.datasetId.value} · " +
@@ -206,7 +206,7 @@ class DebugCatalogActivity : ComponentActivity() {
                         }
                         routeActivation(location.location, selectedOrigin, dataset)
                     },
-                ) { Text(if (relay.activation.loading) "Loading catalog…" else "Load dataset & open timeline") }
+                ) { Text(if (relay.activation.loading) "Loading catalog…" else "Load dataset") }
                 Text("${fixtureStatus}")
                 OutlinedButton(onClick = { openLegacyProfiles() }) { Text("Open legacy forecast profiles") }
                 OutlinedButton(onClick = { finish() }) { Text("Open immersive timeline") }
