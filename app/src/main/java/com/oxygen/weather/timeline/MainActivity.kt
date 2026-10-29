@@ -36,20 +36,31 @@ import androidx.room.Room
 import androidx.lifecycle.lifecycleScope
 import java.time.Clock
 import com.oxygen.weather.timeline.data.catalog.CatalogActivationCoordinator
+import com.oxygen.weather.timeline.data.catalog.CatalogActivationState
 import com.oxygen.weather.timeline.data.catalog.CatalogDatasetStorage
 import com.oxygen.weather.timeline.data.catalog.CatalogSourceRegistry
 import com.oxygen.weather.timeline.data.catalog.SimulatedCatalogSource
 import com.oxygen.weather.timeline.data.catalog.RecordedCatalogSource
 import com.oxygen.weather.timeline.data.catalog.LiveCatalogRepository
 import com.oxygen.weather.timeline.data.openmeteo.OpenMeteoCatalogSource
+import kotlinx.coroutines.launch
+import android.content.Intent
 
 /** Standalone experiment. Does not replace Oxygen Weather's production Home pager. */
-class MainActivity : ComponentActivity() {
+class MainActivity : ComponentActivity(), ActivityVariantDelegate.Host {
     private lateinit var catalogDatabase: CatalogStorageDatabase
+    override lateinit var savedLocations: SavedLocationRepository
+        private set
+    override lateinit var activationCoordinator: CatalogActivationCoordinator
+        private set
+    override val activity get() = this
+    override val activityScope get() = lifecycleScope
+    private var variantDelegate: ActivityVariantDelegate? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         val isDebuggable = applicationInfo.flags and ApplicationInfo.FLAG_DEBUGGABLE != 0
+        variantDelegate = ActivityVariantDelegate.load(classLoader)
         catalogDatabase = Room.databaseBuilder(
             applicationContext,
             CatalogStorageDatabase::class.java,
@@ -58,7 +69,7 @@ class MainActivity : ComponentActivity() {
             CatalogStorageDatabase.MIGRATION_1_2,
             CatalogStorageDatabase.MIGRATION_2_3,
         ).build()
-        val savedLocations = SavedLocationRepository(catalogDatabase)
+        savedLocations = SavedLocationRepository(catalogDatabase)
         val selectorStore = RepositoryLocationSelectorStore(savedLocations)
         val catalogStorage = CatalogDatasetStorage(catalogDatabase.datasets())
         val catalogSources = CatalogSourceRegistry(listOf(
@@ -67,7 +78,7 @@ class MainActivity : ComponentActivity() {
             RecordedCatalogSource(null),
         ))
         val clock = Clock.systemUTC()
-        val activationCoordinator = CatalogActivationCoordinator(
+        activationCoordinator = CatalogActivationCoordinator(
             scope = lifecycleScope,
             savedLocations = savedLocations,
             storage = catalogStorage,
@@ -75,13 +86,12 @@ class MainActivity : ComponentActivity() {
             sources = catalogSources,
             clock = clock,
         )
-        activationCoordinator.restoreStartup()
+        lifecycleScope.launch {
+            activationCoordinator.state.collect { variantDelegate?.onCatalogActivationState(this@MainActivity, it) }
+        }
+        if (variantDelegate?.onMainActivityCreated(this, intent) != true) restoreStartupCatalog()
         val placeSearcher = if (isDebuggable && intent.getBooleanExtra(EXTRA_LOCATION_FIXTURE_SEARCH, false)) {
-            runCatching {
-                Class.forName("com.oxygen.weather.timeline.data.debug.DebugLocationSearchFactory")
-                    .getMethod("create")
-                    .invoke(null) as PlaceSearcher
-            }.getOrElse { OpenMeteoPlaceSearcher() }
+            variantDelegate?.createFixturePlaceSearcher(this) ?: OpenMeteoPlaceSearcher()
         } else OpenMeteoPlaceSearcher()
         val openLocationSelector = isDebuggable && intent.getBooleanExtra(EXTRA_LOCATION_SELECTOR, false)
         val showSnowPreview = isDebuggable && intent.getBooleanExtra(EXTRA_PREVIEW_SNOW, false)
@@ -135,6 +145,16 @@ class MainActivity : ComponentActivity() {
         }
     }
 
+    override fun restoreStartupCatalog() = activationCoordinator.restoreStartup()
+
+    override fun onNewIntent(intent: Intent) {
+        super.onNewIntent(intent)
+        setIntent(intent)
+        val handledByVariant = variantDelegate?.onMainActivityNewIntent(this, intent) == true
+        if (!handledByVariant && applicationInfo.flags and ApplicationInfo.FLAG_DEBUGGABLE != 0 &&
+            intent.getBooleanExtra(EXTRA_LOCATION_SELECTOR, false)) recreate()
+    }
+
     override fun onDestroy() {
         if (::catalogDatabase.isInitialized) catalogDatabase.close()
         super.onDestroy()
@@ -150,7 +170,6 @@ private const val EXTRA_ATM6_CLEAR_NIGHT = "atm6_clear_night"
 private const val EXTRA_ATM6_HOUR = "atm6_hour"
 private const val EXTRA_LOCATION_SELECTOR = "location_selector"
 private const val EXTRA_LOCATION_FIXTURE_SEARCH = "location_fixture_search"
-
 @androidx.compose.runtime.Composable
 private fun FixturePrecipitationPreview(hourOffset: Int) {
     val view = ForecastProjection.fromHourOffset(hourOffset.toDouble(), precision = true)

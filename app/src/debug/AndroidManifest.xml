@@ -4,5 +4,9 @@
             android:name=".data.debug.DebugForecastActivity"
             android:exported="true"
             android:label="Debug forecast profiles" />
+        <activity
+            android:name=".data.debug.DebugCatalogActivity"
+            android:exported="true"
+            android:label="Debug catalog picker" />
     </application>
 </manifest>

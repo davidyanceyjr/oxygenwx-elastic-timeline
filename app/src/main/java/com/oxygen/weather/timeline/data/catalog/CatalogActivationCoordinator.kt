@@ -85,7 +85,7 @@ class CatalogActivationCoordinator(
                 synchronized(this@CatalogActivationCoordinator) {
                     if (sequence == restoreSequence) mutableState.value = mutableState.value.copy(
                         loading = false,
-                        lastError = error.message ?: "Saved location restoration failed",
+                        lastError = error.message ?: "Saved location restoration failed (${error.javaClass.simpleName})",
                     )
                 }
                 return@launch
@@ -115,6 +115,15 @@ class CatalogActivationCoordinator(
             selectedLocation = location
             mutableState.value = mutableState.value.copy(selectedLocation = location)
             beginRequest(CatalogActivationRequest(location, CatalogOrigin.LIVE, startupDatasetId))
+        }
+    }
+
+    /** Activate a validated debug choice for this process without persisting a location choice. */
+    fun requestDebugCatalog(request: CatalogActivationRequest) {
+        synchronized(this) {
+            selectedLocation = request.location
+            mutableState.value = mutableState.value.copy(selectedLocation = request.location)
+            beginRequest(request)
         }
     }
 
@@ -177,7 +186,7 @@ class CatalogActivationCoordinator(
                 synchronized(this@CatalogActivationCoordinator) {
                     if (isCurrent(request, requestSequence)) mutableState.value = mutableState.value.copy(
                         loading = false,
-                        lastError = error.message ?: "Catalog activation failed",
+                        lastError = error.message ?: "Catalog activation failed (${error.javaClass.simpleName})",
                     )
                 }
             }

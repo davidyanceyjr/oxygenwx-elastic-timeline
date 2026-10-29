@@ -1,0 +1,140 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1800" height="1200" viewBox="0 0 1800 1200">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#0b1725"/><stop offset="1" stop-color="#102b3b"/></linearGradient>
+    <marker id="arrow" markerWidth="10" markerHeight="10" refX="8" refY="5" orient="auto"><path d="M0 0L10 5L0 10Z" fill="#7b9aad"/></marker>
+    <marker id="arrowMint" markerWidth="10" markerHeight="10" refX="8" refY="5" orient="auto"><path d="M0 0L10 5L0 10Z" fill="#62d5bb"/></marker>
+    <style>
+      text{font-family:Inter,'DejaVu Sans',sans-serif;fill:#edf4f7}
+      .muted{fill:#abc0cc}.dim{fill:#819cab}.mint{fill:#7be0c9}.amber{fill:#f2bd78}.red{fill:#ef9c94}
+      .panel{fill:#132c3c;stroke:#375a6c;stroke-width:2}.card{fill:#19384a;stroke:#42687a;stroke-width:2}
+      .subcard{fill:#102637;stroke:#355768;stroke-width:1.5}.line{stroke:#708e9f;stroke-width:3;fill:none;marker-end:url(#arrow)}
+      .mintline{stroke:#62d5bb;stroke-width:3;fill:none;marker-end:url(#arrowMint)}
+      .title{font-size:40px;font-weight:750;letter-spacing:.4px}.h{font-size:22px;font-weight:700;letter-spacing:.5px}
+      .body{font-size:18px}.small{font-size:15px}.tiny{font-size:13px}.tag{font-size:13px;font-weight:700;letter-spacing:1px}
+    </style>
+  </defs>
+  <rect width="1800" height="1200" fill="url(#bg)"/>
+  <text x="58" y="66" class="title">WX.22 · Debug dataset picker</text>
+  <text x="60" y="103" class="body muted">Choose a location and source · load the whole dataset · inspect it in the existing timeline</text>
+  <rect x="1450" y="39" width="292" height="42" rx="21" fill="#24413e" stroke="#62bda9" stroke-width="1.5"/>
+  <text x="1596" y="66" text-anchor="middle" class="tag mint">OWNER APPROVED · 2026-10-28</text>
+
+  <!-- Dedicated debug activity mock -->
+  <rect x="55" y="132" width="590" height="728" rx="20" class="panel"/>
+  <text x="82" y="172" class="h mint">01 · ISOLATED DEBUG ACTIVITY</text>
+  <text x="82" y="199" class="small muted">Not a control added to the immersive timeline.</text>
+  <rect x="82" y="220" width="536" height="78" rx="13" class="card"/>
+  <text x="102" y="248" class="tag mint">LOCATION DATASET</text>
+  <text x="102" y="276" class="body">Chicago, Illinois · America/Chicago</text>
+  <text x="577" y="269" text-anchor="end" class="small muted">Change ▾</text>
+
+  <text x="82" y="334" class="tag">SOURCE</text>
+  <rect x="82" y="350" width="169" height="75" rx="12" fill="#19443f" stroke="#62d5bb" stroke-width="2.5"/>
+  <text x="166" y="380" text-anchor="middle" class="tag mint">SIMULATED</text>
+  <text x="166" y="405" text-anchor="middle" class="tiny muted">Synthetic forecast</text>
+  <rect x="259" y="350" width="169" height="75" rx="12" class="card"/>
+  <text x="343" y="380" text-anchor="middle" class="tag">REPLAY</text>
+  <text x="343" y="405" text-anchor="middle" class="tiny muted">Saved recording</text>
+  <rect x="436" y="350" width="182" height="75" rx="12" class="card"/>
+  <text x="527" y="380" text-anchor="middle" class="tag">LIVE</text>
+  <text x="527" y="405" text-anchor="middle" class="tiny muted">Refresh provider data</text>
+
+  <rect x="82" y="444" width="536" height="117" rx="13" class="subcard"/>
+  <text x="103" y="471" class="tag mint">SIMULATED DATASET</text>
+  <text x="103" y="502" class="body">Profile · Snow event</text>
+  <text x="103" y="529" class="small muted">7 event days · 11 loaded days</text>
+  <text x="577" y="504" text-anchor="end" class="small muted">Choose ▾</text>
+  <text x="103" y="550" class="tiny dim">Existing profiles and individual scenarios remain available.</text>
+
+  <rect x="82" y="578" width="536" height="72" rx="13" fill="#183e3a" stroke="#4da895" stroke-width="1.5"/>
+  <circle cx="105" cy="603" r="6" fill="#72dec5"/>
+  <text x="122" y="608" class="tag mint">ACTIVE SOURCE · SIMULATED</text>
+  <text x="103" y="634" class="small">Synthetic meteorological product · no live weather implied</text>
+
+  <rect x="82" y="668" width="536" height="57" rx="12" fill="#4a302b" stroke="#d27f71" stroke-width="1.5"/>
+  <text x="103" y="693" class="tag red">LOAD FAILED · CURRENT DATA KEPT</text>
+  <text x="103" y="714" class="tiny">Could not load selected dataset. Choose another source or retry.</text>
+
+  <rect x="82" y="744" width="536" height="54" rx="12" fill="#1a5149" stroke="#62d5bb" stroke-width="2"/>
+  <text x="350" y="778" text-anchor="middle" class="body" font-weight="700">Load dataset &amp; open timeline</text>
+  <text x="82" y="831" class="tiny dim">While loading: keep the current valid selection active; show progress here.</text>
+
+  <!-- Source-dependent fields and actions -->
+  <rect x="675" y="132" width="530" height="728" rx="20" class="panel"/>
+  <text x="702" y="172" class="h mint">02 · SOURCE-SPECIFIC CHOICES</text>
+  <text x="702" y="199" class="small muted">One origin per request; replace the active dataset atomically.</text>
+
+  <rect x="702" y="222" width="476" height="171" rx="15" class="card"/>
+  <text x="725" y="254" class="tag mint">SIMULATED</text>
+  <text x="725" y="286" class="body">Choose a complete debug profile</text>
+  <text x="725" y="315" class="small muted">Clear, clouds, rain, snow, storm, transitions</text>
+  <text x="725" y="342" class="small muted">Profile rows retain loaded-day details</text>
+  <text x="725" y="372" class="tiny dim">Apply shows a clear SIMULATED provenance label.</text>
+
+  <rect x="702" y="411" width="476" height="171" rx="15" class="card"/>
+  <text x="725" y="443" class="tag mint">REPLAY</text>
+  <text x="725" y="475" class="body">Choose a saved recording ID</text>
+  <text x="725" y="504" class="small muted">Chicago · rec_2026-10-27T12:00Z · captured LIVE</text>
+  <text x="725" y="531" class="small muted">Madison · rec_2026-10-26T18:00Z · captured SIMULATED</text>
+  <text x="725" y="561" class="tiny dim">REPLAY is the active origin; captured origin stays metadata.</text>
+
+  <rect x="702" y="600" width="476" height="116" rx="15" class="card"/>
+  <text x="725" y="632" class="tag mint">LIVE</text>
+  <text x="725" y="664" class="body">Load / refresh the selected location</text>
+  <text x="725" y="693" class="small muted">Show LIVE, cached, or failure state truthfully.</text>
+
+  <rect x="702" y="735" width="476" height="90" rx="14" class="subcard"/>
+  <text x="725" y="766" class="tag amber">APPLY BEHAVIOR</text>
+  <text x="725" y="793" class="small">No field merge · no restart · keep selected Instant if possible</text>
+  <text x="725" y="815" class="tiny muted">Rejected data leaves the previous valid dataset active.</text>
+
+  <!-- Boundary and release isolation -->
+  <rect x="1235" y="132" width="510" height="728" rx="20" class="panel"/>
+  <text x="1262" y="172" class="h mint">03 · RETURN &amp; RELEASE BOUNDARY</text>
+  <text x="1262" y="199" class="small muted">Continue in the existing full-screen timeline.</text>
+
+  <rect x="1262" y="222" width="456" height="166" rx="15" class="card"/>
+  <text x="1285" y="254" class="tag mint">AFTER A VALID LOAD</text>
+  <text x="1285" y="286" class="body">Open existing immersive timeline</text>
+  <text x="1285" y="317" class="small muted">Source label remains visible and truthful.</text>
+  <text x="1285" y="345" class="small muted">Existing timeline gestures and profile entry work.</text>
+  <text x="1285" y="373" class="tiny dim">Reopen debug picker to switch dataset; app stays running.</text>
+
+  <rect x="1262" y="407" width="456" height="154" rx="15" fill="#183e3a" stroke="#4da895" stroke-width="1.5"/>
+  <text x="1285" y="439" class="tag mint">DEBUG BUILD</text>
+  <text x="1285" y="473" class="body">Debug activity and picker are available.</text>
+  <text x="1285" y="504" class="small muted">Existing profile launch path remains usable.</text>
+  <text x="1285" y="532" class="small muted">Origin switch updates application data live.</text>
+
+  <rect x="1262" y="580" width="456" height="124" rx="15" fill="#3c292a" stroke="#b96f68" stroke-width="1.5"/>
+  <text x="1285" y="612" class="tag red">RELEASE BUILD</text>
+  <text x="1285" y="646" class="body">No debug picker activity in manifest / DEX.</text>
+  <text x="1285" y="677" class="small muted">No debug source set or entry point shipped.</text>
+
+  <rect x="1262" y="723" width="456" height="102" rx="14" class="subcard"/>
+  <text x="1285" y="754" class="tag amber">OUT OF SCOPE</text>
+  <text x="1285" y="782" class="small">No permanent timeline controls · no alert controls</text>
+  <text x="1285" y="807" class="tiny muted">No change to production startup or location selector.</text>
+
+  <!-- Flow and approval notes -->
+  <rect x="55" y="885" width="1690" height="185" rx="20" class="panel"/>
+  <text x="82" y="925" class="h mint">04 · PICK → LOAD → RETURN</text>
+  <rect x="82" y="946" width="350" height="72" rx="13" class="subcard"/>
+  <text x="104" y="976" class="tag">1 · SELECT LOCATION + ORIGIN</text>
+  <text x="104" y="1002" class="small muted">SIMULATED · REPLAY · LIVE</text>
+  <path d="M439 982h50" class="line"/>
+  <rect x="500" y="946" width="350" height="72" rx="13" class="subcard"/>
+  <text x="522" y="976" class="tag">2 · CHOOSE PROFILE / RECORDING</text>
+  <text x="522" y="1002" class="small muted">LIVE uses the selected location</text>
+  <path d="M857 982h50" class="line"/>
+  <rect x="918" y="946" width="350" height="72" rx="13" fill="#183e3a" stroke="#4da895" stroke-width="1.5"/>
+  <text x="940" y="976" class="tag mint">3 · VALIDATE &amp; REPLACE</text>
+  <text x="940" y="1002" class="small muted">One whole dataset or keep prior state</text>
+  <path d="M1275 982h50" class="mintline"/>
+  <rect x="1336" y="946" width="382" height="72" rx="13" class="subcard"/>
+  <text x="1358" y="976" class="tag">4 · OPEN TIMELINE</text>
+  <text x="1358" y="1002" class="small muted">No app process restart</text>
+
+  <text x="60" y="1110" class="small muted">Owner review requested: confirm location choice, replay row detail, and the apply/return flow. Failure keeps the last valid catalog active.</text>
+  <text x="60" y="1140" class="tiny dim">WX.22 DESIGN INPUT · OWNER APPROVED 2026-10-28 · DEBUG ACTIVITY ONLY · NOT IMPLEMENTATION OR INSTALLED ACCEPTANCE EVIDENCE</text>
+</svg>

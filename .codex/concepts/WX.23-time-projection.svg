@@ -1,0 +1,127 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1800" height="1200" viewBox="0 0 1800 1200" role="img" aria-labelledby="title desc">
+  <title id="title">WX.23 — Time-indexed forecast projection</title>
+  <desc id="desc">Draft contract board showing an exact selected instant kept distinct from the nearest exact forecast sample, same-local-day selection rules, nullable factual output, daily extrema provenance, and a separate decorative scene blend.</desc>
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#0b1725"/><stop offset="1" stop-color="#102b3b"/></linearGradient>
+    <linearGradient id="mint" x1="0" y1="0" x2="1" y2="0"><stop stop-color="#53c9b2"/><stop offset="1" stop-color="#83e0c9"/></linearGradient>
+    <marker id="arrow" markerWidth="10" markerHeight="10" refX="8" refY="5" orient="auto"><path d="M0 0L10 5L0 10Z" fill="#7b9aad"/></marker>
+    <marker id="arrowMint" markerWidth="10" markerHeight="10" refX="8" refY="5" orient="auto"><path d="M0 0L10 5L0 10Z" fill="#62d5bb"/></marker>
+    <style>
+      text{font-family:Inter,'DejaVu Sans',sans-serif;fill:#edf4f7}
+      .muted{fill:#abc0cc}.dim{fill:#819cab}.mint{fill:#7be0c9}.blue{fill:#a6caff}.amber{fill:#f2bd78}.red{fill:#ef9c94}
+      .panel{fill:#132c3c;stroke:#375a6c;stroke-width:2}.card{fill:#19384a;stroke:#42687a;stroke-width:2}
+      .subcard{fill:#102637;stroke:#355768;stroke-width:1.5}.line{stroke:#708e9f;stroke-width:3;fill:none;marker-end:url(#arrow)}
+      .mintline{stroke:#62d5bb;stroke-width:3;fill:none;marker-end:url(#arrowMint)}
+      .title{font-size:40px;font-weight:750;letter-spacing:.4px}.h{font-size:22px;font-weight:700;letter-spacing:.5px}
+      .eyebrow{font-size:15px;font-weight:700;letter-spacing:2px}.body{font-size:18px}.small{font-size:15px}.tiny{font-size:13px}.mono{font-family:'DejaVu Sans Mono',monospace;font-size:16px}
+    </style>
+  </defs>
+  <rect width="1800" height="1200" fill="url(#bg)"/>
+  <circle cx="1675" cy="120" r="220" fill="#1b3a49" opacity=".38"/>
+  <circle cx="35" cy="1110" r="170" fill="#1b3a49" opacity=".28"/>
+
+  <text x="60" y="45" class="eyebrow mint">OXYGEN WX / PRESENTATION CONTRACT / 23</text>
+  <text x="60" y="100" class="title">Keep selected time and forecast sample distinct.</text>
+  <text x="60" y="134" class="body muted">An exact moment can sit between hourly facts. The projection preserves both times and never invents a fact.</text>
+  <rect x="1430" y="34" width="310" height="42" rx="21" fill="#194740" stroke="#4eb7a4" stroke-width="1.5"/>
+  <text x="1585" y="61" text-anchor="middle" class="small mint" font-weight="700" letter-spacing="1">OWNER APPROVED · 2026-10-29</text>
+
+  <!-- 01: selected time and exact fact sample -->
+  <rect x="55" y="165" width="535" height="535" rx="22" class="panel"/>
+  <text x="82" y="207" class="eyebrow mint">01 · SELECTED TIME → FACT SAMPLE</text>
+  <text x="82" y="244" class="h">Sparse samples within one local date.</text>
+  <text x="82" y="275" class="small muted">America/Chicago · one illustrative day</text>
+  <rect x="82" y="296" width="481" height="222" rx="15" class="subcard"/>
+  <text x="106" y="328" class="small blue" font-weight="700">LOCAL TIME</text>
+  <line x1="126" y1="388" x2="519" y2="388" stroke="#6d8998" stroke-width="4"/>
+  <line x1="126" y1="375" x2="126" y2="401" stroke="#8aa5b2" stroke-width="3"/>
+  <line x1="519" y1="375" x2="519" y2="401" stroke="#8aa5b2" stroke-width="3"/>
+  <circle cx="126" cy="388" r="9" fill="#7b9aad"/>
+  <circle cx="519" cy="388" r="10" fill="#7be0c9"/>
+  <line x1="434.3" y1="348" x2="434.3" y2="432" stroke="#f2bd78" stroke-width="3" stroke-dasharray="5 5"/>
+  <circle cx="434.3" cy="388" r="11" fill="#f2bd78" stroke="#fff1d6" stroke-width="2"/>
+  <text x="126" y="426" text-anchor="middle" class="mono muted">09:00</text>
+  <text x="434.3" y="456" text-anchor="middle" class="mono amber">09:47 selected</text>
+  <text x="519" y="426" text-anchor="middle" class="mono mint">10:00</text>
+  <text x="283" y="483" text-anchor="middle" class="small muted">47 min from 09:00</text>
+  <text x="483" y="483" text-anchor="middle" class="small mint">13 min from 10:00</text>
+  <rect x="82" y="536" width="481" height="62" rx="12" class="card"/>
+  <text x="104" y="562" class="small amber" font-weight="700">NEAREST EXACT FACT SAMPLE</text>
+  <text x="104" y="585" class="mono">10:00 · 13 min away</text>
+  <text x="82" y="631" class="small">Selected instant stays <tspan class="amber" font-weight="700">09:47</tspan>; sample time stays <tspan class="mint" font-weight="700">10:00</tspan>.</text>
+  <text x="82" y="661" class="tiny muted">Tie → earlier instant · empty day → no hourly facts.</text>
+  <text x="82" y="682" class="tiny muted">No cross-date sample fallback; selection never snaps to a sample.</text>
+
+  <!-- 02: output semantics -->
+  <rect x="610" y="165" width="600" height="535" rx="22" class="panel"/>
+  <text x="637" y="207" class="eyebrow mint">02 · TYPED PROJECTION OUTPUT</text>
+  <text x="637" y="244" class="h">Carry selection, sample, and facts separately.</text>
+  <rect x="637" y="266" width="546" height="82" rx="14" class="card"/>
+  <text x="660" y="294" class="small amber" font-weight="700">selectedInstant</text>
+  <text x="660" y="326" class="mono">09:47 · exact selected time</text>
+  <rect x="637" y="363" width="546" height="82" rx="14" class="card"/>
+  <text x="660" y="391" class="small mint" font-weight="700">factSample.validTime</text>
+  <text x="660" y="423" class="mono">10:00 · source sample timestamp</text>
+  <path d="M910 349V360" class="mintline"/>
+  <rect x="637" y="461" width="546" height="150" rx="14" class="subcard"/>
+  <text x="660" y="491" class="small blue" font-weight="700">METEOROLOGICAL FACTS · FROM 10:00 SAMPLE</text>
+  <text x="660" y="525" class="body">Temperature · condition · wind · probabilities</text>
+  <text x="660" y="555" class="body">Amounts · snow identity · other supported fields</text>
+  <text x="660" y="587" class="small amber">A null stays unknown; it is never displayed as measured zero.</text>
+  <text x="637" y="646" class="small muted">Historical model data stays labeled archived forecast, not observations.</text>
+  <text x="637" y="675" class="tiny muted">Origin/product labels travel; unit conversion happens at presentation.</text>
+
+  <!-- 03: local day + daily summary -->
+  <rect x="1230" y="165" width="515" height="535" rx="22" class="panel"/>
+  <text x="1257" y="207" class="eyebrow mint">03 · LOCAL DAY &amp; EXTREMA</text>
+  <text x="1257" y="244" class="h">Use the catalog's actual date support.</text>
+  <rect x="1257" y="267" width="461" height="82" rx="14" class="card"/>
+  <text x="1280" y="296" class="small blue" font-weight="700">CatalogDay</text>
+  <text x="1280" y="328" class="mono">[localStart, next localStart)</text>
+  <text x="1257" y="378" class="small muted">Local date length may be 23, 24, or 25 hours.</text>
+  <text x="1257" y="418" class="small mint" font-weight="700">PER EXTREME · HIGH AND LOW INDEPENDENTLY</text>
+  <rect x="1257" y="438" width="461" height="60" rx="12" class="subcard"/>
+  <text x="1278" y="464" class="small">Provider value exists</text><text x="1696" y="475" text-anchor="end" class="small mint" font-weight="700">KEEP · PROVIDER</text>
+  <rect x="1257" y="509" width="461" height="68" rx="12" class="subcard"/>
+  <text x="1278" y="536" class="small">Missing + temp coverage COMPLETE</text><text x="1278" y="560" class="tiny muted">derive from that date's exact hourly values</text>
+  <rect x="1257" y="588" width="461" height="64" rx="12" fill="#382c2c" stroke="#865c52" stroke-width="1.5"/>
+  <text x="1278" y="615" class="small">Missing + PARTIAL / MISSING coverage</text><text x="1278" y="638" class="small red" font-weight="700">KEEP UNKNOWN</text>
+  <text x="1257" y="677" class="tiny muted">Origins remain distinct; other daily values follow CatalogDay support.</text>
+
+  <!-- 04: visual interpolation path kept separate from facts -->
+  <rect x="55" y="725" width="1690" height="365" rx="22" class="panel"/>
+  <text x="82" y="769" class="eyebrow mint">04 · DECORATIVE SCENE PATH · NEVER A SECOND FACT PATH</text>
+  <text x="82" y="806" class="h">Use time to blend the scene; keep forecast facts on an exact sample.</text>
+
+  <rect x="82" y="831" width="675" height="185" rx="16" class="subcard"/>
+  <text x="108" y="863" class="small blue" font-weight="700">IN-DAY SCENE BRACKET</text>
+  <rect x="111" y="886" width="150" height="72" rx="12" class="card"/>
+  <text x="186" y="914" text-anchor="middle" class="small muted">09:00 scene</text>
+  <text x="186" y="939" text-anchor="middle" class="tiny muted">left sample</text>
+  <path d="M271 922H365" class="line"/>
+  <rect x="377" y="886" width="150" height="72" rx="12" fill="#1b494b" stroke="#62d5bb" stroke-width="2"/>
+  <text x="452" y="914" text-anchor="middle" class="small mint">09:47 scene</text>
+  <text x="452" y="939" text-anchor="middle" class="tiny mint">blend fraction 0.78</text>
+  <path d="M537 922H624" class="mintline"/>
+  <rect x="634" y="886" width="100" height="72" rx="12" class="card"/>
+  <text x="684" y="914" text-anchor="middle" class="small mint">10:00</text>
+  <text x="684" y="939" text-anchor="middle" class="tiny muted">right sample</text>
+  <text x="108" y="991" class="tiny muted">0.78 uses elapsed Instants between same-day samples; the 09:47 fact still comes from 10:00.</text>
+
+  <rect x="782" y="831" width="430" height="185" rx="16" fill="#153e3c" stroke="#4eb7a4" stroke-width="2"/>
+  <text x="808" y="863" class="small mint" font-weight="700">ALLOWED · VISUAL CONTINUITY</text>
+  <text x="808" y="900" class="body">Scene blend position only</text>
+  <text x="808" y="932" class="small muted">Use same-day bracketing scene states.</text>
+  <text x="808" y="965" class="small muted">At an edge: hold the available endpoint.</text>
+  <text x="808" y="994" class="small muted">No samples: no scene transition.</text>
+
+  <rect x="1237" y="831" width="481" height="185" rx="16" fill="#382c2c" stroke="#865c52" stroke-width="2"/>
+  <text x="1263" y="863" class="small red" font-weight="700">NEVER INTERPOLATE AS FORECAST FACT</text>
+  <text x="1263" y="900" class="body">Temperature · probability · amount</text>
+  <text x="1263" y="932" class="body">Wind · condition · snowfall</text>
+  <text x="1263" y="970" class="small muted">No cross-day borrowing or extrapolation.</text>
+  <text x="1263" y="997" class="small amber">Missing stays missing.</text>
+
+  <text x="60" y="1133" class="small muted">SCOPE · Pure presentation contract · legacy fixtures stay on ForecastSource · no timeline, UI, gesture, or renderer migration in WX.23</text>
+  <text x="60" y="1172" class="tiny dim">WX.23 CONCEPT · OWNER APPROVED 2026-10-29 · DESIGN INPUT ONLY · NOT IMPLEMENTATION OR ACCEPTANCE EVIDENCE</text>
+</svg>

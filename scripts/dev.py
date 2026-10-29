@@ -70,6 +70,8 @@ def contract() -> None:
             allowed_activities |= {
                 ".data.debug.DebugForecastActivity",
                 PACKAGE + ".data.debug.DebugForecastActivity",
+                ".data.debug.DebugCatalogActivity",
+                PACKAGE + ".data.debug.DebugCatalogActivity",
                 "androidx.activity.ComponentActivity",
                 "androidx.compose.ui.tooling.PreviewActivity",
             }

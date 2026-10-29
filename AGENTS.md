@@ -17,9 +17,10 @@ Before app implementation or behavior changes:
 1. Read the relevant authority above, `.codex/README.md`, and `.codex/current.md`.
 2. Run `python scripts/dev.py workflow`.
 3. Ensure a bounded plan exists under `.codex/plans/`. If it is PLANNED, review it and activate with `python scripts/codex_cycle.py activate`; if the current state is IDLE, select and plan a roadmap slice before implementation.
-4. Stay within the plan's scope, invariants, acceptance criteria, and exclusions. Do not silently expand a slice.
-5. Preserve actual evidence under `.codex/test-artifacts/<cycle-id>/`.
-6. Inspect `git diff --check` and the final diff, then close completed work into `.codex/history/` with exact verification results and limitations.
+4. Before implementation, ensure the cycle has an objective-specific concept artifact approved by the product owner, with approval and constraints recorded in the plan. This gate applies to code, text/documentation, interface, and logic changes. Choose a form that makes the intended result reviewable: for example, an annotated outline or content map for text, a flowchart or state/sequence/schema/boundary board for logic and data, or a storyboard/visual design for interfaces. A concept artifact guides scope and acceptance; it does not replace implementation verification or installed acceptance evidence. Any exception must be an explicit, slice-specific owner-approved waiver recorded in the plan.
+5. Stay within the plan's scope, invariants, acceptance criteria, and exclusions. Do not silently expand a slice.
+6. Preserve actual evidence under `.codex/test-artifacts/<cycle-id>/`.
+7. Inspect `git diff --check` and the final diff, then close completed work into `.codex/history/` with exact verification results and limitations.
 
 Do not claim visual/device acceptance without installed screenshots and the applicable interaction/accessibility checks. A build or preview alone is not visual evidence.
 

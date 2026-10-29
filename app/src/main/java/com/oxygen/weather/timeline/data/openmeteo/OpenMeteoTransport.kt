@@ -8,7 +8,10 @@ import java.io.IOException
 import java.io.InterruptedIOException
 import java.net.SocketTimeoutException
 import kotlinx.coroutines.CancellationException
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.NonCancellable
 import kotlinx.coroutines.suspendCancellableCoroutine
+import kotlinx.coroutines.withContext
 import okhttp3.Call
 import okhttp3.Callback
 import okhttp3.HttpUrl.Companion.toHttpUrl
@@ -88,22 +91,30 @@ class OpenMeteoTransport(
         } catch (e: IOException) {
             return if (e is SocketTimeoutException || e is InterruptedIOException) Result.Timeout else Result.Connectivity
         }
-        response.use {
-            val bytes = try {
-                val body = it.body ?: return Result.InvalidResponse
-                body.byteStream().use { input ->
-                    val output = ByteArrayOutputStream()
-                    val buffer = ByteArray(8192)
-                    while (true) {
-                        val count = input.read(buffer, 0, minOf(buffer.size, limits.maxResponseBytes + 1 - output.size()))
-                        if (count < 0) break
-                        output.write(buffer, 0, count)
-                        if (output.size() > limits.maxResponseBytes) return Result.OversizedResponse
-                    }
-                    output.toByteArray()
+        return try {
+            withContext(Dispatchers.IO) { readResponse(response) }
+        } catch (e: CancellationException) {
+            withContext(NonCancellable + Dispatchers.IO) { response.close() }
+            throw e
+        } catch (e: IOException) {
+            if (e is SocketTimeoutException || e is InterruptedIOException) Result.Timeout else Result.Connectivity
+        }
+    }
+
+    /** Response body I/O and JSON parsing must not resume on the caller's (often Main) thread. */
+    private fun readResponse(response: Response): Result {
+        return response.use {
+            val body = it.body ?: return Result.InvalidResponse
+            val bytes = body.byteStream().use { input ->
+                val output = ByteArrayOutputStream()
+                val buffer = ByteArray(8192)
+                while (true) {
+                    val count = input.read(buffer, 0, minOf(buffer.size, limits.maxResponseBytes + 1 - output.size()))
+                    if (count < 0) break
+                    output.write(buffer, 0, count)
+                    if (output.size() > limits.maxResponseBytes) return Result.OversizedResponse
                 }
-            } catch (e: IOException) {
-                return if (e is SocketTimeoutException || e is InterruptedIOException) Result.Timeout else Result.Connectivity
+                output.toByteArray()
             }
             val root = try { mapper.readTree(bytes) } catch (_: Exception) { null }
             if (!it.isSuccessful) {
