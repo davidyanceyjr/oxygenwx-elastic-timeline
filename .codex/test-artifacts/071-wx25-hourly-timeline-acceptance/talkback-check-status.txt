@@ -1,5 +1,5 @@
-TalkBack selected-hour spoken-output check: OWNER VERIFIED AND APPROVED for this slice.
+TalkBack acceptance: CANCELLED by the owner on 2026-10-29. It is not required evidence for cycle 071 and no TalkBack pass is claimed.
 
-Owner confirmation: “Talkback is verified for this slice; I approved it.” This owner confirmation supersedes the pending direct-device follow-up for cycle 071. No exact spoken transcript was supplied, so this record does not invent one or claim that Codex heard it.
+Historical record: The owner previously stated, “Talkback is verified for this slice; I approved it.” That status was superseded by the later cancellation. No exact spoken transcript was supplied.
 
-Device probe context: Pixel 3 XL, serial 8AKY0M32X. Initial accessibility setting was disabled. TalkBack was enabled during an ADB probe; the hierarchy exposed the timeline control with selected/sample times and “Activate to browse”, but ADB keyboard focus stopped at Datasets and did not independently verify speech. TalkBack was disabled again and accessibility_enabled restored to 0. The owner has approved this slice's TalkBack verification based on their own check.
+Historical device probe context: Pixel 3 XL, serial 8AKY0M32X. Initial accessibility setting was disabled. TalkBack was enabled during an ADB probe; the hierarchy exposed the timeline control with selected/sample times and “Activate to browse”, but ADB keyboard focus stopped at Datasets and did not independently verify speech. TalkBack was disabled again and accessibility_enabled restored to 0. These historical artifacts are retained for audit and do not count as acceptance evidence.

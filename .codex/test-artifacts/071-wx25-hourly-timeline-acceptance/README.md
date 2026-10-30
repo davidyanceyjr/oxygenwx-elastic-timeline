@@ -16,4 +16,4 @@ This directory records the still-active WX.25 installed acceptance. The owner-ap
 
 ## Remaining WX.25 acceptance
 
-The owner confirmed TalkBack verification and approved it for this slice; the exact spoken transcript was not provided and is not fabricated. See `talkback-check-status.txt`. Font scale and accessibility were restored to 1.0 and disabled after the large-font capture and TalkBack probe. This cycle remains open while the remaining scrub/browser acceptance is completed.
+The owner cancelled TalkBack acceptance for this slice on 2026-10-29. Earlier TalkBack probe artifacts and the prior owner-verification note are retained as historical records only; they do not count toward WX.25 acceptance. See `talkback-check-status.txt`. Font scale and accessibility were restored to 1.0 and disabled after the earlier probe. This cycle remains open while the remaining scrub/browser acceptance is completed.
