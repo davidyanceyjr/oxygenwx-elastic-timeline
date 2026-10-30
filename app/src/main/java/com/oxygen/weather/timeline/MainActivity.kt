@@ -137,12 +137,13 @@ class MainActivity : ComponentActivity(), ActivityVariantDelegate.Host {
         setContent {
             val activation by activationCoordinator.state.collectAsState()
             val active = activation.active
-            val presenter = remember(active?.viewGeneration) { active?.let(::CatalogTimelinePresenter) }
+            val matchingActive = active?.takeIf { it.location == activation.selectedLocation }
+            val presenter = remember(matchingActive?.viewGeneration) { matchingActive?.let(::CatalogTimelinePresenter) }
             var catalogLocationSelectorOpen by remember { mutableStateOf(openLocationSelector) }
             val selectorScope = rememberCoroutineScope()
             val catalogSelector = remember(placeSearcher, selectorStore, selectorScope) {
                 LocationSelectorController(selectorScope, placeSearcher, selectorStore) {
-                    activationCoordinator.committedLocationSelection(it.location)
+                    activationCoordinator.committedLocationSelection(it.location, it.candidate.name)
                 }
             }
             val fixturePreview = isDebuggable && (showStormPreview || showClearNightPreview ||
@@ -166,19 +167,21 @@ class MainActivity : ComponentActivity(), ActivityVariantDelegate.Host {
                             openLocationSelectorOnLaunch = openLocationSelector,
                             showDebugLocationLauncher = isDebuggable,
                         )
-                        active != null && presenter != null -> CatalogTimeLabScreen(
+                        matchingActive != null && presenter != null -> CatalogTimeLabScreen(
                             view = presenter.view(activation),
                             onSelectInstant = activationCoordinator::selectInstant,
                             onReturnToNow = {
                                 activationCoordinator.selectInstant(
-                                    if (active.origin == CatalogOrigin.LIVE) clock.instant()
-                                    else active.recording.catalog.asOf,
-                                    active.viewGeneration,
+                                    if (matchingActive.origin == CatalogOrigin.LIVE) clock.instant()
+                                    else matchingActive.recording.catalog.asOf,
+                                    matchingActive.viewGeneration,
                                 )
                             },
                             onBrowseCatalogs = if (isDebuggable) {
                                 { variantDelegate?.openCatalogPicker(this@MainActivity) }
                             } else null,
+                            onChooseLocation = { catalogLocationSelectorOpen = true },
+                            onRefresh = activationCoordinator::refreshCurrent,
                         )
                         else -> Box(Modifier.fillMaxSize().background(Color(0xFF11263D))) {
                             Column(
@@ -194,11 +197,17 @@ class MainActivity : ComponentActivity(), ActivityVariantDelegate.Host {
                                     },
                                     color = Color.White,
                                 )
+                                activation.selectedLocationName?.let { Text(it, color = Color.White) }
                                 TextButton(
                                     onClick = { catalogLocationSelectorOpen = true },
                                     colors = ButtonDefaults.textButtonColors(contentColor = Color.White),
                                 ) {
                                     Text("Choose location")
+                                }
+                                if (activation.selectedLocation != null && !activation.loading) {
+                                    TextButton(onClick = activationCoordinator::refreshCurrent) {
+                                        Text("Retry forecast", color = Color.White)
+                                    }
                                 }
                             }
                         }

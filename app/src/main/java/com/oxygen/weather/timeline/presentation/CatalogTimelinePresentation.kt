@@ -50,6 +50,7 @@ data class CatalogTimelineView(
     val windDirectionDegrees: Double?,
     val meaning: String,
     val source: String,
+    val selectedLocationName: String?,
     val status: String,
     val scene: SceneVisualState?,
     val localHour: Double,
@@ -119,6 +120,11 @@ class CatalogTimelinePresenter(private val active: ActiveCatalogSelection) {
                 append(" · issued ${it.atZone(zone).format(updateFormat)}")
             }
             if (state.loading) append(" · updating")
+            state.refreshStatus?.takeIf { it in setOf(
+                com.oxygen.weather.timeline.data.catalog.CatalogRefreshStatus.NO_DATA,
+                com.oxygen.weather.timeline.data.catalog.CatalogRefreshStatus.INVALID_REQUEST,
+                com.oxygen.weather.timeline.data.catalog.CatalogRefreshStatus.TRANSPORT_FAILURE,
+            ) }?.let { append(" · refresh ${it.name.lowercase(Locale.US).replace('_', ' ')}") }
         }
         return CatalogTimelineView(
             generation = active.viewGeneration,
@@ -138,6 +144,7 @@ class CatalogTimelinePresenter(private val active: ActiveCatalogSelection) {
             windDirectionDegrees = fact?.facts?.windDirectionDegrees,
             meaning = projected.meaning.label(),
             source = sourceId,
+            selectedLocationName = state.selectedLocationName,
             status = status,
             scene = projected.scene?.toScene(local.hour + local.minute / 60.0),
             localHour = local.hour + local.minute / 60.0,

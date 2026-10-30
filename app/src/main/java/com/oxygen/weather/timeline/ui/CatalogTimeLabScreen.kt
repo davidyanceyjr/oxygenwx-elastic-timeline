@@ -77,6 +77,8 @@ fun CatalogTimeLabScreen(
     onSelectInstant: (Instant, Long) -> Unit,
     onReturnToNow: () -> Unit,
     onBrowseCatalogs: (() -> Unit)? = null,
+    onChooseLocation: (() -> Unit)? = null,
+    onRefresh: (() -> Unit)? = null,
 ) {
     var precision by remember(view.generation) { mutableStateOf(false) }
     var browserOpen by remember { mutableStateOf(false) }
@@ -103,10 +105,18 @@ fun CatalogTimeLabScreen(
                 Column {
                     Text("OXYGEN  /  TIME LAB", color = Color.White, fontSize = 11.sp,
                         letterSpacing = 2.sp, fontWeight = FontWeight.SemiBold)
-                    Text(view.source, color = Color(0xCDE4EDF5), fontSize = 12.sp)
+                    Text(view.selectedLocationName ?: "Selected location", color = Color.White, fontSize = 13.sp,
+                        fontWeight = FontWeight.Medium)
+                    Text(view.source, color = Color(0xCDE4EDF5), fontSize = 11.sp)
                 }
-                Text(view.meaning, color = Color.White, fontSize = 11.sp,
-                    modifier = Modifier.testTag("catalogMeaning"))
+                Column(horizontalAlignment = Alignment.End) {
+                    Text(view.meaning, color = Color.White, fontSize = 11.sp,
+                        modifier = Modifier.testTag("catalogMeaning"))
+                    Row {
+                        onRefresh?.let { TextButton(onClick = it) { Text("Refresh", color = Color.White) } }
+                        onChooseLocation?.let { TextButton(onClick = it) { Text("Place", color = Color.White) } }
+                    }
+                }
             }
             Text(view.status, color = Color(0xCDE4EDF5), fontSize = 11.sp)
             onBrowseCatalogs?.let { browse ->

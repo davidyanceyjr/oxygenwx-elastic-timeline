@@ -1,0 +1,114 @@
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="1800" height="1200" viewBox="0 0 1800 1200" role="img" aria-labelledby="title desc">
+  <title id="title">WX.26 — Production startup and selected-location storyboard</title>
+  <desc id="desc">Installed timeline baseline beside a proposed first-launch location choice and returning-user startup states. The storyboard defines truthful location, live, cached, stale, loading, and failed behavior.</desc>
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#0b1725"/><stop offset="1" stop-color="#102b3b"/></linearGradient>
+    <marker id="arrow" markerWidth="10" markerHeight="10" refX="8" refY="5" orient="auto"><path d="M0 0L10 5L0 10Z" fill="#7b9aad"/></marker>
+    <marker id="arrowMint" markerWidth="10" markerHeight="10" refX="8" refY="5" orient="auto"><path d="M0 0L10 5L0 10Z" fill="#62d5bb"/></marker>
+    <style>
+      text{font-family:Inter,'DejaVu Sans',sans-serif;fill:#edf4f7}
+      .muted{fill:#abc0cc}.dim{fill:#819cab}.mint{fill:#7be0c9}.blue{fill:#a6caff}.amber{fill:#f2bd78}.red{fill:#ef9c94}
+      .panel{fill:#132c3c;stroke:#375a6c;stroke-width:2}.card{fill:#19384a;stroke:#42687a;stroke-width:2}
+      .subcard{fill:#102637;stroke:#355768;stroke-width:1.5}.line{stroke:#708e9f;stroke-width:3;fill:none;marker-end:url(#arrow)}
+      .mintline{stroke:#62d5bb;stroke-width:3;fill:none;marker-end:url(#arrowMint)}
+      .title{font-size:37px;font-weight:750;letter-spacing:.2px}.h{font-size:20px;font-weight:700;letter-spacing:.3px}
+      .eyebrow{font-size:13px;font-weight:700;letter-spacing:1.3px}.body{font-size:16px}.small{font-size:14px}.tiny{font-size:12px}
+    </style>
+    <clipPath id="screen"><rect x="78" y="178" width="390" height="800" rx="12"/></clipPath>
+  </defs>
+  <rect width="1800" height="1200" fill="url(#bg)"/>
+  <circle cx="1688" cy="68" r="190" fill="#1b3a49" opacity=".3"/>
+  <text x="58" y="40" class="eyebrow mint">OXYGEN WX / PRODUCTION STARTUP / 26</text>
+  <text x="58" y="86" class="title">WX.26 makes startup location-aware and honest.</text>
+  <text x="60" y="117" class="body muted">Installed timeline baseline at left · proposed first-launch and returning states at right · design input, not installed evidence.</text>
+  <rect x="1450" y="34" width="292" height="40" rx="20" fill="#263847" stroke="#6b8796" stroke-width="1.5"/>
+  <text x="1596" y="60" text-anchor="middle" class="eyebrow mint">OWNER APPROVED · 2026-10-30</text>
+
+  <!-- Installed baseline -->
+  <rect x="55" y="145" width="455" height="1000" rx="20" class="panel"/>
+  <text x="78" y="178" class="eyebrow blue">01 · INSTALLED TIMELINE BASELINE</text>
+  <image x="78" y="190" width="390" height="788" xlink:href="WX.25-pixel-3-xl-current-screen.png" clip-path="url(#screen)" preserveAspectRatio="none"/>
+  <rect x="78" y="190" width="390" height="788" rx="12" fill="none" stroke="#607d8c" stroke-width="1.5"/>
+  <text x="78" y="1010" class="small muted">Current capture shows DEMO DATA and</text>
+  <text x="78" y="1033" class="small muted">a debug location entry. It is a baseline,</text>
+  <text x="78" y="1056" class="small muted">not the proposed production startup.</text>
+  <text x="78" y="1103" class="tiny dim">Source: WX.25 installed Pixel 3 XL screen.</text>
+  <text x="78" y="1125" class="tiny dim">Capture is design context, not WX.26 acceptance.</text>
+
+  <!-- First launch proposal -->
+  <rect x="535" y="145" width="1210" height="352" rx="20" class="panel"/>
+  <text x="562" y="182" class="eyebrow mint">02 · FIRST LAUNCH · NO SAVED LOCATION</text>
+  <text x="562" y="211" class="small muted">Start with a clear manual choice; do not fill the timeline with sample weather.</text>
+  <rect x="562" y="232" width="380" height="235" rx="16" fill="#102537" stroke="#42687a" stroke-width="2"/>
+  <text x="588" y="266" class="eyebrow blue">OXYGEN WX</text>
+  <text x="588" y="311" class="h">Choose a location</text>
+  <text x="588" y="340" class="small muted">Search for a place to see its forecast.</text>
+  <rect x="588" y="359" width="328" height="48" rx="12" fill="#233f50" stroke="#729ba8" stroke-width="1.5"/>
+  <text x="608" y="389" class="small">⌕  Search places</text>
+  <text x="588" y="438" class="tiny dim">No device location permission requested.</text>
+
+  <rect x="966" y="232" width="747" height="106" rx="14" class="card"/>
+  <text x="990" y="262" class="eyebrow mint">SELECT A SEARCH RESULT</text>
+  <text x="990" y="292" class="body">Add the place to saved locations, then load its catalog.</text>
+  <text x="990" y="319" class="small muted">Show the selected place and timezone; location choice alone is not loaded weather.</text>
+  <path d="M958 286h-9" class="mintline"/>
+  <rect x="966" y="354" width="747" height="113" rx="14" class="subcard"/>
+  <text x="990" y="383" class="eyebrow amber">WHILE THE FIRST CATALOG LOADS</text>
+  <text x="990" y="412" class="body">Show loading for that location, then open the immersive timeline.</text>
+  <text x="990" y="441" class="small muted">SampleForecast stays a clearly labeled development fallback, never local weather.</text>
+
+  <!-- Returning and source states -->
+  <rect x="535" y="517" width="1210" height="392" rx="20" class="panel"/>
+  <text x="562" y="554" class="eyebrow mint">03 · RETURNING STARTUP · RESTORE LOCATION AND MATCHING CACHE</text>
+  <rect x="1448" y="531" width="265" height="40" rx="12" fill="#19443f" stroke="#62d5bb" stroke-width="1.5"/>
+  <text x="1464" y="548" class="tiny mint" font-weight="700">LOCATION · CHICAGO, IL</text>
+  <text x="1697" y="557" text-anchor="end" class="small mint">Change ▾</text>
+  <text x="562" y="582" class="small muted">Restore the saved selection; use only data belonging to that location, with freshness and source visible.</text>
+
+  <rect x="562" y="606" width="354" height="174" rx="15" fill="#153e3c" stroke="#4eb7a4" stroke-width="2"/>
+  <text x="584" y="637" class="eyebrow mint">FRESH LIVE DATA</text>
+  <text x="584" y="673" class="h">Chicago, Illinois</text>
+  <text x="584" y="703" class="small">LIVE · updated 10:07 AM</text>
+  <text x="584" y="735" class="small muted">Refresh available</text>
+  <rect x="785" y="716" width="107" height="42" rx="11" fill="#225c56" stroke="#62d5bb"/>
+  <text x="838" y="743" text-anchor="middle" class="small">Refresh</text>
+
+  <rect x="935" y="606" width="354" height="174" rx="15" class="card"/>
+  <text x="957" y="637" class="eyebrow amber">OFFLINE · MATCHING CACHE</text>
+  <text x="957" y="673" class="h">Chicago, Illinois</text>
+  <text x="957" y="703" class="small">Cached · last updated yesterday</text>
+  <text x="957" y="735" class="small muted">Keep facts; label them stale.</text>
+  <text x="957" y="758" class="tiny dim">Refresh remains available.</text>
+
+  <rect x="1308" y="606" width="405" height="174" rx="15" fill="#3c292a" stroke="#b96f68" stroke-width="2"/>
+  <text x="1330" y="637" class="eyebrow red">FETCH FAILED · NO CACHE</text>
+  <text x="1330" y="673" class="h">Chicago, Illinois</text>
+  <text x="1330" y="703" class="small">Weather unavailable right now.</text>
+  <text x="1330" y="735" class="small muted">Retry · no forecast values shown.</text>
+  <text x="1330" y="758" class="tiny dim">Never substitute SampleForecast.</text>
+
+  <rect x="562" y="796" width="1151" height="89" rx="14" class="subcard"/>
+  <text x="585" y="827" class="eyebrow blue">LOCATION SWITCH · HEADER CONTROL OPENS THE EXISTING SELECTOR</text>
+  <text x="585" y="856" class="body">Use the target location’s matching cache or show its loading/empty state. Never relabel the previous place’s weather.</text>
+
+  <!-- Flow and boundaries -->
+  <rect x="535" y="929" width="1210" height="216" rx="20" class="panel"/>
+  <text x="562" y="966" class="eyebrow mint">04 · STARTUP AND RECOVERY FLOW</text>
+  <rect x="562" y="985" width="257" height="65" rx="12" class="subcard"/>
+  <text x="580" y="1011" class="eyebrow">RESTORE SAVED PLACE</text>
+  <text x="580" y="1036" class="tiny muted">or ask for manual choice</text>
+  <path d="M824 1018h25" class="line"/>
+  <rect x="860" y="985" width="257" height="65" rx="12" class="subcard"/>
+  <text x="878" y="1011" class="eyebrow">CHECK SAME-PLACE CACHE</text>
+  <text x="878" y="1036" class="tiny muted">show its freshness honestly</text>
+  <path d="M1122 1018h25" class="line"/>
+  <rect x="1158" y="985" width="257" height="65" rx="12" fill="#183e3a" stroke="#4da895" stroke-width="1.5"/>
+  <text x="1176" y="1011" class="eyebrow mint">LOAD / REFRESH</text>
+  <text x="1176" y="1036" class="tiny muted">foreground action only</text>
+  <path d="M1420 1018h25" class="mintline"/>
+  <rect x="1456" y="985" width="257" height="65" rx="12" class="subcard"/>
+  <text x="1474" y="1011" class="eyebrow">TIMELINE</text>
+  <text x="1474" y="1036" class="tiny muted">same selected-time authority</text>
+  <text x="562" y="1090" class="tiny amber">Boundaries: no background location tracking · no official alerts · preserve timeline gestures · keep source/freshness labels readable.</text>
+  <text x="562" y="1120" class="tiny dim">Concept board for WX.26 · installed before/after, interaction, and applicable accessibility checks remain implementation evidence.</text>
+</svg>

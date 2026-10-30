@@ -30,9 +30,11 @@ enum class CatalogActivationDelivery { SOURCE, CACHE }
 
 data class CatalogActivationState(
     val selectedLocation: CatalogLocation? = null,
+    val selectedLocationName: String? = null,
     val active: ActiveCatalogSelection? = null,
     val loading: Boolean = false,
     val lastError: String? = null,
+    val refreshStatus: CatalogRefreshStatus? = null,
 )
 
 data class CatalogActivationRequest(
@@ -74,6 +76,8 @@ class CatalogActivationCoordinator(
     private var requestJob: Job? = null
     private var lastRequest: CatalogActivationRequest? = null
     private var activeInterval: SupportedTimeInterval? = null
+    private var nextViewGeneration = 0L
+    private var pendingSelectionAnchor: Instant? = null
 
     /** Restore independently of selector visibility. A newer committed choice wins the race. */
     fun restoreStartup() {
@@ -96,8 +100,16 @@ class CatalogActivationCoordinator(
                 if (sequence != restoreSequence) return@synchronized
                 when (result) {
                     is SavedLocationResult.Selected -> {
-                        selectedLocation = result.location?.location
-                        mutableState.value = mutableState.value.copy(selectedLocation = selectedLocation)
+                        val nextLocation = result.location?.location
+                        if (selectedLocation != nextLocation) {
+                            pendingSelectionAnchor = mutableState.value.active?.selectedInstant
+                            activeInterval = null
+                        }
+                        selectedLocation = nextLocation
+                        mutableState.value = mutableState.value.copy(
+                            selectedLocation = selectedLocation,
+                            selectedLocationName = result.location?.candidate?.name,
+                        )
                         result.location?.location?.let {
                             beginRequest(CatalogActivationRequest(it, CatalogOrigin.LIVE, startupDatasetId))
                         }
@@ -112,10 +124,21 @@ class CatalogActivationCoordinator(
     }
 
     /** Call only after the selector has persisted the selection successfully. */
-    fun committedLocationSelection(location: CatalogLocation) {
+    fun committedLocationSelection(location: CatalogLocation, locationName: String? = null) {
         synchronized(this) {
+            if (selectedLocation != location) {
+                pendingSelectionAnchor = mutableState.value.active?.selectedInstant ?: pendingSelectionAnchor
+                activeInterval = null
+            }
             selectedLocation = location
-            mutableState.value = mutableState.value.copy(selectedLocation = location)
+            mutableState.value = mutableState.value.copy(
+                selectedLocation = location,
+                selectedLocationName = locationName ?: mutableState.value.selectedLocationName,
+                active = mutableState.value.active?.takeIf { it.location == location },
+                loading = true,
+                lastError = null,
+                refreshStatus = null,
+            )
             beginRequest(CatalogActivationRequest(location, CatalogOrigin.LIVE, startupDatasetId))
         }
     }
@@ -166,16 +189,40 @@ class CatalogActivationCoordinator(
         val requestSequence = sequence
         requestJob?.cancel()
         lastRequest = request
-        mutableState.value = mutableState.value.copy(loading = true, lastError = null)
+        val retainsMatching = mutableState.value.active?.location == request.location
+        mutableState.value = mutableState.value.copy(
+            loading = true,
+            lastError = null,
+            refreshStatus = null,
+            active = mutableState.value.active?.takeIf { retainsMatching },
+        )
         requestJob = scope.launch {
             try {
                 val staged = loadAndValidate(request, requestSequence)
                 synchronized(this@CatalogActivationCoordinator) {
                     if (isCurrent(request, requestSequence)) {
                         val previous = mutableState.value.active
+                        val failedRefresh = staged.refreshStatus in setOf(
+                            CatalogRefreshStatus.NO_DATA,
+                            CatalogRefreshStatus.INVALID_REQUEST,
+                            CatalogRefreshStatus.TRANSPORT_FAILURE,
+                        )
+                        if (request.origin == CatalogOrigin.LIVE && request.forceLiveRefresh &&
+                            failedRefresh && previous?.location == request.location) {
+                            mutableState.value = mutableState.value.copy(
+                                loading = false,
+                                refreshStatus = staged.refreshStatus,
+                                lastError = "Refresh failed; showing the last active catalog.",
+                            )
+                            return@synchronized
+                        }
                         val interval = selectionInterval(staged.recording)
-                        val selectedInstant = chooseSelectedInstant(previous?.selectedInstant, interval, staged.recording, request.origin)
-                        val nextGeneration = (previous?.viewGeneration ?: 0L) + 1L
+                        val selectedInstant = chooseSelectedInstant(
+                            previous?.selectedInstant ?: pendingSelectionAnchor,
+                            interval, staged.recording, request.origin,
+                        )
+                        val nextGeneration = ++nextViewGeneration
+                        pendingSelectionAnchor = null
                         activeInterval = interval
                         mutableState.value = mutableState.value.copy(
                             selectedLocation = request.location,
@@ -193,6 +240,7 @@ class CatalogActivationCoordinator(
                             ),
                             loading = false,
                             lastError = null,
+                            refreshStatus = staged.refreshStatus,
                         )
                     }
                 }
@@ -200,10 +248,16 @@ class CatalogActivationCoordinator(
                 throw cancelled
             } catch (error: Exception) {
                 synchronized(this@CatalogActivationCoordinator) {
-                    if (isCurrent(request, requestSequence)) mutableState.value = mutableState.value.copy(
-                        loading = false,
-                        lastError = error.message ?: "Catalog activation failed (${error.javaClass.simpleName})",
-                    )
+                    if (isCurrent(request, requestSequence)) {
+                        val prior = mutableState.value.active?.takeIf { it.location == request.location }
+                        val status = (error as? LiveCatalogUnavailableException)?.status
+                        mutableState.value = mutableState.value.copy(
+                            active = prior,
+                            loading = false,
+                            lastError = error.message ?: "Catalog activation failed (${error.javaClass.simpleName})",
+                            refreshStatus = status,
+                        )
+                    }
                 }
             }
         }
@@ -213,7 +267,9 @@ class CatalogActivationCoordinator(
         val staged = when (request.origin) {
             CatalogOrigin.LIVE -> {
                 val result = liveRepository.load(request.location, request.datasetId, request.forceLiveRefresh)
-                val recording = result.recording ?: throw IllegalStateException("No valid LIVE catalog is available")
+                val recording = result.recording ?: throw LiveCatalogUnavailableException(
+                    result.refresh, "No valid LIVE catalog is available (${result.refresh.name.lowercase()})",
+                )
                 require(recording.catalog.location == request.location &&
                     recording.catalog.datasetId == request.datasetId &&
                     recording.catalog.provenance.origin == CatalogOrigin.LIVE) {
@@ -222,7 +278,7 @@ class CatalogActivationCoordinator(
                 StagedCatalog(recording,
                     if (result.delivery == CatalogDelivery.CACHE) CatalogActivationDelivery.CACHE else CatalogActivationDelivery.SOURCE,
                     result.freshness,
-                    result.storedAt)
+                    result.storedAt, result.refresh)
             }
             CatalogOrigin.SIMULATED, CatalogOrigin.REPLAY -> loadIsolated(request)
         }
@@ -328,7 +384,10 @@ class CatalogActivationCoordinator(
         val delivery: CatalogActivationDelivery,
         val freshness: CatalogFreshness?,
         val storedAt: Instant?,
+        val refreshStatus: CatalogRefreshStatus? = null,
     )
+
+    private class LiveCatalogUnavailableException(val status: CatalogRefreshStatus, message: String) : IllegalStateException(message)
 }
 
 fun interface StartupLocationRestorer {
