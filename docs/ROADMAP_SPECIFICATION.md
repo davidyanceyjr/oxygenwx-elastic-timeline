@@ -1,6 +1,6 @@
 # Roadmap Specification
 
-This document defines how `docs/ROADMAP.md` orders and closes work in Oxygen Time Lab. It adopts the useful control structure from oxygenWX while keeping this prototype's roadmap small.
+This document defines how roadmaps order and close work in Oxygen Time Lab. It adopts the useful control structure from oxygenWX while keeping this prototype's roadmap small. Its slice-board requirement is project-wide: it applies to every roadmap, workstream, and slice in this repository, including future or newly introduced roadmaps and slices.
 
 ## Purpose and relationship to cycle records
 
@@ -30,6 +30,8 @@ Every leaf slice has exactly one status:
 - **ACTIVE** — currently being executed. At most one roadmap slice is ACTIVE, and it must correspond to the active cycle in `.codex/current.md`.
 - **PLANNED** — ordered work that is not the next slice and has no active blocker.
 - **DONE** — the defined exit was met and its evidence is recorded in `.codex/history/`.
+- **CANCELLED** — the owner explicitly removed the slice from the roadmap. Preserve the ID and record the decision and reason; do not treat it as unfinished work or a dependency.
+- **SUPERSEDED** — an owner-directed roadmap pivot replaced the unstarted outcome with a named successor slice or workstream. Preserve the ID and record the replacement and transition point; do not treat it as unfinished work or a dependency.
 - **BLOCKED** — the exit cannot currently be met because of a recorded external, host, or dependency condition. State the exact blocker and evidence; do not start dependent work.
 - **DEFERRED** — intentionally outside the current execution path. State the reason and a concrete re-entry condition.
 
@@ -46,7 +48,29 @@ Use a heading with a stable identifier, concise name, and status, followed by th
 **Depends on:** A slice ID, or `None`.
 **Exit:** Observable conditions that must all be met to call this slice done.
 **Evidence:** Exact target artifact directory and history file; for completed work, link the existing records.
+**Slice board(s):** Path(s) to the objective-specific behavior board and, for UI-related work, UI artwork board; a combined board is acceptable when it clearly covers both.
 ```
+
+Every slice plan on every project roadmap requires an objective-specific
+**slice board package** before the plan can be finalized. This is a project-wide
+rule, not specific to any current workstream or roadmap. A **behavior board** makes the product flow and
+rules reviewable. It can use finite-state-machine-like flowcharts with labeled
+states, transitions, explanatory text, and illustrative images, or an annotated
+content map, contract, schema, sequence, or boundary view. Any slice that
+changes UI or visual output also requires a **UI artwork board** showing the
+intended appearance and relevant states. A combined board is acceptable when
+it clearly communicates both behavior and artwork. The product owner must
+approve the required board(s); the plan records their paths, approval,
+constraints, and how they govern scope and acceptance.
+Reviewing flow and artwork together exposes missing states, transitions, and
+visual intent before implementation begins.
+
+A plan may be drafted while its board is pending, but it is not final or ready
+for activation until the approved board and approval record are present. Mark
+the missing board as a blocker in the draft; do not treat a prompt, artifact
+target path, existing implementation, or installed screenshot as the board or
+its approval. This gate applies to every new or unfinished slice; it does not
+retroactively reopen completed historical slices.
 
 Identifiers remain stable after completion. Split a slice when it contains independently closable outcomes or cannot be completed within one bounded cycle. Ordered follow-ups are separate slices; do not create a dependency unless the later slice is genuinely blocked without the earlier outcome.
 

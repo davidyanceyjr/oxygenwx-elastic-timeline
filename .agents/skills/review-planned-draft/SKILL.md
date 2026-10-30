@@ -79,6 +79,14 @@ Remove unnecessary speculative detail, but retain enough specificity that the im
 
 The final plan should describe outcomes, boundaries, affected areas, implementation steps, validation, and documentation requirements.
 
+The plan cannot be finalized until it references an objective-specific behavior
+board and, for UI/visual work, a UI artwork board. A combined board may cover
+both when it clearly shows behavior and intended appearance. Behavior boards
+may use state/flow diagrams annotated with text and images. Record product-owner
+approval, constraints, and how each board governs scope and acceptance. If this
+gate is unmet, preserve the draft as unfinalized and report the missing board
+or approval; do not claim it is implementation-ready.
+
 Avoid prescribing incidental implementation details unless they are required for correctness or architectural consistency.
 
 Every implementation step should have a corresponding validation path where practical.

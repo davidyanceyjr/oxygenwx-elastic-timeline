@@ -17,4 +17,4 @@ Provider fields, product coverage, attribution/license terms, and actual 44-date
 
 ## Follow-up test-scope audit
 
-The roadmap now keeps slice-specific behavior checks in their implementation slices and assigns broad installed experience checks to two suite-wide slices: WX.29 after timeline integration, then WX.28 for final integration/release acceptance after startup and branding. WX.19, WX.25, and WX.26 no longer carry broad cross-app font/orientation/RTL/TalkBack/reduced-motion matrices.
+The initial follow-up audit assigned broad installed experience checks to WX.29 and WX.28. That proposal was superseded by the owner decision recorded in [`ROADMAP.md`](ROADMAP.md#wx29--run-cross-app-experience-and-accessibility-suite--cancelled) on 2026-10-29: WX.29 is cancelled, checks remain focused within implementation slices, and a separate system-wide test roadmap for TalkBack, font scale, UI performance, persistence, and related coverage will be planned after the basic first-tier features work.

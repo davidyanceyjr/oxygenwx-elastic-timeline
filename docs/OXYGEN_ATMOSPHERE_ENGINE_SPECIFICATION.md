@@ -6,6 +6,7 @@
 **Target repository:** `davidyanceyjr/oxygenwx-elastic-timeline`<br>
 **Inspected source baseline:** `main` at `b8477987ca8272da64a1f579177174efed387c96`<br>
 **Status:** **Adopted for bounded roadmap planning on 2026-10-24.** This subordinate architecture proposal does not authorize application implementation by itself, override `docs/SPECIFICATION.md` or the adopted experience contract, or authorize production oxygenWX changes. Intake and current-tree reconciliation: `.codex/history/023-atmosphere-spec-intake.md`.<br>
+**Roadmap status update:** The unstarted ATM.7–ATM.10 and ENV.1–ENV.5 follow-up sequence was superseded on 2026-10-29 20:47:50 America/Chicago by the owner-directed Scene Generation proposal in `docs/OXYGEN_SCENE_GENERATION_SPECIFICATION.md`. Completed ATM history and shared data, selected-time, accessibility, gesture, and readability invariants remain historical context; future implementation planning follows SG after WX.28.
 **Companion:** `docs/OXYGEN_EXPERIENCE_SPECIFICATION.md` (OXY-UX-001, adopted).<br>
 **Controlling scope:** `docs/SPECIFICATION.md`, then `docs/ROADMAP_SPECIFICATION.md`, `docs/ROADMAP.md`, `AGENTS.md`, and the current `.codex/` cycle instructions as defined in the repository. On any conflict with controlling prototype constraints, stop, record the conflict and request a bounded owner decision; never silently override the specification.
 
