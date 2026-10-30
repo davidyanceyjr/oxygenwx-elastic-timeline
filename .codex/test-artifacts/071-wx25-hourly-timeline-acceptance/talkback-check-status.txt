@@ -1,0 +1,5 @@
+TalkBack selected-hour spoken-output check: OWNER VERIFIED AND APPROVED for this slice.
+
+Owner confirmation: “Talkback is verified for this slice; I approved it.” This owner confirmation supersedes the pending direct-device follow-up for cycle 071. No exact spoken transcript was supplied, so this record does not invent one or claim that Codex heard it.
+
+Device probe context: Pixel 3 XL, serial 8AKY0M32X. Initial accessibility setting was disabled. TalkBack was enabled during an ADB probe; the hierarchy exposed the timeline control with selected/sample times and “Activate to browse”, but ADB keyboard focus stopped at Datasets and did not independently verify speech. TalkBack was disabled again and accessibility_enabled restored to 0. The owner has approved this slice's TalkBack verification based on their own check.

@@ -2,7 +2,8 @@ package com.oxygen.weather.timeline.data.catalog
 
 import java.time.Instant
 import java.time.LocalDate
-import java.time.LocalTime
+import java.time.ZoneId
+import java.time.temporal.ChronoUnit
 import com.oxygen.weather.timeline.data.catalog.WeatherCondition.CLEAR
 import com.oxygen.weather.timeline.data.catalog.WeatherCondition.CLOUDY
 import com.oxygen.weather.timeline.data.catalog.WeatherCondition.PARTLY_CLOUDY
@@ -16,18 +17,24 @@ class SimulatedCatalogSource : WeatherCatalogSource {
 
     override suspend fun load(request: CatalogLoadRequest): CatalogLoadResult {
         val anchor = request.asOf.atZone(request.location.timeZone).toLocalDate()
-        val facts = ArrayList<CanonicalWeatherFacts>(88)
-        val support = linkedMapOf<LocalDate, Map<CatalogField, ExpectedFieldSupport>>()
+        val facts = ArrayList<CanonicalWeatherFacts>(44 * 25)
+        val dates = (-30L..13L).map(anchor::plusDays)
+        val windowStart = dates.first().atStartOfDay(request.location.timeZone).toInstant()
         SEQUENCE.forEachIndexed { index, row ->
-            val date = anchor.plusDays(index.toLong() - 30L)
-            val morning = date.atTime(LocalTime.of(9, 0)).atZone(request.location.timeZone).toInstant()
-            val evening = date.atTime(LocalTime.of(21, 0)).atZone(request.location.timeZone).toInstant()
-            val first = row.fact(morning, night = false)
-            val second = row.fact(evening, night = true)
-            facts += first
-            facts += second
-            support[date] = supportFor(listOf(first, second))
+            val date = dates[index]
+            val zone = request.location.timeZone
+            val localStart = date.atStartOfDay(zone).toInstant()
+            val localEnd = date.plusDays(1).atStartOfDay(zone).toInstant()
+            var validTime = localStart
+            while (validTime < localEnd) {
+                val localHour = validTime.atZone(zone).hour
+                val night = localHour < 9 || localHour >= 21
+                val intervalIsInWindow = !validTime.minus(1, ChronoUnit.HOURS).isBefore(windowStart)
+                facts += row.fact(validTime, night, includeAccumulatedAmounts = intervalIsInWindow)
+                validTime = validTime.plus(1, ChronoUnit.HOURS)
+            }
         }
+        val support = supportFor(facts, request.location.timeZone)
         val catalog = CanonicalCatalog(
             request.location,
             request.datasetId,
@@ -35,7 +42,7 @@ class SimulatedCatalogSource : WeatherCatalogSource {
                 CatalogOrigin.SIMULATED,
                 CatalogProductKind.SYNTHETIC_METEOROLOGICAL_PRODUCT,
                 sourceId = "oxygen-wx10-simulated",
-                productId = "fixed-44-day-sequence-v1",
+                productId = "fixed-44-day-hourly-sequence-v3",
             ),
             request.asOf,
             facts,
@@ -65,7 +72,7 @@ private data class Row(
     val nightCloudCoverPercent: Double? = null,
     val nightVisibility: Double? = null,
 ) {
-    fun fact(time: Instant, night: Boolean): CanonicalWeatherFacts {
+    fun fact(time: Instant, night: Boolean, includeAccumulatedAmounts: Boolean): CanonicalWeatherFacts {
         val interval = AccumulationInterval(time.minusSeconds(3600), time)
         return CanonicalWeatherFacts(
             validTime = time,
@@ -73,28 +80,39 @@ private data class Row(
             phenomena = if (night) nightPhenomena ?: phenomena else phenomena,
             temperatureC = if (night) nightTemperatureC ?: temperatureC else temperatureC,
             cloudCoverPercent = if (night) nightCloudCoverPercent ?: cloudCoverPercent else cloudCoverPercent,
-            precipitationProbabilityPercent = precipitationProbabilityPercent,
+            precipitationProbabilityPercent = precipitationProbabilityPercent ?: 0.0,
             thunderstormProbabilityPercent = thunderstormProbabilityPercent,
             precipitationRate = precipitationRate?.let(::PrecipitationRate),
-            rainAmountMillimeters = rainAmount?.let { AccumulatedMillimeters(it, interval) },
-            snowfallCentimeters = snowfall?.let { AccumulatedSnowfallCentimeters(it, interval) },
+            rainAmountMillimeters = rainAmount?.takeIf { includeAccumulatedAmounts }
+                ?.let { AccumulatedMillimeters(it, interval) },
+            snowfallCentimeters = snowfall?.takeIf { includeAccumulatedAmounts }
+                ?.let { AccumulatedSnowfallCentimeters(it, interval) },
             snowDepthCentimeters = snowDepth,
-            windSpeedKph = windSpeed,
+            windSpeedKph = windSpeed ?: 0.0,
             windGustKph = gust,
             visibilityKm = if (night) nightVisibility ?: visibility else visibility,
         )
     }
 }
 
-private fun supportFor(facts: List<CanonicalWeatherFacts>): Map<CatalogField, ExpectedFieldSupport> {
-    val points = linkedMapOf<CatalogField, MutableSet<Instant>>()
-    val intervals = linkedMapOf<CatalogField, MutableSet<AccumulationInterval>>()
+private fun supportFor(
+    facts: List<CanonicalWeatherFacts>,
+    zone: ZoneId,
+): Map<LocalDate, Map<CatalogField, ExpectedFieldSupport>> {
+    val points = linkedMapOf<LocalDate, MutableMap<CatalogField, MutableSet<Instant>>>()
+    val intervals = linkedMapOf<LocalDate, MutableMap<CatalogField, MutableSet<AccumulationInterval>>>()
     facts.forEach { fact ->
         fun point(field: CatalogField, present: Boolean) {
-            if (present) points.getOrPut(field) { linkedSetOf() }.add(fact.validTime)
+            if (present) {
+                val date = fact.validTime.atZone(zone).toLocalDate()
+                points.getOrPut(date) { linkedMapOf() }.getOrPut(field) { linkedSetOf() }.add(fact.validTime)
+            }
         }
         fun interval(field: CatalogField, value: AccumulationInterval?) {
-            if (value != null) intervals.getOrPut(field) { linkedSetOf() }.add(value)
+            if (value != null) {
+                val date = value.end.minusNanos(1).atZone(zone).toLocalDate()
+                intervals.getOrPut(date) { linkedMapOf() }.getOrPut(field) { linkedSetOf() }.add(value)
+            }
         }
         point(CatalogField.CONDITIONS, fact.conditions.isNotEmpty())
         point(CatalogField.PHENOMENA, fact.phenomena.isNotEmpty())
@@ -110,8 +128,11 @@ private fun supportFor(facts: List<CanonicalWeatherFacts>): Map<CatalogField, Ex
         interval(CatalogField.RAIN_AMOUNT_MILLIMETERS, fact.rainAmountMillimeters?.interval)
         interval(CatalogField.SNOWFALL_CENTIMETERS, fact.snowfallCentimeters?.interval)
     }
-    return points.mapValues { ExpectedFieldSupport.Points(it.value) } +
-        intervals.mapValues { ExpectedFieldSupport.Intervals(it.value) }
+    val dates = points.keys + intervals.keys
+    return dates.associateWith { date ->
+        points[date].orEmpty().mapValues { ExpectedFieldSupport.Points(it.value) } +
+            intervals[date].orEmpty().mapValues { ExpectedFieldSupport.Intervals(it.value) }
+    }
 }
 
 private val SEQUENCE: List<Row> = listOf(

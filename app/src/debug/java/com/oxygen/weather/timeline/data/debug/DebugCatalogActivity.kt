@@ -181,7 +181,7 @@ class DebugCatalogActivity : ComponentActivity() {
                     }
                 }
                 when (selectedOrigin) {
-                    CatalogOrigin.SIMULATED -> Text("SIMULATED · wx22-debug-simulated-v1 · deterministic synthetic catalog")
+                    CatalogOrigin.SIMULATED -> Text("SIMULATED · $SIMULATED_DATASET_ID · deterministic synthetic catalog")
                     CatalogOrigin.LIVE -> Text("LIVE · forecast-44d · force refresh selected location")
                     CatalogOrigin.REPLAY -> {
                         Text(fixtureStatus)
@@ -247,9 +247,9 @@ class DebugCatalogActivity : ComponentActivity() {
         const val EXTRA_DATASET_ID = CatalogPickerDelegate.EXTRA_DATASET_ID
         const val EXTRA_REPLAY_ID = CatalogPickerDelegate.EXTRA_REPLAY_ID
         const val EXTRA_FORCE_REFRESH = CatalogPickerDelegate.EXTRA_FORCE_REFRESH
-        const val SIMULATED_DATASET_ID = "wx22-debug-simulated-v1"
+        const val SIMULATED_DATASET_ID = "wx22-debug-simulated-v3"
         const val LIVE_DATASET_ID = "forecast-44d"
-        const val CHICAGO_REPLAY_ID = "wx22-chicago-replay-v1"
+        const val CHICAGO_REPLAY_ID = "wx22-chicago-replay-v3"
         const val CHICAGO_REPLAY_AS_OF = "2026-10-28T12:00:00Z"
     }
 }

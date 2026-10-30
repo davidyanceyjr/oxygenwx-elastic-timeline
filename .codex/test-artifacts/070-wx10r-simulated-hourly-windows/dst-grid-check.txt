@@ -1,0 +1,4 @@
+Standalone audit of the approved instant-stepping rule (not an installed/app test):
+2026-03-08: 23 instants; hour 1=1 occurrence(s), hour 2=0 occurrence(s); offsets=['01:00 -0600']
+2026-11-01: 25 instants; hour 1=2 occurrence(s), hour 2=1 occurrence(s); offsets=['01:00 -0500', '01:00 -0600']
+2026-10-30: 24 instants; hour 1=1 occurrence(s), hour 2=1 occurrence(s); offsets=['01:00 -0500']

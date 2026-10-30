@@ -1,0 +1,3 @@
+SIMULATED wx22-debug-simulated-v3: asOf=2026-10-30T00:12:51.483794Z; product=fixed-44-day-hourly-sequence-v3; facts=1057; dates=44; hourly-counts={24: 43, 25: 1}; missing-chance=0; missing-wind=0; explicit-zero-chance=672; explicit-zero-wind=865
+Anchor parity with stored v2 at matching Instants: 48 preexisting non-null chance/wind values preserved
+REPLAY wx22-chicago-replay-v3: asOf=2026-10-28T12:00:00Z; product=fixed-44-day-hourly-sequence-v3; facts=1057; dates=44; hourly-counts={24: 43, 25: 1}; missing-chance=0; missing-wind=0; explicit-zero-chance=672; explicit-zero-wind=865

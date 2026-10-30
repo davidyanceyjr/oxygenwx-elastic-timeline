@@ -1,0 +1,24 @@
+python scripts/dev.py workflow
+PASS — Workflow scaffold OK; current cycle valid.
+
+python scripts/dev.py contract
+PASS — Transport contract: isolated package, approved Internet only, no location/background/cleartext/release debug exposure, pure projection.
+
+python scripts/dev.py run --serial 8AKY0M32X
+PASS — BUILD SUCCESSFUL; streamed install succeeded; MainActivity started.
+
+Read-only installed catalog payload audit
+PASS — SIMULATED wx22-debug-simulated-v2: 44 dates, 1,057 unique facts, exact top-of-hour real-instant grid, normal dates 24 facts, Chicago 2026-11-01 25 facts, event-family inventory complete, 88/88 old 9 AM/9 PM anchors preserved, 479 supported accumulation intervals valid.
+PASS — REPLAY wx22-chicago-replay-v2: 44 dates, 1,057 unique facts, exact top-of-hour real-instant grid, normal dates 24 facts, Chicago 2026-11-01 25 facts, same event-family inventory, 480 supported accumulation intervals valid.
+
+Standalone timezone grid audit (approved instant-stepping rule, not an installed/app test)
+PASS — America/Chicago 2026-03-08 has 23 instants and no 02:00; 2026-11-01 has 25 instants and two distinct 01:00 instants; 2026-10-30 has 24.
+
+git diff --check
+PASS.
+
+git diff --cached --check
+PASS.
+
+Automated tests
+NOT RUN — not authorized by the repository instruction.
