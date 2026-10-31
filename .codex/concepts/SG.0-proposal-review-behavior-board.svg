@@ -1,0 +1,89 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1800" height="1200" viewBox="0 0 1800 1200" role="img" aria-labelledby="title desc">
+  <title id="title">SG.0 — Scene Generation proposal-review behavior board</title>
+  <desc id="desc">Owner-approved behavior board showing the typed forecast to semantic scene flow, four storyboards, the scene ownership split, and details deferred to later slices. Documentation review only.</desc>
+  <defs>
+    <linearGradient id="bg" x2="1" y2="1"><stop stop-color="#0b1725"/><stop offset="1" stop-color="#102b3b"/></linearGradient>
+    <marker id="arrow" markerWidth="10" markerHeight="10" refX="8" refY="5" orient="auto"><path d="M0 0L10 5L0 10Z" fill="#6fd4bd"/></marker>
+    <style>
+      text{font-family:Inter,'DejaVu Sans',sans-serif;fill:#edf4f7}
+      .title{font-size:38px;font-weight:750}.subtitle{font-size:17px;fill:#abc0cc}
+      .eyebrow{font-size:14px;font-weight:700;letter-spacing:1.5px}.heading{font-size:23px;font-weight:700}
+      .body{font-size:17px}.small{font-size:15px}.tiny{font-size:13px}
+      .mint{fill:#7be0c9}.blue{fill:#a6caff}.amber{fill:#f2bd78}.muted{fill:#abc0cc}.red{fill:#efaaa1}
+      .panel{fill:#132c3c;stroke:#375a6c;stroke-width:2}.card{fill:#19384a;stroke:#42687a;stroke-width:2}
+      .soft{fill:#102637;stroke:#355768;stroke-width:1.5}.line{stroke:#6fd4bd;stroke-width:3;fill:none;marker-end:url(#arrow)}
+    </style>
+  </defs>
+  <rect width="1800" height="1200" fill="url(#bg)"/>
+  <circle cx="1695" cy="75" r="180" fill="#1b3a49" opacity=".35"/>
+  <text x="58" y="42" class="eyebrow mint">OXYGEN WX / SCENE GENERATION / SG.0</text>
+  <text x="58" y="91" class="title">Proposal-review behavior contract</text>
+  <text x="60" y="123" class="subtitle">Selected time and forecast meaning stay stable while semantic tracks become theme-owned drawable scenes.</text>
+  <rect x="1448" y="38" width="294" height="42" rx="21" fill="#593f25" stroke="#bd8c52" stroke-width="1.5"/>
+  <text x="1595" y="65" text-anchor="middle" class="eyebrow amber">APPROVED · 2026-10-30</text>
+
+  <rect x="55" y="153" width="1690" height="293" rx="22" class="panel"/>
+  <text x="82" y="191" class="eyebrow mint">01 · INPUT TO SCENE CONTRACT</text>
+  <rect x="82" y="210" width="352" height="105" rx="15" class="card"/>
+  <text x="104" y="244" class="eyebrow blue">CANONICAL INPUT</text>
+  <text x="104" y="275" class="body">Typed forecast facts + coverage</text>
+  <text x="104" y="299" class="small muted">Location timezone; no provider DTOs</text>
+  <path d="M448 262h48" class="line"/>
+  <rect x="510" y="210" width="354" height="105" rx="15" class="card"/>
+  <text x="532" y="244" class="eyebrow blue">SEMANTIC SCENE PLAN</text>
+  <text x="532" y="275" class="body">Asset family · layer · interval</text>
+  <text x="532" y="299" class="small muted">No theme coordinates or layout</text>
+  <path d="M879 262h47" class="line"/>
+  <rect x="940" y="210" width="354" height="105" rx="15" class="card"/>
+  <text x="962" y="244" class="eyebrow blue">RESOLVE AT SELECTED INSTANT</text>
+  <text x="962" y="275" class="body">Dry · event · unavailable</text>
+  <text x="962" y="299" class="small muted">Weather + light tracks independent</text>
+  <path d="M1309 262h48" class="line"/>
+  <rect x="1370" y="210" width="348" height="105" rx="15" class="card"/>
+  <text x="1392" y="244" class="eyebrow blue">THEME + RENDERER</text>
+  <text x="1392" y="275" class="body">Drawable, placement, background</text>
+  <text x="1392" y="299" class="small muted">Selected Instant remains unchanged</text>
+  <rect x="82" y="334" width="1636" height="82" rx="14" class="soft"/>
+  <text x="105" y="364" class="eyebrow amber">TIMELINE AUTHORITY</text>
+  <text x="315" y="364" class="body">The existing timeline owns selected Instant and gestures. Scrub, release, loading, theme change,</text>
+  <text x="105" y="393" class="body">and reduced motion cannot retarget it. Facts remain readable text with accessible meaning.</text>
+
+  <rect x="55" y="465" width="1690" height="360" rx="22" class="panel"/>
+  <text x="82" y="503" class="eyebrow mint">02 · FOUR STORYBOARDS APPROVED 2026-10-30</text>
+  <rect x="82" y="524" width="796" height="130" rx="15" class="card"/>
+  <text x="105" y="555" class="eyebrow amber">A · SCRUB THROUGH AN EVENT</text>
+  <text x="105" y="590" class="body">10:30 dry  →  11:30 rain  →  13:30 unavailable  →  14:30 dry</text>
+  <text x="105" y="624" class="small muted">Supported boundaries govern onset and end; unavailable never appears dry.</text>
+  <rect x="896" y="524" width="822" height="130" rx="15" class="card"/>
+  <text x="919" y="555" class="eyebrow amber">B · WEATHER AND LIGHT ARE INDEPENDENT</text>
+  <text x="919" y="590" class="body">Rain remains active through day → dusk → night.</text>
+  <text x="919" y="624" class="small muted">Light changes do not shift the rain interval or selected time.</text>
+  <rect x="82" y="672" width="796" height="130" rx="15" class="card"/>
+  <text x="105" y="703" class="eyebrow amber">C · ONE PLAN, TWO THEMES</text>
+  <text x="105" y="738" class="body">Background, placement, and ordering may differ.</text>
+  <text x="105" y="772" class="small muted">Event timing and forecast meaning must match.</text>
+  <rect x="896" y="672" width="822" height="130" rx="15" class="card"/>
+  <text x="919" y="703" class="eyebrow amber">D · REDUCED MOTION</text>
+  <text x="919" y="738" class="body">Static mode resolves the same selected-time state.</text>
+  <text x="919" y="772" class="small muted">Animation cannot change facts or take timeline gestures.</text>
+
+  <rect x="55" y="844" width="1070" height="292" rx="22" class="panel"/>
+  <text x="82" y="882" class="eyebrow mint">03 · APPROVED OWNERSHIP DIRECTION</text>
+  <text x="82" y="918" class="heading">Scene engine</text>
+  <text x="82" y="948" class="body">Builds semantic ScenePlan; resolves selected-time scene state;</text>
+  <text x="82" y="975" class="body">owns reusable Compose drawable functions and placement.</text>
+  <text x="82" y="1019" class="heading">Theme + separate UI roadmap</text>
+  <text x="82" y="1049" class="body">Theme supplies background, layer placement, order, variants.</text>
+  <text x="82" y="1076" class="body">UI roadmap owns final art direction, interface layout, polish.</text>
+  <text x="82" y="1112" class="small muted">Initial drawable functions may use placeholders; no final artwork is approved here.</text>
+  <rect x="1144" y="844" width="601" height="292" rx="22" class="panel"/>
+  <text x="1171" y="882" class="eyebrow amber">04 · APPROVAL AND DEFERRED DETAILS</text>
+  <text x="1171" y="918" class="body">ScenePlan / ThemeDefinition / ResolvedScene /</text>
+  <text x="1171" y="945" class="body">renderer split guides SG.0 contract review.</text>
+  <text x="1171" y="980" class="body">Drawable library and placement: scene engine;</text>
+  <text x="1171" y="1007" class="body">theme supplies parameters and composition.</text>
+  <text x="1171" y="1042" class="body">Exact transitions, unavailable artwork, and</text>
+  <text x="1171" y="1069" class="body">missing-asset fallback: later bounded slices.</text>
+  <text x="1171" y="1105" class="small red">Plan review and activation remain separate.</text>
+  <text x="58" y="1174" class="tiny muted">SG.0 documentation review only · Board approval does not adopt the SG specification, authorize app implementation, or claim installed acceptance.</text>
+</svg>

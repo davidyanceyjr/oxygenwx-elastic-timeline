@@ -1,0 +1,108 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1800" height="1200" viewBox="0 0 1800 1200" role="img" aria-labelledby="title desc">
+  <title id="title">SG.1 — Deterministic semantic scene-track contract</title>
+  <desc id="desc">Review candidate showing canonical input to theme-independent tracks, a proposed nearest expected point-sample display rule with a missing sample, explicit interval support, and an independent light track.</desc>
+  <defs>
+    <linearGradient id="bg" x2="1" y2="1"><stop stop-color="#0b1725"/><stop offset="1" stop-color="#102b3b"/></linearGradient>
+    <marker id="arrow" markerWidth="10" markerHeight="10" refX="8" refY="5" orient="auto"><path d="M0 0L10 5L0 10Z" fill="#6fd4bd"/></marker>
+    <style>
+      text{font-family:Inter,'DejaVu Sans',sans-serif;fill:#edf4f7}
+      .title{font-size:38px;font-weight:750}.subtitle{font-size:17px;fill:#abc0cc}
+      .eyebrow{font-size:14px;font-weight:700;letter-spacing:1.5px}.heading{font-size:22px;font-weight:700}
+      .body{font-size:17px}.small{font-size:15px}.tiny{font-size:13px}
+      .mint{fill:#7be0c9}.blue{fill:#a6caff}.amber{fill:#f2bd78}.muted{fill:#abc0cc}.red{fill:#efaaa1}
+      .panel{fill:#132c3c;stroke:#375a6c;stroke-width:2}.card{fill:#19384a;stroke:#42687a;stroke-width:2}
+      .soft{fill:#102637;stroke:#355768;stroke-width:1.5}.line{stroke:#6fd4bd;stroke-width:3;fill:none;marker-end:url(#arrow)}
+    </style>
+  </defs>
+  <rect width="1800" height="1200" fill="url(#bg)"/>
+  <circle cx="1695" cy="75" r="180" fill="#1b3a49" opacity=".35"/>
+  <text x="58" y="42" class="eyebrow mint">OXYGEN WX / SCENE GENERATION / SG.1</text>
+  <text x="58" y="91" class="title">Semantic scene tracks preserve source support.</text>
+  <text x="60" y="123" class="subtitle">A pure plan carries weather meaning and time; the selected instant evaluates it without changing the forecast.</text>
+  <rect x="1450" y="38" width="292" height="42" rx="21" fill="#453c26" stroke="#b79053" stroke-width="1.5"/>
+  <text x="1596" y="65" text-anchor="middle" class="eyebrow amber">REVIEW CANDIDATE</text>
+
+  <rect x="55" y="153" width="1690" height="228" rx="22" class="panel"/>
+  <text x="82" y="191" class="eyebrow mint">01 · PURE GENERATOR BOUNDARY</text>
+  <rect x="82" y="210" width="350" height="106" rx="15" class="card"/>
+  <text x="104" y="243" class="eyebrow blue">CANONICAL INPUT</text>
+  <text x="104" y="273" class="body">Typed facts + coverage</text>
+  <text x="104" y="299" class="small muted">Valid times · location timezone</text>
+  <path d="M447 263h52" class="line"/>
+  <rect x="512" y="210" width="350" height="106" rx="15" class="card"/>
+  <text x="534" y="243" class="eyebrow blue">EXPECTED SUPPORT</text>
+  <text x="534" y="273" class="body">Point · interval · missing</text>
+  <text x="534" y="299" class="small muted">Field meaning stays distinct</text>
+  <path d="M877 263h52" class="line"/>
+  <rect x="942" y="210" width="350" height="106" rx="15" class="card"/>
+  <text x="964" y="243" class="eyebrow blue">SEMANTIC SCENE PLAN</text>
+  <text x="964" y="273" class="body">Asset family · layer · timeline</text>
+  <text x="964" y="299" class="small muted">Ordered; no theme coordinates</text>
+  <path d="M1307 263h52" class="line"/>
+  <rect x="1372" y="210" width="346" height="106" rx="15" class="card"/>
+  <text x="1394" y="243" class="eyebrow blue">EVALUATE SELECTION</text>
+  <text x="1394" y="273" class="body">Exact selected Instant</text>
+  <text x="1394" y="299" class="small muted">Weather + light independent</text>
+  <text x="82" y="350" class="small muted">Same catalog revision + timezone + requested window + generator version → same ordered tracks. Selection never snaps to a sample.</text>
+
+  <rect x="55" y="399" width="1690" height="433" rx="22" class="panel"/>
+  <text x="82" y="438" class="eyebrow mint">02 · POINT-SAMPLE DISPLAY RULE · PROPOSED FOR APPROVAL</text>
+  <text x="82" y="471" class="heading">Expected hourly samples retain their valid times. Each point represents its nearest expected-time cell.</text>
+  <text x="82" y="501" class="small muted">Illustrative local clock labels; actual ordering and midpoint math use Instants. Midpoints choose imagery only; they are not reported event times.</text>
+  <rect x="82" y="521" width="1636" height="225" rx="15" class="soft"/>
+  <text x="108" y="551" class="eyebrow blue">SOURCE VALID TIMES</text>
+  <line x1="218" y1="610" x2="1520" y2="610" stroke="#7597a9" stroke-width="4"/>
+  <g stroke="#547181" stroke-width="2" stroke-dasharray="5 6">
+    <line x1="348" y1="562" x2="348" y2="692"/><line x1="608" y1="562" x2="608" y2="692"/>
+    <line x1="868" y1="562" x2="868" y2="692"/><line x1="1128" y1="562" x2="1128" y2="692"/>
+    <line x1="1388" y1="562" x2="1388" y2="692"/>
+  </g>
+  <g>
+    <circle cx="218" cy="610" r="12" fill="#7be0c9"/><circle cx="478" cy="610" r="12" fill="#f2bd78"/>
+    <circle cx="738" cy="610" r="12" fill="#efaaa1"/><circle cx="998" cy="610" r="12" fill="#7be0c9"/>
+    <circle cx="1258" cy="610" r="12" fill="#efaaa1"/><circle cx="1518" cy="610" r="12" fill="#a6caff"/>
+  </g>
+  <g class="small" text-anchor="middle">
+    <text x="218" y="579">09:00 · dry*</text><text x="478" y="579">10:00 · rain</text>
+    <text x="738" y="579">11:00 · missing</text><text x="998" y="579">12:00 · clear</text>
+    <text x="1258" y="579">13:00 · chance only</text><text x="1518" y="579">14:00 · snow</text>
+  </g>
+  <g class="tiny muted" text-anchor="middle">
+    <text x="348" y="598">09:30</text><text x="608" y="598">10:30</text><text x="868" y="598">11:30</text>
+    <text x="1128" y="598">12:30</text><text x="1388" y="598">13:30</text>
+  </g>
+  <text x="108" y="659" class="eyebrow blue">REPRESENTATIVE IMAGE</text>
+  <rect x="218" y="673" width="130" height="34" rx="6" fill="#174c4b"/>
+  <rect x="348" y="673" width="260" height="34" rx="6" fill="#76512c"/>
+  <rect x="608" y="673" width="260" height="34" rx="6" fill="#643d3e"/>
+  <rect x="868" y="673" width="260" height="34" rx="6" fill="#174c4b"/>
+  <rect x="1128" y="673" width="260" height="34" rx="6" fill="#643d3e"/>
+  <rect x="1388" y="673" width="130" height="34" rx="6" fill="#344f70"/>
+  <g class="tiny" text-anchor="middle">
+    <text x="283" y="695">DRY*</text><text x="478" y="695">RAIN</text><text x="738" y="695">UNKNOWN</text>
+    <text x="998" y="695">CLEAR</text><text x="1258" y="695">UNKNOWN</text><text x="1453" y="695">SNOW</text>
+  </g>
+  <text x="82" y="778" class="body">10:20 selection → rain image from the 10:00 sample; selected time remains 10:20. The 11:00 gap breaks visual carry at 10:30.</text>
+  <text x="82" y="806" class="small amber">*Dry requires explicit supported dry evidence; chance alone is not an observed condition. No carry beyond the first or last supported cell.</text>
+
+  <rect x="55" y="850" width="824" height="286" rx="22" class="panel"/>
+  <text x="82" y="889" class="eyebrow mint">03 · SOURCE GRANULARITY STAYS VISIBLE</text>
+  <text x="82" y="925" class="heading">Point sequence ≠ supported interval</text>
+  <text x="82" y="955" class="body">A point track keeps each source validTime and expected slot.</text>
+  <text x="82" y="983" class="body">An explicit interval keeps its [start, end) source bounds.</text>
+  <rect x="82" y="1006" width="770" height="93" rx="13" class="soft"/>
+  <text x="105" y="1038" class="eyebrow amber">SEPARATE EXAMPLE · AMOUNT SUPPORT</text>
+  <text x="105" y="1067" class="body">10:15 ━━━━━━━ 11:15 · source-backed interval</text>
+  <text x="105" y="1088" class="tiny muted">Amount does not itself decide rain imagery; SG.4 owns that evidence rule.</text>
+
+  <rect x="897" y="850" width="848" height="286" rx="22" class="panel"/>
+  <text x="924" y="889" class="eyebrow mint">04 · INDEPENDENT LIGHT + HANDOFF</text>
+  <text x="924" y="925" class="heading">Light changes do not rewrite weather support.</text>
+  <rect x="924" y="947" width="794" height="66" rx="13" class="soft"/>
+  <text x="947" y="976" class="body">DAY → DUSK → NIGHT · local-time rule, versioned</text>
+  <text x="947" y="1001" class="small muted">No astronomical sunrise, sunset, sun angle, or moon claim.</text>
+  <text x="924" y="1046" class="body">Output: inspectable six-sample plan; no renderer or theme layout.</text>
+  <text x="924" y="1074" class="small muted">SG.2 owns composition and assets; SG.4 owns precipitation evidence.</text>
+  <text x="924" y="1102" class="small red">Approval of this board would guide SG.1 planning, not activate it.</text>
+  <text x="58" y="1175" class="tiny muted">SG.1 concept · review candidate · illustrative sample states · no approved artwork or installed acceptance claimed.</text>
+</svg>

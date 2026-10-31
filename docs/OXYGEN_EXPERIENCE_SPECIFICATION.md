@@ -22,7 +22,7 @@ A user should be able to answer, without hunting through screens:
 4. What forecast time am I examining, and how can I return to now immediately?
 5. Where did the forecast come from, how fresh is it, and what information is missing?
 
-**Experience target:** immersive but legible; interactive but predictable; ambitious but restrained. Every gesture and visual effect must improve understanding or make navigation more effortless.
+Every gesture and visual effect must preserve readable forecast facts, predictable time navigation, and truthful data meaning.
 
 ## 2. Authority, maturity, and scope
 
@@ -59,8 +59,7 @@ The successor's target catalog uses 44 local calendar dates: D-30 through D-1 as
 6. **True data remains distinguishable from illustration.** Never imply that animated cloud, rain, sun, or a smoothly varying number is a source-measured minute-by-minute prediction.
 7. **Reachability and clarity over novelty.** A beautiful gesture without a perceivable, accessible alternative is unfinished design.
 8. **Motion is optional.** Reduced-motion users get the same forecast and navigation meaning.
-9. **Keep complexity behind the surface.** Sophisticated state mapping and rendering must not create additional work for a user.
-10. **Measure on a device.** Attractive screenshots and compiling source do not establish good touch interaction.
+9. **Measure on a device.** Screenshots and compiling source do not establish touch acceptance.
 
 ## 4. Interaction contract: current preferred model
 
@@ -72,8 +71,9 @@ The single authoritative value is the **selected forecast moment**. UI position,
 
 - The selected moment stays under the fixed central playhead while the axis changes scale.
 - The screen may shift from a daily representative illustration to an hourly illustration at the same selected time; **presentation mode is not the underlying timestamp**.
-- Selecting a new day/hour or explicitly returning to now is permitted to change the selected moment.
-- Time navigation is bounded by the real available forecast horizon. No wrapping, padding, or extrapolating beyond available data.
+- Daily tap and daily drag release select exactly 12:00 local on the target date in the selected location's IANA timezone. A scale-only collapse preserves the exact selected instant, even when the daily view shows a day summary.
+- In-window hours or days with missing facts remain selectable and navigable. Show unavailable facts explicitly, never as zero; condition imagery must not imply a missing fact exists. A data refresh must not silently retarget selection.
+- Targets beyond the first or last selectable catalog instant clamp to the nearest boundary with a communicated adjustment. No wrapping, padding, or extrapolating beyond the catalog window.
 
 ### 4.2 Timeline shuttle — daily navigation
 
@@ -82,9 +82,9 @@ The single authoritative value is the **selected forecast moment**. UI position,
 - A narrow time tape floats near the bottom over a subtle contrast gradient; its touch region can be larger than the visible artwork.
 - Three-letter day labels (`FRI`, `SAT`, `SUN`) and day boundary ticks map to actual dates.
 - A small, subdued center marker plus larger selected label indicates the selected time; no oversized thumb, panel, or full-height ruler is required.
-- **Tap:** select the touched day at a documented representative time (currently approximately local noon).
+- **Tap:** select the touched date at exactly 12:00 local time. On a partial boundary date, an out-of-window noon target clamps to the nearest catalog boundary with an adjustment notice.
 - **Immediate horizontal drag:** move the **tape** beneath the central reading position. Drag left advances toward later dates; drag right moves toward earlier dates.
-- **Release in daily browsing:** settle to the selected day's representative moment. A displayed day summary must clearly be described as a daily representation, not an hourly fact.
+- **Release in daily browsing:** select 12:00 local on the target date, subject to the boundary clamp. A displayed day summary is a daily representation, not an hourly fact.
 - Day labels remain compact; favor spatial breathing room over more controls.
 
 **Acceptance:** the shuttle remains reachable, the atmospheric canvas remains visually dominant, and a user can reach a future Saturday directly instead of scrubbing hour by hour across intermediate days.
@@ -98,21 +98,21 @@ The single authoritative value is the **selected forecast moment**. UI position,
 - The entire tape transitions to **uniform hourly spacing**, currently around **16 dp per hour**, rather than expanding one isolated day.
 - An animated scale transition (currently around **260 ms**) reveals hourly ticks and selective major-hour labels. Avoid drawing all 24 hour labels simultaneously.
 - Dragging now explores hour-level forecast samples under the fixed playhead; the selected hour label is emphasized.
-- Releasing ends the current gesture but leaves hourly precision active. A tap on the main forecast area exits precision while preserving the selected absolute hour; a tap on the timeline exits precision and selects the time under the tap. The hourly sampling and a later daily overview must remain semantically distinct.
+- Releasing ends the current gesture but leaves hourly precision active. A main-area tap collapses to daily overview and preserves the exact instant. An hourly tape tap resolves the touched instant on the hourly axis before collapse, selects it, and preserves it through collapse. The hourly sampling and daily overview remain semantically distinct.
 - A haptic confirmation of entering precision is appropriate; it must not be the only indication of the change.
 
-**Acceptance:** there is no clock jump caused solely by entering, animating, or leaving precision. Releasing a hold-then-drag leaves hourly precision active. A main-area tap exits precision without changing selected time; a timeline tap exits precision and selects its target time. No gesture is recognized as both an ordinary day drag and a hold-to-hour drag.
+**Acceptance:** there is no clock jump caused solely by entering, animating, or leaving precision. Releasing a hold-then-drag leaves hourly precision active. A main-area tap collapses to daily overview without changing selected time; a timeline tap collapses to daily overview and selects its target time. No gesture is recognized as both an ordinary day drag and a hold-to-hour drag.
 
 ### 4.4 Main atmospheric view — shortcut navigation
 
-**Established prototype behavior**
+**Established prototype behavior and successor rule**
 
-- **Horizontal swipe on the central forecast summary:** go to the following or preceding calendar day, preserving the selected *hour-of-day* as closely as the forecast domain permits.
-- **Double-tap on the central summary/main temperature region:** return directly to the present forecast moment (the demo currently maps the device clock into its fixed fixture).
+- **Horizontal swipe on the central forecast summary:** in the fixed-fixture prototype, shift by 24 hours while preserving hour-of-day. In the successor, target the adjacent local calendar date at the same wall time. For a repeated local time, retain the prior offset when possible or choose the earlier occurrence; for a nonexistent local time, choose the first valid time. An in-window gap remains selected with unavailable facts; an out-of-window target clamps to the nearest boundary with an adjustment notice.
+- **Double-tap on the central summary/main temperature region:** the fixed-fixture prototype returns to its mapped fixture hour. Successor live reset targets the current instant at activation, including with a stale live catalog; simulated and recorded replay reset to catalog `asOf`. Out-of-window targets clamp with an adjustment notice. Stale and unavailable provenance remain visible.
 - Main-view gestures are owned by the main-view touch region; shuttle gestures are owned by the timeline. They must not both consume the same touch sequence.
 - Keep these shortcuts fast and repeatable, with no page transitions masquerading as weather changes.
 
-**Future production caveat:** a *calendar day* is not always 24 elapsed hours across daylight-saving transitions. Use location-aware calendar operations and define unambiguous behavior for nonexistent or repeated local hours. For the current fixed 24-hour demo days, ±24 hours is acceptable.
+The prototype's fixed 24-hour fixture days permit ±24-hour navigation. Successor navigation uses location-aware calendar-day operations; a calendar day may be 23 or 25 elapsed hours across daylight-saving transitions.
 
 ### 4.5 Gestural precedence and discoverability
 
@@ -168,7 +168,7 @@ Optional weather segments could hint at clear, cloudy, wet, or stormy periods us
 - Forecast provider, valid time, last update, freshness, and stale/offline condition.
 - Availability and missing values. Missing is not `0` and must not be silently imputed.
 - Forecast horizon limits and available granularities; do not synthesize 72 hours if only 36 are present.
-- Actual severe-weather alerts from authoritative sources, separate from decorative or inferred storm imagery.
+- If an official-alert subsystem is offered, alerts from authoritative sources, separate from decorative or inferred storm imagery. Real-data integration does not require alerts. Before the subsystem exists, an empty display must not imply that no alerts exist.
 
 If data is unavailable, the shell should remain navigable and honest. Do not show visually convincing but fabricated “current weather” as a fallback. Old cached forecasts, if ever added, must be clearly marked stale.
 
@@ -214,9 +214,9 @@ Suggested explicit state categories (conceptual, not a required rename of curren
 
 ## 8. Performance, motion, battery, and accessibility
 
-**Proposed acceptance targets, not measured claims:**
+**Requirements for later implementation acceptance, not measured claims:**
 
-- Aim for fluid interaction at the device's standard refresh rate; initially prioritize a dependable **60 fps** experience on the reference handset, then profile frame-time distribution and dropped frames on actual hardware.
+- Profile frame-time distribution and dropped frames on actual hardware during a defined scrub and scene workload. Each bounded implementation plan states its device baseline, measurement method, and justified pass threshold; 60 fps is a design aim, not an unmeasured acceptance claim.
 - Never block the UI thread on forecast I/O, geocoding, cache parsing, or heavyweight scene construction.
 - Keep per-frame allocations low; cache stable paths/brushes where helpful; avoid unnecessary whole-screen recomposition from tiny pointer changes.
 - Stop decorative animation when the view is not visible or the app is backgrounded.
@@ -225,110 +225,40 @@ Suggested explicit state categories (conceptual, not a required rename of curren
 - Verify larger text, font scaling, contrast on bright/dark weather, narrow widths, landscape, and chronology with RTL locales.
 - Make tap and double-tap targets discernible for motor accessibility; support non-gesture navigation before production release without restoring an intrusive persistent control strip.
 
+For each applicable state, later implementation cycles record **pass/fail/not run**, the expected result, device and build, viewport and orientation, font scale, locale and layout direction, input method, motion setting, and installed screenshot/video or measurement path. The matrix covers the Pixel 3 XL reference viewport, affected compact viewport and landscape layout, large font, bright and dark scenes, RTL, reduced motion, TalkBack and non-gesture actions, gesture arbitration, and performance when rendering or interaction changes. A bounded plan identifies applicability, the exact workload and measurement method, and justified numeric thresholds where useful. A not-run state remains an acceptance gap.
+
 ## 9. Acceptance scenarios and evidence
 
 A bounded development cycle should select scenarios relevant to its modification, then preserve **actual** results (pass/fail/not run) and installed evidence under `.codex/test-artifacts/<cycle>/`.
 
 | ID | Scenario | Pass condition |
 |---|---|---|
-| T01 | Tap `SAT` | Selected date becomes Saturday's representative overview; day label and weather summary agree. |
+| T01 | Tap `SAT` or release daily drag | Select 12:00 local Saturday; on a partial boundary date clamp an out-of-window noon and communicate the adjustment. Day summary and selected time agree. |
 | T02 | Drag tape left then right | Time advances then reverses under a fixed playhead; no gesture gets stuck. |
 | T03 | Long-press then drag | Hour ticks appear with uniform spacing and finer time changes; haptic/visual confirmation occurs. |
 | T04 | Scale animation invariant | A known selected timestamp remains projected to the same playhead coordinate throughout expansion/collapse. |
-| T05 | Release precision | Selected hour survives collapse even if daily-overview **rendering** replaces the hourly illustration. |
-| T06 | Main-view horizontal swipe | Exactly one day changes in intended direction; local hour is preserved where representable. |
-| T07 | Double-tap center | Returns to present moment; never requires scrolling back through days. |
-| T08 | Scrub bounds | Cannot select beyond first/last valid forecast data point. |
+| T05 | Release precision | Releasing ends the drag but keeps hourly precision active and the selected time unchanged. |
+| T05a | Tap to collapse precision | Main-view tap preserves the exact instant. Hourly tape tap resolves its touched instant on the hourly axis before collapse and preserves that instant through animation. |
+| T06 | Main-view horizontal swipe | Targets one adjacent local date at the same wall time using the DST rule; a missing destination stays selected with unavailable facts, and an out-of-window target clamps with notice. |
+| T07 | Double-tap center | Live, including stale live, targets current instant; simulated/replay targets catalog `asOf`; outside coverage clamps with notice and provenance stays truthful. |
+| T08 | Scrub bounds and gaps | Selection clamps only outside catalog boundaries; an in-window missing hour/day stays selectable with unavailable facts and no condition imagery claiming a fact. Navigation crosses the gap. |
 | T09 | Tap / drag / hold arbitration | Early movement prevents false long-press; cancellation recovers; main-view and tape do not double-handle input. |
 | T10 | Bright and dark scenes | Forecast facts and timeline markers stay legible with and without effects. |
 | T11 | Larger text / small screens | Key temperature/date/facts remain readable, not clipped or covered by the tape. |
 | T12 | TalkBack / non-gesture operation | A user can select time, switch granularity, and return to now with accessible actions. |
 | T13 | Reduced motion | Time navigation remains correct with transitions suppressed. |
-| T14 | Real-data integration (future) | Source/freshness/missing-horizon states are accurate; no fabricated values or alerts. |
-| T15 | DST/timezone boundary (future) | Calendar-day and hourly navigation preserve intended local meaning through spring-forward/fall-back cases. |
+| T14 | Real-data integration (future) | Source/freshness/missing-horizon states are accurate; no fabricated values. Without an alert subsystem, empty alert display makes no absence claim; offered alerts are authoritative and separate. |
+| T15 | DST/timezone boundary (future) | Adjacent-date swipes preserve wall time, choose the prior offset in overlaps when possible (otherwise earlier), and first valid time in a gap. |
 
 **Evidence rule:** Do not mark a scenario complete based on design intent, README claims, a successful compile, or a unit test for only part of the interaction. Record which device, build, viewport, input method, test command, and screenshot/video established the result.
 
-## 10. Development sequence and scope protection
 
-Use the repository's `.codex` planning workflow, one bounded slice at a time. This sequence is proposed, not an automatic change to `docs/ROADMAP.md`.
+## 10. Historical context and planning authority
 
-### UX.0 — Specification adoption and baseline reconciliation
+The UX.0–UX.5 sequence in the 2026-10-24 proposal was a candidate development sequence, not the active roadmap. `docs/ROADMAP.md` and the current bounded cycle govern work order and scope. The successor repository boundary is settled in `docs/SPECIFICATION.md`; the deprecated application is outside this workstream. Candidate event markers and weather-colored tape still require separate approval and source-supported semantics.
 
-- Review this proposal against the **latest local changes** and obtain owner sign-off on any discrepancies.
-- Keep existing `docs/SPECIFICATION.md` authoritative until an explicit adoption cycle updates the authority order.
-- Reconcile README references to removed `HOURS/DAYS`, `NOW`, and footer controls; check whether prototype tests still assert historical local-focused-day behavior not used by the current UI.
-- Capture and label an installed “known good” baseline of the current shuttle, center swipes, and double-tap return.
+The `718f271` public-branch inspection recorded a synthetic eight-day prototype, a uniform hourly tape, fixed-fixture ±24-hour main swipes, and Pixel 3 XL evidence in cycles 002–006. It is dated baseline evidence, not a claim about the current tree or current acceptance. Consult later `.codex/history/` records and installed evidence for subsequent implementation status.
 
-### UX.1 — Interaction stabilization
+## 11. Feature review rule
 
-- Formalize gesture arbitration and selection/scale invariants in pure tests and installed touch review.
-- Tune long-press threshold and drag gain with actual physical-device evidence.
-- Preserve day and hour selection through release and layout changes.
-- Include timeline bounds and rapid repeated navigation.
-
-### UX.2 — Accessibility and resilience
-
-- Validate TalkBack custom actions, large fonts, compact widths, RTL, high contrast, reduced motion, and input alternatives.
-- Fix only the smallest evidenced problems; avoid new permanent control rows.
-
-### UX.3 — Atmospheric polish
-
-- Improve sky/cloud/light/rain treatment in separable, composable layers.
-- Keep imagery subordinate to data and benchmark installed rendering/battery use.
-- Any asset/shader or motion enhancement must preserve UX.1/UX.2 acceptance.
-
-### UX.4 — Navigation intelligence (candidate, separately approved)
-
-- Consider event markers such as rain onset, likely clearing, peak warmth, and sunrise/sunset **only where source data supports those labels**.
-- Treat jump-to-event controls as optional and contextual, not new permanent chrome.
-- A candidate weather-colored time tape needs non-color-only semantics and honest uncertainty.
-
-### UX.5 — Production-data feasibility (deferred)
-
-- Explicitly decide whether this remains a separate experience or becomes a redesign of the original Oxygen product.
-- Model forecast time with location-aware timestamps, provider provenance, missing data, and honest daily summaries.
-- Plan provider, cache, location, alerts, privacy, and navigation integration as independent bounded cycles.
-- No automatic transfer of experimental gestures into the original `Now -> Hourly -> Daily -> Details` pager.
-
-## 11. Anti-goals: what not to do
-
-- Do not replace the shuttle with seven large cards or a full-width control panel.
-- Do not permanently restore a toggle row because a gesture was difficult to test once; first improve affordance and accessible alternatives.
-- Do not put feature badges, event chips, or animated status tiles across the atmosphere by default.
-- Do not claim physically accurate rain, clouds, sunset, or precise precipitation timing without appropriate data and methods.
-- Do not let scale changes or animation frames change forecast selection.
-- Do not let new background effects reduce responsiveness, contrast, legibility, or battery life.
-- Do not write over the original Oxygen project as a shortcut to integration.
-
-## 12. Feature decision filter
-
-Before accepting a UI enhancement, answer:
-
-1. Which real forecast question does this make easier to answer?
-2. Can it be learned without a tutorial and used with one hand?
-3. Does it preserve the three core navigation routes and selection invariants?
-4. Does it increase permanent visual clutter, ambiguity, or hidden state?
-5. Can every visible weather claim be traced to actual data and a valid time?
-6. Is an accessible/reduced-motion path available?
-7. Has the actual app been tested at the necessary device and layout states?
-
-If the first three cannot be demonstrated, **defer the feature** regardless of how striking the mockup looks.
-
-## 13. Baseline observed at the cited commit
-
-The following is an inspection of the public `main` branch, not a claim about newer local work:
-
-| Area | Observed at `718f271` | Remaining gap |
-|---|---|---|
-| Minimal timeline | Three-letter labels, subdued central dot, large selection cue | Contrast/legibility matrix |
-| Daily/hour gestures | Custom tap/drag/480 ms hold, uniform hourly scale | Full gesture arbitration and accessibility review |
-| Main-view navigation | ±24-hour swipe, double-tap back to fixture now | Calendar-aware production time semantics |
-| Atmospheric visual | Canvas sky, clouds, lighting, illustrative rain and landscape | Reduced motion, performance and data fidelity |
-| Source data | Eight synthetic days, 192 hourly samples, explicit demo labeling | Real forecast services are out of scope |
-| Installed evidence | Pixel 3 XL checks in history cycles 002–006 | Lint/unit suite/TalkBack and other matrices not completely accepted |
-| Documentation | Prototype spec and active P.2 roadmap | README describes removed visible controls; historical test still covers localized expansion |
-
-## 14. Definition of product success
-
-Oxygen succeeds when the user can glance at the atmosphere, swipe to tomorrow, dive into an hour of interest using the shuttle, and double-tap home—**without stopping to think about the interface**. The visuals should invite exploration, but forecast meaning, speed, and confidence are the enduring result.
+A visual or interaction change must identify the forecast question it answers, preserve selected-time and gesture invariants, keep visible facts source-supported, and provide an accessible reduced-motion route. Its bounded plan identifies applicable device states and installed evidence; implementation is incomplete until those acceptance checks are recorded.

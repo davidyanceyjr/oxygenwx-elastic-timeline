@@ -1,0 +1,81 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1800" height="1200" viewBox="0 0 1800 1200" role="img" aria-labelledby="title desc">
+  <title id="title">BT.1 — Gradle configuration cache behavior board</title>
+  <desc id="desc">Review candidate for enabling the Gradle configuration cache with one root property, showing first-run storage, repeat-run reuse, invalidation, failure behavior, and bounded verification.</desc>
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#0b1725"/><stop offset="1" stop-color="#102b3b"/></linearGradient>
+    <marker id="arrow" markerWidth="10" markerHeight="10" refX="8" refY="5" orient="auto"><path d="M0 0L10 5L0 10Z" fill="#6fd4bd"/></marker>
+    <style>
+      text{font-family:Inter,'DejaVu Sans',sans-serif;fill:#edf4f7}
+      .title{font-size:38px;font-weight:750}.subtitle{font-size:17px;fill:#abc0cc}
+      .eyebrow{font-size:14px;font-weight:700;letter-spacing:1.5px}.heading{font-size:22px;font-weight:700}
+      .body{font-size:17px}.small{font-size:15px}.tiny{font-size:13px}.mono{font-family:'DejaVu Sans Mono',monospace;font-size:15px}
+      .mint{fill:#7be0c9}.blue{fill:#a6caff}.amber{fill:#f2bd78}.muted{fill:#abc0cc}.red{fill:#efaaa1}
+      .panel{fill:#132c3c;stroke:#375a6c;stroke-width:2}.card{fill:#19384a;stroke:#42687a;stroke-width:2}
+      .soft{fill:#102637;stroke:#355768;stroke-width:1.5}.line{stroke:#6fd4bd;stroke-width:3;fill:none;marker-end:url(#arrow)}
+    </style>
+  </defs>
+  <rect width="1800" height="1200" fill="url(#bg)"/>
+  <circle cx="1695" cy="75" r="180" fill="#1b3a49" opacity=".35"/>
+  <text x="58" y="42" class="eyebrow mint">OXYGEN WX / BUILD TOOLING / BT.1</text>
+  <text x="58" y="91" class="title">Reuse Gradle configuration for repeat builds.</text>
+  <text x="60" y="123" class="subtitle">One repository setting speeds repeat task graphs; incompatible configuration still fails visibly.</text>
+  <rect x="1450" y="38" width="292" height="42" rx="21" fill="#153e3c" stroke="#4eb7a4" stroke-width="1.5"/>
+  <text x="1596" y="65" text-anchor="middle" class="eyebrow mint">OWNER APPROVED</text>
+
+  <rect x="55" y="153" width="1690" height="350" rx="22" class="panel"/>
+  <text x="82" y="191" class="eyebrow mint">01 · PROPOSED BUILD FLOW</text>
+  <text x="82" y="225" class="heading">Root property applies to the existing Gradle wrapper commands.</text>
+  <rect x="82" y="247" width="377" height="133" rx="15" class="card"/>
+  <text x="104" y="280" class="eyebrow blue">PROJECT SETTING</text>
+  <text x="104" y="315" class="mono" style="font-size:12.5px">org.gradle.configuration-cache=true</text>
+  <text x="104" y="347" class="small muted">Root gradle.properties · one line</text>
+  <path d="M472 314h52" class="line"/>
+  <rect x="537" y="247" width="357" height="133" rx="15" class="card"/>
+  <text x="559" y="280" class="eyebrow blue">FIRST TASK GRAPH</text>
+  <text x="559" y="314" class="body">Configure → execute</text>
+  <text x="559" y="347" class="small mint">Store configuration entry</text>
+  <path d="M907 314h52" class="line"/>
+  <rect x="972" y="247" width="357" height="133" rx="15" class="card"/>
+  <text x="994" y="280" class="eyebrow blue">REPEAT TASK GRAPH</text>
+  <text x="994" y="314" class="body">Reuse → execute / skip</text>
+  <text x="994" y="347" class="small mint">Configuration phase avoided</text>
+  <path d="M1342 314h52" class="line"/>
+  <rect x="1407" y="247" width="311" height="133" rx="15" class="card"/>
+  <text x="1429" y="280" class="eyebrow blue">INPUT CHANGES</text>
+  <text x="1429" y="314" class="body">Invalidate entry</text>
+  <text x="1429" y="347" class="small muted">Reconfigure and store</text>
+  <rect x="82" y="401" width="1636" height="75" rx="13" class="soft"/>
+  <text x="105" y="431" class="eyebrow amber">REPOSITORY COMMANDS</text>
+  <text x="105" y="459" class="body">build → :app:assembleDebug       lint → :app:lintDebug       (both through python scripts/dev.py)</text>
+
+  <rect x="55" y="522" width="824" height="372" rx="22" class="panel"/>
+  <text x="82" y="561" class="eyebrow mint">02 · FAILURE AND RECOVERY CONTRACT</text>
+  <text x="82" y="597" class="heading">Configuration problems fail the build.</text>
+  <rect x="82" y="621" width="770" height="99" rx="13" fill="#382c2c" stroke="#865c52" stroke-width="1.5"/>
+  <text x="105" y="653" class="eyebrow red">INCOMPATIBILITY</text>
+  <text x="105" y="682" class="body">Inspect Gradle's report and fix the task or plugin.</text>
+  <text x="105" y="706" class="small muted">Do not persist problems=warn or suppress reports.</text>
+  <rect x="82" y="737" width="770" height="125" rx="13" class="soft"/>
+  <text x="105" y="769" class="eyebrow blue">ONE-OFF DIAGNOSTIC OPT-OUT</text>
+  <text x="105" y="804" class="mono">./gradlew --no-configuration-cache &lt;task&gt;</text>
+  <text x="105" y="836" class="small muted">Project default remains enabled; no plugin or task changes.</text>
+
+  <rect x="897" y="522" width="848" height="372" rx="22" class="panel"/>
+  <text x="924" y="561" class="eyebrow mint">03 · BOUNDED ACCEPTANCE</text>
+  <text x="924" y="597" class="heading">Demonstrate storage and reuse for both commands.</text>
+  <rect x="924" y="621" width="794" height="101" rx="13" class="card"/>
+  <text x="947" y="653" class="eyebrow blue">DEBUG BUILD · :app:assembleDebug</text>
+  <text x="947" y="685" class="body">First run: stored   →   next run: reused</text>
+  <rect x="924" y="738" width="794" height="101" rx="13" class="card"/>
+  <text x="947" y="770" class="eyebrow blue">DEBUG LINT · :app:lintDebug</text>
+  <text x="947" y="802" class="body">First run: stored   →   next run: reused</text>
+  <text x="924" y="870" class="small muted">Capture actual command output; no test task or device acceptance in this slice.</text>
+
+  <rect x="55" y="914" width="1690" height="220" rx="22" class="panel"/>
+  <text x="82" y="953" class="eyebrow mint">04 · SCOPE BOUNDARY AND HANDOFF</text>
+  <text x="82" y="989" class="heading">Build configuration only. Application behavior stays the same.</text>
+  <text x="82" y="1022" class="body">Keep plugin versions, build tasks, app code, and existing Gradle properties unchanged.</text>
+  <text x="82" y="1052" class="body">Cache files remain local in .gradle/configuration-cache/ and are not committed.</text>
+  <text x="82" y="1090" class="small amber">Board approved 2026-10-31; verification still required before BT.1 can close.</text>
+  <text x="58" y="1175" class="tiny muted">BT.1 behavior board · owner approved 2026-10-31 · based on Gradle 9.7.0 cache probes · no UI artwork required.</text>
+</svg>

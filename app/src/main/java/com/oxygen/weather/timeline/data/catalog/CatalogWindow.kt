@@ -345,6 +345,9 @@ class CatalogDay internal constructor(
         },
     )
 
+    /** A defensive, read-only view of the source's expected support for this date. */
+    fun expectedFieldSupport(): Map<CatalogField, ExpectedFieldSupport> = expectedSupport
+
     /** Derive only a full-local-day accumulated amount with exact, complete interval support. */
     fun deriveDailyAmount(field: DailyAmountField): DailyAccumulatedAmount? {
         val catalogField = field.catalogField()

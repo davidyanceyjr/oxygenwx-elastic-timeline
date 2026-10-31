@@ -9,7 +9,17 @@ Every visual enhancement must preserve timeline responsiveness, gesture predicta
 
 ## Workstream priority
 
-WX is the current priority: `WX.1`, `WX.2`, `WX.3`, `WX.5`, `WX.6`, `WX.9`–`WX.13`, `WX.13R`, and `WX.15`–`WX.20`, plus `WX.22` and `WX.23`, are `DONE`; `WX.24` is `DONE` in cycle 065; `WX.10R` is `DONE` in cycle 070; `WX.25` is `DONE` in cycle 071; WX.26 is `DONE` in cycle 072. WX.27 and WX.28 remain planned; WX.29 is `CANCELLED`. The proposed Scene Generation (SG) workstream follows WX.28, starting with the documentation-only SG.0 prompt review and then SG.1–SG.7. Every unfinished SG slice requires its objective-specific behavior board and, for UI/visual work, UI artwork board(s) before its cycle plan can be finalized; its roadmap artifact field identifies the board target(s). The owner-directed P.2.16 correction is DONE in cycle 048. This workstream ordering does not add a dependency beyond those stated on each slice.
+WX.1, WX.2, WX.3, WX.5, WX.6, WX.9–WX.13, WX.13R, WX.15–WX.20, WX.22, WX.23, WX.24, WX.10R, WX.25, and WX.26 are `DONE`. WX.27 and WX.28 are `DEFERRED` until the product is finished and polished and release-readiness work is appropriate. G.5, SG.0, SG.1, and BT.1 are `DONE`; SG.2 is `NEXT`, and SG.3–SG.7 remain ordered follow-ups. Every unfinished slice requires its objective-specific behavior board and, for UI/visual work, UI artwork board(s) before its cycle plan can be finalized. The owner-directed P.2.16 correction is DONE in cycle 048. SG work does not depend on deferred release-readiness slices.
+
+## Build tooling
+
+### BT.1 — Enable Gradle configuration cache — DONE
+
+**Objective/scope:** Enable Gradle configuration caching through one root property for this repository's wrapper-driven builds. Preserve the existing build task selection, plugin versions, and application behavior.
+**Depends on:** None.
+**Exit:** Root `gradle.properties` enables configuration caching; `:app:assembleDebug` and `:app:lintDebug` both complete with the setting, store configuration entries and reuse them on repeat invocation; configuration-cache problems remain build failures.
+**Slice board(s) — Behavior:** Product-owner approved `.codex/concepts/BT.1-configuration-cache-behavior-board.png` on 2026-10-31, with no additional constraints stated (editable `.svg` and detailed `.md` at the same stem). No UI artwork board applies.
+**Evidence:** Cycle 077 command logs and result record: `.codex/test-artifacts/077-bt1-configuration-cache/`; closed outcome: `.codex/history/077-bt1-configuration-cache.md`; archived plan: `.codex/history/plans/077-bt1-configuration-cache.md`.
 
 ## Roadmap transition record — Scene Generation pivot
 
@@ -20,6 +30,12 @@ WX is the current priority: `WX.1`, `WX.2`, `WX.3`, `WX.5`, `WX.6`, `WX.9`–`WX
 **Destination:** WX.26 remains next after WX.25 and WX.27/WX.28 retain their order. After WX.28, the proposed `SG.1`–`SG.7` workstream replaces the unstarted ATM.7–ATM.10 scene-mapping sequence and reframes future environment packs as theme-specific scene compositions. Completed ATM.0–ATM.6 and DFM.1–DFM.3 remain historical and unchanged.
 
 **First-slice insertion:** 2026-10-29 20:54:52 America/Chicago / 2026-10-30 01:54:52 UTC. The owner-directed Codex kickoff prompt was saved as `.codex/prompts/scene-generation-roadmap-kickoff.md` and added as SG.0, a documentation-only review slice dependent on WX.28. Existing SG.1–SG.7 IDs and outcomes were preserved; SG.1 now depends on SG.0.
+
+**Owner-directed reprioritization:** 2026-10-30. WX.27 and WX.28 were deferred because release-readiness work is premature while at least two roadmaps of product work remain. SG.0 became NEXT and may review the scene-generation proposal before release-readiness work. The parked WX.27 cycle plan was not activated.
+
+**Owner-directed SG dependency and acceptance update:** 2026-10-30. SG.1–SG.7 do not depend on WX.27, WX.28, or cancelled WX.29; the existing WX dependency edges remain unchanged. Existing-product RTL and TalkBack acceptance is resolved and accepted for SG to inherit as its baseline. Review font scale in SG visual slices when the changed layout or content makes it applicable. Historical cycle records retain what each cycle did and did not test.
+
+**Specification audit insertion:** 2026-10-30. The owner selected one documentation-only G.5 resolution slice ahead of SG.0. G.5 was completed in cycle 074; SG.0 depended on G.5 and completed in cycle 075. The owner approved G.5's behavior board later that day. Cycle 074 closed with findings dispositions and documentation evidence.
 
 **Planning basis:** Draft `docs/OXYGEN_SCENE_GENERATION_SPECIFICATION.md` (OXY-SG-001). It defines semantic asset/layer/timeline tracks, theme-owned composition and placement, day/night transitions, deterministic scene planning, and focused acceptance. The draft is subordinate to controlling product authorities and does not authorize implementation.
 
@@ -57,13 +73,21 @@ Project-wide, every unfinished slice on every roadmap requires an objective-spec
 **Exit:** Authority precedence and adoption limits are explicit; every cited source path is compared with the proposal's baseline; conflicts and missing evidence are recorded; proposed ATM/ENV slices use this roadmap's leaf format; documentation checks pass without application changes.
 **Evidence:** `.codex/history/023-atmosphere-spec-intake.md`; `.codex/history/plans/023-atmosphere-spec-intake.md`; `.codex/test-artifacts/023-atmosphere-spec-intake/README.md`.
 
+### G.5 — Resolve specification audit findings — DONE
+
+**Objective/scope:** Resolve the ten prioritized findings in `findings.md` as one documentation-only clarification of `docs/SPECIFICATION.md` and `docs/OXYGEN_EXPERIENCE_SPECIFICATION.md`. Preserve prototype facts, adopted successor boundaries, and SG.0's separate objective; no app implementation.
+**Depends on:** G.3.
+**Exit:** The approved behavior board and constraints are recorded; all ten findings have explicit dispositions; the two specifications agree on selected-time navigation, data gaps, reset, calendar swipes, conditional alert scope, and acceptance evidence; obsolete or repetitive companion prose no longer obscures current authority; final documentation diff and `git diff --check` are inspected.
+**Slice board(s) — Behavior:** Owner-approved 2026-10-30 at `.codex/concepts/G.5-specification-clarity-behavior-board.md`, with no additional constraints. The board governs the selected-time, availability, reset, and alert contract in plan 074. This documentation-only slice has no UI implementation or visual change.
+**Evidence:** `.codex/test-artifacts/074-g5-specification-clarity/README.md`, `.codex/history/074-g5-specification-clarity.md`, and `.codex/history/plans/074-g5-specification-clarity.md`.
+
 ## WX — OxygenWX unified 44-day weather catalog and production data path
 
 **Status:** Integrated into `docs/ROADMAP.md` after a format, dependency, authority, and provider-capability audit. WX.1 is DONE in cycle 043. WX.17 adds a dormant geocoding contract and adapter; cycle 061 wires selected-location catalog activation, while the active catalog remains separate from the current SampleForecast renderer.
 
 **Authority transition:** WX.1 records the owner-approved successor direction. The current prototype remains the only integrated app behavior; bounded WX data-domain work may proceed without changing app behavior. The deprecated oxygenWX application is a reference only; do not copy its app structure or introduce its four-page Home pager. The immersive elastic timeline remains the successor app's primary experience.
 
-**Roadmap priority:** WX is the prioritized workstream. `WX.1` is `DONE` in cycle 043 and `WX.2` is `DONE` in cycle 044; `WX.3` is `DONE` in cycle 045 and `WX.5` is `DONE` in cycle 047; `WX.6` is `DONE` in cycle 049, `WX.9` is `DONE` in cycle 050, and `WX.10` is `DONE` in cycle 051; owner-directed `WX.10R` is `DONE` in cycle 070; `WX.11` is `DONE` in cycle 052; `WX.12` is `DONE` in cycle 053; `WX.13` is `DONE` in cycle 054; `WX.13R` is `DONE` in cycle 055; `WX.15` is `DONE` in cycle 056; WX.16 is DONE in cycle 057; WX.17 is DONE in cycle 058; `WX.18` is `DONE` in cycle 059; `WX.19` is `DONE` in cycle 060; `WX.20` is `DONE` in cycle 061; `WX.22` is `DONE` in cycle 062; `WX.23` is `DONE` in cycle 063; `WX.24` is `DONE` in cycle 065; `WX.25` is `DONE` in cycle 071; WX.26 is DONE in cycle 072; later WX slices are `PLANNED`. P.2.16 is DONE in cycle 048. After `WX.28` closes, begin the proposed SG workstream as recorded in the roadmap transition record. This records sequencing, not an added dependency edge. Cycle 045 closed for WX.3; its contract board was owner-approved on 2026-10-27.
+**Roadmap priority:** WX.1–WX.26 work listed above is complete, with exact cycle references preserved in its slice records. WX.27 and WX.28 remain DEFERRED as independent release-readiness outcomes; neither gates SG work. G.5, SG.0, SG.1, and BT.1 are DONE; SG.2 is NEXT. P.2.16 is DONE in cycle 048. Cycle 045 closed for WX.3; its contract board was owner-approved on 2026-10-27.
 
 **Slice board gate:** Every unfinished WX slice requires its objective-specific behavior board and, for UI/visual work, a UI artwork board before its cycle plan can be finalized. Existing concept paths below are board targets, not evidence of owner approval. The WX.3 annotated catalog-contract board was approved on 2026-10-27 as shown, with its constraints recorded in the active plan/evidence. The WX.5 annotated window-completeness board was approved on 2026-10-27 as shown, with its constraints recorded in plan 047. The WX.6 fixture-adapter board, WX.10 simulator board, and WX.11 record/replay board were approved on 2026-10-27 as shown, with their constraints recorded in their plans/evidence. Other proposed `.codex/concepts/WX.*.png` paths remain targets. Behavior boards may use flows, states, schemas, sequences, or boundaries annotated with text and images. UI artwork is additionally required for UI/visual outcomes. Record approval and constraints in the plan; device/installed acceptance evidence remains separate.
 
@@ -157,7 +181,7 @@ Project-wide, every unfinished slice on every roadmap requires an objective-spec
 **Objective/scope:** Define a stable serialized canonical catalog recording with schema version, location, source/product timestamps, nullable fields, and deterministic replay loader. Record an approved deterministic synthetic fixture without network calls. Provider-derived fixture selection and verification are deferred to WX.13, where provider product meaning can be established. No live transport, UI, or editing raw scenario tables.
 **Depends on:** WX.9 and WX.10.
 **Exit:** An approved synthetic catalog recording round-trips without losing units, timezone, source/product identity, severe-weather fields, declared support, or missingness; malformed/old schemas fail or migrate explicitly; replay produces the same canonical type as simulation. Provider-derived round-trip evidence remains a WX.13 follow-up and is not claimed by WX.11.
-**Behavior board:** Owner-approved 2026-10-27 as shown in `.codex/concepts/WX.11-record-replay.png`, with editable `.svg`; its section 04 contract and fixture choices remain for the bounded plan to resolve before finalization.
+**Concept artwork:** Owner-approved 2026-10-27 as shown in `.codex/concepts/WX.11-record-replay.png`, with editable `.svg`; its section 04 contract and fixture choices remain for the bounded plan to resolve before finalization.
 **Evidence:** Cycle 052 (`052-wx11-recorded-catalog-replay`): fixture and verification evidence `.codex/test-artifacts/052-wx11-recorded-catalog-replay/`; closeout `.codex/history/052-wx11-recorded-catalog-replay.md`; archived plan `.codex/history/plans/052-wx11-recorded-catalog-replay.md`; wire format `docs/RECORDED_CATALOG_V1.md`.
 
 ### WX.12 — Add the Open-Meteo transport and revise prototype isolation guard — DONE
@@ -283,18 +307,20 @@ Project-wide, every unfinished slice on every roadmap requires an objective-spec
 **Evidence:** On planning, allocate chronological cycle paths and installed state/evidence captures. Target paths when planned: `.codex/test-artifacts/<cycle-id>/`; closeout `.codex/history/<cycle-id>.md`; plan `.codex/plans/<cycle-id>.md`; archived plan `.codex/history/plans/<cycle-id>.md`.
 **Closeout evidence:** `.codex/test-artifacts/072-wx26-production-startup/README.md` records first launch, saved/offline restore, cached and uncached location switches, refresh success/failure, and retry recovery on Pixel 3 XL. Automated tests and selector-dismissal/stale-callback runtime checks were not performed; see cycle history for exact limits. These omissions do not alter the focused roadmap exit flows.
 
-### WX.27 — Adopt OxygenWX product labels and audit release-data boundaries — PLANNED
+### WX.27 — Adopt OxygenWX product labels and audit release-data boundaries — DEFERRED
 
 **Objective/scope:** Replace experimental user-facing Time Lab branding with owner-approved OxygenWX naming, align permissions, source attribution/modified-data notices, privacy and debug/release packaging with actual implemented capabilities, and make an explicit Android application-ID/signing/migration decision **without silently changing identity**. Do not copy the deprecated app or claim official alerts. Coordinate rather than duplicate deferred `P.4` slices.
 **Depends on:** WX.26 and the owner-approved WX.1 product decision.
 **Exit:** Release-installed app presents approved OxygenWX labels and accurate provider/freshness context; manifests, permissions, source/DEX scan, security/attribution and legacy-app coexistence or replacement decision are recorded; synthetic data and debug picker are absent from release; no unsupported weather warning claims or misleading DEMO DATA labels exist.
-**Concept artwork:** Pending owner-approved product identity/source placement storyboard at `.codex/concepts/WX.27-release-identity.png`.
+**Re-entry condition:** The product is finished and polished and release-readiness work is appropriate; explicitly restore this slice to the ordered execution path before planning or activation.
+**Concept artwork:** Owner approved 2026-10-30 at `.codex/concepts/WX.27-release-identity.png` (editable source: `.codex/concepts/WX.27-release-identity.svg`). Approval covers the proposed OxygenWX identity placement, live/cached/unavailable source and freshness states, attribution/privacy/permission review, debug-versus-release boundary, and explicit app-ID/signing decision flow. It does not pre-decide final provider/legal copy or the coexist-versus-replace outcome; record those within WX.27. No application-ID or signing migration is authorized by this storyboard approval.
 **Evidence:** On planning, allocate chronological cycle paths and release manifest/APK/installed evidence. Target paths when planned: `.codex/test-artifacts/<cycle-id>/`; closeout `.codex/history/<cycle-id>.md`; plan `.codex/plans/<cycle-id>.md`; archived plan `.codex/history/plans/<cycle-id>.md`.
 
-### WX.28 — Run final application-wide integration and release acceptance — PLANNED
+### WX.28 — Run final application-wide integration and release acceptance — DEFERRED
 
 **Objective/scope:** Execute final bounded integration and release-boundary acceptance for the implemented catalog and app experience; publish a coverage/limitations matrix without hiding fixes in the verification cycle. Exercise real/recorded/simulated sources, 30+14 date coverage, archived-past labeling, DST, nullable severe fields, source hot-swap and races, multi-location persistence, offline/lifecycle behavior, and debug/release isolation. Keep checks focused on integration and release boundaries; system-wide accessibility, UI performance, and other cross-app suites belong to a separate test roadmap after the basic first-tier features work. Confirm registered devices during planning; Pixel 3 XL remains the reference. Handle defects as separate corrective slices.
 **Depends on:** WX.10, WX.11, WX.13, WX.16, WX.19, WX.22, WX.25, WX.26, and WX.27.
+**Re-entry condition:** WX.27 is complete and the product is finished and polished enough for application-wide integration and release acceptance; explicitly restore this slice to the ordered execution path before planning or activation.
 **Exit:** An owner-reviewable report records each scoped integration/release scenario as **PASS/FAIL/NOT RUN**, with exact commands/builds/device details, installed captures where needed, source/units/provenance agreement, target-versus-actual date coverage, remaining blockers, and release risks. Mark DONE only when the recorded release acceptance criteria pass; fixes require separate slices.
 **Concept artwork:** Pending owner-approved acceptance coverage and evidence storyboard at `.codex/concepts/WX.28-acceptance-matrix.png`.
 **Evidence:** On planning, allocate chronological cycle paths and integrated verification matrix/captures. Target paths when planned: `.codex/test-artifacts/<cycle-id>/`; closeout `.codex/history/<cycle-id>.md`; plan `.codex/plans/<cycle-id>.md`; archived plan `.codex/history/plans/<cycle-id>.md`.
@@ -578,33 +604,33 @@ This workstream establishes an explicit, debug-only set of typed forecast scenar
 **Concept artwork:** Owner approved 2026-10-26 at `.codex/concepts/DFM.3-debug-forecast-matrix-browser.png`. The Pixel 3 XL-based storyboard shows the same full-screen atmosphere and bottom tape across a clear → partly-cloudy → storm scrub sequence, plus separate rain and extended cold/cloud/wind/snow fixtures. No forecast cards or on-screen debug control are proposed.
 **Evidence:** Cycle 041: `.codex/test-artifacts/041-dfm3-debug-forecast-matrix-browser/README.md`; release inspection: `.codex/test-artifacts/041-dfm3-debug-forecast-matrix-browser/release-isolation.txt`; history: `.codex/history/041-dfm3-debug-forecast-matrix-browser.md`; archived plan: `.codex/history/plans/041-dfm3-debug-forecast-matrix-browser.md`. TalkBack, RTL, large-font, and reduced-motion review remain assigned to applicable follow-up cycles.
 
-## SG — Scene Generation (proposed roadmap after WX.28)
+## SG — Scene Generation
 
-The SG workstream follows the owner-directed pivot recorded above and is grounded in the draft `docs/OXYGEN_SCENE_GENERATION_SPECIFICATION.md`. It consumes typed forecast events and emits semantic asset/layer/timeline tracks; themes supply backgrounds, placement, paths, ordering, and visual variants. It does not assume a landscape, sky, horizon, or planetary setting. WX.26 remains the next slice after active WX.25, and SG work does not begin before WX.28 closes.
+The SG workstream follows the owner-directed pivot recorded above and is grounded in the draft `docs/OXYGEN_SCENE_GENERATION_SPECIFICATION.md`. It consumes typed forecast events and emits semantic asset/layer/timeline tracks; themes supply backgrounds, placement, paths, ordering, and visual variants. It does not assume a landscape, sky, horizon, or planetary setting. SG.0 is documentation-only; SG.1–SG.7 follow their SG and DFM dependencies and do not wait on deferred WX.27/WX.28 release-readiness work or cancelled WX.29. For SG, a slice board package means a flow/logic board plus a UI artwork board for visual slices; one combined board is acceptable when both parts are clear. Existing-product RTL and TalkBack acceptance is the inherited baseline. Review font scale in SG UI work when applicable.
 
-### SG.0 — Review and mature the Scene Generation proposal — PLANNED
+### SG.0 — Review and mature the Scene Generation proposal — DONE
 
-**Objective/scope:** Execute `.codex/prompts/scene-generation-roadmap-kickoff.md` as a documentation-only review of OXY-SG-001 and SG.1–SG.7. Refine scene-track/theme contracts, transition and data-truth rules, boundaries, slice exits, dependencies, concept-art briefs, and open decisions. Do not change application code or claim concept approval.
-**Depends on:** WX.28.
-**Exit:** The specification and roadmap are internally consistent and grounded in current source; SG.1–SG.7 are bounded, ordered, and have valid dependencies and observable exits; material unresolved choices are listed for owner resolution; concept-art briefs identify the affected visual states and invariants; the spec remains a draft unless the owner explicitly adopts it. Evidence includes the review findings and final documentation diff.
-**Behavior board:** Pending owner-approved proposal-review board at `.codex/concepts/SG.0-proposal-review-behavior-board.md`, covering specification/roadmap decisions, unresolved owner choices, and the review boundary as an annotated flow/content map. The kickoff prompt is an execution brief, not the required board.
-**Evidence:** On planning, allocate chronological cycle paths; preserve the review findings and exact documentation verification under `.codex/test-artifacts/<cycle-id>/`, `.codex/history/<cycle-id>.md`, and `.codex/history/plans/<cycle-id>.md`.
+**Objective/scope:** Execute `.codex/prompts/scene-generation-roadmap-kickoff.md` as a documentation-only review of OXY-SG-001 and SG.1–SG.7. Refine scene-track/theme contracts, transition and data-truth rules, boundaries, slice exits, dependencies, slice-board briefs, and open decisions. Do not change application code or claim concept approval.
+**Depends on:** G.5.
+**Exit:** The specification and roadmap are internally consistent and grounded in current source; SG.1–SG.7 are bounded, ordered, and have valid dependencies and observable exits; material unresolved choices are listed for owner resolution; slice-board briefs identify the affected visual states and invariants; the spec remains a draft unless the owner explicitly adopts it. Evidence includes the review findings and final documentation diff.
+**Slice board(s) — Flow/logic:** Product-owner approved the complete proposal-review behavior board at `.codex/concepts/SG.0-proposal-review-behavior-board.md` on 2026-10-30 after reviewing its visual sheet at `.codex/concepts/SG.0-proposal-review-behavior-board.png`. It covers the behavior/type/ownership review direction and leaves exact transitions, unavailable artwork, and missing-theme-asset fallback to later bounded slices. The kickoff prompt is an execution brief, not the required board.
+**Evidence:** Cycle 075 review findings and documentation diff: `.codex/test-artifacts/075-sg0-proposal-review/`; closed outcome: `.codex/history/075-sg0-proposal-review.md`; archived plan: `.codex/history/plans/075-sg0-proposal-review.md`. The SG specification remains a draft.
 
-### SG.1 — Generate deterministic semantic scene tracks — PLANNED
+### SG.1 — Generate deterministic semantic scene tracks — DONE
 
 **Objective/scope:** Define and implement the pure scene-plan contract from canonical typed forecast events, location timezone, and selected-time window. Tracks identify an asset or asset family, semantic `layer_name`, absolute timeline, and bounded transition policy; they contain no theme-specific coordinates or layout. Include day/night transition tracks as explicit light-phase variants without astronomical claims.
-**Depends on:** WX.28, SG.0, DFM.1, DFM.2, and DFM.3.
-**Exit:** Repeated generation from the same catalog revision, timezone, window, and generator version yields the same ordered tracks; dry, precipitation, missing, and probability-only inputs remain distinct; event boundaries use actual supported instants; day/night transitions do not alter weather-event intervals; a focused six-hour scenario can be inspected as a scene plan without rendering.
-**Concept artwork:** Pending owner-approved scene-track and layer contract board at `.codex/concepts/SG.1-scene-track-contract.png`.
-**Evidence:** At planning, assign the next chronological cycle ID and allocate its `.codex/test-artifacts/<cycle-id>/`, `.codex/history/<cycle-id>.md`, and `.codex/history/plans/<cycle-id>.md` paths.
+**Depends on:** SG.0, DFM.1, DFM.2, and DFM.3.
+**Exit:** Repeated generation from the same catalog revision, timezone, window, and generator version yields the same ordered theme-independent tracks; point and interval support retain their granularity; dry, precipitation, missing, and probability-only inputs remain distinct; a documented bounded representative-display, expected-gap, and disclosure rule handles adjacent point samples without reporting an exact event minute; day/night tracks do not alter weather support; a focused six-hour scenario can be inspected as a scene plan without rendering.
+**Slice board(s) — Flow/logic:** Product-owner approved `.codex/concepts/SG.1-scene-track-contract.png` on 2026-10-31, with no additional constraints stated; editable source is `.codex/concepts/SG.1-scene-track-contract.svg`. The board governs adjacent supported samples, an expected missing sample, point versus interval support, source valid times, the nearest expected-time display-cell rule, and independent light tracks. It is a behavior contract, not UI artwork or installed evidence. Candidate forecast IDs in `docs/WEATHER_ASSETS_SPEC.md` inform semantic mapping only where canonical typed inputs support them; approval does not extend to artwork or full inventory coverage.
+**Evidence:** Cycle 076 trace and command record: `.codex/test-artifacts/076-sg1-semantic-scene-tracks/`; closed outcome: `.codex/history/076-sg1-semantic-scene-tracks.md`; archived plan: `.codex/history/plans/076-sg1-semantic-scene-tracks.md`. No UI or installed acceptance was claimed.
 
-### SG.2 — Define the first theme composition and asset family — PLANNED
+### SG.2 — Define the first theme composition and asset family — NEXT
 
 **Objective/scope:** Establish one complete theme manifest with a background/world definition, semantic layer placements and order, asset-family references, day/night variants, and the theme's composition paths. Keep the selected-time and forecast contract independent of the theme. No theme picker or downloadable themes.
 **Depends on:** SG.1.
 **Visual conditions:** Define the theme at portrait phone and compact viewport sizes; record large-font, RTL, and reduced-motion applicability on its UI board before plan finalization. The board is the visual review target, not installed acceptance evidence.
 **Exit:** The first theme resolves every layer used by its approved initial scene; assets scale within its declared world/viewport; day/night variants transition without moving weather-event timelines; missing theme variants have an explicit fallback; the manifest makes no geographic or climate claim unsupported by its inputs.
-**Concept artwork:** Pending owner-approved first-theme composition and day/night asset board at `.codex/concepts/SG.2-first-theme-composition.png`.
+**Slice board(s):** Combined flow/logic and UI artwork board pending owner approval: first-theme background, placement, day/night assets, missing-variant fallback, and compact/static states at `.codex/concepts/SG.2-first-theme-composition.png`. Select a bounded asset family from supported semantic inputs; inventory rows alone do not approve drawings.
 **Evidence:** At planning, assign the next chronological cycle ID and allocate its test-artifact and history paths.
 
 ### SG.3 — Render clear, cloudy, and light-phase scenes — PLANNED
@@ -613,16 +639,16 @@ The SG workstream follows the owner-directed pivot recorded above and is grounde
 **Depends on:** SG.1 and SG.2.
 **Visual conditions:** Installed Pixel 3 XL portrait states cover clear, cloudy, day, dusk, and night; review default and 1.3 font scale, and record RTL and reduced-motion applicability with focused checks for any affected scene behavior.
 **Exit:** Focused installed states show the approved sky-condition distinctions and light transitions at selected instants; transitions are deterministic and scene loading does not steal input or delay scrubbing; selected time, forecast facts, and readable UI remain authoritative; static presentation preserves the same scene meaning.
-**Concept artwork:** Pending owner-approved first-theme clear/cloud/light-phase storyboard at `.codex/concepts/SG.3-clear-cloud-light-transitions.png`.
+**Slice board(s):** Combined flow/logic and UI artwork board pending owner approval: first-theme clear/cloud/light-phase storyboard at `.codex/concepts/SG.3-clear-cloud-light-transitions.png`, including supported, unavailable, day, dusk, night, and static states without astronomical claims.
 **Evidence:** At planning, assign the next chronological cycle ID, installed captures, and history paths.
 
 ### SG.4 — Add precipitation event tracks and overlays — PLANNED
 
-**Objective/scope:** Map supported rain and snow events, probability, explicit amounts, and missing values to first-theme overlays with day/night variants. Preserve their separate meanings. Demonstrate a near-term scrub where the scene shows the supported dry, rain, and clearing intervals without implying that missing data is dry or probability is certainty/intensity.
+**Objective/scope:** Map supported rain and snow evidence, probability, explicit amounts, and missing values to first-theme overlays with day/night variants. Preserve their separate meanings. Demonstrate a near-term scrub through supported dry, rain, and clearing evidence without implying that point samples establish exact event intervals, missing data is dry, or probability is certainty/intensity.
 **Depends on:** SG.1, SG.2, and SG.3.
 **Visual conditions:** Installed Pixel 3 XL states cover dry, rain, snow, unknown, probability-only, explicit-amount, day, and night cases; review default and 1.3 font scale, and reduced motion for the affected overlays. Record RTL applicability for the theme composition.
-**Exit:** A focused six-hour installed scenario shows rain onset, continuation, and end at supported timeline positions; dry, unknown, probability-only, and explicit-amount states remain distinguishable; transitions do not fabricate event times or facts; selected-time behavior, responsiveness, gesture ownership, and readable forecast text remain intact.
-**Concept artwork:** Pending owner-approved precipitation overlay and six-hour timeline board at `.codex/concepts/SG.4-precipitation-event-tracks.png`.
+**Exit:** A focused six-hour installed scenario shows precipitation changes within source-supported time brackets or interval bounds, with point-sample imagery distinguished from an interval-backed claim; the bounded mapping identifies which inputs establish dry or event evidence and how an expected missing sample breaks visual carry; dry, unknown, probability-only, and explicit-amount states remain distinguishable; no chosen visual transition minute is reported as a source event time; selected-time behavior, responsiveness, gesture ownership, and readable forecast text remain intact.
+**Slice board(s):** Combined flow/logic and UI artwork board pending owner approval: precipitation overlay and six-hour timeline at `.codex/concepts/SG.4-precipitation-event-tracks.png`; show rain-at-10:00/clear-at-11:00, an expected missing sample, point-supported rain/snow versus explicit amount/rate intervals, dry, probability-only, day/night, and reduced-motion states. Select only supported input families from the proposed weather-assets inventory.
 **Evidence:** At planning, assign the next chronological cycle ID and its focused installed evidence paths.
 
 ### SG.5 — Add approved atmospheric event families — PLANNED
@@ -631,7 +657,7 @@ The SG workstream follows the owner-directed pivot recorded above and is grounde
 **Depends on:** SG.1, SG.2, and SG.3.
 **Visual conditions:** The bounded plan names the selected event families and installed Pixel 3 XL states; it records compact/large-font, RTL, and reduced-motion applicability, then reviews only conditions affected by those scene changes.
 **Exit:** Every selected event family has the required owner-approved behavior and UI artwork board(s) before plan finalization and a focused installed state showing correct onset/change/exit behavior. Missing inputs remain unknown; its scene transitions preserve forecast facts, selected time, responsiveness, gesture ownership, and readability.
-**Concept artwork:** Pending owner-selected event-family board(s), allocated under `.codex/concepts/SG.5-<event-family>.png` when that slice is planned.
+**Slice board(s):** Flow/logic and UI artwork board(s) pending owner selection for the event families, allocated under `.codex/concepts/SG.5-<event-family>.png` when that slice is planned. Each board names supported typed inputs, onset/change/exit and unavailable states, shared art versus distinct readable labels, and applicable day/night/static treatment; proposed inventory hazards and official products do not enter this scene slice.
 **Evidence:** Plan one specific event-family set and allocate its chronological cycle and evidence paths; do not claim coverage for unselected families.
 
 ### SG.6 — Prove theme-specific spatial composition — PLANNED
@@ -640,7 +666,7 @@ The SG workstream follows the owner-directed pivot recorded above and is grounde
 **Depends on:** SG.1, SG.2, SG.3, and SG.4.
 **Visual conditions:** The approved board defines both themes at portrait phone and compact viewport sizes, plus applicable large-font, RTL, and reduced-motion states. Installed paired captures use the same selected instants and forecast events.
 **Exit:** The same selected-time scene plan renders in both themes with matching event times and forecast meaning but distinct theme-owned composition; missing theme assets follow the declared fallback; theme changes do not change selected time or forecast facts. This is an architecture proof, not a complete theme catalog or theme-selection UI.
-**Concept artwork:** Pending owner-approved contrasting-theme composition board at `.codex/concepts/SG.6-contrasting-theme-proof.png`.
+**Slice board(s):** Combined flow/logic and UI artwork board pending owner approval: contrasting-theme composition at `.codex/concepts/SG.6-contrasting-theme-proof.png`.
 **Evidence:** At planning, allocate paired installed captures, theme manifests, and focused history paths.
 
 ### SG.7 — Bound scene planning, loading, lifecycle, and performance — PLANNED
@@ -649,7 +675,7 @@ The SG workstream follows the owner-directed pivot recorded above and is grounde
 **Depends on:** SG.3, SG.4, and SG.6.
 **Visual conditions:** Profile the same representative states at the Pixel 3 XL reference viewport and one compact viewport; include foreground, background/offscreen, and reduced-motion states. Record large-font and RTL applicability for scene/text composition.
 **Exit:** Focused reference-device evidence records plan-build and asset-load latency, cache invalidation on catalog/location/theme-version changes, timeline responsiveness during scrub, lifecycle behavior, and static/reduced-motion meaning. Define and meet the bounded budget in the cycle plan or record an evidenced blocker and follow-up.
-**Concept artwork:** Pending owner-approved scene quality/lifecycle board at `.codex/concepts/SG.7-scene-runtime-quality.png`.
+**Slice board(s):** Flow/logic and UI artwork board pending owner approval: scene quality/lifecycle at `.codex/concepts/SG.7-scene-runtime-quality.png`.
 **Evidence:** At planning, allocate reference-device logs, captures, exact measurement method, and closeout paths.
 
 ## ATM — Earlier matrix-driven scene sequence (superseded)

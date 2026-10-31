@@ -1,0 +1,136 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1800" height="1200" viewBox="0 0 1800 1200" role="img" aria-labelledby="title desc">
+  <title id="title">WX.27 — OxygenWX release identity and data boundary storyboard</title>
+  <desc id="desc">A combined behavior and UI storyboard for approved OxygenWX naming, truthful provider and freshness labels, privacy and permission review, debug versus release packaging, and an explicit app identity decision that does not silently change application ID or signing.</desc>
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#0b1725"/><stop offset="1" stop-color="#102b3b"/></linearGradient>
+    <marker id="arrow" markerWidth="10" markerHeight="10" refX="8" refY="5" orient="auto"><path d="M0 0L10 5L0 10Z" fill="#7b9aad"/></marker>
+    <marker id="arrowMint" markerWidth="10" markerHeight="10" refX="8" refY="5" orient="auto"><path d="M0 0L10 5L0 10Z" fill="#62d5bb"/></marker>
+    <style>
+      text{font-family:Inter,'DejaVu Sans',sans-serif;fill:#edf4f7}
+      .muted{fill:#abc0cc}.dim{fill:#819cab}.mint{fill:#7be0c9}.blue{fill:#a6caff}.amber{fill:#f2bd78}.red{fill:#ef9c94}
+      .panel{fill:#132c3c;stroke:#375a6c;stroke-width:2}.card{fill:#19384a;stroke:#42687a;stroke-width:2}
+      .subcard{fill:#102637;stroke:#355768;stroke-width:1.5}.line{stroke:#708e9f;stroke-width:3;fill:none;marker-end:url(#arrow)}
+      .mintline{stroke:#62d5bb;stroke-width:3;fill:none;marker-end:url(#arrowMint)}
+      .title{font-size:37px;font-weight:750;letter-spacing:.2px}.h{font-size:20px;font-weight:700;letter-spacing:.3px}
+      .eyebrow{font-size:14px;font-weight:700;letter-spacing:1.5px}.body{font-size:16px}.small{font-size:14px}.tiny{font-size:12px}.mono{font-family:'DejaVu Sans Mono',monospace;font-size:13px}
+    </style>
+  </defs>
+  <rect width="1800" height="1200" fill="url(#bg)"/>
+  <circle cx="1690" cy="85" r="185" fill="#1b3a49" opacity=".34"/>
+  <text x="58" y="42" class="eyebrow mint">OXYGEN WX / RELEASE IDENTITY &amp; DATA BOUNDARY / 27</text>
+  <text x="58" y="91" class="title">Make the release identity match the weather data it ships.</text>
+  <text x="60" y="123" class="body muted">Approve the name and visible source context; audit privacy, permissions, package contents, and app identity before release acceptance.</text>
+  <rect x="1450" y="35" width="300" height="40" rx="20" fill="#153e3c" stroke="#4eb7a4" stroke-width="1.5"/>
+  <text x="1600" y="61" text-anchor="middle" class="eyebrow mint">OWNER APPROVED · 2026-10-30</text>
+
+  <!-- User facing identity and attribution artwork -->
+  <rect x="55" y="155" width="825" height="438" rx="22" class="panel"/>
+  <text x="82" y="195" class="eyebrow mint">01 · RELEASE APP · IDENTITY + VISIBLE DATA CONTEXT</text>
+  <text x="82" y="226" class="h">Candidate OxygenWX name; product mark awaits approval.</text>
+  <rect x="82" y="247" width="362" height="316" rx="18" class="subcard"/>
+  <rect x="82" y="247" width="362" height="47" rx="18" fill="#19384a" stroke="#355768" stroke-width="1.5"/>
+  <text x="104" y="278" class="eyebrow mint">OXYGENWX · CANDIDATE WORDMARK</text>
+  <text x="104" y="323" class="h">Chicago, Illinois</text>
+  <text x="104" y="348" class="small muted">America/Chicago · location saved</text>
+  <rect x="104" y="368" width="317" height="80" rx="12" fill="#153e3c" stroke="#4eb7a4" stroke-width="1.5"/>
+  <text x="123" y="394" class="eyebrow mint">LIVE · OPEN-METEO</text>
+  <text x="123" y="420" class="small">Updated 10:00 AM local time</text>
+  <text x="123" y="440" class="tiny muted">Provider and freshness stay visible with values.</text>
+  <rect x="104" y="462" width="317" height="76" rx="12" class="card"/>
+  <text x="123" y="487" class="eyebrow blue">FORECAST · SELECTED TIME</text>
+  <text x="123" y="515" class="body">72° · Partly cloudy · Wind 8 mph</text>
+  <text x="123" y="535" class="tiny muted">Important facts remain readable as text.</text>
+  <text x="468" y="270" class="eyebrow blue">VISIBLE LABEL RULES</text>
+  <rect x="468" y="286" width="380" height="76" rx="13" class="card"/>
+  <text x="490" y="312" class="eyebrow mint">LIVE / CURRENT</text>
+  <text x="490" y="338" class="small">Name provider; show last successful update.</text>
+  <rect x="468" y="376" width="380" height="76" rx="13" class="card"/>
+  <text x="490" y="402" class="eyebrow amber">CACHED / OFFLINE</text>
+  <text x="490" y="428" class="small">Keep source; show cached time and stale state.</text>
+  <rect x="468" y="466" width="380" height="76" rx="13" fill="#382c2c" stroke="#865c52" stroke-width="1.5"/>
+  <text x="490" y="492" class="eyebrow red">UNAVAILABLE / FAILED</text>
+  <text x="490" y="512" class="small">Explain no current refresh; retain</text>
+  <text x="490" y="532" class="small">the prior data state truthfully.</text>
+
+  <!-- Release/debug separation -->
+  <rect x="905" y="155" width="840" height="438" rx="22" class="panel"/>
+  <text x="932" y="195" class="eyebrow mint">02 · BUILD VARIANTS · DEBUG TOOLS NEVER SHIP IN RELEASE</text>
+  <rect x="932" y="220" width="382" height="230" rx="16" fill="#153e3c" stroke="#4eb7a4" stroke-width="2"/>
+  <text x="958" y="255" class="eyebrow mint">RELEASE APK</text>
+  <text x="958" y="291" class="h">Real catalog app experience</text>
+  <text x="958" y="326" class="small">✓ Approved OxygenWX product labels</text>
+  <text x="958" y="354" class="small">✓ Accurate provider / cached / freshness context</text>
+  <text x="958" y="382" class="small">✓ Only permissions used by shipped capabilities</text>
+  <text x="958" y="402" class="small">✓ No synthetic catalog or debug picker</text>
+  <text x="976" y="424" class="small">entry point in release</text>
+  <rect x="1336" y="220" width="382" height="230" rx="16" fill="#382c2c" stroke="#865c52" stroke-width="2"/>
+  <text x="1362" y="255" class="eyebrow red">DEBUG APK ONLY</text>
+  <text x="1362" y="291" class="h">Developer source controls</text>
+  <text x="1362" y="326" class="small">SIMULATED and REPLAY source picker</text>
+  <text x="1362" y="354" class="small">Synthetic scenarios and debug entry point</text>
+  <text x="1362" y="382" class="small">Clearly labeled test data / developer context</text>
+  <text x="1362" y="410" class="small">Present only in debug manifest / DEX / source set</text>
+  <rect x="932" y="469" width="786" height="88" rx="13" class="subcard"/>
+  <text x="955" y="496" class="eyebrow amber">RELEASE CHECK · SOURCE, MANIFEST, DEX, INSTALLED APP</text>
+  <text x="955" y="524" class="small">Search for picker, fixture profiles, synthetic IDs and debug activities; inspect permissions and final installed labels.</text>
+  <text x="955" y="546" class="tiny muted">A screenshot alone cannot establish package isolation or permission correctness.</text>
+
+  <!-- Attribution / permissions -->
+  <rect x="55" y="615" width="545" height="307" rx="22" class="panel"/>
+  <text x="82" y="655" class="eyebrow mint">03 · DATA, PRIVACY &amp; PERMISSIONS REVIEW</text>
+  <rect x="82" y="679" width="491" height="91" rx="13" class="card"/>
+  <text x="104" y="706" class="eyebrow blue">SOURCE &amp; MODIFIED-DATA NOTICE</text>
+  <text x="104" y="734" class="small">Give required provider credit and explain any transformations.</text>
+  <text x="104" y="755" class="tiny muted">Copy and placement follow provider terms and actual app behavior.</text>
+  <rect x="82" y="784" width="491" height="104" rx="13" class="subcard"/>
+  <text x="104" y="811" class="eyebrow amber">CAPABILITY-BASED PERMISSION AUDIT</text>
+  <text x="104" y="839" class="small">Retain only permissions needed by shipped features.</text>
+  <text x="104" y="862" class="small">No GPS/background location claim; manual search is current path.</text>
+  <text x="104" y="881" class="tiny muted">Privacy notice describes collected, stored, and shared data truthfully.</text>
+
+  <!-- App id/signing decision -->
+  <rect x="620" y="615" width="545" height="307" rx="22" class="panel"/>
+  <text x="647" y="655" class="eyebrow mint">04 · APPLICATION ID &amp; SIGNING · EXPLICIT DECISION</text>
+  <rect x="647" y="679" width="491" height="70" rx="13" class="card"/>
+  <text x="670" y="706" class="eyebrow amber">REVIEW CURRENT ID + KEY OWNERSHIP</text>
+  <text x="670" y="731" class="small">Record present package ID, signing continuity, and distribution.</text>
+  <path d="M892 750v24m0 0H770v13m122-13h120v13" class="line"/>
+  <rect x="647" y="801" width="232" height="76" rx="13" fill="#153e3c" stroke="#4eb7a4" stroke-width="1.5"/>
+  <text x="665" y="827" class="eyebrow mint">COEXIST</text>
+  <text x="665" y="851" class="tiny">Keep ID/signing; install alongside</text>
+  <text x="665" y="869" class="tiny">legacy app if owner chooses.</text>
+  <rect x="897" y="801" width="241" height="76" rx="13" fill="#382c2c" stroke="#865c52" stroke-width="1.5"/>
+  <text x="915" y="827" class="eyebrow red">REPLACE / MIGRATE</text>
+  <text x="915" y="851" class="tiny">Requires explicit owner decision</text>
+  <text x="915" y="869" class="tiny">and separate migration authorization.</text>
+  <text x="647" y="906" class="tiny muted">WX.27 records the decision; it does not silently change package identity or keys.</text>
+
+  <!-- Flow and closure -->
+  <rect x="1185" y="615" width="560" height="307" rx="22" class="panel"/>
+  <text x="1212" y="655" class="eyebrow mint">05 · REVIEW FLOW &amp; RELEASE GATE</text>
+  <rect x="1212" y="679" width="506" height="48" rx="11" class="subcard"/>
+  <text x="1230" y="709" class="small">1 · Approve user-facing name and source wording</text>
+  <path d="M1465 729v13" class="mintline"/>
+  <rect x="1212" y="746" width="506" height="48" rx="11" class="subcard"/>
+  <text x="1230" y="776" class="small">2 · Match every label to source, freshness, and capability</text>
+  <path d="M1465 796v13" class="mintline"/>
+  <rect x="1212" y="812" width="506" height="48" rx="11" class="subcard"/>
+  <text x="1230" y="842" class="small">3 · Audit privacy, permissions, attribution, and build contents</text>
+  <path d="M1465 862v13" class="mintline"/>
+  <rect x="1212" y="879" width="506" height="28" rx="9" fill="#153e3c" stroke="#4eb7a4" stroke-width="1.5"/>
+  <text x="1465" y="899" text-anchor="middle" class="tiny mint">4 · Record app ID / signing disposition → hand off to WX.28</text>
+
+  <!-- Cross-cutting constraints and approval -->
+  <rect x="55" y="944" width="1690" height="171" rx="22" class="panel"/>
+  <text x="82" y="984" class="eyebrow mint">06 · INVARIANTS, OUT-OF-SCOPE, AND OWNER REVIEW</text>
+  <rect x="82" y="1002" width="790" height="79" rx="13" fill="#153e3c" stroke="#4eb7a4" stroke-width="1.5"/>
+  <text x="105" y="1029" class="eyebrow mint">PRESERVE TRUTH</text>
+  <text x="105" y="1056" class="small">No unsupported weather-warning claims · no SIMULATED data as live · no misleading DEMO DATA labels.</text>
+  <text x="105" y="1076" class="tiny muted">Keep important forecast facts visible as text; retain the immersive timeline as the primary experience.</text>
+  <rect x="895" y="1002" width="823" height="79" rx="13" fill="#382c2c" stroke="#865c52" stroke-width="1.5"/>
+  <text x="918" y="1029" class="eyebrow red">NOT THIS SLICE</text>
+  <text x="918" y="1056" class="small">No unapproved identity migration · no official-alert feature · no deprecated-app port or unrelated redesign.</text>
+  <text x="918" y="1076" class="tiny muted">Owner review requested: product name/mark, source placement/copy, privacy wording, and coexist-or-replace disposition.</text>
+  <text x="60" y="1150" class="small muted">INTENT · Release hygiene aligns user-visible claims, packaged capabilities, permission use, source attribution, and installed behavior.</text>
+  <text x="60" y="1180" class="tiny dim">WX.27 STORYBOARD · OWNER APPROVED 2026-10-30 · DESIGN INPUT ONLY · NOT IMPLEMENTATION OR INSTALLED ACCEPTANCE EVIDENCE</text>
+</svg>
