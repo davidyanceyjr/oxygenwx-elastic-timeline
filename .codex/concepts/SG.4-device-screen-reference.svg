@@ -1,0 +1,122 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1600" height="1160" viewBox="0 0 1600 1160">
+<defs>
+ <linearGradient id="paper" x2="0" y2="1"><stop stop-color="#eef5f7"/><stop offset="1" stop-color="#dce8ec"/></linearGradient>
+ <style>
+  .eyebrow{font:700 16px 'DejaVu Sans',sans-serif;letter-spacing:2px;fill:#16869a}
+  .title{font:700 34px 'DejaVu Sans',sans-serif;fill:#18344e}
+  .sub{font:17px 'DejaVu Sans',sans-serif;fill:#405d73}
+  .label{font:700 15px 'DejaVu Sans',sans-serif;letter-spacing:1.2px;fill:#16869a}
+  .h{font:700 21px 'DejaVu Sans',sans-serif;fill:#203d55}
+  .body{font:16px 'DejaVu Sans',sans-serif;fill:#304d64}
+  .small{font:14px 'DejaVu Sans',sans-serif;fill:#587286}
+ </style>
+ <clipPath id="rainTile"><rect x="548" y="442" width="470" height="235" rx="16"/></clipPath>
+ <clipPath id="snowTile"><rect x="1040" y="442" width="470" height="235" rx="16"/></clipPath>
+ <pattern id="rainCurtain" width="220" height="190" patternUnits="userSpaceOnUse">
+  <path d="M37 17l0 7" fill="none" stroke="#4f8293" stroke-width="1.5" stroke-linecap="round" opacity=".58"/>
+  <path d="M8 30l0 11" fill="none" stroke="#4f8293" stroke-width="1.7" stroke-linecap="round" opacity=".58"/>
+  <path d="M114 142l-3 9" fill="none" stroke="#4f8293" stroke-width="1.5" stroke-linecap="round" opacity=".58"/>
+  <path d="M76 123l-2 9" fill="none" stroke="#4f8293" stroke-width="1.8" stroke-linecap="round" opacity=".58"/>
+  <path d="M46 134l-1 11" fill="none" stroke="#4f8293" stroke-width="1.8" stroke-linecap="round" opacity=".58"/>
+  <path d="M141 123l-3 12" fill="none" stroke="#4f8293" stroke-width="1.7" stroke-linecap="round" opacity=".58"/>
+  <path d="M76 148l-1 7" fill="none" stroke="#4f8293" stroke-width="1.6" stroke-linecap="round" opacity=".58"/>
+  <path d="M97 95l2 11" fill="none" stroke="#4f8293" stroke-width="1.5" stroke-linecap="round" opacity=".58"/>
+  <path d="M176 8l1 14" fill="none" stroke="#4f8293" stroke-width="1.8" stroke-linecap="round" opacity=".58"/>
+  <path d="M65 109l-3 15" fill="none" stroke="#4f8293" stroke-width="1.5" stroke-linecap="round" opacity=".58"/>
+  <path d="M133 11l-2 8" fill="none" stroke="#4f8293" stroke-width="1.7" stroke-linecap="round" opacity=".58"/>
+  <path d="M184 26l2 16" fill="none" stroke="#4f8293" stroke-width="1.6" stroke-linecap="round" opacity=".58"/>
+  <path d="M97 7l-1 12" fill="none" stroke="#4f8293" stroke-width="1.8" stroke-linecap="round" opacity=".58"/>
+  <path d="M24 87l-3 16" fill="none" stroke="#4f8293" stroke-width="2.1" stroke-linecap="round" opacity=".58"/>
+  <path d="M191 46l-3 8" fill="none" stroke="#4f8293" stroke-width="2.0" stroke-linecap="round" opacity=".58"/>
+  <path d="M182 7l1 9" fill="none" stroke="#4f8293" stroke-width="1.5" stroke-linecap="round" opacity=".58"/>
+  <path d="M149 151l-3 13" fill="none" stroke="#4f8293" stroke-width="1.5" stroke-linecap="round" opacity=".58"/>
+  <path d="M40 37l-3 15" fill="none" stroke="#4f8293" stroke-width="1.8" stroke-linecap="round" opacity=".58"/>
+  <path d="M169 115l2 7" fill="none" stroke="#4f8293" stroke-width="2.1" stroke-linecap="round" opacity=".58"/>
+  <path d="M172 59l0 15" fill="none" stroke="#4f8293" stroke-width="2.0" stroke-linecap="round" opacity=".58"/>
+  <path d="M124 69l0 7" fill="none" stroke="#4f8293" stroke-width="1.5" stroke-linecap="round" opacity=".58"/>
+  <path d="M197 141l2 10" fill="none" stroke="#4f8293" stroke-width="2.0" stroke-linecap="round" opacity=".58"/>
+  <path d="M12 103l2 12" fill="none" stroke="#4f8293" stroke-width="2.0" stroke-linecap="round" opacity=".58"/>
+  <path d="M104 61l-1 15" fill="none" stroke="#4f8293" stroke-width="1.5" stroke-linecap="round" opacity=".58"/>
+  <path d="M130 19l0 7" fill="none" stroke="#4f8293" stroke-width="1.7" stroke-linecap="round" opacity=".58"/>
+  <path d="M16 63l-1 11" fill="none" stroke="#4f8293" stroke-width="2.0" stroke-linecap="round" opacity=".58"/>
+  <path d="M12 163l1 7" fill="none" stroke="#4f8293" stroke-width="2.1" stroke-linecap="round" opacity=".58"/>
+  <path d="M187 133l-1 7" fill="none" stroke="#4f8293" stroke-width="1.8" stroke-linecap="round" opacity=".58"/>
+  <path d="M205 116l-3 7" fill="none" stroke="#4f8293" stroke-width="1.8" stroke-linecap="round" opacity=".58"/>
+  <path d="M82 31l-2 10" fill="none" stroke="#4f8293" stroke-width="2.1" stroke-linecap="round" opacity=".58"/>
+  <path d="M24 133l-3 10" fill="none" stroke="#4f8293" stroke-width="2.0" stroke-linecap="round" opacity=".58"/>
+  <path d="M29 33l0 15" fill="none" stroke="#4f8293" stroke-width="1.5" stroke-linecap="round" opacity=".58"/>
+  <path d="M14 102l-3 14" fill="none" stroke="#4f8293" stroke-width="1.8" stroke-linecap="round" opacity=".58"/>
+  <path d="M148 14l0 8" fill="none" stroke="#4f8293" stroke-width="1.5" stroke-linecap="round" opacity=".58"/>
+  <path d="M134 46l2 9" fill="none" stroke="#4f8293" stroke-width="1.6" stroke-linecap="round" opacity=".58"/>
+  <path d="M43 108l1 7" fill="none" stroke="#4f8293" stroke-width="1.6" stroke-linecap="round" opacity=".58"/>
+  <path d="M37 93l-3 9" fill="none" stroke="#4f8293" stroke-width="1.7" stroke-linecap="round" opacity=".58"/>
+  <path d="M84 45l-1 10" fill="none" stroke="#4f8293" stroke-width="2.0" stroke-linecap="round" opacity=".58"/>
+  <path d="M25 114l-1 7" fill="none" stroke="#4f8293" stroke-width="1.7" stroke-linecap="round" opacity=".58"/>
+  <path d="M167 77l-2 12" fill="none" stroke="#4f8293" stroke-width="2.0" stroke-linecap="round" opacity=".58"/>
+  <path d="M118 155l-2 13" fill="none" stroke="#4f8293" stroke-width="1.5" stroke-linecap="round" opacity=".58"/>
+  <path d="M99 149l-3 7" fill="none" stroke="#4f8293" stroke-width="1.8" stroke-linecap="round" opacity=".58"/>
+ </pattern>
+</defs>
+<rect width="1600" height="1160" fill="url(#paper)"/>
+<text x="48" y="42" class="eyebrow">OXYGEN · SCENE GENERATION · SG.4 · DEVICE-ANCHORED CONCEPT BOARD</text>
+<text x="48" y="91" class="title">Add precipitation inside the installed forecast scene.</text>
+<text x="48" y="123" class="sub">Real Pixel 3 XL capture anchors the current layout; the adjacent rain and snow sketches are proposed additions.</text>
+
+<rect x="40" y="148" width="462" height="948" rx="24" fill="#fff" stroke="#c6d8df" stroke-width="3"/>
+<image href="SG.4-device-current.png" x="54" y="162" width="434" height="893" preserveAspectRatio="xMidYMid meet"/>
+<text x="271" y="1080" text-anchor="middle" class="small">Pixel 3 XL · LIVE MainActivity · 07:34 CST</text>
+
+<g fill="#fff" stroke="#c6d8df" stroke-width="2">
+ <rect x="526" y="148" width="1034" height="250" rx="22"/>
+ <rect x="526" y="418" width="1034" height="309" rx="22"/>
+ <rect x="526" y="747" width="1034" height="349" rx="22"/>
+</g>
+<text x="552" y="187" class="label">KEEP THE INSTALLED SCREEN'S READING ORDER</text>
+<text x="552" y="226" class="h">Scene-wide precipitation sits behind clouds and temperature data.</text>
+<text x="552" y="261" class="body">Rain spans the backdrop; cloud forms occlude its upper strokes.</text>
+<text x="552" y="294" class="body">Temperature and forecast data stay on top; the timeline remains the only time authority.</text>
+<path d="M552 322h978" stroke="#d7e3e8" stroke-width="2"/>
+<text x="552" y="353" class="small">The Pixel capture is unchanged. Examples show scene-wide precipitation behind clouds and all data text.</text>
+
+<text x="552" y="457" class="label">PROPOSED SCENE-LAYER TREATMENTS · NOT DEVICE CAPTURES</text>
+<!-- proposed rain tile -->
+<g clip-path="url(#rainTile)">
+ <rect x="548" y="480" width="470" height="197" fill="#98b7c6"/>
+ <path d="M548 620h38v-37h34v27h31v-52h44v43h30v-36h40v46h27v-65h49v57h35v-38h38v56h34v-48h40v95H548z" fill="#334b60"/>
+ <path d="M548 653h470v24H548z" fill="#203a51"/>
+ <rect x="548" y="480" width="470" height="197" fill="url(#rainCurtain)"/>
+ <path d="M624 515c14-22 38-23 56-8 19-27 49-25 67 1 19-16 44-9 54 12 26-6 45 6 49 24-24 13-69 14-115 11-47 5-87 1-111-12z" fill="#f1f5f6" opacity="1"/>
+ <rect x="873" y="489" width="134" height="48" rx="8" fill="#183d5a" opacity=".96"/>
+ <text x="940" y="509" text-anchor="middle" fill="#fff" font-family="DejaVu Sans" font-size="12" font-weight="700">58° · CLOUDY</text>
+ <text x="940" y="527" text-anchor="middle" fill="#d9eaf0" font-family="DejaVu Sans" font-size="9">HIGH 63° · LOW 54°</text>
+</g>
+<rect x="548" y="480" width="470" height="197" rx="16" fill="none" stroke="#8ca6b3" stroke-width="2"/>
+<text x="552" y="707" class="small">RAIN · scattered strokes span the scene; data stays on top.</text>
+<!-- proposed snow tile -->
+<g clip-path="url(#snowTile)">
+ <rect x="1040" y="480" width="470" height="197" fill="#243a5b"/>
+ <circle cx="1434" cy="486" r="21" fill="#e9f0f3"/><circle cx="1443" cy="478" r="21" fill="#2b4264"/>
+ <path d="M1040 620h38v-37h34v27h31v-52h44v43h30v-36h40v46h27v-65h49v57h35v-38h38v56h34v-48h40v95h-470z" fill="#1c304b"/>
+ <path d="M1040 653h470v24h-470z" fill="#142a45"/>
+ <g fill="#eff5f8"><circle cx="1049" cy="497" r="3"/><circle cx="1088" cy="545" r="2.8"/><circle cx="1122" cy="600" r="3.5"/><circle cx="1164" cy="522" r="2.5"/><circle cx="1205" cy="579" r="4"/><circle cx="1242" cy="635" r="2.5"/><circle cx="1286" cy="501" r="3.4"/><circle cx="1311" cy="606" r="2.7"/><circle cx="1360" cy="562" r="4"/><circle cx="1391" cy="632" r="3"/><circle cx="1421" cy="525" r="2.5"/><circle cx="1477" cy="585" r="3.5"/><circle cx="1500" cy="510" r="2.8"/><circle cx="1450" cy="616" r="4"/></g>
+ <path d="M1118 499c14-21 37-21 54-8 18-25 47-23 64 2 18-15 42-8 51 11 25-6 43 6 47 22-22 12-65 13-110 10-44 4-82 0-106-11z" fill="#cbd6e3" opacity="1"/>
+ <rect x="1347" y="604" width="150" height="48" rx="8" fill="#183d5a" opacity=".96"/>
+ <text x="1422" y="624" text-anchor="middle" fill="#fff" font-family="DejaVu Sans" font-size="12" font-weight="700">58° · SNOW</text>
+ <text x="1422" y="642" text-anchor="middle" fill="#d9eaf0" font-family="DejaVu Sans" font-size="9">HIGH 36° · LOW 28°</text>
+</g>
+<rect x="1040" y="480" width="470" height="197" rx="16" fill="none" stroke="#8ca6b3" stroke-width="2"/>
+<text x="1040" y="707" class="small">SNOW · scattered flakes span the scene; data stays on top.</text>
+
+<text x="552" y="789" class="label">DATA RULES THAT MUST SURVIVE EACH SCENE</text>
+<g>
+ <rect x="552" y="814" width="302" height="102" rx="14" fill="#e7f3f6"/>
+ <rect x="870" y="814" width="302" height="102" rx="14" fill="#fff1dc"/>
+ <rect x="1188" y="814" width="342" height="102" rx="14" fill="#e7f3f6"/>
+ <text x="572" y="846" class="h">INTERVAL</text><text x="572" y="878" class="small">Use source bounds only.</text>
+ <text x="890" y="846" class="h">UNKNOWN</text><text x="890" y="878" class="small">Label the gap; stop carry.</text>
+ <text x="1208" y="846" class="h">CHANCE ONLY</text><text x="1208" y="878" class="small">Text stays chance, not art/intensity.</text>
+</g>
+<text x="552" y="958" class="body">Say “dry” only for explicit supported evidence. Missing data, CLEAR sky, and empty conditions are not dry.</text>
+<text x="552" y="990" class="body">Zero chance/amount alone is insufficient. Reduced motion holds the scene; text facts remain readable.</text>
+<text x="1534" y="1132" text-anchor="end" class="small">Owner approved · 2026-11-01 · revised concept · screenshot remains installed reference</text>
+</svg>

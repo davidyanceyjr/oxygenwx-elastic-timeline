@@ -82,6 +82,10 @@ Identifiers remain stable after completion. Split a slice when it contains indep
 - Planned evidence paths are targets, not claims that evidence already exists.
 - Device or visual acceptance requires installed screenshots and the applicable interaction/accessibility checks specified by the product and UI workflow authorities.
 
+### Slice-local verification
+
+Design and implementation slices verify only behavior, interfaces, values, and presentation states within their stated scope. They do not run or claim app-wide RTL, TalkBack, accessibility, localization, device, or other system/environment matrices. Those cross-cutting checks belong to dedicated roadmap slices explicitly designated `TEST`. A focused interaction or visual check that directly establishes the slice's own exit remains in scope. Keep product-level acceptance obligations in the roadmap, but assign broad verification to the appropriate `TEST` slice rather than repeating it in every design cycle.
+
 ## Failure, blockers, and replanning
 
 Attempt a slice's exit within one bounded cycle. If the exit fails or an external decision is missing, record the exact result, blocker, and evidence in the cycle history; close the cycle without marking the slice DONE. Mark it BLOCKED when progress depends on that unresolved condition, and stop dependent work. Resume only after the condition changes and the roadmap/plan explicitly records the bounded next action. Do not create an automatic retry chain or silently widen the slice.

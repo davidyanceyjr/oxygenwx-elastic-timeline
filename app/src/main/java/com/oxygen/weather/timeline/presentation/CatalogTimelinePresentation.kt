@@ -13,6 +13,7 @@ import com.oxygen.weather.timeline.presentation.atmosphere.PrecipitationKind
 import com.oxygen.weather.timeline.presentation.atmosphere.PreviewEffectStrengths
 import com.oxygen.weather.timeline.presentation.atmosphere.SceneVisualState
 import com.oxygen.weather.timeline.presentation.scene.SceneReading
+import com.oxygen.weather.timeline.presentation.scene.SceneEvidence
 import com.oxygen.weather.timeline.presentation.scene.SemanticSceneGenerator
 import com.oxygen.weather.timeline.presentation.scene.SemanticScenePlan
 import com.oxygen.weather.timeline.data.SkyCondition
@@ -49,6 +50,7 @@ data class CatalogTimelineView(
     val high: String?,
     val low: String?,
     val precipitationChance: String?,
+    val precipitationFact: String?,
     val wind: String?,
     val windDirectionDegrees: Double?,
     val meaning: String,
@@ -121,6 +123,38 @@ class CatalogTimelinePresenter(private val active: ActiveCatalogSelection) {
         val selected = interval.clamp(checkNotNull(state.active).selectedInstant)
         val projected = CanonicalForecastProjection.project(catalog, window, selected, ForecastDisplayUnits.IMPERIAL)
         val fact = projected.factSample
+        val reading = scenePlan.evaluate(selected)
+        val conditionPoint = reading.weather["conditions"]
+        val supportedCondition = conditionPoint?.value?.takeIf { value ->
+            value in setOf("CLEAR", "PARTLY_CLOUDY", "CLOUDY", "RAIN", "SNOW")
+        }
+        val carried = conditionPoint?.takeIf { it.evidence == SceneEvidence.EXPECTED_MISSING &&
+            it.value != null && it.sourceValidTime != null }
+        val displayFact = fact.takeIf { candidate ->
+            when {
+                conditionPoint == null -> candidate?.validTime == selected
+                conditionPoint.evidence == SceneEvidence.EXPECTED_MISSING ->
+                    candidate?.validTime == conditionPoint.expectedSlot
+                else -> true
+            }
+        }
+        val rainInterval = reading.intervals["rain_amount_millimeters"]
+            ?.takeIf { it.evidence == SceneEvidence.SUPPLIED }
+            ?.value?.toDoubleOrNull()?.let { it > 0.0 } == true
+        val snowInterval = reading.intervals["snowfall_centimeters"]
+            ?.takeIf { it.evidence == SceneEvidence.SUPPLIED }
+            ?.value?.toDoubleOrNull()?.let { it > 0.0 } == true
+        val intervalEvent = when {
+            rainInterval && !snowInterval -> "RAIN"
+            snowInterval && !rainInterval -> "SNOW"
+            else -> null
+        }
+        val event = when {
+            conditionPoint?.evidence == SceneEvidence.SUPPLIED ->
+                supportedCondition?.takeIf { it == "RAIN" || it == "SNOW" }
+            carried != null -> intervalEvent ?: supportedCondition?.takeIf { it == "RAIN" || it == "SNOW" }
+            else -> intervalEvent
+        }
         val local = selected.atZone(zone)
         val sourceId = projected.productSegment?.sourceId ?: projected.provenance.sourceId ?: "Source unavailable"
         val status = buildString {
@@ -146,19 +180,42 @@ class CatalogTimelinePresenter(private val active: ActiveCatalogSelection) {
             days = days,
             heading = projected.selectedDate.format(dateFormat).uppercase(Locale.US),
             selectedTimeLabel = selected.atZone(zone).format(selectedTimeFormat),
-            factTimeLabel = fact?.let { formatTime(it.validTime) },
-            temperature = fact?.temperature?.let { "${it.displayValue.rounded()}°" },
-            condition = conditionLabel(fact?.facts?.conditions),
+            factTimeLabel = carried?.let { "Condition from ${formatTime(requireNotNull(it.sourceValidTime))}; selected hour unavailable" }
+                ?: displayFact?.let { formatTime(it.validTime) },
+            temperature = displayFact?.temperature?.let { "${it.displayValue.rounded()}°" },
+            condition = supportedCondition?.lowercase(Locale.US)?.replace('_', ' ')
+                ?: conditionLabel(displayFact?.facts?.conditions).takeIf { conditionPoint?.evidence == SceneEvidence.SUPPLIED },
             high = projected.dailyHigh.displayTemperature?.let { "${it.displayValue.rounded()}°" },
             low = projected.dailyLow.displayTemperature?.let { "${it.displayValue.rounded()}°" },
-            precipitationChance = fact?.facts?.precipitationProbabilityPercent?.let { "${it.rounded()}%" },
-            wind = fact?.windSpeed?.let { "${it.displayValue.rounded()} ${it.displayUnit}" },
-            windDirectionDegrees = fact?.facts?.windDirectionDegrees,
+            precipitationChance = reading.weather["precipitation_probability_percent"]
+                ?.takeIf { it.evidence == SceneEvidence.PROBABILITY_ONLY }
+                ?.value?.toDoubleOrNull()?.let { "${it.rounded()}%" },
+            precipitationFact = buildList {
+                reading.intervals["rain_amount_millimeters"]?.takeIf { it.evidence == SceneEvidence.SUPPLIED }?.let {
+                    add("Rain ${it.value} mm · ${formatTime(it.sourceBounds.start)}–${formatTime(it.sourceBounds.end)}")
+                }
+                reading.intervals["snowfall_centimeters"]?.takeIf { it.evidence == SceneEvidence.SUPPLIED }?.let {
+                    add("Snowfall ${it.value} cm · ${formatTime(it.sourceBounds.start)}–${formatTime(it.sourceBounds.end)}")
+                }
+                reading.intervals["total_precipitation_millimeters"]?.takeIf { it.evidence == SceneEvidence.SUPPLIED }?.let {
+                    add("Total precipitation ${it.value} mm · ${formatTime(it.sourceBounds.start)}–${formatTime(it.sourceBounds.end)}")
+                }
+                reading.weather["precipitation_rate"]?.takeIf { it.evidence == SceneEvidence.SUPPLIED }?.let {
+                    add("Rate ${it.value} mm/h" + (it.sourceMeanInterval?.let { bounds ->
+                        " · ${formatTime(bounds.start)}–${formatTime(bounds.end)}" } ?: " · ${formatTime(it.expectedSlot)}"))
+                }
+            }.takeIf { it.isNotEmpty() }?.joinToString("\n"),
+            wind = displayFact?.windSpeed?.let { "${it.displayValue.rounded()} ${it.displayUnit}" },
+            windDirectionDegrees = displayFact?.facts?.windDirectionDegrees,
             meaning = projected.meaning.label(),
             source = sourceId,
             selectedLocationName = state.selectedLocationName,
             status = status,
-            scene = projected.scene?.toScene(local.hour + local.minute / 60.0),
+            scene = if ((conditionPoint == null || conditionPoint.evidence in setOf(
+                    SceneEvidence.EXPECTED_MISSING, SceneEvidence.SUPPLIED_EMPTY)) &&
+                conditionPoint?.value == null && event == null) null
+                else selectedScene(projected.scene?.toScene(local.hour + local.minute / 60.0),
+                    supportedCondition, event),
             localHour = local.hour + local.minute / 60.0,
             loading = state.loading,
             error = state.lastError,
@@ -189,6 +246,40 @@ private fun conditionLabel(conditions: Set<WeatherCondition>?): String? =
     conditions?.takeIf { it.isNotEmpty() }?.joinToString(", ") {
         it.name.lowercase(Locale.US).replace('_', ' ')
     }
+
+/** SG.4 catalog-only bridge; SG.9 will own the general typed scene composition. */
+private fun selectedScene(base: SceneVisualState?, condition: String?, event: String?): SceneVisualState? {
+    if (condition == null && event == null) return base?.takeUnless {
+        it.depiction == DepictionKind.ILLUSTRATIVE_RAIN || it.depiction == DepictionKind.ILLUSTRATIVE_SNOW
+    }
+    val sky = when (condition) {
+        "CLEAR" -> SkyCondition.CLEAR
+        "PARTLY_CLOUDY" -> SkyCondition.PARTLY_CLOUDY
+        "CLOUDY" -> SkyCondition.CLOUDY
+        "RAIN" -> SkyCondition.RAIN
+        "SNOW" -> SkyCondition.CLOUDY
+        else -> base?.condition ?: SkyCondition.CLOUDY
+    }
+    val depiction = when (event) {
+        "RAIN" -> DepictionKind.ILLUSTRATIVE_RAIN
+        "SNOW" -> DepictionKind.ILLUSTRATIVE_SNOW
+        else -> DepictionKind.NONE
+    }
+    val fallback = SceneVisualState(sky, PrecipitationKind.NONE, DepictionKind.NONE, 0.0,
+        null, null, null, true, EnvironmentId.NEUTRAL, EffectsLevel.NONE,
+        AtmospherePreview.NONE, PreviewEffectStrengths(0.0, 0.0))
+    return (base ?: fallback).copy(
+        condition = sky,
+        precipitation = when (event) {
+            "RAIN" -> PrecipitationKind.RAIN
+            "SNOW" -> PrecipitationKind.SYNTHETIC_SNOW
+            else -> PrecipitationKind.NONE
+        },
+        depiction = depiction,
+        precipitationChancePercent = if (event != null) 100.0 else 0.0,
+        cloudFraction = if (event != null) 1.0 else base?.cloudFraction,
+    )
+}
 
 /** The scene consumes known condition cues only; missing measurements remain missing in text. */
 private fun DecorativeSceneTransition.toScene(localHour: Double): SceneVisualState? {

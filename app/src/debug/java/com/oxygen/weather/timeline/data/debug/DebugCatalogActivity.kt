@@ -44,6 +44,8 @@ import com.oxygen.weather.timeline.data.catalog.SavedLocationRepository
 import com.oxygen.weather.timeline.data.catalog.SimulatedCatalogSource
 import com.oxygen.weather.timeline.data.catalog.StoredCatalogResult
 import java.time.Instant
+import java.time.Duration
+import java.time.format.DateTimeFormatter
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.Job
 
@@ -115,6 +117,18 @@ class DebugCatalogActivity : ComponentActivity() {
         fixtureStatus = "Chicago replay ready · captured SIMULATED · $CHICAGO_REPLAY_AS_OF"
     }
 
+    private suspend fun prepareSg4GapReplay(location: CatalogLocation) {
+        val id = DatasetId(SG4_GAP_REPLAY_ID)
+        val asOf = Instant.parse(CHICAGO_REPLAY_AS_OF)
+        val existing = storage.load(location, CatalogStorageNamespace.REPLAY, id)
+        if (existing !is StoredCatalogResult.Found || existing.recording.catalog.asOf != asOf) {
+            storage.save(CatalogStorageNamespace.REPLAY,
+                sg4GapRecording(CatalogLoadRequest(location, id, asOf)))
+        }
+        replayIds = storage.history(location.id, CatalogStorageNamespace.REPLAY)
+            .map { it.datasetId }.distinct().sorted()
+    }
+
     private fun reloadLocations() {
         reloadJob?.cancel()
         reloadJob = lifecycleScope.launch {
@@ -124,6 +138,11 @@ class DebugCatalogActivity : ComponentActivity() {
                     loadError = if (result.values.isEmpty())
                         "No saved locations. Add Chicago and Miami with the existing location selector." else null
                     result.values.firstOrNull(::isChicago)?.let { prepareChicagoReplay(it.location) }
+                    result.values.firstOrNull()?.let {
+                        prepareSg4GapReplay(it.location)
+                        fixtureReady = true
+                        fixtureStatus = "SG.4 canonical gap replay ready"
+                    }
                 }
                 SavedLocationListResult.MalformedRecord -> loadError =
                     "A saved location is invalid. Repair it in the location selector."
@@ -190,6 +209,71 @@ class DebugCatalogActivity : ComponentActivity() {
                             if (active) Text("Selected recording · $id")
                             else OutlinedButton(onClick = { selectedReplay = id }) { Text(id) }
                         }
+                        if (selectedReplay == SG4_GAP_REPLAY_ID) {
+                            val zone = selectedLocation?.location?.timeZone
+                            val rainDay = zone?.let {
+                                Instant.parse(CHICAGO_REPLAY_AS_OF).atZone(it).toLocalDate().minusDays(24)
+                            }
+                            val zeroDay = zone?.let {
+                                Instant.parse(CHICAGO_REPLAY_AS_OF).atZone(it).toLocalDate().minusDays(30)
+                            }
+                            if (zone != null && rainDay != null) {
+                                Text("SG.4 exact-time inspection · ${rainDay}")
+                                val inspectionTargets = buildList {
+                                    if (zeroDay != null) add("Sep 28 01:00 · explicit zero rain amount" to
+                                        zeroDay.atTime(1, 0).atZone(zone).toInstant())
+                                    addAll(listOf(
+                                    "09:30:00 · tie uses earlier value" to rainDay.atTime(9, 30).atZone(zone).toInstant(),
+                                    "09:30:00.001 · just after tie" to rainDay.atTime(9, 30).atZone(zone).toInstant().plusMillis(1),
+                                    "19:30:00 · clear/rain tie" to rainDay.atTime(19, 30).atZone(zone).toInstant(),
+                                    "19:30:00.001 · just after tie" to rainDay.atTime(19, 30).atZone(zone).toInstant().plusMillis(1),
+                                    "20:00 · supplied rain point" to rainDay.atTime(20, 0).atZone(zone).toInstant(),
+                                    "11:30 · missing expected hour" to rainDay.atTime(11, 30).atZone(zone).toInstant(),
+                                    "13:45 · interval-only rain" to rainDay.atTime(13, 45).atZone(zone).toInstant(),
+                                    "14:30 · simultaneous rain/snow intervals" to rainDay.atTime(14, 30).atZone(zone).toInstant(),
+                                    ))
+                                }
+                                inspectionTargets.forEach { (label, instant) ->
+                                    OutlinedButton(
+                                        enabled = !relay.activation.loading && selectedLocation != null,
+                                        onClick = {
+                                            selectedLocation?.location?.let {
+                                                routeActivation(it, CatalogOrigin.REPLAY, SG4_GAP_REPLAY_ID, instant)
+                                            }
+                                        },
+                                    ) { Text("Inspect $label") }
+                                }
+                            }
+                        }
+                    }
+                }
+                val liveSolarCatalog = relay.activation.active?.takeIf {
+                    it.origin == CatalogOrigin.LIVE && it.datasetId.value == LIVE_DATASET_ID
+                }
+                val solarDay = liveSolarCatalog?.recording?.catalog?.dailySummaries?.firstOrNull {
+                    it.sunriseInstant != null && it.sunsetInstant != null
+                }
+                if (liveSolarCatalog != null && solarDay != null) {
+                    val zone = liveSolarCatalog.location.timeZone
+                    val solarTimeFormat = DateTimeFormatter.ofPattern("h:mm a z")
+                    val sunrise = requireNotNull(solarDay.sunriseInstant)
+                    val sunset = requireNotNull(solarDay.sunsetInstant)
+                    Text("LIVE solar source · ${liveSolarCatalog.recording.catalog.provenance.sourceId} · " +
+                        "${solarDay.date} · sunrise ${sunrise.atZone(zone).format(solarTimeFormat)} · " +
+                        "sunset ${sunset.atZone(zone).format(solarTimeFormat)}")
+                    val solarTargets = listOf(
+                        "45 min before sunrise" to sunrise.minusSeconds(45 * 60L),
+                        "sunrise" to sunrise,
+                        "45 min after sunrise" to sunrise.plusSeconds(45 * 60L),
+                        "45 min before sunset" to sunset.minusSeconds(45 * 60L),
+                        "sunset" to sunset,
+                        "45 min after sunset" to sunset.plusSeconds(45 * 60L),
+                    )
+                    solarTargets.forEach { (label, instant) ->
+                        OutlinedButton(
+                            enabled = !relay.activation.loading,
+                            onClick = { routeExactSelection(LIVE_DATASET_ID, instant) },
+                        ) { Text("Inspect $label · ${instant.atZone(zone).format(solarTimeFormat)}") }
                     }
                 }
                 OutlinedButton(onClick = { openLocationSelector() }) { Text("Add or manage saved locations") }
@@ -217,7 +301,12 @@ class DebugCatalogActivity : ComponentActivity() {
         }
     }
 
-    private fun routeActivation(location: CatalogLocation, origin: CatalogOrigin, dataset: String) {
+    private fun routeActivation(
+        location: CatalogLocation,
+        origin: CatalogOrigin,
+        dataset: String,
+        selectedInstant: Instant? = null,
+    ) {
         val request = Intent(this, MainActivity::class.java)
             .setAction(ACTION_ACTIVATE_CATALOG)
             .putExtra(EXTRA_VERSION, CONTRACT_VERSION)
@@ -226,8 +315,19 @@ class DebugCatalogActivity : ComponentActivity() {
             .putExtra(EXTRA_DATASET_ID, dataset)
             .putExtra(EXTRA_FORCE_REFRESH, origin == CatalogOrigin.LIVE)
         if (origin == CatalogOrigin.REPLAY) request.putExtra(EXTRA_REPLAY_ID, dataset)
+        if (selectedInstant != null) request.putExtra(EXTRA_SELECTED_INSTANT, selectedInstant.toString())
         request.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_SINGLE_TOP)
         startActivity(request)
+        finish()
+    }
+
+    private fun routeExactSelection(dataset: String, instant: Instant) {
+        startActivity(Intent(this, MainActivity::class.java)
+            .setAction(ACTION_SELECT_CATALOG_INSTANT)
+            .putExtra(EXTRA_VERSION, CONTRACT_VERSION)
+            .putExtra(EXTRA_DATASET_ID, dataset)
+            .putExtra(EXTRA_SELECTED_INSTANT, instant.toString())
+            .addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_SINGLE_TOP))
         finish()
     }
 
@@ -240,6 +340,7 @@ class DebugCatalogActivity : ComponentActivity() {
 
     companion object {
         const val ACTION_ACTIVATE_CATALOG = CatalogPickerDelegate.ACTION_ACTIVATE_CATALOG
+        const val ACTION_SELECT_CATALOG_INSTANT = CatalogPickerDelegate.ACTION_SELECT_CATALOG_INSTANT
         const val CONTRACT_VERSION = CatalogPickerDelegate.CONTRACT_VERSION
         const val EXTRA_VERSION = CatalogPickerDelegate.EXTRA_VERSION
         const val EXTRA_LOCATION_ID = CatalogPickerDelegate.EXTRA_LOCATION_ID
@@ -247,9 +348,11 @@ class DebugCatalogActivity : ComponentActivity() {
         const val EXTRA_DATASET_ID = CatalogPickerDelegate.EXTRA_DATASET_ID
         const val EXTRA_REPLAY_ID = CatalogPickerDelegate.EXTRA_REPLAY_ID
         const val EXTRA_FORCE_REFRESH = CatalogPickerDelegate.EXTRA_FORCE_REFRESH
+        const val EXTRA_SELECTED_INSTANT = CatalogPickerDelegate.EXTRA_SELECTED_INSTANT
         const val SIMULATED_DATASET_ID = "wx22-debug-simulated-v3"
         const val LIVE_DATASET_ID = "forecast-44d"
         const val CHICAGO_REPLAY_ID = "wx22-chicago-replay-v3"
+        const val SG4_GAP_REPLAY_ID = "sg4-canonical-gaps-v8"
         const val CHICAGO_REPLAY_AS_OF = "2026-10-28T12:00:00Z"
     }
 }

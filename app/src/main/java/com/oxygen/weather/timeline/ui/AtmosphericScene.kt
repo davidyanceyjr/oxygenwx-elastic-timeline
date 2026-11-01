@@ -78,6 +78,12 @@ fun CatalogAtmosphericScene(
     Canvas(modifier.fillMaxSize()) {
         if (state != null) {
             drawSkyPalette(state)
+            if (state.depiction == DepictionKind.ILLUSTRATIVE_RAIN) {
+                drawRect(Brush.verticalGradient(
+                    0f to Color(0xFF4B6072), .55f to Color(0xFF5F7385),
+                    1f to Color.Transparent,
+                ))
+            }
             drawCityDiffuseLight(reading, zone, treatment, state)
             when (state.preview) {
                 AtmospherePreview.ILLUSTRATIVE_TURBULENCE,
@@ -98,6 +104,7 @@ fun CatalogAtmosphericScene(
                     it.hour + it.minute / 60.0 + it.second / 3600.0
                 },
                 isRain = state.depiction == DepictionKind.ILLUSTRATIVE_RAIN,
+                isSnow = state.depiction == DepictionKind.ILLUSTRATIVE_SNOW,
                 isStorm = state.hasStormVisual(),
                 reducedMotion = reducedMotion,
             )
@@ -110,7 +117,7 @@ fun CatalogAtmosphericScene(
         drawCityReadoutQuietZone()
         if (!omitOptionalCityLayers &&
             (treatment == CityTreatment.DUSK || treatment == CityTreatment.NIGHT)) drawCityWindowLights()
-        drawCityTimeCue(reading, zone, treatment)
+        if (state?.depiction != DepictionKind.ILLUSTRATIVE_RAIN) drawCityTimeCue(reading, zone, treatment)
         if (state != null) {
             drawRect(
                 brush = Brush.verticalGradient(
@@ -120,12 +127,9 @@ fun CatalogAtmosphericScene(
                 ),
             )
             when (state.depiction) {
-                DepictionKind.ILLUSTRATIVE_RAIN -> drawCityRainField(
-                    state.precipitationChancePercent,
-                    state.precipitationAmount as? PrecipitationAmount.RainLiquidMm,
-                )
+                DepictionKind.ILLUSTRATIVE_RAIN -> drawCityRainField()
                 DepictionKind.ILLUSTRATIVE_SNOW, DepictionKind.SYNTHETIC_SNOW_PREVIEW ->
-                    drawSnow(state.precipitationChancePercent)
+                    drawCitySnowField()
                 else -> Unit
             }
         }
@@ -186,6 +190,7 @@ private fun DrawScope.drawCityCloudFields(
     daylight: Double?,
     localHour: Double,
     isRain: Boolean,
+    isSnow: Boolean,
     isStorm: Boolean,
     reducedMotion: Boolean,
 ) {
@@ -212,6 +217,13 @@ private fun DrawScope.drawCityCloudFields(
         drawCityCloudBank(leftX, y, bankWidth, height, baseColor.copy(alpha = alpha), mirrored = false)
         drawCityCloudBank(rightX, y - height * .18f, bankWidth, height, baseColor.copy(alpha = alpha * .82f), mirrored = true)
     } else {
+        if (isRain || isSnow) {
+            drawCityCloudBank(-size.width * .25f, y - height * .16f, size.width * .88f,
+                height * 1.15f, baseColor.copy(alpha = .76f), mirrored = false)
+            drawCityCloudBank(size.width * .40f, y - height * .12f, size.width * .9f,
+                height * 1.12f, baseColor.copy(alpha = .74f), mirrored = true)
+            return
+        }
         val bankWidth = size.width * if (isRain) 1.02f else .78f
         val left = if (isRain) -.36f else .08f
         val middle = if (isRain) -.02f else .14f
@@ -242,43 +254,16 @@ private fun DrawScope.drawCityCloudBank(
     drawPath(bank, color)
 }
 
-private fun DrawScope.drawCityRainField(
-    chancePercent: Double,
-    amount: PrecipitationAmount.RainLiquidMm?,
-) {
-    val coverage = precipitationCoverage(chancePercent)
-    if (coverage <= 0f) return
-    val amountFactor = amount?.value?.div(3.0)?.toFloat()?.coerceIn(0f, 1f) ?: .2f
-    val activeLanes = (5 + coverage * 10f).toInt().coerceIn(7, 14)
-    val laneCount = 24
-    val laneGap = size.width * .040f
-    val fieldWidth = laneGap * (laneCount - 1)
-    val left = (size.width - fieldWidth) / 2f
-    val rowGap = size.height * .052f
-    val streakLength = size.height * (.010f + amountFactor * .004f)
-    val stroke = (1.0f + amountFactor * .65f) * density
-    val alpha = .25f + amountFactor * .12f
-    for (lane in 0 until laneCount) {
-        val laneWithinCurtain = lane % 6
-        val curtainStrength = when (lane / 6) {
-            1 -> .78f
-            2 -> .92f
-            else -> 1f
-        }
-        if (laneWithinCurtain >= activeLanes / 3) continue
-        val x = left + lane * laneGap
-        for (row in 0..12) {
-            val y = size.height * .205f + row * rowGap + ((lane + row) % 3) * rowGap * .20f
-            val endX = x - streakLength * .055f
-            val endY = y + streakLength
-            if (inPrecipitationQuietZone(x, y) || inPrecipitationQuietZone(endX, endY)) continue
-            drawLine(
-                color = Color(0xFFE4F3FF).copy(alpha = alpha * curtainStrength),
-                start = Offset(x, y),
-                end = Offset(endX, endY),
-                strokeWidth = stroke,
-            )
-        }
+private fun DrawScope.drawCityRainField() {
+    repeat(1800) { i ->
+        val x = ((i * 83L + i * i * 29L + 19) % 991) / 991f * size.width
+        val y = size.height * (.52f + ((i * 127L + i * i * 43L + 53) % 997) / 997f * .35f)
+        val quiet = inPrecipitationQuietZone(x, y)
+        val length = size.height * (.003f + (i % 7) * .00065f)
+        drawLine(Color(0xFFE4F3FF).copy(alpha = (.23f + (i % 5) * .075f) *
+            if (quiet) .28f else 1f),
+            Offset(x, y), Offset(x - length * .13f, y + length),
+            strokeWidth = (.35f + (i % 3) * .16f) * density)
     }
 }
 
@@ -801,6 +786,26 @@ private fun DrawScope.drawSnow(chancePercent: Double) {
         if (inPrecipitationQuietZone(x, y)) return@repeat
         val radius = (2.3f + (i % 3) * .45f) * density
         drawCircle(Color(0xFFF0F7FF).copy(alpha = .82f), radius, Offset(x, y))
+    }
+}
+
+private fun DrawScope.drawCitySnowField() {
+    repeat(2300) { i ->
+        val x = ((i * 83L + i * i * 29L + 19) % 991) / 991f * size.width
+        val y = size.height * (.52f + ((i * 127L + i * i * 43L + 53) % 997) / 997f * .35f)
+        val quiet = inPrecipitationQuietZone(x, y)
+        val radius = (.48f + (i % 7) * .24f) * density
+        val center = Offset(x, y)
+        if (i % 3 == 0) {
+            repeat(3) { arm ->
+                val angle = arm * Math.PI / 3.0
+                val dx = kotlin.math.cos(angle).toFloat() * radius * 2.3f
+                val dy = kotlin.math.sin(angle).toFloat() * radius * 2.3f
+                drawLine(Color(0xCDEEF7FF).copy(alpha = if (quiet) .22f else .8f),
+                    center - Offset(dx, dy), center + Offset(dx, dy),
+                    strokeWidth = .48f * density)
+            }
+        } else drawCircle(Color(0xB8EEF7FF).copy(alpha = if (quiet) .2f else .72f), radius, center)
     }
 }
 

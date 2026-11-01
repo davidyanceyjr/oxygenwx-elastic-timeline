@@ -222,9 +222,12 @@ private fun CatalogTimeLabScreenContent(
                 fontWeight = FontWeight.Light, modifier = Modifier.testTag("forecastTemperature"))
             Text(view.condition ?: "Condition unavailable", color = Color.White,
                 fontSize = 22.sp, textAlign = TextAlign.Center)
-            Text(view.factTimeLabel?.let { "Fact sample $it" } ?: "No fact sample for this date",
+            Text(view.factTimeLabel?.let { if (it.startsWith("Condition from ")) it else "Fact sample $it" }
+                ?: "No hourly fact for selected hour",
                 color = Color(0xDDECF3F8), fontSize = 12.sp,
                 modifier = Modifier.testTag("catalogFactTime"))
+            view.precipitationFact?.let { Text(it, color = Color(0xDDECF3F8), fontSize = 11.sp,
+                textAlign = TextAlign.Center) }
             Text("HIGH ${view.high ?: "—"}    /    LOW ${view.low ?: "—"}",
                 color = Color(0xFFECF3F8), fontSize = 12.sp)
         }
@@ -315,7 +318,8 @@ private fun CatalogForecastTimeline(
             .semantics {
                 contentDescription = "${view.meaning} timeline. Selected ${view.selectedTimeLabel}. " +
                     "${view.temperature ?: "Temperature unavailable"}; ${view.condition ?: "condition unavailable"}. " +
-                    "Fact sample ${view.factTimeLabel ?: "unavailable"}. Activate to browse."
+                    "${view.factTimeLabel?.let { if (it.startsWith("Condition from ")) it else "Fact sample $it" }
+                        ?: "No hourly fact for selected hour"}. Activate to browse."
                 role = Role.Button
                 stateDescription = if (precision) "Hourly scale" else "Daily scale"
                 onClick(label = "Browse forecast values") { latestBrowse(); true }

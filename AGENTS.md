@@ -22,7 +22,7 @@ Before app implementation or behavior changes:
 6. Preserve actual evidence under `.codex/test-artifacts/<cycle-id>/`.
 7. Inspect `git diff --check` and the final diff, then close completed work into `.codex/history/` with exact verification results and limitations.
 
-Do not claim visual/device acceptance without installed screenshots and the applicable interaction/accessibility checks. A build or preview alone is not visual evidence.
+Do not claim slice-scoped visual/device acceptance without installed screenshots and the applicable scoped interaction checks. A build or preview alone is not visual evidence. App-wide accessibility and system acceptance is established in dedicated `TEST` slices.
 
 ## Project-local skills
 
@@ -40,12 +40,15 @@ Reusable workflows live under `.agents/skills/`. Use a skill when it directly fi
 
 Use `python scripts/dev.py workflow`, `contract`, `test`, `build`, `lint`, `run`, or `screenshot` as applicable to the authorized task and active plan. Do not add or run tests unless the user asks. Report exact commands and any verification that could not run. Follow a separate full-suite verification plan when work becomes production integration.
 
+Verification stays within the bounded slice. Design and implementation slices check only their scoped behavior and directly affected paths. Do not add RTL, TalkBack, or broad system/environment matrices to those slices; reserve cross-cutting system acceptance for roadmap slices explicitly designated `TEST`. A design slice may capture and inspect its approved states and directly affected interactions. Do not claim checks outside the slice.
+
 ## Architecture boundaries
 
 - Data fixtures use canonical metric units; only presentation performs display conversion.
 - UI depends on typed projection values, never provider DTOs.
 - Zoom is not forecast time. The selected timestamp is authoritative and must not jump because of a zoom animation.
-- Preserve honest DEMO DATA labels and distinguish source-supplied observations from interpolated visual values.
+- Preserve honest DEMO DATA labels and distinguish supplied observations from interpolated visual values.
+- Treat supplied supported weather values and categorical conditions as presentation inputs. The presentation and rendering layers visualize them faithfully and do not independently reject or correct them based on meteorological plausibility.
 - The current prototype has no live network, location selection, official alerts, or real-data cache. Future successor capabilities require their own bounded WX plan and verification.
 - Official alerts remain a separate future subsystem, outside catalog weather conditions.
 - Keep the immersive timeline as the successor app's primary experience. Do not insert it into the deprecated oxygenWX application's outer pager.
@@ -53,4 +56,4 @@ Use `python scripts/dev.py workflow`, `contract`, `test`, `build`, `lint`, `run`
 
 ## UI slice constraints
 
-Every visual slice identifies its functional invariants, visual objective, applicable compact/large-font/RTL/reduced-motion conditions, installed states, and verification/evidence. Preserve the cross-cutting requirements for timeline responsiveness, predictable gesture ownership, and readable forecast values and labels.
+Every visual slice identifies its functional invariants, visual objective, in-scope installed states, and verification/evidence. Test only that slice's context. RTL, TalkBack, and broad system/environment acceptance belong to dedicated `TEST` slices, not design slices. Preserve timeline responsiveness, predictable gesture ownership, and readable forecast values and labels in the changed states.

@@ -1,0 +1,126 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1600" height="1120" viewBox="0 0 1600 1120">
+<defs>
+ <linearGradient id="paper" x2="0" y2="1"><stop stop-color="#eef5f7"/><stop offset="1" stop-color="#dce8ec"/></linearGradient>
+ <linearGradient id="day" x2="0" y2="1"><stop stop-color="#728fa2"/><stop offset=".68" stop-color="#9cabb1"/><stop offset="1" stop-color="#82949e"/></linearGradient>
+ <linearGradient id="night" x2="0" y2="1"><stop stop-color="#172a4d"/><stop offset=".7" stop-color="#34496e"/><stop offset="1" stop-color="#69788e"/></linearGradient>
+ <style>
+ .eyebrow{font:700 16px 'DejaVu Sans',sans-serif;letter-spacing:2px;fill:#16869a}.title{font:700 34px 'DejaVu Sans',sans-serif;fill:#18344e}
+ .sub{font:17px 'DejaVu Sans',sans-serif;fill:#405d73}.label{font:700 15px 'DejaVu Sans',sans-serif;letter-spacing:1.2px;fill:#16869a}
+ .small{font:14px 'DejaVu Sans',sans-serif;fill:#526d82}.body{font:15px 'DejaVu Sans',sans-serif;fill:#304d64}
+ </style>
+ <clipPath id="f1"><rect x="58" y="258" width="468" height="420" rx="18"/></clipPath>
+ <clipPath id="f2"><rect x="566" y="258" width="468" height="420" rx="18"/></clipPath>
+ <clipPath id="f3"><rect x="1074" y="258" width="468" height="420" rx="18"/></clipPath>
+ <pattern id="rainCurtain" width="220" height="190" patternUnits="userSpaceOnUse">
+  <path d="M96 112l-3 12" fill="none" stroke="#5b91a5" stroke-width="2.1" stroke-linecap="round" opacity=".58"/>
+  <path d="M140 147l-3 10" fill="none" stroke="#5b91a5" stroke-width="1.8" stroke-linecap="round" opacity=".58"/>
+  <path d="M152 64l2 8" fill="none" stroke="#5b91a5" stroke-width="1.7" stroke-linecap="round" opacity=".58"/>
+  <path d="M35 75l-3 12" fill="none" stroke="#5b91a5" stroke-width="2.0" stroke-linecap="round" opacity=".58"/>
+  <path d="M151 117l-1 7" fill="none" stroke="#5b91a5" stroke-width="1.5" stroke-linecap="round" opacity=".58"/>
+  <path d="M63 44l1 15" fill="none" stroke="#5b91a5" stroke-width="2.0" stroke-linecap="round" opacity=".58"/>
+  <path d="M189 110l-1 15" fill="none" stroke="#5b91a5" stroke-width="1.7" stroke-linecap="round" opacity=".58"/>
+  <path d="M196 104l-3 9" fill="none" stroke="#5b91a5" stroke-width="1.5" stroke-linecap="round" opacity=".58"/>
+  <path d="M33 163l-3 9" fill="none" stroke="#5b91a5" stroke-width="2.0" stroke-linecap="round" opacity=".58"/>
+  <path d="M185 108l-2 7" fill="none" stroke="#5b91a5" stroke-width="1.5" stroke-linecap="round" opacity=".58"/>
+  <path d="M177 71l1 16" fill="none" stroke="#5b91a5" stroke-width="1.6" stroke-linecap="round" opacity=".58"/>
+  <path d="M62 81l-1 9" fill="none" stroke="#5b91a5" stroke-width="1.8" stroke-linecap="round" opacity=".58"/>
+  <path d="M169 41l1 9" fill="none" stroke="#5b91a5" stroke-width="1.6" stroke-linecap="round" opacity=".58"/>
+  <path d="M207 97l-3 13" fill="none" stroke="#5b91a5" stroke-width="1.8" stroke-linecap="round" opacity=".58"/>
+  <path d="M185 153l2 16" fill="none" stroke="#5b91a5" stroke-width="1.7" stroke-linecap="round" opacity=".58"/>
+  <path d="M172 112l1 9" fill="none" stroke="#5b91a5" stroke-width="1.8" stroke-linecap="round" opacity=".58"/>
+  <path d="M144 60l0 10" fill="none" stroke="#5b91a5" stroke-width="2.0" stroke-linecap="round" opacity=".58"/>
+  <path d="M182 72l1 11" fill="none" stroke="#5b91a5" stroke-width="2.1" stroke-linecap="round" opacity=".58"/>
+  <path d="M10 98l-2 13" fill="none" stroke="#5b91a5" stroke-width="2.0" stroke-linecap="round" opacity=".58"/>
+  <path d="M114 104l0 11" fill="none" stroke="#5b91a5" stroke-width="1.5" stroke-linecap="round" opacity=".58"/>
+  <path d="M25 130l1 8" fill="none" stroke="#5b91a5" stroke-width="1.8" stroke-linecap="round" opacity=".58"/>
+  <path d="M159 142l-3 9" fill="none" stroke="#5b91a5" stroke-width="1.6" stroke-linecap="round" opacity=".58"/>
+  <path d="M39 81l-2 15" fill="none" stroke="#5b91a5" stroke-width="1.5" stroke-linecap="round" opacity=".58"/>
+  <path d="M52 13l-1 10" fill="none" stroke="#5b91a5" stroke-width="1.5" stroke-linecap="round" opacity=".58"/>
+  <path d="M76 155l-3 7" fill="none" stroke="#5b91a5" stroke-width="1.5" stroke-linecap="round" opacity=".58"/>
+  <path d="M161 93l-1 10" fill="none" stroke="#5b91a5" stroke-width="1.5" stroke-linecap="round" opacity=".58"/>
+  <path d="M21 79l-3 10" fill="none" stroke="#5b91a5" stroke-width="1.6" stroke-linecap="round" opacity=".58"/>
+  <path d="M192 25l-3 7" fill="none" stroke="#5b91a5" stroke-width="1.6" stroke-linecap="round" opacity=".58"/>
+  <path d="M140 158l1 7" fill="none" stroke="#5b91a5" stroke-width="2.1" stroke-linecap="round" opacity=".58"/>
+  <path d="M48 119l-2 10" fill="none" stroke="#5b91a5" stroke-width="2.1" stroke-linecap="round" opacity=".58"/>
+  <path d="M20 150l-1 15" fill="none" stroke="#5b91a5" stroke-width="1.8" stroke-linecap="round" opacity=".58"/>
+  <path d="M199 60l0 12" fill="none" stroke="#5b91a5" stroke-width="2.0" stroke-linecap="round" opacity=".58"/>
+  <path d="M76 89l-2 8" fill="none" stroke="#5b91a5" stroke-width="1.7" stroke-linecap="round" opacity=".58"/>
+  <path d="M35 85l2 13" fill="none" stroke="#5b91a5" stroke-width="1.6" stroke-linecap="round" opacity=".58"/>
+  <path d="M49 147l0 8" fill="none" stroke="#5b91a5" stroke-width="1.7" stroke-linecap="round" opacity=".58"/>
+  <path d="M15 21l-1 8" fill="none" stroke="#5b91a5" stroke-width="2.1" stroke-linecap="round" opacity=".58"/>
+  <path d="M54 70l0 10" fill="none" stroke="#5b91a5" stroke-width="1.6" stroke-linecap="round" opacity=".58"/>
+  <path d="M166 24l-2 12" fill="none" stroke="#5b91a5" stroke-width="1.5" stroke-linecap="round" opacity=".58"/>
+  <path d="M55 99l-3 12" fill="none" stroke="#5b91a5" stroke-width="1.6" stroke-linecap="round" opacity=".58"/>
+  <path d="M207 90l-1 8" fill="none" stroke="#5b91a5" stroke-width="1.5" stroke-linecap="round" opacity=".58"/>
+  <path d="M67 101l-1 12" fill="none" stroke="#5b91a5" stroke-width="2.0" stroke-linecap="round" opacity=".58"/>
+  <path d="M154 12l-2 9" fill="none" stroke="#5b91a5" stroke-width="1.6" stroke-linecap="round" opacity=".58"/>
+ </pattern>
+</defs>
+<rect width="1600" height="1120" fill="url(#paper)"/>
+<text x="48" y="42" class="eyebrow">OXYGEN · SCENE GENERATION · SG.4 · ARTWORK BOARD</text>
+<text x="48" y="92" class="title">Rain and snow read as coherent weather scenes.</text>
+<text x="48" y="124" class="sub">Rain brings a cloud-led sky with no exposed bright sun; precipitation sits behind clouds and forecast data.</text>
+<g fill="#fff" stroke="#c9d9e0" stroke-width="2">
+ <rect x="40" y="151" width="492" height="584" rx="22"/><rect x="554" y="151" width="492" height="584" rx="22"/><rect x="1068" y="151" width="492" height="584" rx="22"/>
+</g>
+<text x="64" y="190" class="label">DAY · RAIN · SELECTED 10:30</text>
+<text x="578" y="190" class="label">NIGHT · SNOW · SELECTED 20:45</text>
+<text x="1092" y="190" class="label">CARRIED RAIN / STATIC · SELECTED 11:00</text>
+
+<!-- rain scene -->
+<g clip-path="url(#f1)"><rect x="58" y="258" width="468" height="420" fill="url(#day)"/>
+ <path d="M58 585h48v-58h43v38h29v-83h51v69h27v-46h42v57h30v-98h54v86h31v-55h43v90h39v-69h40v124H58z" fill="#354d62"/>
+ <path d="M58 636h468v42H58z" fill="#213a52"/>
+ <rect x="58" y="258" width="468" height="420" fill="url(#rainCurtain)"/>
+ <path d="M58 335c23-36 67-42 94-23 26-40 80-44 113-10 25-28 66-26 91-3 35-31 91-25 112 10 29-6 51 6 58 25v94H58z" fill="#b7c7ce" opacity=".96"/>
+ <path d="M58 389c31-22 74-22 104-5 26-22 61-25 89-7 36-22 78-17 104 5 47-27 94-13 118 10 22-6 40-1 53 9v47H58z" fill="#d5dfe3" opacity=".88"/>
+ <rect x="72" y="272" width="162" height="62" rx="10" fill="#183d5a" opacity=".96"/>
+ <text x="88" y="300" fill="#fff" font-family="DejaVu Sans" font-size="22" font-weight="700">58°</text>
+ <text x="88" y="322" fill="#d9eaf0" font-family="DejaVu Sans" font-size="9" font-weight="700">RAIN · H63° / L54°</text>
+ <text x="292" y="664" text-anchor="middle" fill="#fff" font-family="DejaVu Sans" font-size="16">RAIN · point-supported example</text>
+</g>
+<rect x="58" y="258" width="468" height="420" rx="18" fill="none" stroke="#8aa4b1" stroke-width="3"/>
+<text x="64" y="714" class="small">Cloud-led rain obscures direct sun; forecast text stays above.</text>
+
+<!-- snow night scene -->
+<g clip-path="url(#f2)"><rect x="566" y="258" width="468" height="420" fill="url(#night)"/>
+ <circle cx="929" cy="318" r="29" fill="#e9f1f5"/><circle cx="940" cy="307" r="29" fill="#263b61"/>
+ <path d="M566 585h48v-58h43v38h29v-83h51v69h27v-46h42v57h30v-98h54v86h31v-55h43v90h39v-69h40v124H566z" fill="#243750"/>
+ <path d="M566 636h468v42H566z" fill="#152d49"/>
+ <g fill="#eef5fa" opacity=".94"><circle cx="575" cy="286" r="3"/><circle cx="621" cy="414" r="2.7"/><circle cx="657" cy="520" r="3.8"/><circle cx="697" cy="475" r="2.7"/><circle cx="739" cy="299" r="3.5"/><circle cx="779" cy="568" r="4"/><circle cx="816" cy="427" r="2.6"/><circle cx="856" cy="530" r="3.3"/><circle cx="885" cy="374" r="3.8"/><circle cx="921" cy="579" r="2.7"/><circle cx="970" cy="491" r="4"/><circle cx="1016" cy="555" r="3.2"/><circle cx="1001" cy="365" r="2.8"/><circle cx="612" cy="606" r="3.4"/></g>
+ <path d="M648 351c16-25 44-26 65-10 20-28 55-25 73 1 22-18 51-9 61 14 29-7 52 7 57 26-27 15-76 16-129 13-53 6-100 1-127-14z" fill="#d9e2eb" opacity="1"/>
+ <rect x="580" y="272" width="162" height="62" rx="10" fill="#0f2342" opacity=".96"/>
+ <text x="596" y="300" fill="#fff" font-family="DejaVu Sans" font-size="22" font-weight="700">32°</text>
+ <text x="596" y="322" fill="#d9eaf0" font-family="DejaVu Sans" font-size="9" font-weight="700">SNOW · H36° / L28°</text>
+ <text x="800" y="664" text-anchor="middle" fill="#fff" font-family="DejaVu Sans" font-size="16">SNOW · point-supported example</text>
+</g>
+<rect x="566" y="258" width="468" height="420" rx="18" fill="none" stroke="#8aa4b1" stroke-width="3"/>
+<text x="578" y="714" class="small">Scene-wide scattered snow sits behind clouds and temperature data.</text>
+
+<!-- carried rain and static -->
+<g clip-path="url(#f3)"><rect x="1074" y="258" width="468" height="420" fill="url(#day)"/>
+ <rect x="1074" y="258" width="468" height="420" fill="url(#rainCurtain)"/>
+ <path d="M1074 585h48v-58h43v38h29v-83h51v69h27v-46h42v57h30v-98h54v86h31v-55h43v90h39v-69h40v124h-468z" fill="#354d62"/>
+ <path d="M1074 636h468v42h-468z" fill="#213a52"/>
+ <g transform="translate(1016 0)"><path d="M58 335c23-36 67-42 94-23 26-40 80-44 113-10 25-28 66-26 91-3 35-31 91-25 112 10 29-6 51 6 58 25v94H58z" fill="#b7c7ce" opacity=".96"/>
+ <path d="M58 389c31-22 74-22 104-5 26-22 61-25 89-7 36-22 78-17 104 5 47-27 94-13 118 10 22-6 40-1 53 9v47H58z" fill="#d5dfe3" opacity=".88"/></g>
+ <rect x="1095" y="302" width="426" height="60" rx="13" fill="#183d5a"/>
+ <text x="1308" y="329" text-anchor="middle" fill="#fff" font-family="DejaVu Sans" font-size="17" font-weight="700">RAIN · FROM 10:00</text>
+ <text x="1308" y="350" text-anchor="middle" fill="#d9eaf0" font-family="DejaVu Sans" font-size="13">Selected 11:00 · source time stays 10:00</text>
+ <rect x="1095" y="389" width="426" height="51" rx="12" fill="#f5ead8" opacity=".97"/>
+ <text x="1308" y="421" text-anchor="middle" fill="#604b2f" font-family="DejaVu Sans" font-size="15" font-weight="700">REDUCED MOTION · HOLD THIS FRAME</text>
+ <text x="1308" y="664" text-anchor="middle" fill="#fff" font-family="DejaVu Sans" font-size="16">Carried display · no invented 11:00 fact</text>
+</g>
+<rect x="1074" y="258" width="468" height="420" rx="18" fill="none" stroke="#8aa4b1" stroke-width="3"/>
+<text x="1092" y="714" class="small">The prior hour supplies art and label; still mode holds the frame.</text>
+
+<rect x="40" y="773" width="1520" height="253" rx="22" fill="#fff" stroke="#c9d9e0" stroke-width="2"/>
+<text x="64" y="815" class="label">SIX-HOUR FORECAST TAPE · ART FOLLOWS THE SELECTED INSTANT</text>
+<line x1="114" y1="883" x2="1484" y2="883" stroke="#93aab6" stroke-width="5" stroke-linecap="round"/>
+<g fill="#fff" stroke="#66899a" stroke-width="3"><circle cx="190" cy="883" r="10"/><circle cx="438" cy="883" r="10"/><circle cx="686" cy="883" r="10"/><circle cx="934" cy="883" r="10"/><circle cx="1182" cy="883" r="10"/><circle cx="1430" cy="883" r="10"/></g>
+<line x1="686" y1="851" x2="686" y2="915" stroke="#16869a" stroke-width="5"/><path d="M676 849h20l-10-13z" fill="#16869a"/>
+<g font-family="DejaVu Sans Mono" font-size="15" fill="#38566d" text-anchor="middle"><text x="190" y="921">08:00</text><text x="438" y="921">09:00</text><text x="686" y="921">10:00</text><text x="934" y="921">11:00</text><text x="1182" y="921">12:00</text><text x="1430" y="921">13:00</text></g>
+<text x="686" y="951" text-anchor="middle" font-family="DejaVu Sans" font-size="14" font-weight="700" fill="#16869a">SELECTED 10:30</text>
+<text x="64" y="989" class="body">Probability, amount/rate and source time remain readable. A leading gap shows daily facts only; art never takes timeline gestures.</text>
+<text x="1536" y="1080" text-anchor="end" class="small">Revision v3 · owner approval pending · concept, not installed evidence</text>
+</svg>

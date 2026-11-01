@@ -16,5 +16,7 @@ Recorded 2026-10-25 at the owner's request.
   “x window,” use `DISPLAY=:0` for graphical review, including opening boards
   and screenshots there. This is a persistent project environment detail; do
   not ask the owner to repeat the display address.
+- Display image files for the owner with the `feh` binary on `DISPLAY=:0`.
+  Links or image attachments in chat do not replace opening them in that window.
 
 Recorded 2026-10-31 at the owner's request.

@@ -1,0 +1,22 @@
+# SG.4 revised board review notes — product-owner approved 2026-11-01
+
+Review package: behavior board `SG.4-precipitation-event-tracks-v5.png` (editable `.svg`), UI artwork board `SG.4-precipitation-visual-states-v8.png` (editable `.svg`), and this note. The product owner reviewed the two visuals on the X display and approved this package on 2026-11-01 without stated exceptions. These boards are approved design inputs, not installed evidence. This note makes the bounded behavior and affected visual states explicit where the board images show only representative examples.
+
+## Behavior boundary for the v5 board
+
+- The controlling rule is `sg4-interior-carry-v1` in `docs/OXYGEN_SCENE_GENERATION_SPECIFICATION.md`. Carry applies only to an absent **expected** hourly condition slot bracketed by supported supplied conditions on the same local date, with expected slots one elapsed hour apart. Consecutive missing expected slots between those anchors use the same preceding condition for display.
+- The carried condition and scene are labeled with the preceding supplied valid time **and** selected-hour condition unavailability. They do not create a canonical hourly fact, continuous weather interval, or exact onset/clearing time. Other facts retain their own support and selected-time meaning.
+- Each missing expected slot retains its SG.1 representative cell. The earlier slot owns an exact midpoint tie; the next supplied cell takes over immediately after that tie. Carry ends at the next supplied cell and cannot cross a local-date/catalog boundary or a supplied empty/unsupported condition. A wider or undeclared sparse gap is not eligible.
+- A leading or trailing missing run displays available daily facts without an hourly condition claim. An empty condition on a supplied hourly record is not an absent expected slot and cannot trigger carry.
+- A separately supported positive typed rain/snow accumulation interval may govern precipitation art within its original half-open bounds during an eligible missing cell. The older condition remains visibly labeled as older evidence; the interval does not fill the missing condition fact. A current supplied categorical condition retains precedence. Probability, generic total precipitation, and untyped rate cannot select rain/snow art or intensity.
+
+## Artwork and affected states for the v8 board
+
+- The Normal Rain panel is the baseline for a supported `RAIN` condition without supported source intensity: edge-to-edge cloud-led sky, rain beneath shaped source clouds, no bright exposed direct sun, fine near/far drops, and readable forecast facts and timeline above the art. The Light Rain panel is a visual variant only; it does not authorize selection from chance or an inferred threshold.
+- The Heavy Snow panel is the approved-reference appearance proposed for a supported Heavy Snow variant: varied snowflakes beneath shaped clouds, with six-armed near flakes rather than round pellets. Normal remains the baseline when no supported source intensity is available. Optional intensity capture and live Light/Heavy selection belong to a separate data slice.
+- The carried-hour state keeps the previous scene with the original source time and selected-hour unavailability readable. A leading or trailing gap uses available daily facts and makes no hourly condition or precipitation-scene claim from the absent hour. Probability-only makes no rain/snow art. A typed interval may supply its own art only within its own bounds and with its separate fact visible.
+- The art remains illustrative. Supplied cloud-cover values, solar event times, selected `Instant`, chance, amount, rate, and missingness are not changed to match the drawing. Text remains above the scene; the scene does not own timeline gestures. Reduced-motion presentation retains the same scene meaning without continuous animation.
+
+## Approval record
+
+The product owner approved **both** revised PNG boards and this note as the SG.4 review package on 2026-11-01, after visual review on `DISPLAY=:0`. No exceptions or requested edits were stated. The package governs the SG.4 value-to-scene mapping, missing-hour display boundaries, affected rain/snow artwork, and the corresponding roadmap exit. It does not authorize catalog recovery or independent-provider failover, which are separate WX.30 and WX.31 slices. The historical SG.4 boards remain records of their earlier approved behavior. Installed screenshots and scoped interaction checks remain necessary for implementation acceptance.

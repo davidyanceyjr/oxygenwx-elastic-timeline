@@ -18,7 +18,7 @@ data class RepresentativeCell(val startInclusive: Instant, val endExclusive: Ins
 }
 
 enum class SceneSupportKind { POINT, INTERVAL, LIGHT_RULE }
-enum class SceneEvidence { SUPPLIED, EXPECTED_MISSING, PROBABILITY_ONLY, LIGHT_RULE }
+enum class SceneEvidence { SUPPLIED, SUPPLIED_EMPTY, EXPECTED_MISSING, PROBABILITY_ONLY, LIGHT_RULE }
 enum class LightPhase { DAY, DAWN, DUSK, NIGHT, UNAVAILABLE }
 
 data class SolarDayEvents(
@@ -119,7 +119,7 @@ class SemanticScenePlan internal constructor(
 }
 
 object SemanticSceneGenerator {
-    const val VERSION = "sg1-hourly-cells-provider-solar-v2"
+    const val VERSION = "sg4-interior-carry-provider-solar-v3"
 
     fun generate(catalog: CanonicalCatalog, window: CatalogWindow, start: Instant, end: Instant): SemanticScenePlan {
         require(start < end && start >= window.startInclusive && end <= window.endExclusive)
@@ -136,7 +136,24 @@ object SemanticSceneGenerator {
                 val expected = support.instants.sorted()
                 expected.mapIndexed { index, slot ->
                     val fact = day.facts.firstOrNull { it.validTime == slot }
-                    val value = fact?.pointValue(field)
+                    val carried = if (field == CatalogField.CONDITIONS && fact == null) {
+                        val previousSlot = (index - 1 downTo 0).takeWhile { offset ->
+                            expected[offset + 1].epochSecond - expected[offset].epochSecond == 3600L
+                        }.firstOrNull { offset -> day.facts.any { it.validTime == expected[offset] } }
+                        val eligible = setOf("CLEAR", "PARTLY_CLOUDY", "CLOUDY", "RAIN", "SNOW")
+                        val previous = previousSlot?.let { offset ->
+                            day.facts.first { it.validTime == expected[offset] }.pointValue(field)
+                                ?.takeIf { it in eligible }?.let { expected[offset] to it }
+                        }
+                        val nextSlot = (index + 1 until expected.size).takeWhile { offset ->
+                            expected[offset].epochSecond - expected[offset - 1].epochSecond == 3600L
+                        }.firstOrNull { offset -> day.facts.any { it.validTime == expected[offset] } }
+                        val next = nextSlot?.let { offset ->
+                            day.facts.first { it.validTime == expected[offset] }.pointValue(field)
+                        }
+                        previous?.takeIf { next in eligible }
+                    } else null
+                    val value = fact?.pointValue(field) ?: carried?.second
                     val left = expected.getOrNull(index - 1)?.takeIf { slot.epochSecond - it.epochSecond == 3600L }
                     val right = expected.getOrNull(index + 1)?.takeIf { it.epochSecond - slot.epochSecond == 3600L }
                     val cell = if (left == null && right == null) null else {
@@ -146,8 +163,9 @@ object SemanticSceneGenerator {
                         val clippedEnd = minOf(to, end, day.localEnd)
                         if (clippedStart < clippedEnd) RepresentativeCell(clippedStart, clippedEnd) else null
                     }
-                    ScenePoint(slot, slot.takeIf { value != null }, value,
-                        if (value == null) SceneEvidence.EXPECTED_MISSING else if (field == CatalogField.PRECIPITATION_PROBABILITY_PERCENT)
+                    ScenePoint(slot, carried?.first ?: slot.takeIf { fact?.pointValue(field) != null }, value,
+                        if (fact == null) SceneEvidence.EXPECTED_MISSING else if (value == null) SceneEvidence.SUPPLIED_EMPTY
+                        else if (field == CatalogField.PRECIPITATION_PROBABILITY_PERCENT)
                             SceneEvidence.PROBABILITY_ONLY else SceneEvidence.SUPPLIED, cell,
                         if (value != null && field == CatalogField.PRECIPITATION_RATE) fact?.precipitationRate?.meanInterval else null)
                 }
