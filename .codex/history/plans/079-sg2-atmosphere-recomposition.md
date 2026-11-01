@@ -1,6 +1,6 @@
 # Cycle plan — 079-sg2-atmosphere-recomposition
 
-State: ACTIVE
+State: CLOSED DONE
 Cycle ID: `079-sg2-atmosphere-recomposition`
 Roadmap: SG.2
 Objective: Refactor the first-city atmosphere composition and its existing sky, time-cue, cloud, and rain visuals to meet the owner's atmosphere-first target while preserving selected-time and forecast semantics.
@@ -63,6 +63,10 @@ Objective: Refactor the first-city atmosphere composition and its existing sky, 
 - New forecast facts, semantic scene tracks, event timing/support, provider/location/source behavior, timeline gestures or scales, controls/navigation redesign beyond the approved footprint and vertical placement, alerts, second theme, theme picker/downloads, animation/performance framework, or deprecated oxygenWX app changes.
 - Broad system-wide accessibility/TalkBack, RTL, font-scale, or motion test suites excluded by prior owner direction.
 
+## Cycle 079 closeout
+
+Closeout was initially recorded INCOMPLETE on 2026-10-31 because the approved cloud study was not matched closely and rain/unavailable-weather lacked valid active-route captures. The product owner then accepted the installed cloud treatment (“pretty good”) and directed remaining weather-state work to coming slices. SG.2 closes DONE under that revised acceptance scope. This records acceptance, not retroactive verification: rain and unavailable-weather states were not captured and are assigned to SG.4 and SG.3, respectively. Evidence and exact verification limits remain in `.codex/test-artifacts/079-sg2-atmosphere-recomposition/README.md` and `.codex/history/079-sg2-atmosphere-recomposition.md`.
+
 ## Plan status
 
-**ACTIVE — owner board approval recorded 2026-10-31.**
+**CLOSED DONE — owner accepted the installed SG.2 baseline on 2026-10-31; uncovered rain/unavailable-weather states are assigned to later slices.**

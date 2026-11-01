@@ -28,22 +28,38 @@ object FirstCityTheme {
     )
 
     fun treatment(reading: SceneReading, zone: ZoneId): CityTreatment {
-        val local = reading.selectedInstant.atZone(zone)
         return when (reading.lightPhase) {
-            LightPhase.DAY -> if (local.hour < 12) CityTreatment.MORNING else CityTreatment.DAY
+            LightPhase.DAY -> CityTreatment.DAY
+            LightPhase.DAWN -> CityTreatment.MORNING
             LightPhase.DUSK -> CityTreatment.DUSK
             LightPhase.NIGHT -> CityTreatment.NIGHT
+            LightPhase.UNAVAILABLE -> CityTreatment.UNAVAILABLE
         }
     }
 
-    fun cuePosition(instant: Instant, zone: ZoneId): Pair<Float, Float> {
-        val progress = cueProgress(instant, zone)
-        return .12f + .76f * progress to .20f - .06f * kotlin.math.sin(progress * Math.PI).toFloat()
+    fun cuePosition(reading: SceneReading, zone: ZoneId, treatment: CityTreatment): Pair<Float, Float>? {
+        if (treatment == CityTreatment.NIGHT) {
+            val progress = cueProgress(reading.selectedInstant, zone)
+            return .12f + .76f * progress to .20f - .06f * kotlin.math.sin(progress * Math.PI).toFloat()
+        }
+        val events = reading.solarEvents?.takeIf { it.hasCompleteDaylight } ?: return null
+        val sunrise = requireNotNull(events.sunriseInstant)
+        val sunset = requireNotNull(events.sunsetInstant)
+        if (reading.selectedInstant < sunrise || reading.selectedInstant > sunset) return null
+        val progress = ((reading.selectedInstant.epochSecond - sunrise.epochSecond).toDouble() /
+            (sunset.epochSecond - sunrise.epochSecond).toDouble()).coerceIn(0.0, 1.0).toFloat()
+        return .12f + .76f * progress to .42f - .24f * kotlin.math.sin(progress * Math.PI).toFloat()
     }
 
     /** Theme-only apparent size: larger toward the ends of the illustrative arc. */
-    fun cueScale(instant: Instant, zone: ZoneId): Float {
-        val progress = cueProgress(instant, zone)
+    fun cueScale(reading: SceneReading, zone: ZoneId, treatment: CityTreatment): Float {
+        val progress = if (treatment == CityTreatment.NIGHT) cueProgress(reading.selectedInstant, zone) else {
+            val events = reading.solarEvents?.takeIf { it.hasCompleteDaylight } ?: return 1f
+            val sunrise = requireNotNull(events.sunriseInstant)
+            val sunset = requireNotNull(events.sunsetInstant)
+            ((reading.selectedInstant.epochSecond - sunrise.epochSecond).toDouble() /
+                (sunset.epochSecond - sunrise.epochSecond).toDouble()).coerceIn(0.0, 1.0).toFloat()
+        }
         return 1.28f - .48f * kotlin.math.sin(progress * Math.PI).toFloat()
     }
 
@@ -62,4 +78,4 @@ data class CityLayer(
     val fallback: String,
 )
 
-enum class CityTreatment { MORNING, DAY, DUSK, NIGHT }
+enum class CityTreatment { MORNING, DAY, DUSK, NIGHT, UNAVAILABLE }

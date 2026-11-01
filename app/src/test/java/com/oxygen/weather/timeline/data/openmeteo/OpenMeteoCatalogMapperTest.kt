@@ -79,13 +79,15 @@ class OpenMeteoCatalogMapperTest {
         assertFalse(mapped.expectedSupport.containsKey(date.plusDays(14)))
     }
 
-    @Test fun `captured provider catalog round trips losslessly through v2 and can emit the approval artifact`() {
+    @Test fun `legacy captured provider catalog round trips through v2 with solar events unavailable`() {
         val request = request(Instant.parse("2026-10-28T14:57:55.714828Z"))
         val input = javaClass.getResourceAsStream("/openmeteo/provider-response-public-chicago.json")!!.use { it.readBytes() }
         val mapped = OpenMeteoCatalogMapper.decode(input, request).success()
         val original = CatalogRecording(mapped.catalog, mapped.expectedSupport, mapped.dailyExpectedSupport)
         val encoded = RecordedCatalogCodec.encode(original)
         assertEquals(2, mapper.readTree(encoded).path("schemaVersion").intValue())
+        assertNull(mapped.catalog.dailySummaries.first().sunriseInstant)
+        assertNull(mapped.catalog.dailySummaries.first().sunsetInstant)
         val decoded = (RecordedCatalogCodec.decode(encoded) as RecordingDecodeResult.Success).recording
         assertEquals(original.catalog, decoded.catalog)
         assertEquals(original.expectedSupport.keys, decoded.expectedSupport.keys)
@@ -103,6 +105,37 @@ class OpenMeteoCatalogMapperTest {
         }
         val hash = MessageDigest.getInstance("SHA-256").digest(encoded).joinToString("") { "%02x".format(it) }
         assertTrue(hash.matches(Regex("[a-f0-9]{64}")))
+    }
+
+    @Test fun `solar events map as absolute instants, remain nullable, and round trip through v3`() {
+        val date = LocalDate.parse("2026-07-10")
+        val request = request(date.atTime(12, 0).atZone(chicago.timeZone).toInstant())
+        val response = fixture(request, -5 * 3600, listOf(date.atTime(12, 0).atZone(chicago.timeZone).toInstant()), listOf(date))
+        val mapped = mapBytes(response, request).success()
+        val summary = mapped.catalog.dailySummaries.single()
+        val expectedSunrise = date.atTime(6, 30).atZone(chicago.timeZone).toInstant()
+        val expectedSunset = date.atTime(18, 30).atZone(chicago.timeZone).toInstant()
+        assertEquals(expectedSunrise, summary.sunriseInstant)
+        assertEquals(expectedSunset, summary.sunsetInstant)
+        assertTrue(summary.has(DailyCatalogField.SUNRISE))
+        assertTrue(summary.has(DailyCatalogField.SUNSET))
+
+        val encoded = RecordedCatalogCodec.encode(CatalogRecording(
+            mapped.catalog, mapped.expectedSupport, mapped.dailyExpectedSupport,
+        ))
+        assertEquals(3, mapper.readTree(encoded).path("schemaVersion").intValue())
+        val decoded = (RecordedCatalogCodec.decode(encoded) as RecordingDecodeResult.Success).recording
+        assertEquals(mapped.catalog.dailySummaries, decoded.catalog.dailySummaries)
+        assertArrayEquals(encoded, RecordedCatalogCodec.encode(decoded))
+
+        val daily = response.path("daily")
+        (daily.path("sunrise") as ArrayNode).set(0, mapper.nodeFactory.nullNode())
+        (daily.path("sunset") as ArrayNode).set(0, mapper.nodeFactory.nullNode())
+        val missing = mapBytes(response, request).success().catalog.dailySummaries.single()
+        assertNull(missing.sunriseInstant)
+        assertNull(missing.sunsetInstant)
+        assertFalse(missing.has(DailyCatalogField.SUNRISE))
+        assertFalse(missing.has(DailyCatalogField.SUNSET))
     }
 
     @Test fun `buffered live capture can emit a clipped v2 candidate and coverage report`() {
@@ -229,6 +262,8 @@ class OpenMeteoCatalogMapperTest {
         val day = (CatalogWindow.create(mapped.catalog, mapped.expectedSupport, dailyExpectedSupport = mapped.dailyExpectedSupport) as CatalogWindowResult.Success).window.days.single { it.date == date }
         assertEquals(CoverageStatus.MISSING, day.dailyCoverage.getValue(DailyCatalogField.TEMPERATURE_MAX_C))
         assertEquals(CoverageStatus.MISSING, day.dailyCoverage.getValue(DailyCatalogField.CONDITIONS))
+        assertEquals(CoverageStatus.MISSING, day.dailyCoverage.getValue(DailyCatalogField.SUNRISE))
+        assertEquals(CoverageStatus.MISSING, day.dailyCoverage.getValue(DailyCatalogField.SUNSET))
     }
 
     @Test fun `returned null only row receives a product segment and absent date has none`() {
@@ -324,8 +359,8 @@ class OpenMeteoCatalogMapperTest {
         })
         set<com.fasterxml.jackson.databind.JsonNode>("daily", mapper.createObjectNode().apply {
             set<com.fasterxml.jackson.databind.JsonNode>("time", mapper.createArrayNode().also { a -> dailyDates.forEach { a.add(it.atStartOfDay().toEpochSecond(ZoneOffset.ofTotalSeconds(offsetSeconds))) } })
-            OpenMeteoTransport.DAILY.filter { it != "time" && it !in omitDaily }.forEach { name ->
-                set<com.fasterxml.jackson.databind.JsonNode>(name, mapper.createArrayNode().also { a -> dailyDates.forEach { a.add(dayValue(name)) } })
+                OpenMeteoTransport.DAILY.filter { it != "time" && it !in omitDaily }.forEach { name ->
+                set<com.fasterxml.jackson.databind.JsonNode>(name, mapper.createArrayNode().also { a -> dailyDates.forEach { a.add(dayValue(name, it)) } })
             }
         })
     }
@@ -340,11 +375,13 @@ class OpenMeteoCatalogMapperTest {
         "precipitation_probability", "cloud_cover" -> 0.0
         else -> 0.0
     }
-    private fun dayValue(name: String): Double = when (name) {
+    private fun dayValue(name: String, date: LocalDate): Double = when (name) {
         "weather_code" -> 0.0
         "temperature_2m_max" -> 20.0
         "temperature_2m_min" -> 10.0
         "precipitation_probability_max" -> 0.0
+        "sunrise" -> date.atTime(6, 30).atZone(chicago.timeZone).toEpochSecond().toDouble()
+        "sunset" -> date.atTime(18, 30).atZone(chicago.timeZone).toEpochSecond().toDouble()
         else -> 0.0
     }
     private fun hourUnit(name: String) = when (name) {
@@ -362,6 +399,7 @@ class OpenMeteoCatalogMapperTest {
     }
     private fun dayUnit(name: String) = when (name) {
         "time" -> "unixtime"
+        "sunrise", "sunset" -> "unixtime"
         "weather_code" -> "wmo code"
         "temperature_2m_max", "temperature_2m_min" -> "°C"
         "precipitation_probability_max" -> "%"

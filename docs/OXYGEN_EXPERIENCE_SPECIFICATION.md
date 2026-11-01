@@ -141,7 +141,7 @@ Avoid accumulating persistent mode rows, page bars, chip clusters, weather cards
 - The atmosphere responds to selected time and appropriate forecast fields: lighting, sky palette, cloudiness, precipitation identity, and time of day.
 - Scene transitions can be aesthetically continuous between hourly forecast samples, but **do not represent interpolated transitions as measured minute-by-minute forecasts**.
 - A precipitation probability is **not** rainfall rate; rain-streak artwork must be treated as illustrative unless actual precipitation-intensity inputs exist.
-- The sun's position and sunrise/sunset cues must not be presented as physically or geographically accurate until location, timezone, date, and a validated solar model are used.
+- Sun position remains illustrative unless a validated location/date solar-position model is used. When provider-supplied sunrise and sunset instants are available for the selected location, local date, and IANA timezone, the sun cue may use those exact event times for its horizon crossings in every weather scene; do not infer missing events or claim precise azimuth/elevation from those two times alone.
 - Decorative terrain, clouds, stars, and textures are optional. They must never cover critical information or cause excessive battery drain.
 - Daily overview should use an honestly labeled representative or aggregated day visualization; hourly precision should represent the selected hour. Switching these display lenses may alter the scene even when the selected moment does not change.
 

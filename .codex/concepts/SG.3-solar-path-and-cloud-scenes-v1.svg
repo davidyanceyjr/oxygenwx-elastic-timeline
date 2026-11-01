@@ -1,0 +1,89 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1900" height="1260" viewBox="0 0 1900 1260">
+<defs>
+ <linearGradient id="paper" x2="0" y2="1"><stop stop-color="#eef5f7"/><stop offset="1" stop-color="#dce8ed"/></linearGradient>
+ <linearGradient id="sunrise" x2="0" y2="1"><stop stop-color="#90b5cd"/><stop offset=".62" stop-color="#efb69c"/><stop offset="1" stop-color="#e8cfbc"/></linearGradient>
+ <linearGradient id="noon" x2="0" y2="1"><stop stop-color="#75a9ca"/><stop offset="1" stop-color="#d6e1df"/></linearGradient>
+ <linearGradient id="sunset" x2="0" y2="1"><stop stop-color="#536783"/><stop offset=".65" stop-color="#d58f88"/><stop offset="1" stop-color="#f0bd93"/></linearGradient>
+ <linearGradient id="night" x2="0" y2="1"><stop stop-color="#152642"/><stop offset="1" stop-color="#3a526b"/></linearGradient>
+ <clipPath id="ref"><rect x="54" y="174" width="356" height="732" rx="24"/></clipPath>
+ <style>
+  .title{font:700 38px 'DejaVu Sans',sans-serif;fill:#18334b}.sub{font:20px 'DejaVu Sans',sans-serif;fill:#49677d}
+  .eyebrow{font:700 16px 'DejaVu Sans',sans-serif;letter-spacing:2px;fill:#00859b}.label{font:700 15px 'DejaVu Sans',sans-serif;letter-spacing:1.4px;fill:#00859b}
+  .body{font:17px 'DejaVu Sans',sans-serif;fill:#244259}.small{font:14px 'DejaVu Sans',sans-serif;fill:#58738a}
+  .card{fill:white;stroke:#c7d7df;stroke-width:2}.cloud{fill:#edf3f4;fill-opacity:.88}
+ </style>
+</defs>
+<rect width="1900" height="1260" fill="url(#paper)"/>
+<text x="54" y="44" class="eyebrow">OXYGEN · SG.3 · SELECTED-TIME SOLAR PATH · REVIEW BOARD</text>
+<text x="54" y="94" class="title">Sunrise and sunset must land on the selected time.</text>
+<text x="54" y="128" class="sub">The location’s date and time zone drive one shared solar result for every scene state.</text>
+
+<!-- Installed device reference -->
+<rect x="42" y="150" width="380" height="856" rx="26" class="card"/>
+<g clip-path="url(#ref)"><image x="54" y="174" width="356" height="732" preserveAspectRatio="none" href="/home/opsman/project_git/oxygenwx-elastic-timeline/.codex/test-artifacts/079-sg2-atmosphere-recomposition/pixel-main-final.png"/></g>
+<rect x="54" y="174" width="356" height="732" rx="24" fill="none" stroke="#7c98a9" stroke-width="3"/>
+<text x="62" y="938" class="label">INSTALLED PIXEL SCENE REFERENCE</text>
+<text x="62" y="965" class="small">Chicago · 2026-10-31 · current cue is illustrative</text>
+<text x="62" y="986" class="small">Cloud forms match across captures; they show no storm state.</text>
+
+<!-- Selected-time solar states -->
+<text x="458" y="170" class="label">SAME CHICAGO DATE · LOCAL CDT · FOUR SELECTED INSTANTS</text>
+<g transform="translate(450 192)">
+ <rect width="320" height="500" rx="20" class="card"/>
+ <text x="22" y="36" class="label">07:22 · SUNRISE</text>
+ <rect x="14" y="56" width="292" height="330" rx="14" fill="url(#sunrise)"/>
+ <circle cx="82" cy="274" r="28" fill="#ffe0a0"/>
+ <path fill="#537998" d="M14 322h30v-42h28v25h20v-58h33v49h19v-36h28v41h20v-69h37v62h23v-44h25v48h31v48H14z"/>
+ <path fill="#263f59" d="M14 350h292v36H14z"/>
+ <text x="20" y="420" class="body">Apparent sunrise on horizon</text>
+ <text x="20" y="447" class="small">Azimuth ≈ 108° · east-southeast</text>
+ <text x="20" y="477" class="small">Sun cue crosses at this local instant.</text>
+</g>
+<g transform="translate(798 192)">
+ <rect width="320" height="500" rx="20" class="card"/>
+ <text x="22" y="36" class="label">12:34 · SOLAR NOON</text>
+ <rect x="14" y="56" width="292" height="330" rx="14" fill="url(#noon)"/>
+ <circle cx="160" cy="202" r="31" fill="#ffe8ac"/>
+ <path fill="#537998" d="M14 322h30v-42h28v25h20v-58h33v49h19v-36h28v41h20v-69h37v62h23v-44h25v48h31v48H14z"/>
+ <path fill="#263f59" d="M14 350h292v36H14z"/>
+ <text x="20" y="420" class="body">Highest daily sun position</text>
+ <text x="20" y="447" class="small">South-facing transit · elevation ≈ 34°</text>
+ <text x="20" y="477" class="small">Not a generic “high noon” placement.</text>
+</g>
+<g transform="translate(1146 192)">
+ <rect width="320" height="500" rx="20" class="card"/>
+ <text x="22" y="36" class="label">17:46 · SUNSET</text>
+ <rect x="14" y="56" width="292" height="330" rx="14" fill="url(#sunset)"/>
+ <circle cx="240" cy="274" r="28" fill="#ffd69a"/>
+ <path fill="#537998" d="M14 322h30v-42h28v25h20v-58h33v49h19v-36h28v41h20v-69h37v62h23v-44h25v48h31v48H14z"/>
+ <path fill="#263f59" d="M14 350h292v36H14z"/>
+ <text x="20" y="420" class="body">Apparent sunset on horizon</text>
+ <text x="20" y="447" class="small">Azimuth ≈ 251° · west-southwest</text>
+ <text x="20" y="477" class="small">Sun cue crosses at this local instant.</text>
+</g>
+<g transform="translate(1494 192)">
+ <rect width="320" height="500" rx="20" class="card"/>
+ <text x="22" y="36" class="label">19:57 · AFTER SUNSET</text>
+ <rect x="14" y="56" width="292" height="330" rx="14" fill="url(#night)"/>
+ <path fill="#537998" d="M14 322h30v-42h28v25h20v-58h33v49h19v-36h28v41h20v-69h37v62h23v-44h25v48h31v48H14z"/>
+ <path fill="#263f59" d="M14 350h292v36H14z"/>
+ <text x="20" y="420" class="body">Sun is below the horizon</text>
+ <text x="20" y="447" class="small">No visible sun cue at 19:57 CDT.</text>
+ <text x="20" y="477" class="small">Clouds and weather do not move sunset.</text>
+</g>
+
+<!-- Behavior and invariants -->
+<rect x="450" y="724" width="1364" height="282" rx="20" class="card"/>
+<text x="478" y="766" class="label">BEHAVIOR CONTRACT · SHARED BY CLEAR, CLOUDY, RAIN, AND STORM SCENES</text>
+<text x="478" y="808" class="body">Location coordinates + selected Instant + IANA time zone → solar position and local sunrise/sunset for that date.</text>
+<text x="478" y="844" class="body">Every scene reads the same solar result; weather layers may soften or cover light, never shift its timing.</text>
+<text x="478" y="880" class="body">DST follows the location’s time-zone rules. Scrubbing selects the instant; the scene never snaps to a solar event.</text>
+<text x="478" y="916" class="body">Polar day/night has no invented daily crossing. If location data is unavailable, omit the sun cue rather than guess.</text>
+<text x="478" y="962" class="small">Model uses the conventional apparent sunrise/set definition: upper solar limb at the horizon, with standard refraction.</text>
+
+<text x="1810" y="1048" class="small" text-anchor="end">Concept board · installed screenshot is composition reference only · solar states are proposed, not installed evidence.</text>
+<text x="54" y="1092" class="label">CLOUD / CITY DEPTH</text>
+<text x="54" y="1125" class="body">Keep the blue buildings distant. On storm states, broad continuous cloud banks pass in front of the skyline;</text>
+<text x="54" y="1157" class="body">they move as coherent masses, not repeated puffs. The same solar timestamps apply through every weather layer.</text>
+<text x="1810" y="1220" class="small" text-anchor="end">Chicago reference: 2026-10-31 · sunrise 07:22 · solar noon 12:34 · sunset 17:46 · all local time.</text>
+</svg>

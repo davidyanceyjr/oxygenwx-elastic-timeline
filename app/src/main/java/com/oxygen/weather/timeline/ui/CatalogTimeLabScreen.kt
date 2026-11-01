@@ -125,9 +125,6 @@ private fun CatalogTimeLabScreenContent(
                 zone = view.zone,
                 state = view.scene,
                 omitOptionalCityLayers = omitOptionalCityLayers,
-                phaseHours = InstantTimeAxis.elapsedSecondsBetween(
-                    view.interval.startInclusive, view.selectedInstant,
-                ) / 3600.0,
             )
         } else if (view.scene != null) {
             CatalogAtmosphericScene(

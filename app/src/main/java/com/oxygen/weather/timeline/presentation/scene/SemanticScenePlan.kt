@@ -19,7 +19,16 @@ data class RepresentativeCell(val startInclusive: Instant, val endExclusive: Ins
 
 enum class SceneSupportKind { POINT, INTERVAL, LIGHT_RULE }
 enum class SceneEvidence { SUPPLIED, EXPECTED_MISSING, PROBABILITY_ONLY, LIGHT_RULE }
-enum class LightPhase { DAY, DUSK, NIGHT }
+enum class LightPhase { DAY, DAWN, DUSK, NIGHT, UNAVAILABLE }
+
+data class SolarDayEvents(
+    val date: LocalDate,
+    val sunriseInstant: Instant?,
+    val sunsetInstant: Instant?,
+) {
+    val hasCompleteDaylight: Boolean
+        get() = sunriseInstant != null && sunsetInstant != null && sunriseInstant < sunsetInstant
+}
 
 /** One expected point, including missing slots. The source time exists only for supplied data. */
 data class ScenePoint(
@@ -67,6 +76,7 @@ data class SceneReading(
     val weather: Map<String, ScenePoint?>,
     val intervals: Map<String, SceneInterval?>,
     val lightInterval: LightInterval,
+    val solarEvents: SolarDayEvents? = null,
 ) {
     val lightPhase: LightPhase get() = lightInterval.phase
 }
@@ -78,6 +88,7 @@ class SemanticScenePlan internal constructor(
     val windowStart: Instant,
     val windowEnd: Instant,
     tracks: List<SceneTrack>,
+    private val solarEventsByDate: Map<LocalDate, SolarDayEvents>,
 ) {
     val tracks: List<SceneTrack> = Collections.unmodifiableList(tracks.toList())
 
@@ -102,19 +113,13 @@ class SemanticScenePlan internal constructor(
             }
         }
         return SceneReading(selectedInstant, Collections.unmodifiableMap(weather),
-            Collections.unmodifiableMap(intervals), requireNotNull(lightInterval))
+            Collections.unmodifiableMap(intervals), requireNotNull(lightInterval),
+            solarEventsByDate[selectedInstant.atZone(zoneId).toLocalDate()])
     }
 }
 
-/** Rule v1 uses clock hours only; it makes no sunrise, sunset, or moon claim. */
-private fun lightAt(instant: Instant, zone: ZoneId): LightPhase = when (instant.atZone(zone).hour) {
-    in 7..17 -> LightPhase.DAY
-    in 18..19 -> LightPhase.DUSK
-    else -> LightPhase.NIGHT
-}
-
 object SemanticSceneGenerator {
-    const val VERSION = "sg1-hourly-cells-light-v1"
+    const val VERSION = "sg1-hourly-cells-provider-solar-v2"
 
     fun generate(catalog: CanonicalCatalog, window: CatalogWindow, start: Instant, end: Instant): SemanticScenePlan {
         require(start < end && start >= window.startInclusive && end <= window.endExclusive)
@@ -164,8 +169,11 @@ object SemanticSceneGenerator {
             if (values.isNotEmpty()) tracks += SceneTrack(field.name.lowercase(), field.assetFamily(), SceneSupportKind.INTERVAL,
                 intervals = Collections.unmodifiableList(values))
         }
-        tracks += SceneTrack("light_phase", "local_clock_light", SceneSupportKind.LIGHT_RULE,
-            lightIntervals = Collections.unmodifiableList(lightIntervals(start, end, window.zoneId)))
+        val solarEventsByDate = catalog.dailySummaries.associate { summary ->
+            summary.date to SolarDayEvents(summary.date, summary.sunriseInstant, summary.sunsetInstant)
+        }
+        tracks += SceneTrack("light_phase", "provider_solar_events", SceneSupportKind.LIGHT_RULE,
+            lightIntervals = Collections.unmodifiableList(lightIntervals(start, end, window.zoneId, solarEventsByDate)))
         val canonical = buildString {
             append(VERSION).append('|').append(catalog.datasetId.value).append('|')
             append(catalog.location).append('|').append(catalog.provenance).append('|').append(catalog.asOf)
@@ -176,24 +184,43 @@ object SemanticSceneGenerator {
         }
         val digest = MessageDigest.getInstance("SHA-256").digest(canonical.toByteArray(Charsets.UTF_8))
             .joinToString("") { "%02x".format(it) }
-        return SemanticScenePlan("$VERSION:$digest", window.zoneId, start, end, tracks)
+        return SemanticScenePlan("$VERSION:$digest", window.zoneId, start, end, tracks, solarEventsByDate)
     }
 }
 
-private fun lightIntervals(start: Instant, end: Instant, zone: ZoneId): List<LightInterval> {
-    val firstDate = start.atZone(zone).toLocalDate().minusDays(1)
-    val lastDate = end.atZone(zone).toLocalDate().plusDays(1)
+private fun lightIntervals(
+    start: Instant,
+    end: Instant,
+    zone: ZoneId,
+    solarEventsByDate: Map<LocalDate, SolarDayEvents>,
+): List<LightInterval> {
     val boundaries = mutableListOf(start, end)
-    var date: LocalDate = firstDate
-    while (!date.isAfter(lastDate)) {
-        for (hour in listOf(7, 18, 20)) {
-            val boundary = date.atTime(hour, 0).atZone(zone).toInstant()
-            if (boundary > start && boundary < end) boundaries += boundary
+    for (events in solarEventsByDate.values) {
+        for (event in listOfNotNull(events.sunriseInstant, events.sunsetInstant)) {
+            for (boundary in listOf(event.minusSeconds(45 * 60L), event, event.plusSeconds(45 * 60L))) {
+                if (boundary > start && boundary < end) boundaries += boundary
+            }
         }
-        date = date.plusDays(1)
     }
     return boundaries.distinct().sorted().zipWithNext { from, to ->
-        LightInterval(from, to, lightAt(from, zone))
+        LightInterval(from, to, lightAt(from, zone, solarEventsByDate))
+    }
+}
+
+private fun lightAt(instant: Instant, zone: ZoneId, solarEventsByDate: Map<LocalDate, SolarDayEvents>): LightPhase {
+    val events = solarEventsByDate[instant.atZone(zone).toLocalDate()]?.takeIf { it.hasCompleteDaylight }
+        ?: return LightPhase.UNAVAILABLE
+    val sunrise = requireNotNull(events.sunriseInstant)
+    val sunset = requireNotNull(events.sunsetInstant)
+    val dawnStart = sunrise.minusSeconds(45 * 60L)
+    val dawnEnd = sunrise.plusSeconds(45 * 60L)
+    val duskStart = sunset.minusSeconds(45 * 60L)
+    val duskEnd = sunset.plusSeconds(45 * 60L)
+    return when {
+        instant < dawnStart || instant >= duskEnd -> LightPhase.NIGHT
+        instant < dawnEnd -> LightPhase.DAWN
+        instant < duskStart -> LightPhase.DAY
+        else -> LightPhase.DUSK
     }
 }
 

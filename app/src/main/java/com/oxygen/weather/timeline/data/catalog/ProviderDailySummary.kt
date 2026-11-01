@@ -1,10 +1,11 @@
 package com.oxygen.weather.timeline.data.catalog
 
+import java.time.Instant
 import java.time.LocalDate
 
 enum class DailyCatalogField {
     TEMPERATURE_MAX_C, TEMPERATURE_MIN_C, PRECIPITATION_PROBABILITY_MAX_PERCENT,
-    CONDITIONS, PHENOMENA, RAIN_AMOUNT, TOTAL_PRECIPITATION, SNOWFALL,
+    CONDITIONS, PHENOMENA, RAIN_AMOUNT, TOTAL_PRECIPITATION, SNOWFALL, SUNRISE, SUNSET,
 }
 
 /** Provider-supplied day-level values. Support always spans the real IANA local calendar day. */
@@ -19,6 +20,8 @@ data class ProviderDailySummary(
     val rainAmountMillimeters: Double? = null,
     val totalPrecipitationMillimeters: Double? = null,
     val snowfallCentimeters: Double? = null,
+    val sunriseInstant: Instant? = null,
+    val sunsetInstant: Instant? = null,
     val origin: DailyValueOrigin = DailyValueOrigin.PROVIDER_SUPPLIED,
 ) {
     init {
@@ -28,6 +31,9 @@ data class ProviderDailySummary(
         require(temperatureMaxC == null || temperatureMinC == null || temperatureMaxC >= temperatureMinC)
         require(precipitationProbabilityMaxPercent == null || precipitationProbabilityMaxPercent.isFinite() && precipitationProbabilityMaxPercent in 0.0..100.0)
         require(listOf(rainAmountMillimeters, totalPrecipitationMillimeters, snowfallCentimeters).all { it == null || it.isFinite() && it >= 0.0 })
+        require(sunriseInstant == null || sunriseInstant >= support.start && sunriseInstant < support.end)
+        require(sunsetInstant == null || sunsetInstant >= support.start && sunsetInstant < support.end)
+        require(sunriseInstant == null || sunsetInstant == null || sunriseInstant < sunsetInstant)
     }
 
     fun has(field: DailyCatalogField): Boolean = when (field) {
@@ -39,6 +45,8 @@ data class ProviderDailySummary(
         DailyCatalogField.RAIN_AMOUNT -> rainAmountMillimeters != null
         DailyCatalogField.TOTAL_PRECIPITATION -> totalPrecipitationMillimeters != null
         DailyCatalogField.SNOWFALL -> snowfallCentimeters != null
+        DailyCatalogField.SUNRISE -> sunriseInstant != null
+        DailyCatalogField.SUNSET -> sunsetInstant != null
     }
 }
 

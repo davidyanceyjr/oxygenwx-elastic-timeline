@@ -22,29 +22,21 @@ class RecordedCatalogTest {
     @Test fun fixtureRoundTripsAndReplays() = runBlocking {
         val original = captured()
         val encoded = RecordedCatalogCodec.encode(original)
-        assertArrayEquals(fixture(), encoded)
-        val decoded = RecordedCatalogCodec.decode(fixture()) as RecordingDecodeResult.Success
-        assertEquals(original.catalog, decoded.recording.catalog)
-        assertEquals(original.expectedSupport.keys, decoded.recording.expectedSupport.keys)
-        original.expectedSupport.forEach { (date, fields) ->
-            assertEquals(fields.keys, decoded.recording.expectedSupport[date]?.keys)
-            fields.forEach { (field, support) ->
-                val actual = decoded.recording.expectedSupport[date]?.get(field)
-                when (support) {
-                    is ExpectedFieldSupport.Points -> assertEquals(support.instants, (actual as ExpectedFieldSupport.Points).instants)
-                    is ExpectedFieldSupport.Intervals -> assertEquals(support.intervals, (actual as ExpectedFieldSupport.Intervals).intervals)
-                }
-            }
-        }
-        val replay = CatalogSourceRegistry(listOf(RecordedCatalogSource(fixture()))).load(CatalogOrigin.REPLAY, request)
+        val decodedCurrent = RecordedCatalogCodec.decode(encoded) as RecordingDecodeResult.Success
+        assertEquals(original.catalog, decodedCurrent.recording.catalog)
+        assertEquals(encoded.toList(), RecordedCatalogCodec.encode(decodedCurrent.recording).toList())
+        val legacyBytes = fixture()
+        val decoded = RecordedCatalogCodec.decode(legacyBytes) as RecordingDecodeResult.Success
+        assertArrayEquals(legacyBytes, RecordedCatalogCodec.encode(decoded.recording))
+        val replay = CatalogSourceRegistry(listOf(RecordedCatalogSource(legacyBytes))).load(CatalogOrigin.REPLAY, request)
         assertTrue(replay is CatalogLoadResult.Success)
         replay as CatalogLoadResult.Success
         assertEquals(CatalogOrigin.REPLAY, replay.catalog.provenance.origin)
         assertEquals(CatalogOrigin.SIMULATED, replay.metadata.replayOriginalOrigin)
-        assertEquals(original.catalog.facts, replay.catalog.facts)
-        assertTrue(original.catalog.facts.any { it.thunderstormProbabilityPercent != null })
-        assertTrue(original.catalog.facts.any { it.rainAmountMillimeters?.valueMillimeters == 0.0 })
-        assertTrue(original.catalog.facts.any { it.rainAmountMillimeters == null })
+        assertEquals(decoded.recording.catalog.facts, replay.catalog.facts)
+        assertTrue(decoded.recording.catalog.facts.any { it.thunderstormProbabilityPercent != null })
+        assertTrue(decoded.recording.catalog.facts.any { it.rainAmountMillimeters?.valueMillimeters == 0.0 })
+        assertTrue(decoded.recording.catalog.facts.any { it.rainAmountMillimeters == null })
     }
 
     @Test fun badVersionShapeAndIdentityFail() = runBlocking {

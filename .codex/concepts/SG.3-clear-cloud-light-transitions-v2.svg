@@ -1,0 +1,60 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1500" height="1060" viewBox="0 0 1500 1060">
+<defs>
+ <linearGradient id="paper" x2="0" y2="1"><stop stop-color="#eef4f6"/><stop offset="1" stop-color="#dce7eb"/></linearGradient>
+ <linearGradient id="sky" x2="0" y2="1"><stop stop-color="#b8d7e8"/><stop offset=".62" stop-color="#e5d7ca"/><stop offset="1" stop-color="#8a9bab"/></linearGradient>
+ <linearGradient id="sunwash" x1="0" x2="1"><stop stop-color="#f7d9a8" stop-opacity="0"/><stop offset=".5" stop-color="#f7d9a8" stop-opacity=".5"/><stop offset="1" stop-color="#f7d9a8" stop-opacity="0"/></linearGradient>
+ <clipPath id="f1"><rect x="56" y="205" width="420" height="500" rx="18"/></clipPath>
+ <clipPath id="f2"><rect x="540" y="205" width="420" height="500" rx="18"/></clipPath>
+ <clipPath id="f3"><rect x="1024" y="205" width="420" height="500" rx="18"/></clipPath>
+ <style>
+ .eyebrow{font:700 15px 'DejaVu Sans',sans-serif;letter-spacing:2px;fill:#16869b}
+ .title{font:700 30px 'DejaVu Sans',sans-serif;fill:#18344e}
+ .sub{font:16px 'DejaVu Sans',sans-serif;fill:#355068}
+ .label{font:700 14px 'DejaVu Sans',sans-serif;letter-spacing:1.4px;fill:#18859a}
+ .note{font:16px 'DejaVu Sans',sans-serif;fill:#213d55}
+ .small{font:13px 'DejaVu Sans',sans-serif;fill:#526d82}
+ .cloud{fill:#f4f7f8;fill-opacity:.67}
+ </style>
+</defs>
+<rect width="1500" height="1060" fill="url(#paper)"/>
+<text x="48" y="42" class="eyebrow">OXYGEN · SG.3 · CLOUD SCRUB MOTION · REVIEW BOARD</text>
+<text x="48" y="88" class="title">Continuous cloud banks cue rain and heavy-rain storms.</text>
+<text x="48" y="120" class="sub">One broad bank arrives from one side for rain; banks converge from both sides for heavy-rain storms.</text>
+<!-- panels -->
+<g fill="#fff" stroke="#c8d7df" stroke-width="2">
+ <rect x="40" y="150" width="452" height="594" rx="22"/>
+ <rect x="524" y="150" width="452" height="594" rx="22"/>
+ <rect x="1008" y="150" width="452" height="594" rx="22"/>
+</g>
+<text x="60" y="184" class="label">SELECTED 06:00</text><text x="544" y="184" class="label">SELECTED 12:00</text><text x="1028" y="184" class="label">SELECTED 18:00</text>
+<!-- atmospheric city frame one -->
+<g clip-path="url(#f1)"><rect x="56" y="205" width="420" height="500" fill="url(#sky)"/><rect x="56" y="245" width="420" height="210" fill="url(#sunwash)" opacity=".35"/>
+ <path class="cloud" d="M82 315 C103 289 127 291 148 306 C167 276 199 275 222 302 C250 284 280 293 294 317 C327 306 354 318 364 338 C336 357 279 360 221 355 C163 362 116 354 82 338Z"/>
+ <path class="cloud" d="M70 402 C92 378 124 381 143 395 C169 361 203 365 224 392 C251 376 276 386 289 407 C321 398 348 408 362 430 C337 448 280 450 224 445 C160 452 107 445 70 430Z" opacity=".55"/>
+ <g fill="#34485c"><path d="M56 538h38v-65h28v48h22v-93h39v76h25v-56h34v66h23v-112h44v104h30v-71h33v83h28v-53h36v138H56z"/><path d="M56 610h420v95H56z" fill="#20384f"/></g>
+ <text x="266" y="670" fill="white" font-size="17" font-family="DejaVu Sans" text-anchor="middle">one connected bank arrives · rain</text></g>
+<!-- frame two, cloud moves clearly right -->
+<g clip-path="url(#f2)"><rect x="540" y="205" width="420" height="500" fill="url(#sky)"/><rect x="540" y="245" width="420" height="210" fill="url(#sunwash)" opacity=".6"/>
+ <g fill="#34485c"><path d="M540 538h38v-65h28v48h22v-93h39v76h25v-56h34v66h23v-112h44v104h30v-71h33v83h28v-53h36v138H540z"/><path d="M540 610h420v95H540z" fill="#20384f"/></g>
+ <g transform="translate(540 0)"><path class="cloud" d="M76 315 C97 289 121 291 142 306 C161 276 193 275 216 302 C244 284 274 293 288 317 C321 306 348 318 358 338 C330 357 273 360 215 355 C157 362 110 354 76 338Z"/>
+ <path class="cloud" d="M64 402 C86 378 118 381 137 395 C163 361 197 365 218 392 C245 376 270 386 283 407 C315 398 342 408 356 430 C331 448 274 450 218 445 C154 452 101 445 64 430Z" opacity=".55"/></g>
+ <path class="cloud" d="M950 327 C925 298 895 300 874 316 C850 283 818 285 797 311 C770 291 744 300 731 323 C700 314 680 326 670 345 C697 365 751 367 802 361 C858 367 911 357 950 341Z" opacity=".86"/>
+ <text x="750" y="670" fill="white" font-size="17" font-family="DejaVu Sans" text-anchor="middle">storm banks pass in front of blue skyline</text></g>
+<!-- frame three, cloud moves further right -->
+<g clip-path="url(#f3)"><rect x="1024" y="205" width="420" height="500" fill="url(#sky)"/><rect x="1024" y="245" width="420" height="210" fill="url(#sunwash)" opacity=".28"/>
+ <g fill="#34485c"><path d="M1024 538h38v-65h28v48h22v-93h39v76h25v-56h34v66h23v-112h44v104h30v-71h33v83h28v-53h36v138h-420z"/><path d="M1024 610h420v95h-420z" fill="#20384f"/></g>
+ <g transform="translate(1024 0)"><path class="cloud" d="M126 315 C147 289 171 291 192 306 C211 276 243 275 266 302 C294 284 324 293 338 317 C371 306 398 318 408 338 C380 357 323 360 265 355 C207 362 160 354 126 338Z"/>
+ <path class="cloud" d="M114 402 C136 378 168 381 187 395 C213 361 247 365 268 392 C295 376 320 386 333 407 C365 398 392 408 406 430 C381 448 324 450 268 445 C204 452 151 445 114 430Z" opacity=".55"/></g>
+ <path class="cloud" d="M1062 350 C1080 302 1132 290 1174 322 C1211 282 1260 282 1295 315 C1330 290 1387 299 1439 339 L1439 375 C1347 399 1161 401 1062 378Z" opacity=".9"/>
+ <text x="1234" y="670" fill="white" font-size="17" font-family="DejaVu Sans" text-anchor="middle">storm canopy passes before distant skyline</text></g>
+<g fill="none" stroke="#7c98a9" stroke-width="3"><rect x="56" y="205" width="420" height="500" rx="18"/><rect x="540" y="205" width="420" height="500" rx="18"/><rect x="1024" y="205" width="420" height="500" rx="18"/></g>
+<!-- behavioral contract -->
+<rect x="40" y="770" width="1420" height="236" rx="20" fill="#fff" stroke="#c8d7df" stroke-width="2"/>
+<text x="66" y="811" class="label">PROPOSED CLOUD STORY</text>
+<text x="66" y="849" class="note">• Rain uses one continuous, broad cloud bank arriving from a single side; a heavy-rain storm uses banks converging from both sides.</text>
+<text x="66" y="882" class="note">• Keep each bank coherent and smooth: no repeated cloud puffs, dotted paths, or marching-ants motion.</text>
+<text x="66" y="915" class="note">• Blue buildings stay distant; storm banks pass in front. Missing cloud data adds no cloud claim.</text>
+<text x="66" y="948" class="note">• Selected time determines the scene; interpolate smoothly while scrubbing and hold a still frame for reduced motion.</text>
+<text x="66" y="982" class="small">Direction is a scene cue for precipitation, not a claim about measured wind, cloud speed, or unsupported event timing.</text>
+<text x="1440" y="1036" class="small" text-anchor="end">Product-owner approved 2026-10-31 · not installed evidence</text>
+</svg>

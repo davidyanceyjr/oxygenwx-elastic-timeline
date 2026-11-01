@@ -177,6 +177,8 @@ object OpenMeteoCatalogMapper {
                         rainAmountMillimeters = values["rain_sum"],
                         totalPrecipitationMillimeters = values["precipitation_sum"],
                         snowfallCentimeters = values["snowfall_sum"],
+                        sunriseInstant = values["sunrise"]?.let { it.toEventInstant("sunrise", date) },
+                        sunsetInstant = values["sunset"]?.let { it.toEventInstant("sunset", date) },
                     )
                 } catch (e: Exception) { throw IllegalArgumentException("Invalid daily value on $date: ${e.message}") }
             }
@@ -260,6 +262,17 @@ object OpenMeteoCatalogMapper {
         return toInt()
     }
 
+    private fun Double.toEventInstant(name: String, date: LocalDate): Instant {
+        require(isFinite() && this == kotlin.math.floor(this) && this >= 0.0 && this <= Long.MAX_VALUE.toDouble()) {
+            "$name on $date must be whole Unix seconds"
+        }
+        return try {
+            Instant.ofEpochSecond(toLong())
+        } catch (e: Exception) {
+            throw IllegalArgumentException("Invalid $name instant on $date", e)
+        }
+    }
+
     private fun hourlyUnit(name: String): String = when (name) {
         "time" -> "unixtime"
         "temperature_2m" -> "°C"
@@ -276,6 +289,7 @@ object OpenMeteoCatalogMapper {
     }
     private fun dailyUnit(name: String): String = when (name) {
         "time" -> "unixtime"
+        "sunrise", "sunset" -> "unixtime"
         "weather_code" -> "wmo code"
         "temperature_2m_max", "temperature_2m_min" -> "°C"
         "precipitation_probability_max" -> "%"
@@ -288,6 +302,6 @@ object OpenMeteoCatalogMapper {
     private fun JsonNode.requiredText(name: String): String = required(name).takeIf { it.isTextual }?.asText() ?: error("$name must be text")
     private fun JsonNode.requiredLong(name: String): Long = required(name).takeIf { it.isIntegralNumber && it.canConvertToLong() }?.longValue() ?: error("$name must be an integer")
     private fun JsonNode.longArray(): List<Long> { require(isArray); return map { it.takeIf { n -> n.isIntegralNumber && n.canConvertToLong() }?.longValue() ?: error("time values must be integer Unix seconds") } }
-    private val DAILY_EXPECTED = setOf(DailyCatalogField.TEMPERATURE_MAX_C, DailyCatalogField.TEMPERATURE_MIN_C, DailyCatalogField.PRECIPITATION_PROBABILITY_MAX_PERCENT, DailyCatalogField.CONDITIONS, DailyCatalogField.PHENOMENA, DailyCatalogField.RAIN_AMOUNT, DailyCatalogField.TOTAL_PRECIPITATION, DailyCatalogField.SNOWFALL)
+    private val DAILY_EXPECTED = setOf(DailyCatalogField.TEMPERATURE_MAX_C, DailyCatalogField.TEMPERATURE_MIN_C, DailyCatalogField.PRECIPITATION_PROBABILITY_MAX_PERCENT, DailyCatalogField.CONDITIONS, DailyCatalogField.PHENOMENA, DailyCatalogField.RAIN_AMOUNT, DailyCatalogField.TOTAL_PRECIPITATION, DailyCatalogField.SNOWFALL, DailyCatalogField.SUNRISE, DailyCatalogField.SUNSET)
     const val SOURCE_ID = "open-meteo-forecast-api"
 }
