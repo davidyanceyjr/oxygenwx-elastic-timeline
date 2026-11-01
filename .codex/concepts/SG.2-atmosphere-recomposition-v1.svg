@@ -1,0 +1,89 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1800" height="1440" viewBox="0 0 1800 1440" role="img" aria-labelledby="title desc">
+  <title id="title">SG.2 refactor — atmosphere-first city composition</title>
+  <desc id="desc">Draft combined behavior and artwork board responding to owner rejection of the previous SG.2 installed scene. It targets a prominent nearby city, restrained sky, organic composed cloud and rain fields, a larger detached time cue, and broad moving sunlight, while preserving forecast truth and timeline readability.</desc>
+  <defs>
+    <linearGradient id="paper" x2="0" y2="1"><stop stop-color="#f8f9fb"/><stop offset="1" stop-color="#e9eef3"/></linearGradient>
+    <linearGradient id="day" x2="0" y2="1"><stop stop-color="#5284aa"/><stop offset="1" stop-color="#f0bd7b"/></linearGradient>
+    <linearGradient id="dusk" x2="0" y2="1"><stop stop-color="#626b7e"/><stop offset="1" stop-color="#c1a28f"/></linearGradient>
+    <linearGradient id="night" x2="0" y2="1"><stop stop-color="#101a34"/><stop offset="1" stop-color="#354768"/></linearGradient>
+    <style>
+      .ink{fill:#172538}.muted{fill:#526477}.tiny{font:500 15px Inter,Arial,sans-serif}.small{font:500 18px Inter,Arial,sans-serif}.body{font:500 21px Inter,Arial,sans-serif}.label{font:700 15px Inter,Arial,sans-serif;letter-spacing:1.4px}.title{font:700 37px Inter,Arial,sans-serif}.section{font:700 22px Inter,Arial,sans-serif}
+    </style>
+  </defs>
+  <rect width="1800" height="1440" fill="url(#paper)"/>
+  <text x="56" y="52" class="label" fill="#28718f">OXYGEN · SCENE GENERATION · SG.2 REFACTOR</text>
+  <text x="56" y="101" class="title ink">Atmosphere first · city close, sky alive</text>
+  <text x="56" y="139" class="small muted">OWNER-APPROVED REFACTOR BOARD · 2026-10-31</text>
+  <rect x="1470" y="45" width="270" height="44" rx="22" fill="#e4f3e8" stroke="#82b995"/>
+  <text x="1605" y="73" text-anchor="middle" class="label" fill="#285f3c">OWNER APPROVED</text>
+
+  <rect x="52" y="174" width="744" height="1248" rx="24" fill="#14253a"/>
+  <image href="SG.2-atmosphere-recomposition-study-v1.png" x="62" y="184" width="724" height="1228" preserveAspectRatio="xMidYMid slice"/>
+  <rect x="62" y="184" width="724" height="1228" rx="16" fill="none" stroke="#ffffff" stroke-opacity=".6" stroke-width="2"/>
+  <rect x="82" y="200" width="258" height="38" rx="19" fill="#10243b" fill-opacity=".78"/>
+  <text x="211" y="225" text-anchor="middle" class="label" fill="#fff">VISUAL STUDY · AFTERNOON</text>
+  <rect x="82" y="1350" width="694" height="62" fill="#10243b" fill-opacity=".78"/>
+  <text x="104" y="1388" class="small" fill="#fff">Scene art only · no controls or forecast claims baked into the image</text>
+
+  <text x="842" y="202" class="label" fill="#28718f">REQUIRED COMPOSITION</text>
+  <text x="842" y="246" class="section ink">The city is the atmospheric subject.</text>
+  <text x="842" y="279" class="small muted">Bring readable, detailed architecture into the near and middle</text>
+  <text x="842" y="304" class="small muted">ground. Keep the city distinct and richly lit instead of hazed away.</text>
+
+  <rect x="842" y="336" width="410" height="145" rx="18" fill="#fff" stroke="#d3dce5"/>
+  <text x="866" y="372" class="label" fill="#28718f">SKY + LIGHT</text>
+  <text x="866" y="404" class="tiny ink">Sky target: about 35–40% of the scene.</text>
+  <text x="866" y="428" class="tiny ink">Broad sunlight gradient moves with the sun cue.</text>
+  <text x="866" y="452" class="tiny ink">Supported clouds diffuse the glow.</text>
+  <text x="866" y="476" class="tiny muted">Sun/moon resize by cycle; no visible track.</text>
+
+  <rect x="1272" y="336" width="468" height="145" rx="18" fill="#fff" stroke="#d3dce5"/>
+  <text x="1296" y="372" class="label" fill="#28718f">CLOUD + RAIN FORM</text>
+  <text x="1296" y="405" class="tiny ink">Organic layered masses; broken contours.</text>
+  <text x="1296" y="429" class="tiny ink">Rain: coherent curtain of fine strokes.</text>
+  <text x="1296" y="453" class="tiny ink">Stylized fields, never scattered icons.</text>
+  <text x="1296" y="477" class="tiny muted">No bubble chains or comet streaks.</text>
+  <path d="M1620 416 C1624 405 1634 400 1643 404 C1648 391 1661 389 1670 399 C1681 393 1693 401 1694 411 C1705 408 1713 415 1710 423 C1708 430 1699 432 1690 430 C1676 435 1665 429 1654 432 C1640 436 1625 431 1621 425 C1618 422 1618 419 1620 416Z" fill="#8da3b5" stroke="#657f94" stroke-width="2"/>
+  <path d="M1635 442 l-2 9 M1649 442 l-2 9 M1663 442 l-2 9 M1677 442 l-2 9 M1691 442 l-2 9 M1705 442 l-2 9 M1642 458 l-2 9 M1656 458 l-2 9 M1670 458 l-2 9 M1684 458 l-2 9 M1698 458 l-2 9" fill="none" stroke="#5d89a8" stroke-width="2.5" stroke-linecap="round"/>
+
+  <text x="842" y="530" class="label" fill="#28718f">ONE CITY WORLD · SELECTED-TIME TREATMENTS</text>
+  <rect x="842" y="553" width="214" height="86" rx="12" fill="url(#day)"/>
+  <rect x="1070" y="553" width="214" height="86" rx="12" fill="url(#day)"/>
+  <rect x="1298" y="553" width="214" height="86" rx="12" fill="url(#dusk)"/>
+  <rect x="1526" y="553" width="214" height="86" rx="12" fill="url(#night)"/>
+  <text x="949" y="672" text-anchor="middle" class="label ink">MORNING</text>
+  <text x="1177" y="672" text-anchor="middle" class="label ink">DAY</text>
+  <text x="1405" y="672" text-anchor="middle" class="label ink">DUSK</text>
+  <text x="1633" y="672" text-anchor="middle" class="label ink">NIGHT</text>
+  <text x="842" y="707" class="tiny muted">Same camera/city across phases; dusk shifts gently from muted blue-gray to warm haze.</text>
+
+  <path d="M842 742 H1740" stroke="#cbd5df" stroke-width="2"/>
+  <text x="842" y="786" class="label" fill="#28718f">BEHAVIOR / SEMANTIC CONTRACT</text>
+  <rect x="842" y="808" width="272" height="58" rx="14" fill="#fff" stroke="#cbd5df"/>
+  <rect x="1155" y="808" width="272" height="58" rx="14" fill="#fff" stroke="#cbd5df"/>
+  <rect x="1468" y="808" width="272" height="58" rx="14" fill="#fff" stroke="#cbd5df"/>
+  <text x="978" y="843" text-anchor="middle" class="tiny ink">Selected instant + zone</text>
+  <path d="M1118 837 H1148" stroke="#5e8498" stroke-width="2" marker-end="url(#arrow)"/>
+  <text x="1291" y="843" text-anchor="middle" class="tiny ink">Light phase + city</text>
+  <path d="M1431 837 H1461" stroke="#5e8498" stroke-width="2" marker-end="url(#arrow)"/>
+  <text x="1604" y="843" text-anchor="middle" class="tiny ink">Same time on tape + facts</text>
+  <text x="842" y="892" class="tiny muted">Illustrative position, scale, and light only; no actual sun angle, sunrise, sunset, or moon phase.</text>
+
+  <rect x="842" y="904" width="898" height="208" rx="18" fill="#fff" stroke="#d3dce5"/>
+  <text x="866" y="942" class="label" fill="#28718f">WEATHER TRUTH + READABILITY</text>
+  <text x="866" y="980" class="small ink">Supported weather → composed scene fields; missing weather → city/time only.</text>
+  <text x="866" y="1012" class="small ink">Rain probability does not set intensity; visual rain remains explicitly illustrative DEMO DATA.</text>
+  <text x="866" y="1044" class="small ink">Forecast facts stay legible over a deliberate quiet zone; tape labels stay unobscured.</text>
+  <text x="866" y="1078" class="tiny muted">Static/reduced motion preserves the selected-time scene. Scrub remains responsive and owns the same gestures.</text>
+
+  <text x="842" y="1158" class="label" fill="#28718f">REVIEW STATES + CONDITIONS</text>
+  <text x="842" y="1196" class="small ink">Pixel 3 XL portrait + 360×640 dp compact: morning, noon, dusk, night, cloudy, rain, and unknown.</text>
+  <text x="842" y="1228" class="small ink">Check default + 1.3 font; record RTL/reduced-motion applicability and affected-state checks.</text>
+  <text x="842" y="1260" class="small ink">Installed review confirms city prominence, sky share, cue scale, cloud/rain character, text, tape, and gestures.</text>
+  <rect x="842" y="1300" width="898" height="104" rx="16" fill="#e6edf2"/>
+  <text x="866" y="1338" class="label" fill="#28718f">BOUNDED SCOPE</text>
+  <text x="866" y="1362" class="tiny ink">Refactor first-city composition and its cue/cloud/rain primitives to this target.</text>
+  <text x="866" y="1386" class="tiny ink">No new forecast inputs, provider, theme picker, or navigation redesign.</text>
+
+  <defs><marker id="arrow" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto"><path d="M0 0 L8 4 L0 8Z" fill="#5e8498"/></marker></defs>
+</svg>

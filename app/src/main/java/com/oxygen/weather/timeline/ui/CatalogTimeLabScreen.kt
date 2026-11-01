@@ -21,6 +21,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.navigationBarsPadding
+import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.foundation.lazy.LazyColumn
@@ -63,8 +64,10 @@ import androidx.compose.ui.unit.LayoutDirection
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.oxygen.weather.timeline.presentation.CatalogTimelineView
+import com.oxygen.weather.timeline.presentation.CatalogTimelineScenePresentation
 import com.oxygen.weather.timeline.presentation.CompassDirection
 import com.oxygen.weather.timeline.presentation.InstantTimeAxis
+import com.oxygen.weather.timeline.presentation.scene.SceneReading
 import java.time.Instant
 import java.time.format.DateTimeFormatter
 import java.util.Locale
@@ -79,6 +82,35 @@ fun CatalogTimeLabScreen(
     onBrowseCatalogs: (() -> Unit)? = null,
     onChooseLocation: (() -> Unit)? = null,
     onRefresh: (() -> Unit)? = null,
+) = CatalogTimeLabScreenContent(
+    view, null, onSelectInstant, onReturnToNow, onBrowseCatalogs, onChooseLocation, onRefresh,
+)
+
+@Composable
+fun CatalogTimeLabScreen(
+    presentation: CatalogTimelineScenePresentation,
+    onSelectInstant: (Instant, Long) -> Unit,
+    onReturnToNow: () -> Unit,
+    onBrowseCatalogs: (() -> Unit)? = null,
+    onChooseLocation: (() -> Unit)? = null,
+    onRefresh: (() -> Unit)? = null,
+    omitOptionalCityLayers: Boolean = false,
+) = CatalogTimeLabScreenContent(
+    presentation.timeline, presentation.reading,
+    onSelectInstant, onReturnToNow, onBrowseCatalogs, onChooseLocation, onRefresh,
+    omitOptionalCityLayers,
+)
+
+@Composable
+private fun CatalogTimeLabScreenContent(
+    view: CatalogTimelineView,
+    sceneReading: SceneReading?,
+    onSelectInstant: (Instant, Long) -> Unit,
+    onReturnToNow: () -> Unit,
+    onBrowseCatalogs: (() -> Unit)?,
+    onChooseLocation: (() -> Unit)?,
+    onRefresh: (() -> Unit)?,
+    omitOptionalCityLayers: Boolean = false,
 ) {
     var precision by remember(view.generation) { mutableStateOf(false) }
     var browserOpen by remember { mutableStateOf(false) }
@@ -86,8 +118,18 @@ fun CatalogTimeLabScreen(
     val latestSelected by rememberUpdatedState(view.selectedInstant)
     val isRtl = LocalLayoutDirection.current == LayoutDirection.Rtl
     BoxWithConstraints(Modifier.fillMaxSize().background(Color(0xFF11263D))) {
-        val compactLayout = compact || maxHeight < 400.dp
-        if (view.scene != null) {
+        val compactLayout = compact || maxWidth < 400.dp || maxHeight < 400.dp
+        if (sceneReading != null) {
+            CatalogAtmosphericScene(
+                reading = sceneReading,
+                zone = view.zone,
+                state = view.scene,
+                omitOptionalCityLayers = omitOptionalCityLayers,
+                phaseHours = InstantTimeAxis.elapsedSecondsBetween(
+                    view.interval.startInclusive, view.selectedInstant,
+                ) / 3600.0,
+            )
+        } else if (view.scene != null) {
             CatalogAtmosphericScene(
                 state = view.scene,
                 localHour = view.localHour,
@@ -101,20 +143,40 @@ fun CatalogTimeLabScreen(
                 .padding(horizontal = 25.dp),
         ) {
             Spacer(Modifier.height(if (compactLayout) 5.dp else 19.dp))
-            Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween) {
-                Column {
+            if (compactLayout) {
+                Column(Modifier.fillMaxWidth()) {
                     Text("OXYGEN  /  TIME LAB", color = Color.White, fontSize = 11.sp,
                         letterSpacing = 2.sp, fontWeight = FontWeight.SemiBold)
-                    Text(view.selectedLocationName ?: "Selected location", color = Color.White, fontSize = 13.sp,
-                        fontWeight = FontWeight.Medium)
-                    Text(view.source, color = Color(0xCDE4EDF5), fontSize = 11.sp)
-                }
-                Column(horizontalAlignment = Alignment.End) {
                     Text(view.meaning, color = Color.White, fontSize = 11.sp,
                         modifier = Modifier.testTag("catalogMeaning"))
-                    Row {
-                        onRefresh?.let { TextButton(onClick = it) { Text("Refresh", color = Color.White) } }
-                        onChooseLocation?.let { TextButton(onClick = it) { Text("Place", color = Color.White) } }
+                    Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween) {
+                        Column(Modifier.weight(1f)) {
+                            Text(view.selectedLocationName ?: "Selected location", color = Color.White,
+                                fontSize = 13.sp, fontWeight = FontWeight.Medium)
+                            Text(view.source, color = Color(0xCDE4EDF5), fontSize = 11.sp)
+                        }
+                        Row {
+                            onRefresh?.let { TextButton(onClick = it) { Text("Refresh", color = Color.White) } }
+                            onChooseLocation?.let { TextButton(onClick = it) { Text("Place", color = Color.White) } }
+                        }
+                    }
+                }
+            } else {
+                Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween) {
+                    Column {
+                        Text("OXYGEN  /  TIME LAB", color = Color.White, fontSize = 11.sp,
+                            letterSpacing = 2.sp, fontWeight = FontWeight.SemiBold)
+                        Text(view.selectedLocationName ?: "Selected location", color = Color.White, fontSize = 13.sp,
+                            fontWeight = FontWeight.Medium)
+                        Text(view.source, color = Color(0xCDE4EDF5), fontSize = 11.sp)
+                    }
+                    Column(horizontalAlignment = Alignment.End) {
+                        Text(view.meaning, color = Color.White, fontSize = 11.sp,
+                            modifier = Modifier.testTag("catalogMeaning"))
+                        Row {
+                            onRefresh?.let { TextButton(onClick = it) { Text("Refresh", color = Color.White) } }
+                            onChooseLocation?.let { TextButton(onClick = it) { Text("Place", color = Color.White) } }
+                        }
                     }
                 }
             }
@@ -125,7 +187,7 @@ fun CatalogTimeLabScreen(
             view.error?.let { Text(it, color = Color(0xFFFFD1C9), fontSize = 11.sp) }
         }
         Column(
-            Modifier.fillMaxWidth().align(Alignment.Center).padding(horizontal = 25.dp)
+            Modifier.fillMaxWidth().align(Alignment.Center).offset(y = (-20).dp).padding(horizontal = 25.dp)
                 .pointerInput(view.generation, view.zone, view.interval) {
                     var totalDrag = 0f
                     detectHorizontalDragGestures(
@@ -204,7 +266,7 @@ fun CatalogTimeLabScreen(
                     }
                 }
             }
-            Spacer(Modifier.height(35.dp))
+            Spacer(Modifier.height(19.dp))
             CatalogForecastTimeline(
                 view = view,
                 precision = precision,
@@ -252,7 +314,7 @@ private fun CatalogForecastTimeline(
     fun pixelsPerSecond(zoom: Float) =
         (compactDayPx / 24.0 + (expandedHourPx - compactDayPx / 24.0) * zoom) / 3600.0
     Canvas(
-        modifier.fillMaxWidth().height(84.dp).testTag("catalogTimeline")
+        modifier.fillMaxWidth().height(120.dp).testTag("catalogTimeline")
             .semantics {
                 contentDescription = "${view.meaning} timeline. Selected ${view.selectedTimeLabel}. " +
                     "${view.temperature ?: "Temperature unavailable"}; ${view.condition ?: "condition unavailable"}. " +
@@ -336,11 +398,12 @@ private fun CatalogForecastTimeline(
         val w = size.width
         val h = size.height
         val playhead = w / 2.0
-        val baseY = h * .60f
+        val dateY = 30.dp.toPx()
+        val railY = 73.dp.toPx()
         val scale = pixelsPerSecond(animation)
         val stroke = 1.dp.toPx()
         drawRect(Brush.verticalGradient(0f to Color.Transparent, 1f to Color(0xB7081628)))
-        drawLine(Color(0x33D7EBF7), Offset(0f, baseY), Offset(w, baseY), stroke)
+        drawLine(Color(0x33D7EBF7), Offset(0f, railY), Offset(w, railY), stroke)
         fun xFor(instant: Instant): Float {
             val x = InstantTimeAxis.xForInstant(instant, view.selectedInstant, playhead, scale, view.interval)
             return (if (rtl) w - x else x).toFloat()
@@ -350,8 +413,8 @@ private fun CatalogForecastTimeline(
             val startX = xFor(start)
             val noonX = xFor(day.overviewInstant)
             if (startX in -8f..(w + 8f)) {
-                drawLine(Color(0xA6E0EDF6), Offset(startX, baseY - 9.dp.toPx()),
-                    Offset(startX, baseY + 10.dp.toPx()), stroke)
+                drawLine(Color(0x4DD7EBF7), Offset(startX, dateY + 6.dp.toPx()),
+                    Offset(startX, dateY + 18.dp.toPx()), stroke)
             }
             if (noonX in -60f..(w + 60f)) {
                 val selectedDay = view.selectedInstant.atZone(view.zone).toLocalDate() == day.date
@@ -359,11 +422,12 @@ private fun CatalogForecastTimeline(
                     val paint = Paint(Paint.ANTI_ALIAS_FLAG).apply {
                         color = android.graphics.Color.argb(if (selectedDay) 245 else 175, 244, 250, 255)
                         textAlign = Paint.Align.CENTER
-                        textSize = (if (selectedDay) 15.dp else 11.dp).toPx()
+                        textSize = (if (selectedDay) 20.dp else 12.dp).toPx()
                         isFakeBoldText = selectedDay
                     }
-                    canvas.nativeCanvas.drawText(day.date.dayOfWeek.name.take(3), noonX,
-                        baseY - 17.dp.toPx(), paint)
+                    val dayLabel = day.date.dayOfWeek.name.take(3)
+                    canvas.nativeCanvas.drawText(dayLabel, noonX,
+                        dateY, paint)
                 }
             }
         }
@@ -376,24 +440,37 @@ private fun CatalogForecastTimeline(
                 if (x !in -30f..(w + 30f)) continue
                 val major = tick.atZone(view.zone).hour % 3 == 0
                 drawLine(Color.White.copy(alpha = animation * if (major) .82f else .48f),
-                    Offset(x, baseY - if (major) 8.dp.toPx() else 3.dp.toPx()),
-                    Offset(x, baseY + if (major) 9.dp.toPx() else 5.dp.toPx()), stroke)
-            }
-            drawIntoCanvas { canvas ->
-                val paint = Paint(Paint.ANTI_ALIAS_FLAG).apply {
-                    color = android.graphics.Color.argb((245 * animation).toInt(), 255, 226, 167)
-                    textAlign = Paint.Align.CENTER
-                    textSize = 13.dp.toPx()
-                    isFakeBoldText = true
-                }
-                canvas.nativeCanvas.drawText(
-                    view.selectedInstant.atZone(view.zone).format(
-                        DateTimeFormatter.ofPattern("h:mm a", Locale.US),
-                    ), playhead.toFloat(), baseY + 25.dp.toPx(), paint,
-                )
+                    Offset(x, railY - if (major) 9.dp.toPx() else 3.dp.toPx()),
+                    Offset(x, railY + if (major) 10.dp.toPx() else 5.dp.toPx()), stroke)
             }
         }
-        drawCircle(Color(0xD9FFE2A7), 3.dp.toPx(), Offset(playhead.toFloat(), baseY))
+        drawCircle(Color(0xD9FFE2A7), 4.dp.toPx(), Offset(playhead.toFloat(), railY))
+        drawLine(Color(0xD9FFE2A7), Offset(playhead.toFloat(), railY - 12.dp.toPx()),
+            Offset(playhead.toFloat(), railY + 13.dp.toPx()), 2.dp.toPx())
+        drawIntoCanvas { canvas ->
+            val native = canvas.nativeCanvas
+            val label = view.selectedInstant.atZone(view.zone).format(
+                DateTimeFormatter.ofPattern("h:mm a", Locale.US),
+            )
+            val textPaint = Paint(Paint.ANTI_ALIAS_FLAG).apply {
+                color = android.graphics.Color.rgb(255, 240, 201)
+                textAlign = Paint.Align.CENTER
+                textSize = 12.dp.toPx()
+                isFakeBoldText = true
+            }
+            val badgePaint = Paint(Paint.ANTI_ALIAS_FLAG).apply {
+                color = android.graphics.Color.argb(224, 26, 42, 57)
+            }
+            val badgeWidth = 66.dp.toPx()
+            val badgeHeight = 22.dp.toPx()
+            val badgeTop = h - badgeHeight - 2.dp.toPx()
+            native.drawRoundRect(
+                playhead.toFloat() - badgeWidth / 2f, badgeTop,
+                playhead.toFloat() + badgeWidth / 2f, badgeTop + badgeHeight,
+                11.dp.toPx(), 11.dp.toPx(), badgePaint,
+            )
+            native.drawText(label, playhead.toFloat(), badgeTop + 15.dp.toPx(), textPaint)
+        }
     }
 }
 

@@ -1,0 +1,82 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1920" height="1500" viewBox="0 0 1920 1500" role="img" aria-labelledby="title desc">
+  <title id="title">SG.2 — First theme artwork board: layered city</title>
+  <desc id="desc">Target art direction board with a consistent cinematic painterly city across morning, noon, dusk, and night. Timeline overlays preserve readability; callouts specify depth, auxiliary details, ambient cycle cue, and performance boundaries.</desc>
+  <defs>
+    <linearGradient id="paper" x2="0" y2="1"><stop stop-color="#f7f8fa"/><stop offset="1" stop-color="#e8edf2"/></linearGradient>
+    <linearGradient id="tape" x2="0" y2="1"><stop stop-color="#102138" stop-opacity=".15"/><stop offset="1" stop-color="#102138" stop-opacity=".84"/></linearGradient>
+    <style>
+      .ink{fill:#172538}.muted{fill:#566577}.tiny{font:500 14px Inter,Arial,sans-serif}.small{font:500 17px Inter,Arial,sans-serif}.body{font:500 20px Inter,Arial,sans-serif}.label{font:700 14px Inter,Arial,sans-serif;letter-spacing:1.3px}.title{font:700 34px Inter,Arial,sans-serif}.subtitle{font:500 19px Inter,Arial,sans-serif}
+    </style>
+  </defs>
+  <rect width="1920" height="1500" fill="url(#paper)"/>
+  <text x="54" y="58" class="label" fill="#357294">OXYGEN · SCENE GENERATION · SG.2 · BOARD 2 OF 2</text>
+  <text x="54" y="104" class="title ink">Target artwork · the layered city through selected time</text>
+  <text x="54" y="140" class="subtitle muted">Grounded, atmospheric painterly realism; one city world changes its light, weather presentation, and auxiliary details.</text>
+  <rect x="1544" y="48" width="322" height="48" rx="24" fill="#fff0d9" stroke="#e7c48b"/>
+  <text x="1705" y="78" text-anchor="middle" class="label" fill="#845d24">ARTWORK BOARD · APPROVED</text>
+
+  <image href="SG.2-city-artwork-grid-v2.png" x="54" y="174" width="1000" height="1249" preserveAspectRatio="none"/>
+  <g font-family="Arial,sans-serif" font-weight="700" font-size="14" letter-spacing="1">
+    <rect x="72" y="194" width="194" height="36" rx="18" fill="#14253a" fill-opacity=".72"/><text x="169" y="217" text-anchor="middle" fill="#fff">MORNING · CLEAR</text>
+    <rect x="572" y="194" width="224" height="36" rx="18" fill="#14253a" fill-opacity=".72"/><text x="684" y="217" text-anchor="middle" fill="#fff">NOON · PARTLY CLOUDY</text>
+    <rect x="72" y="819" width="184" height="36" rx="18" fill="#14253a" fill-opacity=".72"/><text x="164" y="842" text-anchor="middle" fill="#fff">DUSK · CLOUDY</text>
+    <rect x="572" y="819" width="174" height="36" rx="18" fill="#14253a" fill-opacity=".72"/><text x="659" y="842" text-anchor="middle" fill="#fff">NIGHT · CLEAR</text>
+  </g>
+  <g fill="url(#tape)">
+    <rect x="54" y="748" width="500" height="60"/><rect x="554" y="748" width="500" height="60"/>
+    <rect x="54" y="1372" width="500" height="60"/><rect x="554" y="1372" width="500" height="60"/>
+  </g>
+  <g stroke="#f4f7fa" stroke-opacity=".8" fill="#fff" font-family="Arial,sans-serif" font-size="12" text-anchor="middle">
+    <path d="M94 770 H514 M594 770 H1014 M94 1394 H514 M594 1394 H1014" stroke-width="1"/>
+    <g stroke-width="1"><path d="M144 765v10 M224 765v10 M304 760v15 M384 765v10 M464 765v10 M644 765v10 M724 765v10 M804 760v15 M884 765v10 M964 765v10 M144 1389v10 M224 1389v10 M304 1384v15 M384 1389v10 M464 1389v10 M644 1389v10 M724 1389v10 M804 1384v15 M884 1389v10 M964 1389v10"/></g>
+    <text x="144" y="795">06</text><text x="224" y="795">07</text><text x="304" y="795" font-weight="700" font-size="14">08</text><text x="384" y="795">09</text><text x="464" y="795">10</text>
+    <text x="644" y="795">11</text><text x="724" y="795">12</text><text x="804" y="795" font-weight="700" font-size="14">13</text><text x="884" y="795">14</text><text x="964" y="795">15</text>
+    <text x="144" y="1419">17</text><text x="224" y="1419">18</text><text x="304" y="1419" font-weight="700" font-size="14">19</text><text x="384" y="1419">20</text><text x="464" y="1419">21</text>
+    <text x="644" y="1419">21</text><text x="724" y="1419">22</text><text x="804" y="1419" font-weight="700" font-size="14">23</text><text x="884" y="1419">00</text><text x="964" y="1419">01</text>
+  </g>
+  <g>
+    <text x="1100" y="198" class="label" fill="#357294">ART DIRECTION</text>
+    <text x="1100" y="238" class="body ink">Painterly, grounded, atmospheric</text>
+    <text x="1100" y="270" class="small muted">Dimensional natural light, layered haze, detailed city</text>
+    <text x="1100" y="294" class="small muted">silhouettes, and restrained surface texture. The mood</text>
+    <text x="1100" y="318" class="small muted">stays premium and cinematic instead of flat or diagrammatic.</text>
+    <path d="M1100 346 H1866" stroke="#cbd5df" stroke-width="1.5"/>
+
+    <text x="1100" y="388" class="label" fill="#357294">ONE COHERENT WORLD · FOUR STATES</text>
+    <text x="1100" y="426" class="small ink">Same skyline and camera; sky, ambient light, cloud art,</text>
+    <text x="1100" y="450" class="small ink">and window illumination shift with selected local time.</text>
+    <text x="1100" y="486" class="small muted">Morning → warm horizon, windows off.</text>
+    <text x="1100" y="512" class="small muted">Noon → bright diffuse daylight, windows off.</text>
+    <text x="1100" y="538" class="small muted">Dusk / night → warmer city lights, then cool night palette.</text>
+    <path d="M1100 566 H1866" stroke="#cbd5df" stroke-width="1.5"/>
+
+    <text x="1100" y="608" class="label" fill="#357294">DEPTH &amp; NON-WEATHER DETAIL</text>
+    <text x="1100" y="646" class="small ink">Background: open sky field and distant city.</text>
+    <text x="1100" y="672" class="small ink">Middle ground: layered architecture; window-light pass.</text>
+    <text x="1100" y="698" class="small ink">Foreground: treetops framing, not obscuring, the scene.</text>
+    <text x="1100" y="734" class="small muted">Auxiliary accents (window lights, street lamps, birds) are</text>
+    <text x="1100" y="758" class="small muted">theme details, not weather facts; place them at fitting depths.</text>
+    <path d="M1100 786 H1866" stroke="#cbd5df" stroke-width="1.5"/>
+
+    <text x="1100" y="828" class="label" fill="#357294">TIME-LINKED AMBIENT CUE</text>
+    <text x="1100" y="866" class="small ink">Sun / moon cues follow a theme-designed path as the</text>
+    <text x="1100" y="890" class="small ink">selected time changes; reduced motion holds the cue at</text>
+    <text x="1100" y="914" class="small ink">the selected-time position.</text>
+    <text x="1100" y="950" class="small muted">Illustrative only; no actual solar position, sunrise/sunset,</text>
+    <text x="1100" y="974" class="small muted">or moon-phase claim. Other themes may use another motif.</text>
+    <path d="M1100 1002 H1866" stroke="#cbd5df" stroke-width="1.5"/>
+
+    <text x="1100" y="1044" class="label" fill="#357294">TIMELINE &amp; PERFORMANCE</text>
+    <text x="1100" y="1082" class="small ink">Keep atmospheric detail clear of the bottom tape and</text>
+    <text x="1100" y="1106" class="small ink">preserve readable labels at portrait and compact sizes.</text>
+    <text x="1100" y="1142" class="small muted">Use reusable art layers and simple palette / visibility</text>
+    <text x="1100" y="1166" class="small muted">changes; avoid costly per-frame scene construction.</text>
+  </g>
+  <rect x="1100" y="1200" width="766" height="222" rx="18" fill="#eaf0f4" stroke="#cdd8e1"/>
+  <text x="1128" y="1240" class="label" fill="#357294">REVIEW SCOPE</text>
+  <text x="1128" y="1278" class="small ink">This is the target visual direction for SG.2, not a shipped asset pack.</text>
+  <text x="1128" y="1308" class="small ink">Weather meaning and timing still come only from supported typed tracks.</text>
+  <text x="1128" y="1338" class="small ink">No location-specific skyline, climate claim, or exact astronomy.</text>
+  <text x="1128" y="1384" class="tiny muted">ARTWORK BOARD 2 OF 2 · APPROVED 2026-10-31</text>
+  <text x="1838" y="1462" text-anchor="end" class="tiny muted">ART STUDY REFERENCES: SG.2 CITY CONCEPT · GENERATED FOR OWNER REVIEW</text>
+</svg>

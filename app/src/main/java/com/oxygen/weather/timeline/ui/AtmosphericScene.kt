@@ -10,8 +10,11 @@ import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Path
+import androidx.compose.ui.graphics.ImageBitmap
+import androidx.compose.ui.graphics.FilterQuality
 import androidx.compose.ui.graphics.drawscope.DrawScope
 import androidx.compose.ui.graphics.lerp
+import androidx.compose.ui.res.imageResource
 import com.oxygen.weather.timeline.presentation.atmosphere.AtmosphereInput
 import com.oxygen.weather.timeline.presentation.atmosphere.AtmospherePreview
 import com.oxygen.weather.timeline.presentation.atmosphere.DepictionKind
@@ -20,8 +23,12 @@ import com.oxygen.weather.timeline.presentation.atmosphere.SceneVisualStateMappe
 import com.oxygen.weather.timeline.presentation.SkyFrame
 import com.oxygen.weather.timeline.data.PrecipitationAmount
 import com.oxygen.weather.timeline.data.SkyCondition
+import com.oxygen.weather.timeline.presentation.scene.CityTreatment
+import com.oxygen.weather.timeline.presentation.scene.FirstCityTheme
+import com.oxygen.weather.timeline.presentation.scene.SceneReading
+import java.time.ZoneId
+import com.oxygen.weather.timeline.R
 import kotlin.math.PI
-import kotlin.math.cos
 import kotlin.math.sin
 
 /** Decorative-only rendering. Legible forecast facts are supplied by UI text above this layer. */
@@ -51,6 +58,362 @@ fun CatalogAtmosphericScene(
     modifier: Modifier = Modifier,
 ) {
     AtmosphericScene(state, localHour, phaseHours, modifier)
+}
+
+/** First-city catalog route. A missing weather state omits all condition marks, never implying clear. */
+@Composable
+fun CatalogAtmosphericScene(
+    reading: SceneReading,
+    zone: ZoneId,
+    state: SceneVisualState?,
+    phaseHours: Double,
+    omitOptionalCityLayers: Boolean = false,
+    modifier: Modifier = Modifier,
+) {
+    val architecture = ImageBitmap.imageResource(R.drawable.sg2_city_architecture)
+    val canopy = ImageBitmap.imageResource(R.drawable.sg2_city_canopy)
+    val treatment = FirstCityTheme.treatment(reading, zone)
+    Canvas(modifier.fillMaxSize()) {
+        if (state != null) {
+            drawSkyPalette(state)
+            drawCityDiffuseLight(reading, zone, treatment, state)
+            drawCityCloudFields(
+                state.cloudFraction?.toFloat()?.coerceIn(0f, 1f) ?: 0f,
+                state.daylight,
+                phaseHours,
+                isStorm = state.hasStormVisual(),
+            )
+            when (state.preview) {
+                AtmospherePreview.ILLUSTRATIVE_TURBULENCE,
+                AtmospherePreview.ILLUSTRATIVE_HAZE_AND_TURBULENCE ->
+                    drawPreviewTurbulence(state.previewStrengths.turbulence.toFloat())
+                else -> Unit
+            }
+            drawLandscape(state.previewStrengths.haze.toFloat(), sceneHorizonColor(state), state)
+        } else {
+            drawCityWorld(treatment)
+        }
+        drawAlignedLayer(architecture)
+        drawAlignedLayer(canopy)
+        drawCityTimeWash(treatment)
+        drawCityReadoutQuietZone()
+        if (!omitOptionalCityLayers &&
+            (treatment == CityTreatment.DUSK || treatment == CityTreatment.NIGHT)) drawCityWindowLights()
+        drawCityTimeCue(reading, zone, treatment)
+        if (state != null) {
+            drawRect(
+                brush = Brush.verticalGradient(
+                    0f to Color.Transparent,
+                    .5f to Color(0x09091828),
+                    1f to Color(0xDD081626),
+                ),
+            )
+            when (state.depiction) {
+                DepictionKind.ILLUSTRATIVE_RAIN -> drawCityRainField(
+                    state.precipitationChancePercent,
+                    state.precipitationAmount as? PrecipitationAmount.RainLiquidMm,
+                )
+                DepictionKind.ILLUSTRATIVE_SNOW, DepictionKind.SYNTHETIC_SNOW_PREVIEW ->
+                    drawSnow(state.precipitationChancePercent)
+                else -> Unit
+            }
+        }
+    }
+}
+
+private fun DrawScope.drawCityDiffuseLight(
+    reading: SceneReading,
+    zone: ZoneId,
+    treatment: CityTreatment,
+    state: SceneVisualState,
+) {
+    if (treatment == CityTreatment.NIGHT) return
+    val (xFraction, yFraction) = FirstCityTheme.cuePosition(reading.selectedInstant, zone)
+    val center = Offset(size.width * xFraction, size.height * yFraction)
+    val supportedCloudiness = state.cloudFraction?.toFloat()?.coerceIn(0f, 1f) ?: 0f
+    val dusk = treatment == CityTreatment.DUSK
+    val spread = size.width * (.70f + .24f * supportedCloudiness)
+    val lightX = (center.x / size.width).coerceIn(.001f, .999f)
+    val warmLight = if (dusk) Color(0xFFF1A98A) else Color(0xFFFFDDAA)
+    val diffuseAlpha = (if (dusk) .40f else .44f) * (1f - .38f * supportedCloudiness)
+    val sideAlpha = diffuseAlpha * (if (supportedCloudiness > .05f) .66f else .42f)
+    val left = (lightX - .46f).coerceAtLeast(0f)
+    val right = (lightX + .46f).coerceAtMost(1f)
+    drawRect(
+        brush = Brush.horizontalGradient(
+            colorStops = arrayOf(
+                0f to Color.Transparent,
+                left to warmLight.copy(alpha = sideAlpha),
+                lightX to warmLight.copy(alpha = diffuseAlpha),
+                right to warmLight.copy(alpha = sideAlpha),
+                1f to Color.Transparent,
+            ),
+            startX = 0f,
+            endX = size.width,
+        ),
+        size = Size(size.width, size.height * .48f),
+    )
+    val centerAlpha = diffuseAlpha * if (supportedCloudiness > .05f) .34f else .42f
+    drawCircle(
+        brush = Brush.radialGradient(
+            colorStops = arrayOf(
+                0f to warmLight.copy(alpha = centerAlpha),
+                .46f to warmLight.copy(alpha = centerAlpha * .58f),
+                1f to Color.Transparent,
+            ),
+            center = center,
+            radius = spread,
+        ),
+        radius = spread,
+        center = center,
+    )
+}
+
+private data class CityCloudMass(
+    val x: Float,
+    val y: Float,
+    val width: Float,
+    val height: Float,
+    val fullness: Float,
+    val phase: Double,
+)
+
+private val cityCloudMasses = listOf(
+    CityCloudMass(.015f, .135f, .48f, .105f, .58f, .3),
+    CityCloudMass(.475f, .150f, .50f, .118f, .66f, 2.0),
+    CityCloudMass(.17f, .192f, .64f, .125f, .38f, 4.3),
+)
+
+/** Broad irregular contours form layered weather bands instead of repeated puff icons. */
+private fun DrawScope.drawCityCloudFields(
+    cloudiness: Float,
+    daylight: Double?,
+    phaseHours: Double,
+    isStorm: Boolean,
+) {
+    if (cloudiness <= .01f || size.width <= 0f) return
+    val day = daylight?.toFloat()?.coerceIn(0f, 1f) ?: .35f
+    val baseColor = if (isStorm) Color(0xFF4E6075)
+    else lerp(Color(0xFF7189A5), Color(0xFFE0EAF1), day)
+    cityCloudMasses.forEach { mass ->
+        val width = size.width * mass.width
+        val height = size.height * mass.height
+        val drift = (sin((phaseHours.takeIf(Double::isFinite) ?: 0.0) * .045 + mass.phase)
+            .toFloat() * size.width * .012f)
+        val x = (size.width * mass.x + drift).coerceIn(0f, (size.width - width).coerceAtLeast(0f))
+        val y = size.height * mass.y
+        val alpha = (cloudiness * mass.fullness * if (isStorm) .70f else .43f)
+            .coerceIn(0f, if (isStorm) .60f else .48f)
+        val fill = baseColor.copy(alpha = alpha)
+        val silhouette = Path().apply {
+            moveTo(x + width * .02f, y + height * .79f)
+            if (mass.phase < 1.0) {
+                cubicTo(x + width * .08f, y + height * .68f,
+                    x + width * .15f, y + height * .60f, x + width * .25f, y + height * .64f)
+                cubicTo(x + width * .34f, y + height * .54f,
+                    x + width * .43f, y + height * .47f, x + width * .54f, y + height * .56f)
+                cubicTo(x + width * .66f, y + height * .48f,
+                    x + width * .76f, y + height * .51f, x + width * .84f, y + height * .63f)
+            } else if (mass.phase < 3.0) {
+                cubicTo(x + width * .05f, y + height * .70f,
+                    x + width * .14f, y + height * .58f, x + width * .26f, y + height * .66f)
+                cubicTo(x + width * .35f, y + height * .55f,
+                    x + width * .43f, y + height * .51f, x + width * .54f, y + height * .60f)
+                cubicTo(x + width * .63f, y + height * .47f,
+                    x + width * .78f, y + height * .42f, x + width * .86f, y + height * .61f)
+            } else {
+                cubicTo(x + width * .09f, y + height * .70f,
+                    x + width * .19f, y + height * .61f, x + width * .30f, y + height * .69f)
+                cubicTo(x + width * .39f, y + height * .58f,
+                    x + width * .49f, y + height * .53f, x + width * .59f, y + height * .63f)
+                cubicTo(x + width * .69f, y + height * .51f,
+                    x + width * .82f, y + height * .53f, x + width * .89f, y + height * .68f)
+            }
+            cubicTo(x + width * .94f, y + height * .64f,
+                x + width * .99f, y + height * .70f, x + width * .96f, y + height * .78f)
+            cubicTo(x + width * .76f, y + height * .91f,
+                x + width * .27f, y + height * .89f, x + width * .02f, y + height * .79f)
+            close()
+        }
+        drawPath(silhouette, fill)
+    }
+}
+
+private fun DrawScope.drawCityRainField(
+    chancePercent: Double,
+    amount: PrecipitationAmount.RainLiquidMm?,
+) {
+    val coverage = precipitationCoverage(chancePercent)
+    if (coverage <= 0f) return
+    val amountFactor = amount?.value?.div(3.0)?.toFloat()?.coerceIn(0f, 1f) ?: .2f
+    val activeLanes = (5 + coverage * 10f).toInt().coerceIn(7, 14)
+    val laneCount = 24
+    val laneGap = size.width * .040f
+    val fieldWidth = laneGap * (laneCount - 1)
+    val left = (size.width - fieldWidth) / 2f
+    val rowGap = size.height * .052f
+    val streakLength = size.height * (.010f + amountFactor * .004f)
+    val stroke = (1.0f + amountFactor * .65f) * density
+    val alpha = .25f + amountFactor * .12f
+    for (lane in 0 until laneCount) {
+        val laneWithinCurtain = lane % 6
+        val curtainStrength = when (lane / 6) {
+            1 -> .78f
+            2 -> .92f
+            else -> 1f
+        }
+        if (laneWithinCurtain >= activeLanes / 3) continue
+        val x = left + lane * laneGap
+        for (row in 0..12) {
+            val y = size.height * .205f + row * rowGap + ((lane + row) % 3) * rowGap * .20f
+            val endX = x - streakLength * .055f
+            val endY = y + streakLength
+            if (inPrecipitationQuietZone(x, y) || inPrecipitationQuietZone(endX, endY)) continue
+            drawLine(
+                color = Color(0xFFE4F3FF).copy(alpha = alpha * curtainStrength),
+                start = Offset(x, y),
+                end = Offset(endX, endY),
+                strokeWidth = stroke,
+            )
+        }
+    }
+}
+
+private fun DrawScope.drawCityTimeWash(treatment: CityTreatment) {
+    val color = when (treatment) {
+        CityTreatment.MORNING -> Color(0x33E9A767)
+        CityTreatment.DAY -> Color(0x075795C6)
+        CityTreatment.DUSK -> Color(0x42B45E72)
+        CityTreatment.NIGHT -> Color(0x8506152C)
+    }
+    drawRect(color)
+}
+
+private fun DrawScope.drawCityReadoutQuietZone() {
+    val center = Offset(size.width * .5f, size.height * .53f)
+    val radius = size.width * .82f
+    drawCircle(
+        brush = Brush.radialGradient(
+            colorStops = arrayOf(
+                0f to Color(0x24102031),
+                .48f to Color(0x18102031),
+                1f to Color.Transparent,
+            ),
+            center = center,
+            radius = radius,
+        ),
+        radius = radius,
+        center = center,
+    )
+}
+
+private fun DrawScope.drawCityWorld(treatment: CityTreatment) {
+    val colors = when (treatment) {
+        CityTreatment.MORNING -> listOf(Color(0xFF6497C0), Color(0xFFB9CBD4), Color(0xFFE8C49C))
+        CityTreatment.DAY -> listOf(Color(0xFF347EB1), Color(0xFF8DC2DC), Color(0xFFD5D9D0))
+        CityTreatment.DUSK -> listOf(Color(0xFF25385F), Color(0xFF685B7B), Color(0xFFD08275))
+        CityTreatment.NIGHT -> listOf(Color(0xFF08152E), Color(0xFF1D3150), Color(0xFF39465D))
+    }
+    drawRect(brush = Brush.verticalGradient(
+        0f to colors[0], .42f to colors[1], .72f to colors[2], 1f to colors[2],
+    ))
+    // A restrained phase wash preserves the same city geometry at every selected instant.
+    val tint = when (treatment) {
+        CityTreatment.MORNING -> Color(0x22FFC77F)
+        CityTreatment.DAY -> Color(0x102B7CC0)
+        CityTreatment.DUSK -> Color(0x285C3769)
+        CityTreatment.NIGHT -> Color(0x5A07152F)
+    }
+    drawRect(tint)
+}
+
+private fun DrawScope.drawAlignedLayer(bitmap: ImageBitmap) {
+    if (size.width <= 0f || size.height <= 0f) return
+    val sourceAspect = bitmap.width.toFloat() / bitmap.height
+    val viewportAspect = size.width / size.height
+    val topCrop = if (viewportAspect < .70f) (bitmap.height * .18f).toInt() else 0
+    val availableHeight = bitmap.height - topCrop
+    val sourceWidth = if (sourceAspect > viewportAspect) {
+        (availableHeight * viewportAspect).toInt().coerceIn(1, bitmap.width)
+    } else bitmap.width
+    val sourceHeight = if (sourceAspect > viewportAspect) {
+        availableHeight
+    } else {
+        (bitmap.width / viewportAspect).toInt().coerceIn(1, availableHeight)
+    }
+    val sourceX = (bitmap.width - sourceWidth) / 2
+    val sourceY = topCrop + (availableHeight - sourceHeight) / 2
+    drawImage(
+        image = bitmap,
+        srcOffset = androidx.compose.ui.unit.IntOffset(sourceX, sourceY),
+        srcSize = androidx.compose.ui.unit.IntSize(sourceWidth, sourceHeight),
+        dstOffset = androidx.compose.ui.unit.IntOffset.Zero,
+        dstSize = androidx.compose.ui.unit.IntSize(size.width.toInt(), size.height.toInt()),
+        filterQuality = FilterQuality.Medium,
+    )
+}
+
+private fun DrawScope.drawCityWindowLights() {
+    // Deliberate normalized positions stay within the foreground building facades in the master.
+    val windows = listOf(
+        .055f to .783f, .105f to .812f, .164f to .801f, .235f to .773f,
+        .296f to .825f, .373f to .792f, .445f to .817f, .518f to .785f,
+        .584f to .832f, .662f to .801f, .731f to .827f, .807f to .785f,
+        .874f to .816f, .938f to .782f,
+    )
+    val width = size.width * .009f
+    val height = size.height * .008f
+    windows.forEach { (x, y) ->
+        drawRect(
+            color = Color(0xFFFFC76E).copy(alpha = .84f),
+            topLeft = Offset(size.width * x, size.height * y),
+            size = Size(width, height),
+        )
+    }
+}
+
+private fun DrawScope.drawCityTimeCue(
+    reading: SceneReading,
+    zone: ZoneId,
+    treatment: CityTreatment,
+) {
+    val (x, y) = FirstCityTheme.cuePosition(reading.selectedInstant, zone)
+    val center = Offset(size.width * x, size.height * y)
+    val radius = size.width * .052f * FirstCityTheme.cueScale(reading.selectedInstant, zone)
+    if (treatment == CityTreatment.NIGHT) {
+        drawCircle(
+            brush = Brush.radialGradient(
+                colorStops = arrayOf(
+                    0f to Color(0x44E7E7DE),
+                    .52f to Color(0x20E7E7DE),
+                    1f to Color.Transparent,
+                ),
+                center = center,
+                radius = radius * 3.0f,
+            ),
+            radius = radius * 3.0f,
+            center = center,
+        )
+        drawCircle(Color(0xFFF2EAD5), radius * .70f, center)
+        drawCircle(Color(0xFF24334D), radius * .86f,
+            center + Offset(radius * .42f, -radius * .30f))
+    } else {
+        val sun = if (treatment == CityTreatment.DUSK) Color(0xFFFFC9A1) else Color(0xFFFFE8BB)
+        drawCircle(
+            brush = Brush.radialGradient(
+                colorStops = arrayOf(
+                    0f to sun.copy(alpha = .24f),
+                    .52f to sun.copy(alpha = .10f),
+                    1f to Color.Transparent,
+                ),
+                center = center,
+                radius = radius * 3.0f,
+            ),
+            radius = radius * 3.0f,
+            center = center,
+        )
+        drawCircle(sun.copy(alpha = .98f), radius * .57f, center)
+    }
 }
 
 /** Compatibility entry point for callers that still provide the original forecast frame. */

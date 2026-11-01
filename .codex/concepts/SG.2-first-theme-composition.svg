@@ -1,0 +1,181 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1920" height="1320" viewBox="0 0 1920 1320" role="img" aria-labelledby="title desc">
+  <title id="title">SG.2 — Layered city theme composition board</title>
+  <desc id="desc">Draft combined behavior and artwork board showing one theme across morning, noon, dusk, and night; theme layers, auxiliary details, time-linked ambient element, fallback, compact, and reduced-motion behavior.</desc>
+  <defs>
+    <linearGradient id="paper" x2="0" y2="1"><stop stop-color="#f7f8fa"/><stop offset="1" stop-color="#e9edf2"/></linearGradient>
+    <linearGradient id="morning" x2="0" y2="1"><stop stop-color="#8ab6d1"/><stop offset=".58" stop-color="#e4c9ae"/><stop offset="1" stop-color="#f3c99a"/></linearGradient>
+    <linearGradient id="noon" x2="0" y2="1"><stop stop-color="#69a9d4"/><stop offset=".68" stop-color="#b9d8e7"/><stop offset="1" stop-color="#e5d8bc"/></linearGradient>
+    <linearGradient id="dusk" x2="0" y2="1"><stop stop-color="#283e68"/><stop offset=".55" stop-color="#8f7391"/><stop offset="1" stop-color="#edaa77"/></linearGradient>
+    <linearGradient id="night" x2="0" y2="1"><stop stop-color="#101b35"/><stop offset=".72" stop-color="#263955"/><stop offset="1" stop-color="#59617a"/></linearGradient>
+    <linearGradient id="compactSky" x2="0" y2="1"><stop stop-color="#5a96bd"/><stop offset="1" stop-color="#e4bd93"/></linearGradient>
+    <linearGradient id="tape" x2="0" y2="1"><stop stop-color="#14253a" stop-opacity=".04"/><stop offset=".38" stop-color="#14253a" stop-opacity=".78"/><stop offset="1" stop-color="#14253a" stop-opacity=".94"/></linearGradient>
+    <filter id="soft" x="-30%" y="-30%" width="160%" height="160%"><feGaussianBlur stdDeviation="14"/></filter>
+    <clipPath id="clipMorning"><rect x="54" y="194" width="432" height="326" rx="18"/></clipPath>
+    <clipPath id="clipNoon"><rect x="524" y="194" width="432" height="326" rx="18"/></clipPath>
+    <clipPath id="clipDusk"><rect x="994" y="194" width="432" height="326" rx="18"/></clipPath>
+    <clipPath id="clipNight"><rect x="1464" y="194" width="402" height="326" rx="18"/></clipPath>
+    <style>
+      .ink{fill:#172538}.muted{fill:#566577}.tiny{font:500 14px Inter,Arial,sans-serif}.small{font:500 16px Inter,Arial,sans-serif}.body{font:500 18px Inter,Arial,sans-serif}.label{font:700 14px Inter,Arial,sans-serif;letter-spacing:1.5px}.title{font:700 34px Inter,Arial,sans-serif}.subtitle{font:500 19px Inter,Arial,sans-serif}.card{fill:#fff;stroke:#d4dce5;stroke-width:1.5}.building{fill:#30465c}.window{fill:#ffd994}.windowOff{fill:#46586a}.tree{fill:#304f4b}.treeLight{fill:#527466}.cloud{fill:#eaf1f3;opacity:.83}.cloudDark{fill:#a9bacb;opacity:.76}.chip{fill:#edf2f6;stroke:#d6dee6;stroke-width:1}.line{stroke:#c4ced9;stroke-width:1.5}.amber{fill:#ffcb7f}.blue{fill:#63a7d3}.white{fill:#fff}
+    </style>
+  </defs>
+  <rect width="1920" height="1320" fill="url(#paper)"/>
+  <text x="54" y="58" class="label" fill="#357294">OXYGEN · SCENE GENERATION · SG.2</text>
+  <text x="54" y="104" class="title ink">Board 1 of 2 · City behavior and composition</text>
+  <text x="54" y="140" class="subtitle muted">One city composition; time-of-day treatment, forecast layers, and ambient details resolve together at the selected instant.</text>
+  <rect x="1564" y="48" width="302" height="48" rx="24" fill="#fff0d9" stroke="#e7c48b"/>
+  <text x="1715" y="78" text-anchor="middle" class="label" fill="#845d24">SCHEMATIC · APPROVED</text>
+
+  <text x="54" y="174" class="label muted">SAME THEME · FOUR SELECTED-TIME STATES</text>
+  <g>
+    <rect x="54" y="194" width="432" height="326" rx="18" class="card"/>
+    <g clip-path="url(#clipMorning)">
+      <rect x="54" y="194" width="432" height="326" fill="url(#morning)"/>
+      <circle cx="166" cy="277" r="40" fill="#ffe3ad" opacity=".72"/>
+      <path d="M54 368 Q180 330 280 365 T486 350 L486 520 L54 520Z" fill="#b9b9ad" opacity=".48"/>
+      <path d="M54 415 L54 362 100 362 100 390 136 390 136 345 172 345 172 415 205 415 205 370 247 370 247 398 284 398 284 332 325 332 325 416 354 416 354 356 396 356 396 378 432 378 432 338 486 338 486 520 54 520Z" fill="#53677a" opacity=".86"/>
+      <path d="M54 439 L54 393 91 393 91 425 128 425 128 374 159 374 159 437 197 437 197 404 237 404 237 444 275 444 275 369 316 369 316 441 350 441 350 399 389 399 389 435 429 435 429 390 486 390 486 520 54 520Z" class="building"/>
+      <g fill="#50687a"><rect x="63" y="412" width="12" height="16"/><rect x="103" y="410" width="12" height="16"/><rect x="141" y="392" width="12" height="15"/><rect x="211" y="421" width="12" height="14"/><rect x="289" y="390" width="13" height="15"/><rect x="358" y="416" width="14" height="15"/><rect x="438" y="406" width="13" height="15"/></g>
+      <path d="M54 475 Q92 441 130 468 Q163 429 202 468 Q234 433 272 470 Q314 431 349 470 Q387 436 430 470 Q457 447 486 468 L486 520 54 520Z" class="tree"/>
+      <path d="M55 487 Q94 458 133 490 Q170 454 208 489 Q247 455 285 488 Q321 454 360 488 Q404 451 441 487 Q462 470 486 483 L486 520 55 520Z" class="treeLight" opacity=".8"/>
+      <path d="M117 300 C204 235 308 238 391 282" fill="none" stroke="#fff8e6" stroke-width="2" stroke-dasharray="6 8" opacity=".72"/>
+      <circle cx="166" cy="277" r="12" fill="#fff5d9"/><text x="166" y="281" text-anchor="middle" font-family="Arial" font-size="9" font-weight="700" fill="#916a35">S</text>
+      <path d="M310 327 q8 -10 16 0 q8 -10 16 0" fill="none" stroke="#334c62" stroke-width="2"/>
+    </g>
+    <text x="74" y="222" class="label" fill="#344a5d">08:00 · MORNING · CLEAR</text>
+      <rect x="54" y="456" width="432" height="64" fill="url(#tape)"/>
+      <path d="M88 480 H452" stroke="#dce6ed" stroke-opacity=".7" stroke-width="1"/>
+      <g stroke="#dce6ed" stroke-width="1"><path d="M124 475v10 M196 475v10 M268 469v16 M340 475v10 M412 475v10"/></g>
+      <g text-anchor="middle" font-family="Arial,sans-serif" font-size="12" fill="#f7fafc"><text x="124" y="505">06</text><text x="196" y="505">07</text><text x="268" y="505" font-weight="700" font-size="14">08</text><text x="340" y="505">09</text><text x="412" y="505">10</text></g>
+  </g>
+  <g>
+    <rect x="524" y="194" width="432" height="326" rx="18" class="card"/>
+    <g clip-path="url(#clipNoon)">
+      <rect x="524" y="194" width="432" height="326" fill="url(#noon)"/>
+      <circle cx="754" cy="264" r="46" fill="#fff0bf" opacity=".65"/>
+      <path d="M524 368 Q650 330 750 365 T956 350 L956 520 L524 520Z" fill="#cad1c6" opacity=".45"/>
+      <path d="M524 415 L524 362 570 362 570 390 606 390 606 345 642 345 642 415 675 415 675 370 717 370 717 398 754 398 754 332 795 332 795 416 824 416 824 356 866 356 866 378 902 378 902 338 956 338 956 520 524 520Z" fill="#768694" opacity=".75"/>
+      <path d="M524 439 L524 393 561 393 561 425 598 425 598 374 629 374 629 437 667 437 667 404 707 404 707 444 745 444 745 369 786 369 786 441 820 441 820 399 859 399 859 435 899 435 899 390 956 390 956 520 524 520Z" fill="#43586b"/>
+      <g class="cloud"><ellipse cx="642" cy="307" rx="55" ry="18"/><circle cx="623" cy="297" r="19"/><circle cx="650" cy="291" r="25"/><circle cx="674" cy="301" r="18"/><ellipse cx="851" cy="334" rx="48" ry="15"/><circle cx="834" cy="326" r="17"/><circle cx="857" cy="319" r="21"/><circle cx="878" cy="328" r="15"/></g>
+      <path d="M524 475 Q562 441 600 468 Q633 429 672 468 Q704 433 742 470 Q784 431 819 470 Q857 436 900 470 Q927 447 956 468 L956 520 524 520Z" class="tree"/>
+      <path d="M524 487 Q563 458 602 490 Q639 454 677 489 Q716 455 754 488 Q790 454 829 488 Q873 451 910 487 Q932 470 956 483 L956 520 524 520Z" class="treeLight" opacity=".72"/>
+      <path d="M592 294 C676 228 791 225 877 274" fill="none" stroke="#fff5df" stroke-width="2" stroke-dasharray="6 8" opacity=".75"/>
+      <circle cx="754" cy="264" r="12" fill="#fff7dd"/><text x="754" y="268" text-anchor="middle" font-family="Arial" font-size="9" font-weight="700" fill="#916a35">S</text>
+    </g>
+    <text x="544" y="222" class="label" fill="#344a5d">13:00 · DAY · PARTLY CLOUDY</text>
+      <rect x="524" y="456" width="432" height="64" fill="url(#tape)"/>
+      <path d="M558 480 H922" stroke="#dce6ed" stroke-opacity=".7" stroke-width="1"/>
+      <g stroke="#dce6ed" stroke-width="1"><path d="M594 475v10 M666 475v10 M738 469v16 M810 475v10 M882 475v10"/></g>
+      <g text-anchor="middle" font-family="Arial,sans-serif" font-size="12" fill="#f7fafc"><text x="594" y="505">11</text><text x="666" y="505">12</text><text x="738" y="505" font-weight="700" font-size="14">13</text><text x="810" y="505">14</text><text x="882" y="505">15</text></g>
+  </g>
+  <g>
+    <rect x="994" y="194" width="432" height="326" rx="18" class="card"/>
+    <g clip-path="url(#clipDusk)">
+      <rect x="994" y="194" width="432" height="326" fill="url(#dusk)"/>
+      <circle cx="1298" cy="318" r="54" fill="#ffc48b" opacity=".28" filter="url(#soft)"/>
+      <circle cx="1298" cy="318" r="21" fill="#ffe0ac" opacity=".85"/>
+      <path d="M994 368 Q1120 330 1220 365 T1426 350 L1426 520 L994 520Z" fill="#79768a" opacity=".48"/>
+      <path d="M994 415 L994 362 1040 362 1040 390 1076 390 1076 345 1112 345 1112 415 1145 415 1145 370 1187 370 1187 398 1224 398 1224 332 1265 332 1265 416 1294 416 1294 356 1336 356 1336 378 1372 378 1372 338 1426 338 1426 520 994 520Z" fill="#35445d" opacity=".9"/>
+      <path d="M994 439 L994 393 1031 393 1031 425 1068 425 1068 374 1099 374 1099 437 1137 437 1137 404 1177 404 1177 444 1215 444 1215 369 1256 369 1256 441 1290 441 1290 399 1329 399 1329 435 1369 435 1369 390 1426 390 1426 520 994 520Z" fill="#29394f"/>
+      <g fill="#ffd994"><rect x="1003" y="411" width="11" height="13"/><rect x="1081" y="392" width="11" height="13"/><rect x="1150" y="417" width="11" height="13"/><rect x="1229" y="389" width="12" height="14"/><rect x="1300" y="414" width="12" height="13"/><rect x="1378" y="407" width="12" height="13"/></g>
+      <g class="cloudDark"><ellipse cx="1136" cy="300" rx="53" ry="16"/><circle cx="1118" cy="292" r="18"/><circle cx="1141" cy="286" r="21"/><circle cx="1164" cy="296" r="15"/></g>
+      <path d="M994 475 Q1032 441 1070 468 Q1103 429 1142 468 Q1174 433 1212 470 Q1254 431 1289 470 Q1327 436 1370 470 Q1397 447 1426 468 L1426 520 994 520Z" fill="#1e3a3a"/>
+      <path d="M1060 269 C1143 225 1264 231 1358 291" fill="none" stroke="#ffd29a" stroke-width="2" stroke-dasharray="6 8" opacity=".72"/>
+      <path d="M1291 309 a16 16 0 1 0 18 20 a13 13 0 1 1 -18 -20" fill="#fff1d0"/>
+      <g fill="#ffd88e"><circle cx="1044" cy="360" r="4"/><circle cx="1370" cy="345" r="4"/></g>
+    </g>
+    <text x="1014" y="222" class="label" fill="#fff">19:00 · DUSK · CLOUDY</text>
+      <rect x="994" y="456" width="432" height="64" fill="url(#tape)"/>
+      <path d="M1028 480 H1392" stroke="#dce6ed" stroke-opacity=".7" stroke-width="1"/>
+      <g stroke="#dce6ed" stroke-width="1"><path d="M1064 475v10 M1136 475v10 M1208 469v16 M1280 475v10 M1352 475v10"/></g>
+      <g text-anchor="middle" font-family="Arial,sans-serif" font-size="12" fill="#f7fafc"><text x="1064" y="505">17</text><text x="1136" y="505">18</text><text x="1208" y="505" font-weight="700" font-size="14">19</text><text x="1280" y="505">20</text><text x="1352" y="505">21</text></g>
+  </g>
+  <g>
+    <rect x="1464" y="194" width="402" height="326" rx="18" class="card"/>
+    <g clip-path="url(#clipNight)">
+      <rect x="1464" y="194" width="402" height="326" fill="url(#night)"/>
+      <circle cx="1760" cy="271" r="21" fill="#e4eaf3" opacity=".9"/>
+      <circle cx="1768" cy="263" r="19" fill="#202e49"/>
+      <g fill="#d8e4f1" opacity=".7"><circle cx="1514" cy="266" r="2"/><circle cx="1584" cy="296" r="1.7"/><circle cx="1682" cy="238" r="1.8"/><circle cx="1820" cy="311" r="2"/></g>
+      <path d="M1464 368 Q1588 330 1688 365 T1866 350 L1866 520 L1464 520Z" fill="#4d5a6f" opacity=".42"/>
+      <path d="M1464 415 L1464 362 1510 362 1510 390 1546 390 1546 345 1582 345 1582 415 1615 415 1615 370 1657 370 1657 398 1694 398 1694 332 1735 332 1735 416 1764 416 1764 356 1806 356 1806 378 1842 378 1842 338 1866 338 1866 520 1464 520Z" fill="#29374e"/>
+      <path d="M1464 439 L1464 393 1501 393 1501 425 1538 425 1538 374 1569 374 1569 437 1607 437 1607 404 1647 404 1647 444 1685 444 1685 369 1726 369 1726 441 1760 441 1760 399 1799 399 1799 435 1839 435 1839 390 1866 390 1866 520 1464 520Z" fill="#202e43"/>
+      <g fill="#ffd994"><rect x="1473" y="411" width="11" height="13"/><rect x="1551" y="392" width="11" height="13"/><rect x="1620" y="417" width="11" height="13"/><rect x="1699" y="389" width="12" height="14"/><rect x="1770" y="414" width="12" height="13"/><rect x="1846" y="407" width="11" height="13"/></g>
+      <path d="M1520 475 Q1558 441 1596 468 Q1629 429 1668 468 Q1700 433 1738 470 Q1780 431 1815 470 Q1841 436 1866 468 L1866 520 1520 520Z" class="tree"/>
+      <path d="M1508 281 C1596 223 1712 227 1804 266" fill="none" stroke="#bacbe2" stroke-width="2" stroke-dasharray="6 8" opacity=".68"/>
+      <g fill="#ffd88e"><circle cx="1519" cy="360" r="4"/><circle cx="1838" cy="347" r="4"/></g>
+    </g>
+    <text x="1484" y="222" class="label" fill="#fff">23:00 · NIGHT · CLEAR</text>
+      <rect x="1464" y="456" width="402" height="64" fill="url(#tape)"/>
+      <path d="M1494 480 H1836" stroke="#dce6ed" stroke-opacity=".7" stroke-width="1"/>
+      <g stroke="#dce6ed" stroke-width="1"><path d="M1528 475v10 M1596 475v10 M1664 469v16 M1732 475v10 M1800 475v10"/></g>
+      <g text-anchor="middle" font-family="Arial,sans-serif" font-size="12" fill="#f7fafc"><text x="1528" y="505">21</text><text x="1596" y="505">22</text><text x="1664" y="505" font-weight="700" font-size="14">23</text><text x="1732" y="505">00</text><text x="1800" y="505">01</text></g>
+  </g>
+
+  <rect x="54" y="544" width="1812" height="62" rx="14" fill="#e9f0f5" stroke="#cbd7e1"/>
+  <text x="78" y="570" class="label" fill="#357294">TIME LINK</text>
+  <text x="78" y="592" class="small ink">Ambient marker follows selected local time along a theme-designed path; scene does not run on an independent clock.</text>
+  <text x="1112" y="580" class="small muted">Illustrative path only · no solar position, sunrise, sunset, or moon-phase claim</text>
+
+  <text x="54" y="650" class="label muted">COMPOSITION CONTRACT · SEMANTIC GROUPS CAN OCCUPY DIFFERENT DEPTHS</text>
+  <rect x="54" y="670" width="1110" height="386" rx="18" class="card"/>
+  <text x="82" y="710" class="label" fill="#357294">BACK TO FRONT · CITY EXAMPLE</text>
+  <g>
+    <rect x="82" y="735" width="318" height="72" rx="12" fill="#e9f2f7"/>
+    <circle cx="120" cy="771" r="18" fill="#9cc5d9"/><path d="M99 783 Q120 764 142 783" fill="none" stroke="#557c95" stroke-width="3"/>
+    <text x="162" y="764" class="body ink">1 · Background world</text><text x="162" y="788" class="tiny muted">Sky field + far skyline</text>
+    <rect x="82" y="817" width="318" height="72" rx="12" fill="#e8edf4"/>
+    <path d="M101 867 q22 -28 44 0 M112 857 q11 -19 22 0" fill="none" stroke="#91a8bc" stroke-width="5" stroke-linecap="round"/>
+    <text x="162" y="846" class="body ink">2 · Forecast tracks</text><text x="162" y="870" class="tiny muted">Clouds etc. at supported times</text>
+    <rect x="82" y="899" width="318" height="72" rx="12" fill="#e9e8e2"/>
+    <path d="M104 950 v-26 h18 v26 M128 950 v-38 h19 v38 M153 950 v-20 h17 v20" fill="#5a6876"/>
+    <text x="190" y="928" class="body ink">3 · Middle ground</text><text x="190" y="952" class="tiny muted">Buildings / architecture</text>
+    <rect x="82" y="981" width="318" height="52" rx="12" fill="#e6eee8"/>
+    <path d="M101 1018 q18 -26 36 0 q17 -24 35 0" fill="#537467"/>
+    <text x="190" y="1008" class="body ink">4 · Foreground</text><text x="190" y="1028" class="tiny muted">Tree tops</text>
+  </g>
+  <path d="M427 770 H469 M427 852 H469 M427 934 H469 M427 1006 H469" stroke="#9aa9b8" stroke-width="2" marker-end="url(#arrow)"/>
+  <defs><marker id="arrow" markerWidth="8" markerHeight="8" refX="6" refY="4" orient="auto"><path d="M0 0 L8 4 L0 8Z" fill="#9aa9b8"/></marker></defs>
+  <rect x="488" y="735" width="646" height="298" rx="14" fill="#f4f6f8" stroke="#d7dfe6"/>
+  <text x="514" y="771" class="label" fill="#357294">AUXILIARY · NON-WEATHER DETAIL</text>
+  <text x="514" y="808" class="body ink">A semantic group, placed at theme-chosen depths</text>
+  <g class="small ink"><circle cx="527" cy="846" r="5" fill="#d6a854"/><text x="544" y="852">Window-light pass clipped to buildings</text><text x="984" y="852" class="tiny muted">off by day · on at night</text>
+    <circle cx="527" cy="882" r="5" fill="#d6a854"/><text x="544" y="888">Street lights and small city details</text>
+    <circle cx="527" cy="918" r="5" fill="#607d72"/><text x="544" y="924">Birds or other optional scene accents</text>
+  </g>
+  <text x="514" y="970" class="small muted">Auxiliary elements can sit behind, between, or in front of weather art.</text>
+  <text x="514" y="998" class="small muted">They never change or imply forecast facts.</text>
+  <text x="82" y="1048" class="tiny muted">Other themes may reorder, combine, or omit these roles; no universal sky / ground / horizon is required.</text>
+
+  <rect x="1190" y="670" width="676" height="386" rx="18" class="card"/>
+  <text x="1218" y="710" class="label" fill="#357294">BEHAVIOR, FALLBACK &amp; QUALITY</text>
+  <rect x="1218" y="735" width="286" height="190" rx="14" fill="#eef2f5" stroke="#d7dfe6"/>
+  <rect x="1230" y="746" width="104" height="168" rx="12" fill="#17283d"/>
+  <rect x="1236" y="753" width="92" height="154" rx="8" fill="url(#compactSky)"/>
+  <circle cx="1306" cy="783" r="10" fill="#ffeab7"/>
+  <path d="M1236 849 L1236 831 1250 831 1250 839 1261 839 1261 818 1275 818 1275 849 1287 849 1287 834 1300 834 1300 849 1328 849 1328 907 1236 907Z" fill="#445a6b"/>
+  <path d="M1236 865 Q1250 849 1264 865 Q1279 848 1292 865 Q1307 849 1321 865 Q1325 859 1328 863 L1328 907 1236 907Z" fill="#3c6559"/>
+  <rect x="1236" y="874" width="92" height="33" fill="url(#tape)"/>
+  <path d="M1242 887 H1322" stroke="#eef5f8" stroke-width="1"/><path d="M1255 884v6 M1270 884v6 M1282 881v10 M1294 884v6 M1309 884v6" stroke="#eef5f8" stroke-width="1"/>
+  <text x="1344" y="770" class="label" font-size="12" fill="#344a5d">PORTRAIT</text>
+  <text x="1344" y="790" class="label" font-size="12" fill="#344a5d">COMPACT</text>
+  <text x="1344" y="820" font-family="Arial,sans-serif" font-size="12" fill="#344a5d">Scene stays above tape.</text>
+  <text x="1344" y="840" font-family="Arial,sans-serif" font-size="12" fill="#344a5d">Keep time legible;</text>
+  <text x="1344" y="860" font-family="Arial,sans-serif" font-size="12" fill="#344a5d">reduce optional detail.</text>
+  <rect x="1522" y="735" width="316" height="190" rx="14" fill="#182a42"/>
+  <circle cx="1784" cy="777" r="16" fill="#e4eaf3"/><circle cx="1790" cy="770" r="14" fill="#182a42"/>
+  <path d="M1522 870 L1522 835 1554 835 1554 854 1578 854 1578 818 1608 818 1608 870 1632 870 1632 840 1660 840 1660 870 1838 870 1838 925 1522 925Z" fill="#25384e"/>
+  <g fill="#ffd994"><rect x="1532" y="842" width="8" height="10"/><rect x="1616" y="832" width="8" height="10"/><rect x="1708" y="841" width="8" height="10"/></g>
+  <text x="1540" y="763" class="label" fill="#fff">STATIC / REDUCED MOTION</text>
+  <text x="1540" y="900" class="tiny" fill="#fff">Element stays at selected-time position.</text>
+  <text x="1218" y="958" class="small ink">Missing optional auxiliary variant → omit the detail.</text>
+  <text x="1218" y="984" class="small ink">Missing phase backdrop → reuse base city + phase palette.</text>
+  <text x="1218" y="1010" class="small muted">Never replace a forecast meaning with decorative fallback.</text>
+  <text x="1218" y="1036" class="tiny muted">Use reusable static shapes, simple palette / visibility changes; no continuous 3D scene.</text>
+
+  <rect x="54" y="1080" width="1812" height="176" rx="18" fill="#eaf0f4" stroke="#cdd8e1"/>
+  <text x="82" y="1120" class="label" fill="#357294">BOARD INTENT &amp; REVIEW BOUNDARY</text>
+  <text x="82" y="1154" class="small ink">This board defines one theme’s behavior, layer placement, time-linked variants, auxiliary semantics, and fallback.</text>
+  <text x="82" y="1182" class="small ink">It does not add providers, weather facts, theme selection, downloads, or exact astronomical behavior.</text>
+  <text x="82" y="1222" class="tiny muted">SG.2 proposes composition only. SG.3 owns clear / cloudy / light rendering; later slices own precipitation and other event families.</text>
+  <text x="1838" y="1222" text-anchor="end" class="tiny muted">BOARD 1 OF 2 · APPROVED 2026-10-31</text>
+</svg>

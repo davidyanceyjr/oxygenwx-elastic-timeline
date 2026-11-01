@@ -108,6 +108,8 @@ class MainActivity : ComponentActivity(), ActivityVariantDelegate.Host {
             variantDelegate?.createFixturePlaceSearcher(this) ?: OpenMeteoPlaceSearcher()
         } else OpenMeteoPlaceSearcher()
         val openLocationSelector = isDebuggable && intent.getBooleanExtra(EXTRA_LOCATION_SELECTOR, false)
+        val forceSg2NullWeather = isDebuggable && intent.getBooleanExtra(EXTRA_SG2_NULL_WEATHER, false)
+        val forceSg2MissingOptionalLayer = isDebuggable && intent.getBooleanExtra(EXTRA_SG2_MISSING_OPTIONAL_LAYER, false)
         val showSnowPreview = isDebuggable && intent.getBooleanExtra(EXTRA_PREVIEW_SNOW, false)
         val showStormPreview = isDebuggable && intent.getBooleanExtra(EXTRA_ATM6_STORM, false)
         val showClearNightPreview = isDebuggable && intent.getBooleanExtra(EXTRA_ATM6_CLEAR_NIGHT, false)
@@ -168,7 +170,11 @@ class MainActivity : ComponentActivity(), ActivityVariantDelegate.Host {
                             showDebugLocationLauncher = isDebuggable,
                         )
                         matchingActive != null && presenter != null -> CatalogTimeLabScreen(
-                            view = presenter.view(activation),
+                            presentation = presenter.scenePresentation(activation).let { presentation ->
+                                if (forceSg2NullWeather) presentation.copy(
+                                    timeline = presentation.timeline.copy(scene = null),
+                                ) else presentation
+                            },
                             onSelectInstant = activationCoordinator::selectInstant,
                             onReturnToNow = {
                                 activationCoordinator.selectInstant(
@@ -182,6 +188,7 @@ class MainActivity : ComponentActivity(), ActivityVariantDelegate.Host {
                             } else null,
                             onChooseLocation = { catalogLocationSelectorOpen = true },
                             onRefresh = activationCoordinator::refreshCurrent,
+                            omitOptionalCityLayers = forceSg2MissingOptionalLayer,
                         )
                         else -> Box(Modifier.fillMaxSize().background(Color(0xFF11263D))) {
                             Column(
@@ -245,6 +252,8 @@ private const val EXTRA_ATM6_CLEAR_NIGHT = "atm6_clear_night"
 private const val EXTRA_ATM6_HOUR = "atm6_hour"
 private const val EXTRA_LOCATION_SELECTOR = "location_selector"
 private const val EXTRA_LOCATION_FIXTURE_SEARCH = "location_fixture_search"
+private const val EXTRA_SG2_NULL_WEATHER = "sg2_null_weather"
+private const val EXTRA_SG2_MISSING_OPTIONAL_LAYER = "sg2_missing_optional_layer"
 @androidx.compose.runtime.Composable
 private fun FixturePrecipitationPreview(hourOffset: Int) {
     val view = ForecastProjection.fromHourOffset(hourOffset.toDouble(), precision = true)

@@ -12,6 +12,9 @@ import com.oxygen.weather.timeline.presentation.atmosphere.EnvironmentId
 import com.oxygen.weather.timeline.presentation.atmosphere.PrecipitationKind
 import com.oxygen.weather.timeline.presentation.atmosphere.PreviewEffectStrengths
 import com.oxygen.weather.timeline.presentation.atmosphere.SceneVisualState
+import com.oxygen.weather.timeline.presentation.scene.SceneReading
+import com.oxygen.weather.timeline.presentation.scene.SemanticSceneGenerator
+import com.oxygen.weather.timeline.presentation.scene.SemanticScenePlan
 import com.oxygen.weather.timeline.data.SkyCondition
 import java.time.Instant
 import java.time.LocalDate
@@ -58,6 +61,12 @@ data class CatalogTimelineView(
     val error: String?,
 )
 
+/** Timeline facts and scene semantics evaluated at the same authoritative selected instant. */
+data class CatalogTimelineScenePresentation(
+    val timeline: CatalogTimelineView,
+    val reading: SceneReading,
+)
+
 /** Construct once per published dataset; selected projections remain cheap during scrubbing. */
 class CatalogTimelinePresenter(private val active: ActiveCatalogSelection) {
     private val catalog = active.recording.catalog
@@ -67,6 +76,9 @@ class CatalogTimelinePresenter(private val active: ActiveCatalogSelection) {
     ) as CatalogWindowResult.Success).window
     private val zone = window.zoneId
     private val interval = SupportedTimeInterval(window.startInclusive, window.endExclusive.minusNanos(1))
+    private val scenePlan: SemanticScenePlan = SemanticSceneGenerator.generate(
+        catalog, window, window.startInclusive, window.endExclusive,
+    )
     private val dateFormat = DateTimeFormatter.ofPattern("EEE, MMM d", Locale.US)
     private val timeFormat = DateTimeFormatter.ofPattern("h:mm a z", Locale.US)
     private val selectedTimeFormat = DateTimeFormatter.ofPattern("h:mm:ss a z", Locale.US)
@@ -151,6 +163,11 @@ class CatalogTimelinePresenter(private val active: ActiveCatalogSelection) {
             loading = state.loading,
             error = state.lastError,
         )
+    }
+
+    fun scenePresentation(state: CatalogActivationState): CatalogTimelineScenePresentation {
+        val timeline = view(state)
+        return CatalogTimelineScenePresentation(timeline, scenePlan.evaluate(timeline.selectedInstant))
     }
 
     private fun formatTime(instant: Instant): String = instant.atZone(zone).format(timeFormat)

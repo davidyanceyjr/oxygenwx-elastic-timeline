@@ -1,0 +1,91 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1600" height="1000" viewBox="0 0 1600 1000">
+  <defs>
+    <linearGradient id="screen" x2="0" y2="1">
+      <stop stop-color="#71879a"/><stop offset=".38" stop-color="#a0a4a2"/>
+      <stop offset=".62" stop-color="#d0ab8c"/><stop offset="1" stop-color="#18283a"/>
+    </linearGradient>
+    <linearGradient id="city" x2="0" y2="1">
+      <stop stop-color="#526c80"/><stop offset="1" stop-color="#16283a"/>
+    </linearGradient>
+    <style>
+      .ink{font-family:Inter,Arial,sans-serif;fill:#17283b}.muted{font-family:Inter,Arial,sans-serif;fill:#53677c}
+      .white{font-family:Inter,Arial,sans-serif;fill:#f6f8fa}.label{font:700 15px Inter,Arial,sans-serif;letter-spacing:1.2px;fill:#28768d}
+      .title{font:700 30px Inter,Arial,sans-serif;fill:#17283b}.body{font:16px Inter,Arial,sans-serif;fill:#344b61}
+      .small{font:13px Inter,Arial,sans-serif;fill:#53677c}.phone{fill:#fff;stroke:#c5d2dc;stroke-width:2}
+    </style>
+  </defs>
+  <rect width="1600" height="1000" fill="#edf2f6"/>
+  <text x="48" y="43" class="label">OXYGEN · SG.2 · COMPOSITION ADDENDUM</text>
+  <text x="48" y="89" class="title">Give the scrubber room to work</text>
+  <text x="48" y="123" class="body">Draft UI artwork + behavior board · pending owner review · 2026-10-31</text>
+  <rect x="1331" y="39" width="220" height="44" rx="22" fill="#fff1d5" stroke="#d4a451"/>
+  <text x="1441" y="67" text-anchor="middle" class="label" fill="#865913">PROPOSAL</text>
+
+  <text x="53" y="183" class="label">CURRENT INSTALLED HIERARCHY</text>
+  <text x="535" y="183" class="label">PROPOSED HIERARCHY</text>
+  <rect x="48" y="204" width="420" height="736" rx="32" fill="#102338"/>
+  <rect x="65" y="222" width="386" height="700" rx="20" fill="url(#screen)"/>
+  <path d="M65 495 Q145 465 210 491 Q284 467 451 501 L451 922 L65 922Z" fill="url(#city)" opacity=".95"/>
+  <path d="M65 526 L104 500 130 523 157 493 190 520 227 500 253 526 280 498 310 520 340 489 372 526 410 497 451 523V922H65Z" fill="#263b50" opacity=".62"/>
+  <text x="90" y="257" class="white" font-size="13" font-weight="700">OXYGEN / TIME LAB · CHICAGO</text>
+  <text x="258" y="340" class="white" font-size="14" text-anchor="middle">Selected 5:57 PM</text>
+  <text x="258" y="405" class="white" font-size="58" font-weight="300" text-anchor="middle">56°</text>
+  <text x="258" y="436" class="white" font-size="20" text-anchor="middle">cloudy</text>
+  <text x="145" y="558" class="white" font-size="14">HIGH 58°</text>
+  <text x="325" y="558" class="white" font-size="14">3% · 10 mph</text>
+  <rect x="66" y="792" width="384" height="129" fill="#101e2d" opacity=".77"/>
+  <text x="89" y="831" class="white" font-size="12">WED      THU      FRI      SAT      SUN      MON</text>
+  <line x1="83" y1="867" x2="432" y2="867" stroke="#c3d3dd" stroke-width="2" opacity=".6"/>
+  <path d="M150 856v25 M210 856v25 M270 856v25 M330 856v25 M390 856v25" stroke="#d5e0e7" stroke-width="2"/>
+  <circle cx="270" cy="867" r="5" fill="#ffe2a7"/>
+  <rect x="67" y="792" width="383" height="129" rx="2" fill="none" stroke="#edb04c" stroke-width="3" stroke-dasharray="7 6"/>
+  <text x="265" y="908" text-anchor="middle" class="white" font-size="12">84 dp · one compact rail</text>
+
+  <rect x="535" y="204" width="420" height="736" rx="32" fill="#102338"/>
+  <rect x="552" y="222" width="386" height="700" rx="20" fill="url(#screen)"/>
+  <path d="M552 495 Q632 465 697 491 Q771 467 938 501 L938 922 L552 922Z" fill="url(#city)" opacity=".95"/>
+  <path d="M552 526 L591 500 617 523 644 493 677 520 714 500 740 526 767 498 797 520 827 489 859 526 897 497 938 523V922H552Z" fill="#263b50" opacity=".62"/>
+  <text x="577" y="257" class="white" font-size="13" font-weight="700">OXYGEN / TIME LAB · CHICAGO</text>
+  <text x="745" y="324" class="white" font-size="14" text-anchor="middle">Selected 5:57 PM</text>
+  <text x="745" y="382" class="white" font-size="54" font-weight="300" text-anchor="middle">56°</text>
+  <text x="745" y="412" class="white" font-size="20" text-anchor="middle">cloudy</text>
+  <text x="650" y="485" class="white" font-size="14">HIGH 58°</text>
+  <text x="815" y="485" class="white" font-size="14">3% · 10 mph</text>
+  <rect x="553" y="739" width="384" height="182" fill="#101e2d" opacity=".79"/>
+  <text x="745" y="781" text-anchor="middle" class="white" font-size="11" font-weight="700">DATE CONTEXT</text>
+  <text x="580" y="803" class="white" font-size="12">WED      THU      FRI      SAT      SUN      MON</text>
+  <line x1="575" y1="818" x2="915" y2="818" stroke="#c3d3dd" stroke-width="2" opacity=".6"/>
+  <path d="M638 810v16 M696 810v16 M754 810v16 M812 810v16 M870 810v16" stroke="#d5e0e7" stroke-width="2"/>
+  <text x="745" y="842" text-anchor="middle" class="white" font-size="11" font-weight="700">SCRUB RAIL · HOURLY DETAIL WHEN ZOOMED</text>
+  <line x1="575" y1="861" x2="915" y2="861" stroke="#c3d3dd" stroke-width="2" opacity=".75"/>
+  <path d="M600 852v18 M628 854v14 M656 852v18 M684 854v14 M712 852v18 M740 851v21 M768 852v18 M796 854v14 M824 852v18 M852 854v14 M880 852v18 M908 854v14" stroke="#d5e0e7" stroke-width="2"/>
+  <path d="M745 851v22" stroke="#ffe2a7" stroke-width="3"/>
+  <rect x="709" y="877" width="72" height="19" rx="9" fill="#fff0c9"/>
+  <text x="745" y="890" text-anchor="middle" class="ink" font-size="10" font-weight="700">5:57 PM</text>
+  <text x="745" y="913" text-anchor="middle" class="white" font-size="10">120 dp · two bands</text>
+  <rect x="554" y="761" width="383" height="160" rx="2" fill="none" stroke="#40d0d4" stroke-width="3" stroke-dasharray="7 6"/>
+
+  <text x="1005" y="183" class="label">DESIGN INTENT</text>
+  <rect x="995" y="204" width="560" height="280" rx="20" fill="#fff" stroke="#d4dfe7"/>
+  <text x="1025" y="246" class="ink" font-size="21" font-weight="700">More vertical touch space</text>
+  <text x="1025" y="283" class="body">• Grow the timeline from 84 dp to about 120 dp.</text>
+  <text x="1025" y="316" class="body">• Use two bands: date context and scrub rail.</text>
+  <text x="1025" y="349" class="body">• Move the forecast cluster and lower facts upward.</text>
+  <text x="1025" y="382" class="body">• Keep city, sky share, and weather composition intact.</text>
+  <text x="1025" y="415" class="body">• Keep selected time attached to the rail playhead.</text>
+  <text x="1025" y="458" class="small">Existing selected-time, scale, gesture, and data semantics.</text>
+
+  <rect x="995" y="505" width="560" height="217" rx="20" fill="#fff" stroke="#d4dfe7"/>
+  <text x="1025" y="547" class="label">BEHAVIOR CONTRACT</text>
+  <text x="1025" y="583" class="body">Selected instant ↔ readout ↔ playhead stay paired.</text>
+  <text x="1025" y="616" class="body">Daily overview and hourly precision keep their ownership.</text>
+  <text x="1025" y="649" class="body">Zoom changes the scale; it never changes selected time.</text>
+  <text x="1025" y="682" class="body">Large text and compact screens keep all three bands legible.</text>
+
+  <rect x="995" y="743" width="560" height="197" rx="20" fill="#e1ebf1"/>
+  <text x="1025" y="786" class="label">REVIEW BEFORE IMPLEMENTATION</text>
+  <text x="1025" y="822" class="body">Pixel portrait + 360×640 dp compact.</text>
+  <text x="1025" y="855" class="body">Default + 1.3 font; RTL and reduced-motion impact.</text>
+  <text x="1025" y="888" class="body">Check text/facts clearance, gestures, and timeline readability.</text>
+  <text x="1025" y="923" class="small">This proposal changes the previously approved screen footprint.</text>
+</svg>
