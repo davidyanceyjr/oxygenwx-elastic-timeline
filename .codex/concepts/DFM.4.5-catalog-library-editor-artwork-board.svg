@@ -1,0 +1,99 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1920" height="1080" viewBox="0 0 1920 1080">
+<defs>
+  <linearGradient id="sky" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#b7dae3"/><stop offset="1" stop-color="#e9eff0"/></linearGradient>
+  <style>
+    .bg{fill:#edf2f4}.title{font:700 31px Inter,Arial,sans-serif;fill:#14283c}.sub{font:16px Inter,Arial,sans-serif;fill:#52697a}.eye{font:700 13px Inter,Arial,sans-serif;letter-spacing:1.35px;fill:#227889}.h{font:700 18px Inter,Arial,sans-serif;fill:#18334b}.body{font:15px Inter,Arial,sans-serif;fill:#304a5d}.small{font:13px Inter,Arial,sans-serif;fill:#5b7182}.white{fill:#f7f9fa;font-family:Inter,Arial,sans-serif}.teal{fill:#79d5c5;font-family:Inter,Arial,sans-serif}.panel{fill:#fff;stroke:#d2dee4;stroke-width:2}.dark{fill:#132b40}.field{fill:#f5f8f9;stroke:#b7c8d0;stroke-width:1.5}.chip{fill:#e2f4ef;stroke:#98cfc4;stroke-width:1.5}.amber{fill:#fbf2df;stroke:#ddc58a;stroke-width:1.5}.line{stroke:#aabdc7;stroke-width:2}.muted{fill:#e8eef0}.btn{fill:#f4f8f9;stroke:#b8c9d1;stroke-width:1.4}.btntext{font:700 11px Inter,Arial,sans-serif;fill:#304a5d;letter-spacing:.4px}
+  </style>
+</defs>
+<rect class="bg" width="1920" height="1080"/>
+<text x="52" y="44" class="eye">OXYGEN · DFM.4.5 · OBJECTIVE-SPECIFIC UI ARTWORK BOARD</text>
+<text x="52" y="86" class="title">Catalog library &amp; period-first editor</text>
+<text x="52" y="116" class="sub">Local synthetic workflows · explicit saved-record preview · existing forecast presentation</text>
+<rect x="1518" y="33" width="348" height="48" rx="24" class="amber"/><text x="1692" y="63" text-anchor="middle" class="eye" fill="#86651f">OWNER APPROVED · 2026-11-02</text>
+
+<!-- Catalog library artwork -->
+<rect x="48" y="145" width="590" height="690" rx="20" class="panel"/>
+<text x="72" y="179" class="eye">01 · CATALOG LIBRARY</text>
+<rect x="70" y="198" width="546" height="612" rx="18" fill="#f5f8f9" stroke="#cad8df" stroke-width="2"/>
+<rect x="70" y="198" width="546" height="62" rx="18" class="dark"/><path d="M70 240H616V260H70Z" class="dark"/>
+<text x="92" y="237" class="white" font-size="21" font-weight="700">Forecast catalog</text><text x="592" y="236" text-anchor="end" class="teal" font-size="12">CLOSE</text>
+<text x="92" y="286" class="small">CHICAGO · AMERICA/CHICAGO</text>
+<rect x="92" y="300" width="502" height="43" rx="10" class="chip"/>
+<text x="343" y="327" text-anchor="middle" class="h" font-size="15">+ BUILD NEW SIMULATION</text>
+<text x="92" y="373" class="h">SIMULATED</text><text x="592" y="373" text-anchor="end" class="small">editable · synthetic</text>
+<rect x="92" y="386" width="502" height="150" rx="13" fill="#fff" stroke="#d4dfe4"/>
+<text x="110" y="416" class="h" font-size="15">Autumn rain window</text><text x="110" y="440" class="small">Oct 30 – Nov 3 · 5 local dates</text>
+<rect x="108" y="457" width="135" height="34" rx="9" class="btn"/><text x="175" y="479" text-anchor="middle" class="btntext">EDIT</text>
+<rect x="251" y="457" width="144" height="34" rx="9" class="dark"/><text x="323" y="479" text-anchor="middle" class="white" font-size="11" font-weight="700">PREVIEW</text>
+<rect x="403" y="457" width="173" height="34" rx="9" class="btn"/><text x="489" y="479" text-anchor="middle" class="btntext">CAPTURE REPLAY</text>
+<text x="92" y="574" class="h">REPLAY · FIXED SNAPSHOTS</text><text x="592" y="574" text-anchor="end" class="small">read-only</text>
+<rect x="92" y="587" width="502" height="116" rx="13" fill="#fff" stroke="#d4dfe4"/>
+<text x="110" y="616" class="h" font-size="15">Clear-to-storm study</text><text x="110" y="640" class="small">captured from SIMULATED · immutable</text>
+<rect x="110" y="654" width="146" height="32" rx="9" class="dark"/><text x="183" y="675" text-anchor="middle" class="white" font-size="10" font-weight="700">PREVIEW REPLAY</text>
+<text x="92" y="738" class="small">Saved here on this debug installation.</text>
+<text x="92" y="765" class="small">Both types stay synthetic; LIVE and location are untouched.</text>
+
+<!-- Period first editor artwork -->
+<rect x="665" y="145" width="590" height="690" rx="20" class="panel"/>
+<text x="689" y="179" class="eye">02 · PERIOD-FIRST EDITOR</text>
+<rect x="687" y="198" width="546" height="612" rx="18" fill="#f5f8f9" stroke="#cad8df" stroke-width="2"/>
+<rect x="687" y="198" width="546" height="62" rx="18" class="dark"/><path d="M687 240H1233V260H687Z" class="dark"/>
+<text x="709" y="237" class="white" font-size="20" font-weight="700">Build simulated catalog</text><text x="1208" y="236" text-anchor="end" class="teal" font-size="12">CLOSE</text>
+<text x="709" y="286" class="eye">STEP 1 · NAME &amp; LOCAL PERIOD</text>
+<text x="709" y="314" class="small">CATALOG NAME</text><rect x="709" y="322" width="502" height="38" rx="8" class="field"/><text x="725" y="347" class="body">Autumn rain window</text>
+<text x="709" y="387" class="small">LOCATION · FIXED FOR THIS CATALOG</text><rect x="709" y="395" width="502" height="34" rx="8" class="field"/><text x="725" y="418" class="body" font-size="14">Chicago · America/Chicago</text>
+<rect x="709" y="439" width="240" height="52" rx="9" class="field"/><text x="725" y="458" class="small">START · LOCAL TIME</text><text x="725" y="480" class="body" font-size="14">Oct 30 · 12:00 AM</text>
+<rect x="961" y="439" width="250" height="52" rx="9" class="field"/><text x="977" y="458" class="small">END · LOCAL TIME</text><text x="977" y="480" class="body" font-size="14">Nov 3 · 11:00 PM</text>
+<text x="709" y="524" class="eye">STEP 2 · PLACE SUPPORTED EVENTS</text><text x="1211" y="524" text-anchor="end" class="teal" font-size="12">+ ADD EVENT</text>
+<rect x="709" y="537" width="502" height="76" rx="10" fill="#fff" stroke="#d4dfe4"/>
+<line x1="733" y1="583" x2="1188" y2="583" class="line"/><line x1="770" y1="562" x2="770" y2="593" stroke="#c5d3da"/><line x1="905" y1="562" x2="905" y2="593" stroke="#c5d3da"/><line x1="1040" y1="562" x2="1040" y2="593" stroke="#c5d3da"/><line x1="1150" y1="562" x2="1150" y2="593" stroke="#c5d3da"/>
+<rect x="816" y="553" width="224" height="29" rx="8" fill="#579da3"/><text x="928" y="572" text-anchor="middle" class="white" font-size="11">RAIN · OCT 31 · 6–11 PM</text>
+<text x="735" y="605" class="small" font-size="10">OCT 30</text><text x="1080" y="605" class="small" font-size="10">NOV 3</text>
+<rect x="709" y="623" width="158" height="40" rx="8" class="field"/><text x="724" y="648" class="body" font-size="13">Rain condition ▾</text>
+<rect x="878" y="623" width="145" height="40" rx="8" class="field"/><text x="892" y="648" class="body" font-size="13">Chance 60% ▾</text>
+<rect x="1034" y="623" width="177" height="40" rx="8" class="field"/><text x="1048" y="648" class="body" font-size="13">Amount unavailable ▾</text>
+<rect x="709" y="674" width="502" height="48" rx="9" class="amber"/><text x="725" y="695" class="h" font-size="13">Unavailable stays unavailable</text><text x="725" y="713" class="small" font-size="11">No guessed condition or silent zero. Full 44-date horizon remains.</text>
+<rect x="709" y="739" width="240" height="40" rx="9" class="chip"/><text x="829" y="764" text-anchor="middle" class="body" font-size="12" font-weight="700">SAVE SIMULATION</text>
+<rect x="961" y="739" width="250" height="40" rx="9" fill="#e7edf0" stroke="#d2dee4"/><text x="1086" y="764" text-anchor="middle" class="small" font-size="12">CANCEL</text>
+<text x="709" y="797" class="small" font-size="11">Save returns to the library. Preview is a separate action on a saved item.</text>
+
+<!-- Existing main screen preview artwork -->
+<rect x="1282" y="145" width="590" height="690" rx="20" class="panel"/>
+<text x="1306" y="179" class="eye">03 · EXPLICIT SYNTHETIC PREVIEW</text>
+<rect x="1304" y="198" width="546" height="612" rx="18" fill="#f5f8f9" stroke="#cad8df" stroke-width="2"/>
+<rect x="1304" y="198" width="546" height="50" rx="18" class="dark"/><path d="M1304 230H1850V248H1304Z" class="dark"/>
+<text x="1326" y="230" class="white" font-size="17" font-weight="700">Chicago</text><text x="1828" y="229" text-anchor="end" class="teal" font-size="11">DEBUG MENU</text>
+<rect x="1326" y="260" width="164" height="25" rx="12" class="amber"/><text x="1408" y="277" text-anchor="middle" class="eye" font-size="10" fill="#86651f">DEMO DATA</text>
+<text x="1827" y="278" text-anchor="end" class="small">SIMULATED or REPLAY source in forecast details</text>
+<rect x="1305" y="291" width="544" height="206" fill="url(#sky)"/>
+<circle cx="1749" cy="337" r="24" fill="#f2c974" opacity=".85"/>
+<path d="M1305 465 Q1390 438 1474 460 T1645 452 T1849 457 V498 H1305Z" fill="#aabec0" opacity=".56"/>
+<path d="M1305 478 L1305 448 L1348 448 L1348 431 L1380 431 L1380 459 L1414 459 L1414 421 L1456 421 L1456 451 L1494 451 L1494 438 L1534 438 L1534 466 L1582 466 L1582 426 L1620 426 L1620 452 L1660 452 L1660 436 L1704 436 L1704 465 L1742 465 L1742 418 L1780 418 L1780 453 L1812 453 L1812 438 L1849 438 L1849 498 L1305 498Z" fill="#405f6a" opacity=".72"/>
+<text x="1331" y="536" class="small">SUNDAY · NOV 1 · 6:00 PM</text><text x="1331" y="590" class="title" font-size="46">52°</text><text x="1467" y="575" class="h">Steady rain</text><text x="1467" y="599" class="small">Selected forecast time</text>
+<line x1="1330" y1="622" x2="1824" y2="622" stroke="#d0dce1"/>
+<text x="1331" y="650" class="small">HIGH / LOW</text><text x="1331" y="675" class="h" font-size="15">58° / 44°</text>
+<text x="1498" y="650" class="small">PRECIPITATION CHANCE</text><text x="1498" y="675" class="h" font-size="15">60%</text>
+<text x="1693" y="650" class="small">WIND</text><text x="1693" y="675" class="h" font-size="15">8 mph</text>
+<text x="1331" y="714" class="small">TIME TAPE · existing daily/hourly gestures</text>
+<rect x="1328" y="729" width="498" height="42" rx="9" fill="#fff" stroke="#d2dee4"/>
+<line x1="1352" y1="750" x2="1801" y2="750" class="line"/><line x1="1352" y1="742" x2="1352" y2="759" stroke="#93a9b4"/><line x1="1410" y1="742" x2="1410" y2="759" stroke="#93a9b4"/><line x1="1468" y1="742" x2="1468" y2="759" stroke="#93a9b4"/><line x1="1526" y1="742" x2="1526" y2="759" stroke="#93a9b4"/><line x1="1584" y1="738" x2="1584" y2="762" stroke="#1b8290" stroke-width="3"/><line x1="1642" y1="742" x2="1642" y2="759" stroke="#93a9b4"/><line x1="1700" y1="742" x2="1700" y2="759" stroke="#93a9b4"/><line x1="1758" y1="742" x2="1758" y2="759" stroke="#93a9b4"/>
+<text x="1307" y="795" class="small" font-size="11">Same main scene and tape; DEMO DATA stays visible.</text>
+
+<!-- Contract strip -->
+<rect x="48" y="858" width="1108" height="184" rx="18" class="panel"/>
+<text x="72" y="892" class="eye">BEHAVIOR GATES</text>
+<text x="72" y="925" class="h" font-size="15">1 · Period defines event editing</text><text x="72" y="948" class="small">Full D−30…D+13 window; baseline remains outside authored period.</text>
+<text x="72" y="986" class="h" font-size="15">2 · Save does not activate</text><text x="72" y="1009" class="small">Explicit Preview uses a saved, revalidated SIMULATED or REPLAY record.</text>
+<text x="624" y="925" class="h" font-size="15">3 · Type and source remain honest</text><text x="624" y="948" class="small">Missing ≠ zero · chance ≠ amount · unsupported stays absent.</text>
+<text x="624" y="986" class="h" font-size="15">4 · Preserve existing boundaries</text><text x="624" y="1009" class="small">No LIVE/provider/cache/location mutation; debug exit restores the exact checkpoint.</text>
+
+<rect x="1180" y="858" width="692" height="184" rx="18" class="panel"/>
+<text x="1204" y="892" class="eye">FAIL-CLOSED · ALTERNATE STATE</text>
+<rect x="1204" y="908" width="644" height="112" rx="13" class="amber"/>
+<text x="1224" y="938" class="h" font-size="16">Can't preview this saved catalog</text>
+<text x="1224" y="964" class="body" font-size="13">The saved record is missing, invalid, or changed. Your current forecast</text>
+<text x="1224" y="984" class="body" font-size="13">and selected time are unchanged. Return to the catalog and choose another item.</text>
+<rect x="1642" y="991" width="184" height="23" rx="7" class="dark"/><text x="1734" y="1007" text-anchor="middle" class="white" font-size="10" font-weight="700">BACK TO CATALOG</text>
+
+<text x="52" y="1067" class="small" font-size="11">OWNER-APPROVED BOARD · Sample values and scene shapes are illustrative; this is not a renderer redesign or installed acceptance evidence.</text>
+</svg>

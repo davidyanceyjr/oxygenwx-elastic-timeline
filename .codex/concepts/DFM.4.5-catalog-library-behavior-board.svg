@@ -1,0 +1,110 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1920" height="1080" viewBox="0 0 1920 1080">
+<defs>
+  <marker id="arrow" markerWidth="12" markerHeight="12" refX="10" refY="6" orient="auto"><path d="M1 1L11 6L1 11" fill="none" stroke="#91aabc" stroke-width="2"/></marker>
+  <style>
+    .bg{fill:#111f2d}.orb{fill:#20354a;opacity:.45}.card{fill:#20364a;stroke:#66869c;stroke-width:1.5}.tealCard{fill:#174b58;stroke:#4cb5ba;stroke-width:1.5}.purpleCard{fill:#473b5e;stroke:#a48cc1;stroke-width:1.5}.amberCard{fill:#4e472f;stroke:#e1b64f;stroke-width:1.5}.redCard{fill:#482f35;stroke:#ed8272;stroke-width:1.5}.title{font:700 31px Inter,Arial,sans-serif;fill:#eef4f8}.sub{font:16px Inter,Arial,sans-serif;fill:#b7c7d2}.eye{font:700 12px Inter,Arial,sans-serif;letter-spacing:1.25px;fill:#9fc1d0}.h{font:700 18px Inter,Arial,sans-serif;fill:#f2f6f8}.body{font:15px Inter,Arial,sans-serif;fill:#d8e3e9}.small{font:13px Inter,Arial,sans-serif;fill:#b5c6d1}.teal{fill:#91e0d0;font-family:Inter,Arial,sans-serif}.gold{fill:#f3cf78;font-family:Inter,Arial,sans-serif}.line{stroke:#91aabc;stroke-width:2;fill:none;marker-end:url(#arrow)}
+  </style>
+</defs>
+<rect class="bg" width="1920" height="1080"/><circle cx="1770" cy="85" r="190" class="orb"/><circle cx="95" cy="1040" r="170" class="orb"/>
+<text x="52" y="46" class="eye">OXYGEN · DFM.4.5 · BEHAVIOR BOARD</text>
+<text x="52" y="91" class="title">From debug command to safe synthetic preview</text>
+<text x="52" y="122" class="sub">Catalog authoring stays local; only a saved, revalidated record crosses into the existing selection path.</text>
+<rect x="1514" y="34" width="354" height="46" rx="23" class="amberCard"/><text x="1691" y="62" text-anchor="middle" class="gold" font-size="12" font-weight="700" letter-spacing="1">OWNER APPROVED · 2026-11-02</text>
+
+<!-- Main ordered flow -->
+<rect x="48" y="153" width="332" height="314" rx="16" class="card"/>
+<text x="72" y="184" class="eye">01 · COMMAND / SESSION GATE</text>
+<text x="72" y="218" class="h">Submit #PICKER</text>
+<rect x="70" y="238" width="288" height="82" rx="11" class="tealCard"/>
+<text x="88" y="264" class="teal" font-size="12" font-weight="700">ACTIVE DEBUG SESSION</text><text x="88" y="291" class="body">Open the catalog library.</text>
+<rect x="70" y="331" width="288" height="82" rx="11" class="redCard"/>
+<text x="88" y="357" fill="#ffad9d" font-size="12" font-weight="700">NO ACTIVE SESSION / RELEASE</text><text x="88" y="384" class="body">Continue ordinary place search.</text>
+<text x="72" y="445" class="small">No picker dispatch outside debug.</text>
+
+<rect x="408" y="153" width="332" height="314" rx="16" class="card"/>
+<text x="432" y="184" class="eye">02 · CATALOG LIBRARY</text>
+<text x="432" y="218" class="h">Choose a local record</text>
+<rect x="430" y="238" width="288" height="93" rx="11" class="tealCard"/>
+<text x="448" y="264" class="teal" font-size="12" font-weight="700">SIMULATED · EDITABLE</text><text x="448" y="290" class="body">Build / Edit · Preview saved</text><text x="448" y="313" class="body">Capture an immutable REPLAY</text>
+<rect x="430" y="342" width="288" height="76" rx="11" class="purpleCard"/>
+<text x="448" y="368" fill="#d5c5ef" font-size="12" font-weight="700">REPLAY · FIXED SNAPSHOT</text><text x="448" y="395" class="body">Read-only · Preview only</text>
+<text x="432" y="445" class="small">Saved items are local to this debug install.</text>
+
+<rect x="768" y="153" width="374" height="314" rx="16" class="card"/>
+<text x="792" y="184" class="eye">03 · PERIOD-FIRST EDITOR</text>
+<text x="792" y="218" class="h">Build or edit SIMULATED</text>
+<text x="792" y="254" class="body">Name + fixed location / IANA zone</text>
+<text x="792" y="284" class="body">Choose one contiguous local-time period</text>
+<text x="792" y="314" class="body">Add supported typed events in that period</text>
+<line x1="792" y1="333" x2="1118" y2="333" stroke="#66869c"/>
+<text x="792" y="361" class="teal" font-size="14" font-weight="700">SAVE → library · never activates</text>
+<text x="792" y="389" class="small">Cancel discards draft; saved version stays.</text>
+<text x="792" y="440" class="small">Missing ≠ zero · chance ≠ amount</text>
+
+<rect x="1170" y="153" width="310" height="314" rx="16" class="card"/>
+<text x="1194" y="184" class="eye">04 · SAVED RECORD</text>
+<text x="1194" y="218" class="h">SIMULATED or REPLAY</text>
+<text x="1194" y="255" class="body">SIMULATED stays editable.</text>
+<text x="1194" y="283" class="body">REPLAY captures saved values</text><text x="1194" y="306" class="body">and origin; it cannot be edited.</text>
+<line x1="1194" y1="329" x2="1456" y2="329" stroke="#66869c"/>
+<text x="1194" y="357" class="gold" font-size="14" font-weight="700">Full D−30…D+13 catalog</text>
+<text x="1194" y="385" class="small">Authored period is not the horizon.</text>
+<text x="1194" y="440" class="small">Save / capture never activates.</text>
+
+<rect x="1508" y="153" width="364" height="314" rx="16" class="amberCard"/>
+<text x="1532" y="184" class="gold" font-size="12" font-weight="700" letter-spacing="1.2">05 · EXPLICIT PREVIEW GATE</text>
+<text x="1532" y="218" class="h">User chooses Preview</text>
+<text x="1532" y="254" class="body">Only a saved record is eligible.</text>
+<text x="1532" y="282" class="body">Revalidate identity, namespace,</text><text x="1532" y="305" class="body">location, horizon, codec, metadata,</text><text x="1532" y="328" class="body">and saved content at activation.</text>
+<rect x="1530" y="350" width="320" height="52" rx="10" fill="#5e532f" stroke="#e1b64f"/>
+<text x="1550" y="373" class="gold" font-size="12" font-weight="700">VALID → EXISTING COORDINATOR</text><text x="1550" y="391" class="small">Synthetic selected-time path</text>
+
+<!-- Connect ordered stages -->
+<path d="M380 310H401" class="line"/><path d="M740 310H761" class="line"/><path d="M1142 310H1163" class="line"/><path d="M1480 310H1501" class="line"/>
+
+<!-- Branches / outcomes -->
+<rect x="48" y="501" width="572" height="162" rx="16" class="purpleCard"/>
+<text x="72" y="533" class="eye">REPLAY BRANCH · FROM SAVED SIMULATED</text>
+<text x="72" y="571" class="h">Saved SIMULATED</text><text x="250" y="571" class="small">→</text>
+<text x="283" y="571" class="h">Capture REPLAY</text><text x="457" y="571" class="small">→</text>
+<text x="486" y="571" class="h">Preview</text>
+<text x="72" y="610" class="body">Distinct immutable snapshot identity and captured synthetic origin.</text>
+<text x="72" y="638" class="small">REPLAY joins the same saved-record validation gate above.</text>
+
+<rect x="644" y="501" width="576" height="162" rx="16" class="redCard"/>
+<text x="668" y="533" fill="#ffad9d" font-size="12" font-weight="700" letter-spacing="1.2">INVALID / MISSING / CHANGED / MISMATCHED</text>
+<text x="668" y="570" class="h">Fail closed · show a clear error</text>
+<text x="668" y="604" class="body">No fallback, write, or activation. Keep the active catalog</text><text x="668" y="628" class="body">and selected time unchanged; return to the catalog.</text>
+
+<rect x="1244" y="501" width="628" height="162" rx="16" class="tealCard"/>
+<text x="1268" y="533" class="teal" font-size="12" font-weight="700" letter-spacing="1.2">VALID SAVED SIMULATED / REPLAY</text>
+<text x="1268" y="570" class="h">Activate through existing selection path</text>
+<text x="1268" y="604" class="body">Synthetic provenance stays discoverable; normal forecast scene and tape remain.</text>
+<text x="1268" y="635" class="small">Exit debug restores exact pre-session catalog + selected time without I/O.</text>
+
+<!-- Approved invariant strip -->
+<text x="52" y="714" class="eye">APPROVED INVARIANTS THAT SHAPE THE EDITOR FLOW</text>
+<rect x="48" y="738" width="572" height="269" rx="16" class="card"/>
+<text x="72" y="776" class="h">Period and horizon</text>
+<text x="72" y="813" class="body">The local-time period bounds event authoring.</text>
+<text x="72" y="843" class="body">Every record retains D−30…D+13 in its</text><text x="72" y="870" class="body">fixed location timezone.</text>
+<text x="72" y="912" class="body">Deterministic baseline remains outside it.</text>
+<text x="72" y="961" class="small">Real local-hour instants honor DST.</text>
+
+<rect x="644" y="738" width="576" height="269" rx="16" class="card"/>
+<text x="668" y="776" class="h">Typed weather truth</text>
+<text x="668" y="813" class="body">Use supported canonical fields only.</text>
+<text x="668" y="843" class="body">Missing stays unavailable, never zero.</text>
+<text x="668" y="873" class="body">Probability stays distinct from amount.</text>
+<text x="668" y="912" class="body">Unsupported conditions remain absent.</text>
+<text x="668" y="961" class="small">No new weather meaning or fallback facts.</text>
+
+<rect x="1244" y="738" width="628" height="269" rx="16" class="card"/>
+<text x="1268" y="776" class="h">Isolation and restoration</text>
+<text x="1268" y="813" class="body">No LIVE/provider/cache/location mutation.</text>
+<text x="1268" y="843" class="body">No saved-place changes or network request.</text>
+<text x="1268" y="882" class="body">Ordinary location/refresh actions exit debug</text><text x="1268" y="909" class="body">through the existing restore-before-action rule.</text>
+<text x="1268" y="961" class="small">Approved flow companion; no added behavior.</text>
+
+<text x="52" y="1054" class="small" font-size="11">OWNER-APPROVED BEHAVIOR BOARD · Visual flow companion; no additional product rules, implementation proof, or installed acceptance.</text>
+</svg>

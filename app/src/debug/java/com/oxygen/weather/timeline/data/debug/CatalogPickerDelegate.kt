@@ -6,6 +6,7 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -31,6 +32,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
@@ -74,6 +76,7 @@ internal object DiagnosticPresetCodec {
 /** Debug-build request decoder. MainActivity remains the sole activation owner. */
 class CatalogPickerDelegate : ActivityVariantDelegate {
     private var requestError: String? = null
+    private var previewFailureShownInLibrary = false
     private var entryJob: Job? = null
     private var entryGeneration = 0L
     private var sessionGeneration = 0L
@@ -100,7 +103,12 @@ class CatalogPickerDelegate : ActivityVariantDelegate {
     }
 
     override fun onCatalogActivationState(host: ActivityVariantDelegate.Host, state: CatalogActivationState) {
-        DebugCatalogRelay.publish(state, requestError)
+        publishRelay(state)
+    }
+
+    private fun publishRelay(state: CatalogActivationState) {
+        val activation = if (previewFailureShownInLibrary) state.copy(lastError = null) else state
+        DebugCatalogRelay.publish(activation, if (previewFailureShownInLibrary) null else requestError)
     }
 
     override fun createFixturePlaceSearcher(host: ActivityVariantDelegate.Host): PlaceSearcher =
@@ -132,31 +140,80 @@ class CatalogPickerDelegate : ActivityVariantDelegate {
 
     @Composable
     override fun MainScreenOverlay(host: ActivityVariantDelegate.Host, diagnostics: CatalogDiagnosticPresentation) {
-        if (!overlayVisible) return
-        val anyGroup = selectedGroups.isNotEmpty()
-        Surface(
+        val activeOrigin = host.activationCoordinator.state.value.active?.origin
+        val sourceDetail = when (activeOrigin) {
+            CatalogOrigin.SIMULATED -> "SIMULATED source"
+            CatalogOrigin.REPLAY -> "REPLAY · captured from SIMULATED"
+            else -> null
+        }
+        if (sourceDetail == null && !overlayVisible) return
+        Column(
             modifier = Modifier.fillMaxWidth().padding(horizontal = 18.dp),
-            color = Color(0xE6102030), shape = RoundedCornerShape(14.dp), tonalElevation = 3.dp,
+            verticalArrangement = Arrangement.spacedBy(8.dp),
         ) {
-            androidx.compose.foundation.layout.Column(Modifier.padding(10.dp)) {
-                Text("DIAGNOSTICS · LIVE VIEW", color = Color(0xFF9FE5D7), fontWeight = FontWeight.Bold,
-                    style = MaterialTheme.typography.labelSmall)
-                if (DiagnosticGroup.CATALOG in selectedGroups) Text(
-                    "Catalog diagnostics · ${diagnostics.catalog.joinToString(" · ")}",
-                    color = Color.White, style = MaterialTheme.typography.labelSmall,
-                )
-                if (DiagnosticGroup.SELECTION in selectedGroups) {
-                    Text("Time diagnostics · ${diagnostics.selection.firstOrNull() ?: "unavailable"}", color = Color.White,
-                        style = MaterialTheme.typography.labelSmall)
-                    diagnostics.selection.drop(1).forEach {
-                        Text(it, color = Color.White, style = MaterialTheme.typography.labelSmall)
+            if (sourceDetail != null) {
+                Surface(
+                    modifier = Modifier.fillMaxWidth(),
+                    color = Color(0xF2F2F6F5),
+                    shape = RoundedCornerShape(14.dp),
+                    tonalElevation = 3.dp,
+                ) {
+                    Row(
+                        modifier = Modifier.fillMaxWidth().padding(horizontal = 10.dp, vertical = 7.dp),
+                        verticalAlignment = Alignment.CenterVertically,
+                        horizontalArrangement = Arrangement.SpaceBetween,
+                    ) {
+                        Surface(
+                            color = Color(0xFFFFF4D8),
+                            shape = RoundedCornerShape(50),
+                        ) {
+                            Text(
+                                "DEMO DATA",
+                                modifier = Modifier.padding(horizontal = 12.dp, vertical = 5.dp),
+                                color = Color(0xFF166F7B),
+                                fontWeight = FontWeight.Bold,
+                                style = MaterialTheme.typography.labelSmall,
+                                maxLines = 1,
+                            )
+                        }
+                        Text(
+                            sourceDetail,
+                            modifier = Modifier.weight(1f).padding(start = 10.dp),
+                            color = Color(0xFF4C687A),
+                            style = MaterialTheme.typography.labelSmall,
+                            textAlign = TextAlign.End,
+                            maxLines = 2,
+                        )
                     }
                 }
-                if (DiagnosticGroup.MISSING in selectedGroups) Text(
-                    "Missing-field diagnostics · ${diagnostics.missingFields.joinToString()}",
-                    color = Color.White, style = MaterialTheme.typography.labelSmall,
-                )
-                if (!anyGroup) Text("No diagnostic groups selected", color = Color.White, style = MaterialTheme.typography.labelSmall)
+            }
+            if (overlayVisible) {
+                val anyGroup = selectedGroups.isNotEmpty()
+                Surface(
+                    modifier = Modifier.fillMaxWidth(),
+                    color = Color(0xE6102030), shape = RoundedCornerShape(14.dp), tonalElevation = 3.dp,
+                ) {
+                    Column(Modifier.padding(10.dp)) {
+                        Text("DIAGNOSTICS · LIVE VIEW", color = Color(0xFF9FE5D7), fontWeight = FontWeight.Bold,
+                            style = MaterialTheme.typography.labelSmall)
+                        if (DiagnosticGroup.CATALOG in selectedGroups) Text(
+                            "Catalog diagnostics · ${diagnostics.catalog.joinToString(" · ")}",
+                            color = Color.White, style = MaterialTheme.typography.labelSmall,
+                        )
+                        if (DiagnosticGroup.SELECTION in selectedGroups) {
+                            Text("Time diagnostics · ${diagnostics.selection.firstOrNull() ?: "unavailable"}", color = Color.White,
+                                style = MaterialTheme.typography.labelSmall)
+                            diagnostics.selection.drop(1).forEach {
+                                Text(it, color = Color.White, style = MaterialTheme.typography.labelSmall)
+                            }
+                        }
+                        if (DiagnosticGroup.MISSING in selectedGroups) Text(
+                            "Missing-field diagnostics · ${diagnostics.missingFields.joinToString()}",
+                            color = Color.White, style = MaterialTheme.typography.labelSmall,
+                        )
+                        if (!anyGroup) Text("No diagnostic groups selected", color = Color.White, style = MaterialTheme.typography.labelSmall)
+                    }
+                }
             }
         }
     }
@@ -280,6 +337,7 @@ class CatalogPickerDelegate : ActivityVariantDelegate {
             !requestBelongsToSession || (sessionCheckpoint != null && sessionGeneration == requestSessionGeneration)
         }
         requestError = null
+        previewFailureShownInLibrary = false
         val requestJob = host.activityScope.launch(start = CoroutineStart.LAZY) {
             runCatalogRequestLifecycle(
                 work = work@{
@@ -309,7 +367,7 @@ class CatalogPickerDelegate : ActivityVariantDelegate {
                             "Selected instant is outside the active catalog's solar inspection windows"
                         }
                         host.activationCoordinator.selectInstant(instant, active.viewGeneration)
-                        DebugCatalogRelay.publish(host.activationCoordinator.state.value, requestError)
+                        publishRelay(host.activationCoordinator.state.value)
                         return@work false
                     }
                     processCatalogActivationRequest(
@@ -325,19 +383,49 @@ class CatalogPickerDelegate : ActivityVariantDelegate {
                                 request.getStringExtra(EXTRA_REPLAY_ID),
                                 request.getBooleanExtra(EXTRA_FORCE_REFRESH, false),
                                 request.getStringExtra(EXTRA_SELECTED_INSTANT),
+                                request.getBooleanExtra(EXTRA_SAVED_PREVIEW, false),
                             )
                         },
                         findLocation = { host.savedLocations.find(it) },
                         stillCurrent = isCurrentSessionRequest,
+                        previewSaved = { activationRequest ->
+                            val db = androidx.room.Room.databaseBuilder(host.activity.applicationContext,
+                                com.oxygen.weather.timeline.data.catalog.CatalogStorageDatabase::class.java,
+                                "oxygen-time-lab-catalog.db")
+                                .addMigrations(
+                                    com.oxygen.weather.timeline.data.catalog.CatalogStorageDatabase.MIGRATION_1_2,
+                                    com.oxygen.weather.timeline.data.catalog.CatalogStorageDatabase.MIGRATION_2_3,
+                                ).build()
+                            try {
+                                val repository = DebugAuthoredCatalogRepository(
+                                    com.oxygen.weather.timeline.data.catalog.CatalogDatasetStorage(db.datasets()),
+                                    DebugAuthoredCatalogMetadataStore(host.activity.getSharedPreferences(
+                                        "debug_authored_catalogs", android.content.Context.MODE_PRIVATE)),
+                                )
+                                val completion = host.activationCoordinator.requestSavedCatalogPreview(activationRequest,
+                                    repository.previewMetadataValidator(activationRequest.location, activationRequest.datasetId))
+                                when (val result = completion.await()) {
+                                    is DebugActivationResult.Success -> true
+                                    is DebugActivationResult.Failure -> error(result.message)
+                                    DebugActivationResult.Superseded -> false
+                                }
+                            } finally { db.close() }
+                        },
                     )
                 },
                 coordinator = host.activationCoordinator,
                 participant = participant,
-                showPicker = { showPicker(host) },
+                showPicker = {
+                    if (request.getBooleanExtra(EXTRA_SAVED_PREVIEW, false)) {
+                        showPicker(host, openAuthoredLibrary = true, previewError = requestError)
+                    } else showPicker(host)
+                },
+                showPickerAfterSuccess = { !request.getBooleanExtra(EXTRA_SAVED_PREVIEW, false) },
                 stillCurrent = isCurrentSessionRequest,
                 reportFailure = { error ->
                     requestError = error.message ?: "Debug activation request was rejected"
-                    DebugCatalogRelay.publish(host.activationCoordinator.state.value, requestError)
+                    previewFailureShownInLibrary = request.getBooleanExtra(EXTRA_SAVED_PREVIEW, false)
+                    publishRelay(host.activationCoordinator.state.value)
                 },
             )
         }
@@ -383,6 +471,8 @@ class CatalogPickerDelegate : ActivityVariantDelegate {
         sessionRequestJobs.clear()
         overlayVisible = false
         configurePresets = false
+        requestError = null
+        previewFailureShownInLibrary = false
         host.setDebugSessionMenuVisible(false)
         val checkpoint = sessionCheckpoint
         sessionCheckpoint = null
@@ -405,8 +495,15 @@ class CatalogPickerDelegate : ActivityVariantDelegate {
         preferences(host).edit().putString("preset:$name", DiagnosticPresetCodec.encode(groups)).apply()
     }
 
-    private fun showPicker(host: ActivityVariantDelegate.Host) {
-        host.activity.startActivity(Intent(host.activity, DebugCatalogActivity::class.java))
+    private fun showPicker(
+        host: ActivityVariantDelegate.Host,
+        openAuthoredLibrary: Boolean = false,
+        previewError: String? = null,
+    ) {
+        host.activity.startActivity(Intent(host.activity, DebugCatalogActivity::class.java)
+            .putExtra(DebugCatalogActivity.EXTRA_DEBUG_SESSION, true)
+            .putExtra(DebugCatalogActivity.EXTRA_OPEN_AUTHORED_LIBRARY, openAuthoredLibrary)
+            .putExtra(DebugCatalogActivity.EXTRA_AUTHORED_PREVIEW_ERROR, previewError))
     }
 
     companion object {
@@ -420,6 +517,7 @@ class CatalogPickerDelegate : ActivityVariantDelegate {
         const val EXTRA_REPLAY_ID = "debug_catalog_replay_id"
         const val EXTRA_FORCE_REFRESH = "debug_catalog_force_refresh"
         const val EXTRA_SELECTED_INSTANT = "debug_catalog_selected_instant"
+        const val EXTRA_SAVED_PREVIEW = "debug_catalog_saved_preview"
     }
 }
 
@@ -445,9 +543,11 @@ internal suspend fun runCatalogRequestLifecycle(
     showPicker: () -> Unit,
     reportFailure: (Exception) -> Unit,
     stillCurrent: () -> Boolean = { true },
+    showPickerAfterSuccess: () -> Boolean = { true },
 ) {
     try {
-        if (work() && stillCurrent() && (participant == null || coordinator.finishAlternateStartup(participant))) showPicker()
+        if (work() && stillCurrent() && (participant == null || coordinator.finishAlternateStartup(participant)) &&
+            showPickerAfterSuccess()) showPicker()
     } catch (cancelled: CancellationException) {
         throw cancelled
     } catch (error: Exception) {
@@ -498,6 +598,7 @@ internal data class CatalogIntentValues(
     val replayId: String?,
     val forceRefresh: Boolean,
     val selectedInstant: String?,
+    val savedPreview: Boolean = false,
 )
 
 /** Shared startup request path; Android Intent access stays at the calling boundary. */
@@ -508,6 +609,14 @@ internal suspend fun processCatalogActivationRequest(
     findLocation: suspend (LocationId) -> SavedLocationResult,
     applySelection: suspend (Instant, Long) -> Unit = { instant, generation -> coordinator.selectInstant(instant, generation) },
     stillCurrent: () -> Boolean = { true },
+    previewSaved: suspend (CatalogActivationRequest) -> Boolean = { request ->
+        val result = coordinator.requestDebugCatalog(request).await()
+        when (result) {
+            is DebugActivationResult.Success -> true
+            is DebugActivationResult.Failure -> error(result.message)
+            DebugActivationResult.Superseded -> false
+        }
+    },
 ): Boolean {
     val values = readRequest()
     currentCoroutineContext().ensureActive()
@@ -532,7 +641,11 @@ internal suspend fun processCatalogActivationRequest(
         (origin == CatalogOrigin.REPLAY && datasetId.value == DebugCatalogActivity.SG4_GAP_REPLAY_ID)) {
         "Exact-time selection is only available for the SG.4 debug replay"
     }
-    return activateCatalogForRequest(coordinator, participant,
-        CatalogActivationRequest(saved.location.location, origin, datasetId, replayId, values.forceRefresh), selectedInstant,
-        applySelection, stillCurrent)
+    val activationRequest = CatalogActivationRequest(saved.location.location, origin, datasetId, replayId, values.forceRefresh)
+    if (values.savedPreview) {
+        require(origin == CatalogOrigin.SIMULATED || origin == CatalogOrigin.REPLAY) { "Only synthetic records can be previewed" }
+        require(selectedInstant == null) { "Saved preview cannot include a selected-time override" }
+        return previewSaved(activationRequest)
+    }
+    return activateCatalogForRequest(coordinator, participant, activationRequest, selectedInstant, applySelection, stillCurrent)
 }

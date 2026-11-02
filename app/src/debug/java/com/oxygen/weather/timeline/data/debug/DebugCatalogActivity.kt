@@ -60,10 +60,18 @@ class DebugCatalogActivity : ComponentActivity() {
     private var replayIds by mutableStateOf<List<String>>(emptyList())
     private var fixtureStatus by mutableStateOf("Preparing Chicago replay fixture…")
     private var fixtureReady by mutableStateOf(false)
+    private var showAuthoredLibrary by mutableStateOf(false)
+    private var authoredPreviewError by mutableStateOf<String?>(null)
     private var reloadJob: Job? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        if (!intent.getBooleanExtra(EXTRA_DEBUG_SESSION, false)) {
+            finish()
+            return
+        }
+        showAuthoredLibrary = intent.getBooleanExtra(EXTRA_OPEN_AUTHORED_LIBRARY, false)
+        authoredPreviewError = intent.getStringExtra(EXTRA_AUTHORED_PREVIEW_ERROR)
         database = Room.databaseBuilder(applicationContext, CatalogStorageDatabase::class.java,
             "oxygen-time-lab-catalog.db")
             .addMigrations(CatalogStorageDatabase.MIGRATION_1_2, CatalogStorageDatabase.MIGRATION_2_3)
@@ -166,6 +174,20 @@ class DebugCatalogActivity : ComponentActivity() {
         }
 
         MaterialTheme {
+            if (showAuthoredLibrary) {
+                AuthoredCatalogLibrary(
+                    activity = this,
+                    locations = saved,
+                    storage = storage,
+                    initialPreviewError = authoredPreviewError,
+                    onBack = {
+                        showAuthoredLibrary = false
+                        authoredPreviewError = null
+                    },
+                    onPreview = { location, origin, id -> routeSavedPreview(location, origin, id) },
+                )
+                return@MaterialTheme
+            }
             Column(
                 Modifier.fillMaxSize()
                     .background(MaterialTheme.colorScheme.background)
@@ -173,6 +195,7 @@ class DebugCatalogActivity : ComponentActivity() {
                 verticalArrangement = Arrangement.spacedBy(12.dp),
             ) {
                 Text("Debug dataset picker", style = MaterialTheme.typography.headlineSmall)
+                OutlinedButton(onClick = { showAuthoredLibrary = true }) { Text("Catalog library and editor") }
                 Text("Catalog activation and 44-date timeline review")
                 val current = relay.activation.active
                 if (current != null) Text(
@@ -331,7 +354,24 @@ class DebugCatalogActivity : ComponentActivity() {
         finish()
     }
 
-    private fun routePickerAgain() = startActivity(Intent(this, DebugCatalogActivity::class.java))
+    private fun routeSavedPreview(location: CatalogLocation, origin: CatalogOrigin, dataset: String) {
+        require(origin == CatalogOrigin.SIMULATED || origin == CatalogOrigin.REPLAY)
+        val request = Intent(this, MainActivity::class.java)
+            .setAction(ACTION_ACTIVATE_CATALOG)
+            .putExtra(EXTRA_VERSION, CONTRACT_VERSION)
+            .putExtra(EXTRA_LOCATION_ID, location.id.value)
+            .putExtra(EXTRA_ORIGIN, origin.name)
+            .putExtra(EXTRA_DATASET_ID, dataset)
+            .putExtra(EXTRA_FORCE_REFRESH, false)
+            .putExtra(CatalogPickerDelegate.EXTRA_SAVED_PREVIEW, true)
+        if (origin == CatalogOrigin.REPLAY) request.putExtra(EXTRA_REPLAY_ID, dataset)
+        request.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_SINGLE_TOP)
+        startActivity(request)
+        finish()
+    }
+
+    private fun routePickerAgain() = startActivity(Intent(this, DebugCatalogActivity::class.java)
+        .putExtra(EXTRA_DEBUG_SESSION, true))
 
     private fun openLocationSelector() = startActivity(Intent(this, MainActivity::class.java)
         .putExtra("location_selector", true).addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_SINGLE_TOP))
@@ -349,6 +389,9 @@ class DebugCatalogActivity : ComponentActivity() {
         const val EXTRA_REPLAY_ID = CatalogPickerDelegate.EXTRA_REPLAY_ID
         const val EXTRA_FORCE_REFRESH = CatalogPickerDelegate.EXTRA_FORCE_REFRESH
         const val EXTRA_SELECTED_INSTANT = CatalogPickerDelegate.EXTRA_SELECTED_INSTANT
+        const val EXTRA_DEBUG_SESSION = "debug_catalog_session_active"
+        const val EXTRA_OPEN_AUTHORED_LIBRARY = "debug_catalog_open_authored_library"
+        const val EXTRA_AUTHORED_PREVIEW_ERROR = "debug_catalog_authored_preview_error"
         const val SIMULATED_DATASET_ID = "wx22-debug-simulated-v3"
         const val LIVE_DATASET_ID = "forecast-44d"
         const val CHICAGO_REPLAY_ID = "wx22-chicago-replay-v3"

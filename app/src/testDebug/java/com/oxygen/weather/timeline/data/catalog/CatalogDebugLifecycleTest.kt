@@ -59,6 +59,37 @@ class CatalogDebugLifecycleTest : CatalogCoordinatorTestSupport() {
         Unit
     }
 
+    @Test fun savedPreviewSuccessKeepsForecastVisibleButFailureInvokesPickerCallback() = runBlocking {
+        val h = harness()
+        val coordinator = h.coordinator(this)
+        var picker = 0
+        var failures = 0
+        val participant = coordinator.beginAlternateStartup()
+
+        runCatalogRequestLifecycle(
+            work = { true },
+            coordinator = coordinator,
+            participant = participant,
+            showPicker = { picker++ },
+            reportFailure = { failures++ },
+            showPickerAfterSuccess = { false },
+        )
+        withTimeout(3000) { coordinator.captureSettledCheckpoint() }
+        assertEquals(0, picker)
+        assertEquals(0, failures)
+
+        runCatalogRequestLifecycle(
+            work = { throw IllegalStateException("saved preview rejected") },
+            coordinator = coordinator,
+            participant = null,
+            showPicker = { picker++ },
+            reportFailure = { failures++ },
+            showPickerAfterSuccess = { false },
+        )
+        assertEquals(1, picker)
+        assertEquals(1, failures)
+    }
+
     @Test fun delegateActivationSelectsOnlyItsSuccessfulGeneration() = runBlocking {
         val h = harness()
         val coordinator = h.coordinator(this)

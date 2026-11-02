@@ -5,6 +5,7 @@ import java.time.Instant
 import java.time.LocalDateTime
 import java.time.ZoneId
 import kotlinx.coroutines.runBlocking
+import com.fasterxml.jackson.databind.ObjectMapper
 import org.junit.Assert.assertArrayEquals
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertFalse
@@ -101,6 +102,83 @@ class DebugAuthoredCatalogTest {
         assertNotNull(recording.expectedSupport[day]?.get(CatalogField.WIND_SPEED_KPH))
     }
 
+    @Test fun eventRangesReplaceOnlyCoveredFactsAndRejectGapOnlyRanges() = runBlocking {
+        val asOf = Instant.parse("2026-03-08T12:00:00Z")
+        val first = DebugAuthoredEvent(LocalDateTime.parse("2026-03-08T01:00"),
+            LocalDateTime.parse("2026-03-08T02:00"), DebugAuthoredWeatherValues(
+                conditions = setOf(WeatherCondition.SNOW), temperatureC = -3.0))
+        val second = DebugAuthoredEvent(LocalDateTime.parse("2026-03-08T03:00"),
+            LocalDateTime.parse("2026-03-08T04:00"), DebugAuthoredWeatherValues(
+                conditions = setOf(WeatherCondition.RAIN), temperatureC = 6.0))
+        val definition = DebugAuthoredCatalog("Two events", location, DatasetId("two-events-v1"), asOf,
+            LocalDateTime.parse("2026-03-08T01:00"), LocalDateTime.parse("2026-03-08T04:00"), first.values,
+            listOf(first, second))
+        val recording = DebugAuthoredCatalogMaterializer.materialize(definition)
+        val dayFacts = recording.catalog.facts.filter { it.validTime.atZone(location.timeZone).toLocalDate().toString() == "2026-03-08" }
+        val firstFact = dayFacts.single { it.validTime.atZone(location.timeZone).hour == 1 }
+        val secondFact = dayFacts.single { it.validTime.atZone(location.timeZone).hour == 3 }
+        assertEquals(setOf(WeatherCondition.SNOW), firstFact.conditions)
+        assertEquals(setOf(WeatherCondition.RAIN), secondFact.conditions)
+        assertTrue(dayFacts.none { it.validTime.atZone(location.timeZone).hour == 2 })
+        assertEquals(23, dayFacts.size)
+        val gapOnly = DebugAuthoredCatalog("Gap", location, DatasetId("gap-event-v1"), asOf,
+            LocalDateTime.parse("2026-03-08T01:00"), LocalDateTime.parse("2026-03-08T04:00"), first.values,
+            listOf(DebugAuthoredEvent(LocalDateTime.parse("2026-03-08T02:00"),
+                LocalDateTime.parse("2026-03-08T03:00"), first.values)))
+        try {
+            DebugAuthoredCatalogMaterializer.materialize(gapOnly)
+            fail("A range wholly within the DST gap must be rejected")
+        } catch (_: IllegalArgumentException) { }
+    }
+
+    @Test fun adjacentRangesAreHalfOpenAndInvalidRangesAreRejected() = runBlocking {
+        val asOf = Instant.parse("2026-03-09T12:00:00Z")
+        val day = LocalDateTime.parse("2026-03-09T00:00")
+        val start = day.plusHours(1)
+        val end = day.plusHours(3)
+        val snow = DebugAuthoredWeatherValues(conditions = setOf(WeatherCondition.SNOW), temperatureC = -4.0)
+        val rain = DebugAuthoredWeatherValues(conditions = setOf(WeatherCondition.RAIN), temperatureC = 6.0)
+        val adjacent = DebugAuthoredCatalog(
+            "Adjacent events", location, DatasetId("adjacent-events-v1"), asOf, start, end, snow,
+            listOf(
+                DebugAuthoredEvent(start, start.plusHours(1), snow),
+                DebugAuthoredEvent(start.plusHours(1), end, rain),
+            ),
+        )
+        val recording = DebugAuthoredCatalogMaterializer.materialize(adjacent)
+        val localFacts = recording.catalog.facts.filter {
+            it.validTime.atZone(location.timeZone).toLocalDate().toString() == "2026-03-09"
+        }.associateBy { it.validTime.atZone(location.timeZone).hour }
+        assertEquals(setOf(WeatherCondition.SNOW), localFacts.getValue(1).conditions)
+        assertEquals(setOf(WeatherCondition.RAIN), localFacts.getValue(2).conditions)
+
+        val baselineResult = SimulatedCatalogSource().load(CatalogLoadRequest(location, adjacent.datasetId, asOf))
+        val baseline = when (baselineResult) {
+            is CatalogLoadResult.Success -> baselineResult.catalog
+            is CatalogLoadResult.Partial -> baselineResult.catalog
+            else -> error("Expected a deterministic baseline catalog")
+        }
+        val baselineHour3 = baseline.facts.single { it.validTime.atZone(location.timeZone).hour == 3 &&
+            it.validTime.atZone(location.timeZone).toLocalDate().toString() == "2026-03-09" }
+        assertEquals(baselineHour3, localFacts.getValue(3))
+
+        try {
+            DebugAuthoredEvent(start.plusMinutes(30), start.plusHours(1), snow)
+            fail("Event boundaries must be whole local hours")
+        } catch (_: IllegalArgumentException) { }
+        try {
+            DebugAuthoredCatalog("Overlap", location, DatasetId("overlap-events-v1"), asOf, start, end.plusHours(1), snow,
+                listOf(DebugAuthoredEvent(start, start.plusHours(2), snow),
+                    DebugAuthoredEvent(start.plusHours(1), end.plusHours(1), rain)))
+            fail("Authored event ranges must not overlap")
+        } catch (_: IllegalArgumentException) { }
+        try {
+            DebugAuthoredCatalog("Outside envelope", location, DatasetId("outside-event-v1"), asOf, start, end, snow,
+                listOf(DebugAuthoredEvent(start.minusHours(1), start.plusHours(1), snow)))
+            fail("Authored events must remain inside their envelope")
+        } catch (_: IllegalArgumentException) { }
+    }
+
     @Test fun savedSimulationReopensWithAuthoredDefinitionAndReplayIsImmutable() = runBlocking {
         val asOf = Instant.parse("2026-03-08T12:00:00Z")
         val definition = DebugAuthoredCatalog(
@@ -108,6 +186,13 @@ class DebugAuthoredCatalogTest {
             LocalDateTime.parse("2026-03-08T09:00"), LocalDateTime.parse("2026-03-08T12:00"),
             DebugAuthoredWeatherValues(conditions = setOf(WeatherCondition.STORM, WeatherCondition.RAIN),
                 temperatureC = 8.0, precipitationProbabilityPercent = 70.0),
+            listOf(
+                DebugAuthoredEvent(LocalDateTime.parse("2026-03-08T09:00"), LocalDateTime.parse("2026-03-08T10:00"),
+                    DebugAuthoredWeatherValues(conditions = setOf(WeatherCondition.STORM), temperatureC = 8.0)),
+                DebugAuthoredEvent(LocalDateTime.parse("2026-03-08T10:00"), LocalDateTime.parse("2026-03-08T12:00"),
+                    DebugAuthoredWeatherValues(conditions = setOf(WeatherCondition.RAIN), temperatureC = 8.0,
+                        precipitationProbabilityPercent = 70.0)),
+            ),
         )
         val dao = DatasetMemory()
         val storage = CatalogDatasetStorage(dao)
@@ -119,8 +204,7 @@ class DebugAuthoredCatalogTest {
         assertEquals(definition.name, reopened.first.name)
         assertEquals(definition.startLocal, reopened.first.startLocal)
         assertEquals(definition.endLocalExclusive, reopened.first.endLocalExclusive)
-        assertEquals(definition.values.conditions, reopened.first.values.conditions)
-        assertEquals(definition.values.temperatureC, reopened.first.values.temperatureC)
+        assertEquals(definition.events, reopened.first.events)
         assertArrayEquals(RecordedCatalogCodec.encode(saved), RecordedCatalogCodec.encode(reopened.second))
 
         val replay = repository.captureReplay(location, definition.datasetId, DatasetId("storm-study-replay-v1"))
@@ -137,6 +221,15 @@ class DebugAuthoredCatalogTest {
             .first { it.temperatureC == 8.0 }.temperatureC!!, 0.0)
 
         val sidecarKey = "authored:${location.id.value}:${definition.datasetId.value}"
+        val validSidecar = metadata.values.getValue(sidecarKey)
+        val altered = ObjectMapper().readTree(validSidecar).deepCopy<com.fasterxml.jackson.databind.node.ObjectNode>()
+        val firstValues = altered.withArray("events").get(0) as com.fasterxml.jackson.databind.node.ObjectNode
+        val changedValues = firstValues.get("values").deepCopy<com.fasterxml.jackson.databind.node.ObjectNode>()
+        changedValues.put("temperatureC", 99.0)
+        firstValues.set<com.fasterxml.jackson.databind.JsonNode>("values", changedValues)
+        metadata.values[sidecarKey] = ObjectMapper().writeValueAsString(altered)
+        assertNull(repository.reopen(location, definition.datasetId))
+        metadata.values[sidecarKey] = validSidecar
         metadata.values[sidecarKey] = metadata.values.getValue(sidecarKey)
             .replace(Regex("\"recordingSha256\":\"[^\"]+\""), "\"recordingSha256\":\"tampered\"")
         assertNull(repository.reopen(location, definition.datasetId))
@@ -160,5 +253,44 @@ class DebugAuthoredCatalogTest {
             fail("metadata failure must prevent a saved success")
         } catch (_: IllegalStateException) { }
         assertTrue(storage.load(location, CatalogStorageNamespace.SIMULATED, definition.datasetId) is StoredCatalogResult.Missing)
+    }
+
+    @Test fun unversionedPeriodSidecarReopensAsOneAuthoredEvent() = runBlocking {
+        val definition = DebugAuthoredCatalog("Legacy period", location, DatasetId("legacy-period-v1"),
+            Instant.parse("2026-03-08T12:00:00Z"), LocalDateTime.parse("2026-03-08T09:00"),
+            LocalDateTime.parse("2026-03-08T12:00"), DebugAuthoredWeatherValues(
+                conditions = setOf(WeatherCondition.RAIN), temperatureC = 7.0,
+            ))
+        val dao = DatasetMemory()
+        val storage = CatalogDatasetStorage(dao)
+        val memory = MetadataMemory()
+        val repository = DebugAuthoredCatalogRepository(storage, DebugAuthoredCatalogMetadataStore(memory))
+        repository.save(definition)
+        val sidecarKey = "authored:${location.id.value}:${definition.datasetId.value}"
+        val old = ObjectMapper().readTree(memory.values.getValue(sidecarKey)).deepCopy<com.fasterxml.jackson.databind.node.ObjectNode>()
+        old.remove("schemaVersion")
+        old.remove("events")
+        memory.values[sidecarKey] = ObjectMapper().writeValueAsString(old)
+        val reopened = repository.reopen(location, definition.datasetId)!!.first
+        assertEquals(1, reopened.events.size)
+        assertEquals(definition.startLocal, reopened.events.single().startLocal)
+        assertEquals(definition.endLocalExclusive, reopened.events.single().endLocalExclusive)
+        assertEquals(definition.values, reopened.events.single().values)
+
+        val replayId = DatasetId("legacy-period-replay-v1")
+        val replay = repository.captureReplay(location, definition.datasetId, replayId)
+        val replayKey = "authored:${location.id.value}:${replayId.value}"
+        val oldReplay = ObjectMapper().readTree(memory.values.getValue(replayKey))
+            .deepCopy<com.fasterxml.jackson.databind.node.ObjectNode>()
+        oldReplay.remove("schemaVersion")
+        oldReplay.remove("events")
+        memory.values[replayKey] = ObjectMapper().writeValueAsString(oldReplay)
+        val reopenedReplay = repository.reopenReplay(location, replayId)!!
+        assertEquals(CatalogOrigin.SIMULATED, reopenedReplay.second.catalog.provenance.origin)
+        assertEquals(1, reopenedReplay.first.events.size)
+        assertEquals(definition.startLocal, reopenedReplay.first.events.single().startLocal)
+        assertEquals(definition.endLocalExclusive, reopenedReplay.first.events.single().endLocalExclusive)
+        assertEquals(definition.values, reopenedReplay.first.events.single().values)
+        assertEquals(replay.catalog.facts, reopenedReplay.second.catalog.facts)
     }
 }

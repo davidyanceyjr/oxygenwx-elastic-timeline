@@ -1,0 +1,81 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1920" height="1200" viewBox="0 0 1920 1200">
+<defs>
+  <marker id="arrow" markerWidth="12" markerHeight="12" refX="10" refY="6" orient="auto"><path d="M1 1L11 6L1 11" fill="none" stroke="#91aabc" stroke-width="2"/></marker>
+  <style>
+    .bg{fill:#111f2d}.orb{fill:#20354a;opacity:.45}.card{fill:#20364a;stroke:#66869c;stroke-width:1.5}.tealCard{fill:#174b58;stroke:#4cb5ba;stroke-width:1.5}.purpleCard{fill:#473b5e;stroke:#a48cc1;stroke-width:1.5}.amberCard{fill:#4e472f;stroke:#e1b64f;stroke-width:1.5}.redCard{fill:#482f35;stroke:#ed8272;stroke-width:1.5}.title{font:700 31px Inter,Arial,sans-serif;fill:#eef4f8}.sub{font:16px Inter,Arial,sans-serif;fill:#b7c7d2}.eye{font:700 12px Inter,Arial,sans-serif;letter-spacing:1.2px;fill:#9fc1d0}.h{font:700 18px Inter,Arial,sans-serif;fill:#f2f6f8}.body{font:15px Inter,Arial,sans-serif;fill:#d8e3e9}.small{font:13px Inter,Arial,sans-serif;fill:#b5c6d1}.teal{fill:#91e0d0;font-family:Inter,Arial,sans-serif}.gold{fill:#f3cf78;font-family:Inter,Arial,sans-serif}.line{stroke:#91aabc;stroke-width:2;fill:none;marker-end:url(#arrow)}
+  </style>
+</defs>
+<rect class="bg" width="1920" height="1200"/><circle cx="1790" cy="75" r="190" class="orb"/><circle cx="90" cy="1150" r="170" class="orb"/>
+<text x="52" y="46" class="eye">OXYGEN · DFM.4.5 · AUTHORED EVENT RANGES</text>
+<text x="52" y="91" class="title">Local event ranges inside a saved synthetic catalog</text>
+<text x="52" y="122" class="sub">Proposed storage and materialization behavior · shared catalog schema remains unchanged</text>
+<rect x="1514" y="34" width="354" height="46" rx="23" class="amberCard"/><text x="1691" y="62" text-anchor="middle" class="gold" font-size="12" font-weight="700" letter-spacing="1">DRAFT · OWNER APPROVAL PENDING</text>
+
+<!-- Envelope and event timeline -->
+<rect x="48" y="153" width="1824" height="292" rx="16" class="card"/>
+<text x="76" y="187" class="eye">AUTHORING MODEL · FIXED LOCATION + IANA TIMEZONE</text>
+<text x="76" y="222" class="h">The envelope bounds editing; the saved catalog keeps the full D−30…D+13 horizon.</text>
+<rect x="84" y="246" width="1752" height="156" rx="12" fill="#15293a" stroke="#66869c" stroke-width="1.5"/>
+<text x="104" y="274" class="small">AUTHORED ENVELOPE · [startLocal, endLocalExclusive)</text>
+<line x1="130" y1="324" x2="1787" y2="324" stroke="#66869c" stroke-width="3"/>
+<line x1="130" y1="315" x2="130" y2="337" stroke="#9fc1d0" stroke-width="2"/><line x1="1787" y1="315" x2="1787" y2="337" stroke="#9fc1d0" stroke-width="2"/>
+<text x="130" y="362" class="small">Oct 30 · 00:00</text><text x="1787" y="362" text-anchor="end" class="small">Nov 3 · 00:00</text>
+<rect x="575" y="290" width="316" height="68" rx="9" class="tealCard"/><text x="596" y="316" class="teal" font-size="13" font-weight="700">EVENT A · RAIN</text><text x="596" y="341" class="body">[Oct 31 18:00, 23:00)</text>
+<rect x="891" y="290" width="346" height="68" fill="#4e472f" stroke="#e1b64f" stroke-width="1.5"/><text x="1064" y="318" text-anchor="middle" class="gold" font-size="13" font-weight="700">GAP · SIMULATED BASELINE</text><text x="1064" y="341" text-anchor="middle" class="small">Uncovered hours are retained</text>
+<rect x="1237" y="290" width="272" height="68" rx="9" class="purpleCard"/><text x="1258" y="316" fill="#d4c0ef" font-size="13" font-weight="700">EVENT B · WIND</text><text x="1258" y="341" class="body">[Nov 1 00:00, 04:00)</text>
+<text x="84" y="426" class="small">Ranges are half-open and hour-aligned · adjacent ranges are allowed · each event needs at least one real hourly instant.</text>
+
+<!-- Main flow -->
+<rect x="48" y="474" width="326" height="320" rx="16" class="card"/>
+<text x="72" y="507" class="eye">01 · DEFINE</text><text x="72" y="541" class="h">Envelope + events</text>
+<text x="72" y="579" class="body">Choose a fixed catalog location</text><text x="72" y="604" class="body">and local-time envelope.</text>
+<text x="72" y="644" class="body">Add ordered events, each with</text><text x="72" y="669" class="body">one complete supported value set.</text>
+<text x="72" y="714" class="small">The envelope is an editor boundary,</text><text x="72" y="737" class="small">not the canonical data horizon.</text>
+<path d="M374 634H398" class="line"/>
+
+<rect x="404" y="474" width="350" height="320" rx="16" class="card"/>
+<text x="428" y="507" class="eye">02 · VALIDATE</text><text x="428" y="541" class="h">Reject invalid ranges</text>
+<text x="428" y="579" class="body">Inside envelope · non-empty</text><text x="428" y="604" class="body">· local-hour boundaries.</text>
+<text x="428" y="644" class="body">No overlap; gaps are allowed.</text>
+<rect x="426" y="669" width="306" height="72" rx="10" class="redCard"/><text x="446" y="696" fill="#ffad9d" font-size="13" font-weight="700">INVALID / OVERLAPPING</text><text x="446" y="720" class="small">Explain; keep editable; do not save.</text>
+<path d="M754 634H778" class="line"/>
+
+<rect x="784" y="474" width="350" height="320" rx="16" class="tealCard"/>
+<text x="808" y="507" class="teal" font-size="12" font-weight="700" letter-spacing="1.2">03 · MATERIALIZE</text><text x="808" y="541" class="h">Full canonical horizon</text>
+<text x="808" y="579" class="body">Covered real instants use that</text><text x="808" y="604" class="body">event's complete typed values.</text>
+<text x="808" y="644" class="body">All uncovered instants keep the</text><text x="808" y="669" class="body">deterministic SIMULATED baseline.</text>
+<text x="808" y="714" class="small">Missing stays unavailable; probability</text><text x="808" y="737" class="small">stays distinct from amount.</text>
+<path d="M1134 634H1158" class="line"/>
+
+<rect x="1164" y="474" width="350" height="320" rx="16" class="purpleCard"/>
+<text x="1188" y="507" fill="#d4c0ef" font-size="12" font-weight="700" letter-spacing="1.2">04 · SAVE</text><text x="1188" y="541" class="h">Immutable recording + sidecar</text>
+<text x="1188" y="579" class="body">Versioned debug metadata stores</text><text x="1188" y="604" class="body">envelope, events, values + hash.</text>
+<text x="1188" y="644" class="body">Edits get a new dataset identity.</text>
+<text x="1188" y="684" class="small">Legacy period-wide records reopen</text><text x="1188" y="707" class="small">as one event; verify materialization.</text>
+<path d="M1514 634H1538" class="line"/>
+
+<rect x="1544" y="474" width="328" height="320" rx="16" class="card"/>
+<text x="1568" y="507" class="eye">05 · PREVIEW</text><text x="1568" y="541" class="h">Explicit, saved only</text>
+<text x="1568" y="579" class="body">SIMULATED and immutable REPLAY</text><text x="1568" y="604" class="body">use existing coordinator checks.</text>
+<text x="1568" y="644" class="body">Save/capture never activates.</text>
+<rect x="1566" y="669" width="284" height="72" rx="10" class="redCard"/><text x="1586" y="696" fill="#ffad9d" font-size="13" font-weight="700">INVALID / MISMATCH</text><text x="1586" y="720" class="small">Fail closed; preserve catalog + time.</text>
+
+<!-- DST and boundaries -->
+<rect x="48" y="824" width="572" height="218" rx="16" class="card"/>
+<text x="72" y="859" class="eye">LOCAL TIME · DST</text><text x="72" y="894" class="h">Match local bounds to real catalog instants.</text>
+<text x="72" y="932" class="body">Fall-back repeated hour: include both real instants</text><text x="72" y="958" class="body">when their local time is in the event range.</text>
+<text x="72" y="998" class="small">Spring-forward gap: no nonexistent fact is created.</text>
+
+<rect x="644" y="824" width="576" height="218" rx="16" class="amberCard"/>
+<text x="668" y="859" class="gold" font-size="12" font-weight="700" letter-spacing="1.2">SAVE BOUNDARY</text><text x="668" y="894" class="h">Recording and sidecar must agree.</text>
+<text x="668" y="932" class="body">Reopen re-materializes definitions against the saved</text><text x="668" y="958" class="body">recording. Failure means no success or activation.</text>
+<text x="668" y="998" class="small">No shared schema, codec, Room, LIVE, or coordinator change.</text>
+
+<rect x="1244" y="824" width="628" height="218" rx="16" class="tealCard"/>
+<text x="1268" y="859" class="teal" font-size="12" font-weight="700" letter-spacing="1.2">DATA AND ACTIVATION INVARIANTS</text><text x="1268" y="894" class="h">Debug-local authoring only</text>
+<text x="1268" y="932" class="body">SIMULATED edits use fresh immutable identities; REPLAY</text><text x="1268" y="958" class="body">keeps captured facts and synthetic origin.</text>
+<text x="1268" y="998" class="small">Only explicit Preview crosses the existing validation path.</text>
+
+<text x="52" y="1112" class="small">Board defines proposed storage/materialization behavior. Focused storage evidence and installed UI acceptance remain separate.</text>
+<text x="1868" y="1112" text-anchor="end" class="small">DFM.4.5 · REVIEW DRAFT</text>
+</svg>

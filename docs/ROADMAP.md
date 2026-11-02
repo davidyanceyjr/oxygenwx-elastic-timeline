@@ -674,15 +674,15 @@ This workstream establishes an explicit, debug-only set of typed forecast scenar
 **Slice board(s) — Behavior, OWNER APPROVED:** `.codex/concepts/DFM.4.4-local-catalog-storage-board.md` and visual flow `.codex/concepts/DFM.4.4-local-catalog-storage-board.svg` (PNG preview alongside), approved as written on 2026-11-02. UI artwork is not applicable because this is a nonvisual storage/activation foundation independent of editor UI; DFM.4.5 owns the library/editor presentation and installed UI acceptance. Approval covers canonical SIMULATED materialization, editable SIMULATED round-trip, immutable REPLAY snapshots, explicit-preview revalidation, fail-closed behavior, and LIVE/provider/cache/location isolation. Parent DFM.4 boards remain reference inputs.
 **Evidence:** Cycle 088 complete: `.codex/history/088-dfm44-local-catalog-storage.md`; `.codex/test-artifacts/088-dfm44-local-catalog-storage/README.md`; archived plan `.codex/history/plans/088-dfm44-local-catalog-storage.md`.
 
-### DFM.4.5 — Catalog library and period-first editor — NEXT
+### DFM.4.5 — Catalog library and period-first editor — DONE
 
-**Objective/scope:** Implement the approved debug-only catalog library, period-first event editor, and explicit synthetic preview using the verified storage and coordinator seams. Keep the normal screen and ordinary location paths intact.
+**Objective/scope:** Extend the debug-local authoring metadata/materializer to support event-specific local-time ranges, then implement the debug-only catalog library, period-first event editor, and explicit synthetic preview. Keep the shared catalog schema and normal screen/ordinary location paths intact.
 **Depends on:** DFM.4.2 and DFM.4.4.
-**Exit:** Approved catalog library/editor enables saved simulation and replay workflows and explicit synthetic preview; focused tests and installed state/interaction evidence establish the workflow.
-**Slice board(s):** Original DFM.4 approved boards above are reference inputs; objective-specific coverage and approval must be confirmed during draft review, with additional approved boards where needed.
-**Evidence:** Draft plan `.codex/plans/draft-dfm45.md`; cycle-specific artifact and history paths assigned when planned.
+**Exit:** Saved SIMULATED catalogs support multiple non-overlapping half-open event ranges within a fixed authored envelope and materialize them faithfully over the full canonical horizon; existing DFM.4.4 records still reopen; immutable REPLAY capture and saved-record-only Preview remain valid; and the approved library/editor workflow passes focused checks plus installed state/interaction evidence.
+**Slice board(s) — behavior and UI artwork:** The product owner approved `.codex/concepts/DFM.4.5-catalog-library-behavior-board.md` with flow `.svg` and PNG preview, UI artwork `.codex/concepts/DFM.4.5-catalog-library-editor-artwork-board.svg` with PNG preview, and authored-range behavior contract `.codex/concepts/DFM.4.5-authored-event-ranges-contract.md` with visual board `.svg` and PNG preview, as shown on 2026-11-02 with no additional constraints. The authored-range board covers half-open event ranges, uncovered baseline periods, overlap rejection, DST, sidecar compatibility, and unchanged schema; the other boards govern `#PICKER` gating, library/editor/SIMULATED/REPLAY transitions, save/cancel without activation, explicit saved-record preview/revalidation, fail-closed preservation, synthetic provenance, and restoration/isolation boundaries. Installed evidence remains required.
+**Evidence:** Cycle 089 complete: `.codex/history/089-dfm45-catalog-library-editor.md`; `.codex/test-artifacts/089-dfm45-catalog-library-editor/README.md`; archived plan `.codex/history/plans/089-dfm45-catalog-library-editor.md`.
 
-### DFM.4.6 — Workbench integration and release acceptance — PLANNED
+### DFM.4.6 — Workbench integration and release acceptance — NEXT
 
 **Objective/scope:** Verify the combined original DFM.4 outcome on the installed reference device and release variant. This is focused integration acceptance for DFM.4, not a broad app/system TEST matrix; fix only defects within the approved DFM.4 boundary or replan.
 **Depends on:** DFM.4.2, DFM.4.3 and DFM.4.5.
