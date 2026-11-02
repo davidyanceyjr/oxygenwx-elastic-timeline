@@ -16,6 +16,8 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.sync.Mutex
+import kotlinx.coroutines.sync.withLock
 import kotlinx.coroutines.withContext
 
 sealed interface LocationSearchState {
@@ -59,7 +61,10 @@ class LocationSelectorController(
     private val scope: CoroutineScope,
     private val searcher: PlaceSearcher,
     private val store: LocationSelectorStore,
+    private val onSearchSubmission: (String) -> Boolean = { false },
+    private val beforeSelection: suspend () -> Unit = {},
     private val onCommittedSelection: (SavedLocation) -> Unit = {},
+    private val onSelectionCompleted: () -> Unit = {},
 ) {
     private val mutableState = MutableStateFlow(LocationSelectorState())
     val state: StateFlow<LocationSelectorState> = mutableState.asStateFlow()
@@ -68,6 +73,8 @@ class LocationSelectorController(
     private var savedJob: Job? = null
     private var searchGeneration = 0
     private var savedGeneration = 0
+    private val selectionMutex = Mutex()
+    private var selectionGeneration = 0L
 
     fun open() {
         refreshSnapshot()
@@ -103,6 +110,11 @@ class LocationSelectorController(
         searchGeneration++
         val generation = searchGeneration
         searchJob?.cancel()
+        searchJob = null
+        if (onSearchSubmission(query)) {
+            mutableState.value = mutableState.value.copy(search = LocationSearchState.Idle, message = null)
+            return
+        }
         mutableState.value = mutableState.value.copy(search = LocationSearchState.Loading(query), message = null)
         searchJob = scope.launch {
             try {
@@ -149,24 +161,91 @@ class LocationSelectorController(
         }
     }
 
-    fun select(location: SavedLocation) {
+    /** Saves a search result if needed, persists it as selected, then hands it to the main view. */
+    fun selectCandidate(candidate: PlaceSearchCandidate) {
+        val generation = ++selectionGeneration
         scope.launch {
-            try {
-                when (val result = withContext(Dispatchers.IO) { store.select(location.location.id) }) {
-                    is SavedLocationResult.Selected -> {
-                        result.location?.let(onCommittedSelection)
-                        mutableState.value = mutableState.value.copy(
-                            selectedId = result.location?.location?.id,
-                            message = result.location?.let { "${it.candidate.name} selected. Loading its forecast catalog." }
-                                ?: "No location is selected.",
-                        )
+            selectionMutex.withLock {
+                try {
+                    beforeSelection()
+                    val location = when (val result = withContext(Dispatchers.IO) { store.add(candidate) }) {
+                        is SavedLocationResult.Added -> result.location
+                        is SavedLocationResult.AlreadySaved -> result.location
+                        SavedLocationResult.MissingCanonicalId -> {
+                            announce("This result cannot be selected because it has no stable location identity.")
+                            return@withLock
+                        }
+                        is SavedLocationResult.PointConflict -> {
+                            announce("This location ID already has different coordinates or timezone; the saved point was kept.")
+                            return@withLock
+                        }
+                        SavedLocationResult.MalformedRecord -> {
+                            announce("Saved location data is invalid. Selection was not changed.")
+                            return@withLock
+                        }
+                        else -> {
+                            announce("The location could not be saved.")
+                            return@withLock
+                        }
                     }
-                    SavedLocationResult.MissingLocation -> announce("That saved location is no longer available. Refresh and try again.")
-                    SavedLocationResult.MalformedRecord -> announce("Saved location data is invalid. Selection was not changed.")
-                    else -> announce("The location could not be selected.")
+                    persistSelection(location, generation)
+                } catch (cancelled: CancellationException) { throw cancelled }
+                catch (error: Exception) { announce("Selection failed: ${error.message ?: "storage error"}") }
+            }
+        }
+    }
+
+    fun select(location: SavedLocation) {
+        val generation = ++selectionGeneration
+        scope.launch {
+            selectionMutex.withLock {
+                try {
+                    beforeSelection()
+                    val result = withContext(Dispatchers.IO) { store.select(location.location.id) }
+                    when (result) {
+                        is SavedLocationResult.Selected -> {
+                            val selected = result.location
+                            selected?.let(onCommittedSelection)
+                            if (generation == selectionGeneration) mutableState.value = mutableState.value.copy(
+                                selectedId = selected?.location?.id,
+                                message = selected?.let { "${it.candidate.name} selected. Loading its forecast catalog." }
+                                    ?: "No location is selected.",
+                                messageIsError = false,
+                            )
+                            if (selected != null) onSelectionCompleted()
+                        }
+                        SavedLocationResult.MissingLocation -> if (generation == selectionGeneration)
+                            announce("That saved location is no longer available. Refresh and try again.")
+                        SavedLocationResult.MalformedRecord -> if (generation == selectionGeneration)
+                            announce("Saved location data is invalid. Selection was not changed.")
+                        else -> if (generation == selectionGeneration) announce("The location could not be selected.")
+                    }
+                } catch (cancelled: CancellationException) { throw cancelled }
+                catch (error: Exception) { if (generation == selectionGeneration) announce("Selection failed: ${error.message ?: "storage error"}") }
+            }
+        }
+    }
+
+    private suspend fun persistSelection(location: SavedLocation, generation: Long) {
+        when (val result = withContext(Dispatchers.IO) { store.select(location.location.id) }) {
+            is SavedLocationResult.Selected -> {
+                val selected = result.location
+                if (selected != null) {
+                    onCommittedSelection(selected)
+                    if (generation == selectionGeneration) mutableState.value = mutableState.value.copy(
+                            selectedId = selected.location.id,
+                            message = "${selected.candidate.name} selected. Loading its forecast catalog.",
+                            messageIsError = false,
+                        )
+                    refreshSnapshot(preserveMessage = true)
+                    onSelectionCompleted()
                 }
-            } catch (cancelled: CancellationException) { throw cancelled }
-            catch (error: Exception) { announce("Selection failed: ${error.message ?: "storage error"}") }
+            }
+            SavedLocationResult.MissingLocation -> if (generation == selectionGeneration)
+                announce("That saved location could not be selected. Refresh and try again.")
+            SavedLocationResult.MalformedRecord -> if (generation == selectionGeneration)
+                announce("Saved location data is invalid. Selection was not changed.")
+            else -> if (generation == selectionGeneration) announce("The location could not be selected.")
         }
     }
 

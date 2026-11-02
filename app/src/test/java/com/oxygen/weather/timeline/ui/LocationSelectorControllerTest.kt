@@ -11,6 +11,7 @@ import com.oxygen.weather.timeline.data.catalog.SavedLocation
 import com.oxygen.weather.timeline.data.catalog.SavedLocationListResult
 import com.oxygen.weather.timeline.data.catalog.SavedLocationResult
 import kotlinx.coroutines.CompletableDeferred
+import kotlinx.coroutines.CoroutineStart
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.withTimeout
@@ -24,6 +25,21 @@ import java.time.ZoneId
 import java.util.concurrent.CopyOnWriteArrayList
 
 class LocationSelectorControllerTest {
+    @Test
+    fun consumedSearchSkipsSearcherAndOrdinarySearchStillRuns() = runBlocking {
+        val searcher = RecordingSearcher { _, _ -> PlaceSearchResult.NoMatches }
+        val controller = LocationSelectorController(this, searcher, FakeStore(),
+            onSearchSubmission = { it == "handled" })
+        controller.editQuery(" handled ")
+        controller.submitSearch()
+        assertTrue(searcher.queries.isEmpty())
+        assertEquals(LocationSearchState.Idle, controller.state.value.search)
+        controller.editQuery("Chicago")
+        controller.submitSearch()
+        await { controller.state.value.search is LocationSearchState.NoMatches }
+        assertEquals(listOf("Chicago"), searcher.queries)
+    }
+
     @Test
     fun committedSelectionDispatchesOnlyAfterPersistenceSucceeds() = runBlocking {
         val location = saved(candidate("Chicago", 31))
@@ -44,6 +60,66 @@ class LocationSelectorControllerTest {
         controller.select(location)
         await { controller.state.value.message?.contains("no longer available") == true }
         assertEquals(1, committed.size)
+    }
+
+    @Test
+    fun searchResultIsSavedThenSelectedAndClosesOnlyAfterCommit() = runBlocking {
+        val place = candidate("Chicago", 32)
+        val store = FakeStore()
+        val committed = mutableListOf<SavedLocation>()
+        var completed = 0
+        val controller = LocationSelectorController(
+            this, RecordingSearcher { _, _ -> PlaceSearchResult.NoMatches }, store,
+            onCommittedSelection = committed::add,
+            onSelectionCompleted = { completed++ },
+        )
+
+        controller.selectCandidate(place)
+        await { completed == 1 }
+
+        assertEquals(1, store.addCalls)
+        assertEquals(1, store.selectCalls)
+        assertEquals(place.canonicalPlaceId!!.value, store.restore().let { (it as SavedLocationResult.Selected).location!!.location.id.value })
+        assertEquals(listOf(saved(place)), committed)
+    }
+
+    @Test
+    fun newerLocationSelectionRunsAfterAnOlderDelayedSelection() = runBlocking {
+        val first = saved(candidate("Chicago", 33))
+        val second = saved(candidate("Madison", 34))
+        val store = FakeStore(mutableListOf(first, second))
+        val firstStarted = CompletableDeferred<Unit>()
+        val releaseFirst = CompletableDeferred<Unit>()
+        store.selectDelays[first.location.id] = { firstStarted.complete(Unit); releaseFirst.await() }
+        val committed = mutableListOf<SavedLocation>()
+        val controller = LocationSelectorController(
+            this, RecordingSearcher { _, _ -> PlaceSearchResult.NoMatches }, store,
+            onCommittedSelection = committed::add,
+        )
+
+        controller.select(first)
+        firstStarted.await()
+        controller.select(second)
+        releaseFirst.complete(Unit)
+        await { committed.lastOrNull() == second }
+
+        assertEquals(listOf(first.location.id, second.location.id), store.selectionOrder)
+        assertEquals(second.location.id.value, (store.restore() as SavedLocationResult.Selected).location!!.location.id.value)
+    }
+
+    @Test
+    fun failedSearchResultSaveDoesNotCloseOrSelect() = runBlocking {
+        val place = candidate("Conflict", 35)
+        val store = FakeStore().apply { addOverride = SavedLocationResult.PointConflict(place.canonicalPlaceId!!) }
+        var completed = 0
+        val controller = LocationSelectorController(
+            this, RecordingSearcher { _, _ -> PlaceSearchResult.NoMatches }, store,
+            onSelectionCompleted = { completed++ },
+        )
+        controller.selectCandidate(place)
+        await { controller.state.value.messageIsError }
+        assertEquals(0, completed)
+        assertEquals(0, store.selectCalls)
     }
 
     @Test
@@ -235,10 +311,13 @@ class LocationSelectorControllerTest {
     ) : LocationSelectorStore {
         private var selectedId: String? = selected
         var selectCalls = 0
+        var addCalls = 0
         var removeCalls = 0
         var failList = false
         var addOverride: SavedLocationResult? = null
         var selectOverride: SavedLocationResult? = null
+        val selectDelays = mutableMapOf<LocationId, suspend () -> Unit>()
+        val selectionOrder = mutableListOf<LocationId>()
 
         override suspend fun list(): SavedLocationListResult {
             if (failList) error("storage unavailable")
@@ -249,6 +328,7 @@ class LocationSelectorControllerTest {
         )
 
         override suspend fun add(candidate: PlaceSearchCandidate): SavedLocationResult {
+            addCalls++
             addOverride?.let { return it }
             val found = values.firstOrNull { it.location.id.value == candidate.canonicalPlaceId?.value }
             if (found != null) return SavedLocationResult.AlreadySaved(found)
@@ -260,6 +340,8 @@ class LocationSelectorControllerTest {
 
         override suspend fun select(id: LocationId): SavedLocationResult {
             selectCalls++
+            selectionOrder += id
+            selectDelays[id]?.invoke()
             selectOverride?.let { return it }
             val found = values.firstOrNull { it.location.id == id } ?: return SavedLocationResult.MissingLocation
             selectedId = id.value

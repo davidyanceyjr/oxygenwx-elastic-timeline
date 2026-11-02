@@ -5,6 +5,8 @@ import java.time.Instant
 import java.time.ZoneId
 import java.time.ZoneOffset
 import kotlinx.coroutines.CompletableDeferred
+import kotlinx.coroutines.async
+import kotlinx.coroutines.launch
 import kotlinx.coroutines.NonCancellable
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.runBlocking
@@ -13,27 +15,32 @@ import kotlinx.coroutines.withTimeout
 import org.junit.Assert.*
 import org.junit.Test
 
-class CatalogActivationCoordinatorTest {
-    private val time = Instant.parse("2026-03-08T15:00:00Z")
-    private val a = CatalogLocation(LocationId("a"), GeoCoordinates(41.0, -87.0), ZoneId.of("America/Chicago"))
-    private val b = CatalogLocation(LocationId("b"), GeoCoordinates(40.0, -74.0), ZoneId.of("America/New_York"))
-    private val dataset = DatasetId("forecast-44d")
+open class CatalogCoordinatorTestSupport {
+    protected val time = Instant.parse("2026-03-08T15:00:00Z")
+    protected val a = CatalogLocation(LocationId("a"), GeoCoordinates(41.0, -87.0), ZoneId.of("America/Chicago"))
+    protected val b = CatalogLocation(LocationId("b"), GeoCoordinates(40.0, -74.0), ZoneId.of("America/New_York"))
+    protected val dataset = DatasetId("forecast-44d")
 
-    private class FixedClock(private val value: Instant) : Clock() {
+    protected class FixedClock(private val value: Instant) : Clock() {
         override fun getZone() = ZoneOffset.UTC
         override fun withZone(zone: ZoneId): Clock = this
         override fun instant() = value
     }
 
-    private class MemoryDao : CatalogDatasetDao {
-        private val rows = mutableListOf<CatalogDatasetRow>()
+    protected class MemoryDao : CatalogDatasetDao {
+        protected val rows = mutableListOf<CatalogDatasetRow>()
+        var reads = 0
+        var writes = 0
         override suspend fun replace(row: CatalogDatasetRow) {
+            writes++
             rows.removeAll { it.locationId == row.locationId && it.storageNamespace == row.storageNamespace && it.datasetId == row.datasetId && it.asOfEpochSecond == row.asOfEpochSecond && it.asOfNano == row.asOfNano }
             rows += row
         }
-        override suspend fun findCandidates(locationId: String, namespace: String, datasetId: String) =
-            rows.filter { it.locationId == locationId && it.storageNamespace == namespace && it.datasetId == datasetId }
+        override suspend fun findCandidates(locationId: String, namespace: String, datasetId: String): List<CatalogDatasetRow> {
+            reads++
+            return rows.filter { it.locationId == locationId && it.storageNamespace == namespace && it.datasetId == datasetId }
                 .sortedWith(compareByDescending<CatalogDatasetRow> { it.asOfEpochSecond }.thenByDescending { it.asOfNano })
+        }
         override suspend fun history(locationId: String, namespace: String) = rows.filter { it.locationId == locationId && it.storageNamespace == namespace }
         override suspend fun liveRetentionOrder(locationId: String) = rows.filter { it.locationId == locationId && it.storageNamespace == "LIVE" }
             .sortedByDescending { it.storedAtEpochSecond ?: Long.MIN_VALUE }
@@ -49,7 +56,7 @@ class CatalogActivationCoordinatorTest {
         }
     }
 
-    private class FakeSource(
+    protected class FakeSource(
         override val origin: CatalogOrigin,
         var respond: suspend (CatalogLoadRequest) -> CatalogLoadResult,
     ) : WeatherCatalogSource {
@@ -60,11 +67,11 @@ class CatalogActivationCoordinatorTest {
         }
     }
 
-    private class FakeRestorer(var selection: SavedLocationResult = SavedLocationResult.Selected(null)) : StartupLocationRestorer {
+    protected class FakeRestorer(var selection: SavedLocationResult = SavedLocationResult.Selected(null)) : StartupLocationRestorer {
         override suspend fun restore() = selection
     }
 
-    private suspend fun result(request: CatalogLoadRequest, origin: CatalogOrigin, originalOrigin: CatalogOrigin? = null): CatalogLoadResult {
+    protected suspend fun result(request: CatalogLoadRequest, origin: CatalogOrigin, originalOrigin: CatalogOrigin? = null): CatalogLoadResult {
         val base = SimulatedCatalogSource().load(request) as CatalogLoadResult.Success
         val provenanceOrigin = if (origin == CatalogOrigin.REPLAY) CatalogOrigin.REPLAY else origin
         val catalog = CanonicalCatalog(request.location, request.datasetId,
@@ -83,7 +90,7 @@ class CatalogActivationCoordinatorTest {
             metadata = CatalogLoadMetadata(replayOriginalOrigin = originalOrigin))
     }
 
-    private fun harness(
+    protected fun harness(
         dao: MemoryDao = MemoryDao(),
         live: FakeSource = FakeSource(CatalogOrigin.LIVE) { result(it, CatalogOrigin.LIVE) },
         simulated: FakeSource = FakeSource(CatalogOrigin.SIMULATED) { result(it, CatalogOrigin.SIMULATED) },
@@ -98,7 +105,7 @@ class CatalogActivationCoordinatorTest {
         return Harness(dao, storage, live, simulated, replay, restorer, clock, liveRepository, sources)
     }
 
-    private data class Harness(
+    protected data class Harness(
         val dao: MemoryDao,
         val storage: CatalogDatasetStorage,
         val live: FakeSource,
@@ -114,11 +121,11 @@ class CatalogActivationCoordinatorTest {
         )
     }
 
-    private suspend fun awaitState(predicate: () -> Boolean) = withTimeout(3_000) {
+    protected suspend fun awaitState(predicate: () -> Boolean) = withTimeout(3_000) {
         while (!predicate()) delay(1)
     }
 
-    private fun CanonicalWeatherFacts.withTemperature(value: Double) = CanonicalWeatherFacts(
+    protected fun CanonicalWeatherFacts.withTemperature(value: Double) = CanonicalWeatherFacts(
         validTime = validTime,
         conditions = conditions,
         phenomena = phenomena,
@@ -140,6 +147,9 @@ class CatalogActivationCoordinatorTest {
         visibilityKm = visibilityKm,
     )
 
+}
+
+class CatalogActivationCoordinatorTest : CatalogCoordinatorTestSupport() {
     @Test fun aToBToARaceOnlyPublishesNewestMatchingLocationRequest() = runBlocking {
         val firstA = CompletableDeferred<CatalogLoadResult>()
         var aCalls = 0
@@ -268,8 +278,216 @@ class CatalogActivationCoordinatorTest {
         assertEquals(a, coordinator.state.value.active?.location)
     }
 
+    @Test fun checkpointWaitsForStartupReadAndRestoresSettledEmptyState() = runBlocking {
+        val h = harness()
+        val read = CompletableDeferred<SavedLocationResult>()
+        val coordinator = CatalogActivationCoordinator(this, StartupLocationRestorer { read.await() },
+            h.storage, h.liveRepository, h.sources, h.clock)
+        coordinator.restoreStartup()
+        val checkpoint = async { coordinator.captureSettledCheckpoint() }
+        delay(30)
+        assertFalse(coordinator.state.value.loading)
+        assertFalse(checkpoint.isCompleted)
+        read.complete(SavedLocationResult.Selected(null))
+        val saved = withTimeout(3000) { checkpoint.await() }
+        val savedState = coordinator.state.value
+        val result = coordinator.requestDebugCatalog(CatalogActivationRequest(a, CatalogOrigin.SIMULATED, DatasetId("test-preview")))
+        assertTrue(withTimeout(3000) { result.await() } is DebugActivationResult.Success)
+        coordinator.restoreCheckpoint(saved)
+        assertEquals(savedState, coordinator.state.value)
+        val next = coordinator.requestDebugCatalog(CatalogActivationRequest(a, CatalogOrigin.SIMULATED, DatasetId("after-empty")))
+        val success = withTimeout(3000) { next.await() } as DebugActivationResult.Success
+        assertEquals(2L, success.selection.viewGeneration)
+    }
+
+    @Test fun overlappingStartupAndFallbackRemainPendingUntilCurrentReadFinishes() = runBlocking {
+        val h = harness()
+        val reads = listOf(CompletableDeferred<SavedLocationResult>(), CompletableDeferred())
+        var calls = 0
+        val coordinator = CatalogActivationCoordinator(this, StartupLocationRestorer { reads[calls++].await() },
+            h.storage, h.liveRepository, h.sources, h.clock)
+        coordinator.restoreStartup()
+        kotlinx.coroutines.yield()
+        val alternate = coordinator.beginAlternateStartup()
+        val capture = async { coordinator.captureSettledCheckpoint() }
+        kotlinx.coroutines.yield()
+        reads[0].complete(SavedLocationResult.Selected(null))
+        kotlinx.coroutines.yield()
+        assertFalse(capture.isCompleted)
+        assertTrue(coordinator.fallbackStartup(alternate))
+        kotlinx.coroutines.yield()
+        assertFalse(capture.isCompleted)
+        reads[1].complete(SavedLocationResult.Selected(null))
+        withTimeout(3000) { capture.await() }
+        Unit
+    }
+
+    @Test fun activeCheckpointRestoreInvalidatesGenerationAndSupersedesPreview() = runBlocking {
+        val blocked = CompletableDeferred<CatalogLoadResult>()
+        val started = CompletableDeferred<Unit>()
+        val finished = CompletableDeferred<Unit>()
+        val simulated = FakeSource(CatalogOrigin.SIMULATED) {
+            started.complete(Unit)
+            try { withContext(NonCancellable) { blocked.await() } } finally { finished.complete(Unit) }
+        }
+        val h = harness(simulated = simulated)
+        val coordinator = h.coordinator(this)
+        coordinator.restoreStartup()
+        coordinator.captureSettledCheckpoint()
+        val initial = coordinator.requestDebugCatalog(CatalogActivationRequest(a, CatalogOrigin.LIVE, dataset))
+        assertTrue(withTimeout(3000) { initial.await() } is DebugActivationResult.Success)
+        val before = coordinator.state.value
+        val ioBeforeCapture = listOf(h.dao.reads, h.dao.writes, h.live.requests.size, h.simulated.requests.size)
+        val checkpoint = coordinator.captureSettledCheckpoint()
+        assertEquals(ioBeforeCapture, listOf(h.dao.reads, h.dao.writes, h.live.requests.size, h.simulated.requests.size))
+        val preview = coordinator.requestDebugCatalog(CatalogActivationRequest(a, CatalogOrigin.SIMULATED, DatasetId("blocked")))
+        started.await()
+        val ioBeforeRestore = listOf(h.dao.reads, h.dao.writes, h.live.requests.size, h.simulated.requests.size)
+        coordinator.restoreCheckpoint(checkpoint)
+        assertEquals(ioBeforeRestore, listOf(h.dao.reads, h.dao.writes, h.live.requests.size, h.simulated.requests.size))
+        assertEquals(DebugActivationResult.Superseded, preview.await())
+        val restored = coordinator.state.value
+        val old = before.active!!
+        val fresh = restored.active!!
+        assertTrue(fresh.viewGeneration > old.viewGeneration)
+        assertEquals(before.copy(active = old.copy(viewGeneration = fresh.viewGeneration)), restored)
+        val other = old.selectedInstant.plusSeconds(3600)
+        coordinator.selectInstant(other, old.viewGeneration)
+        assertEquals(old.selectedInstant, coordinator.state.value.active!!.selectedInstant)
+        coordinator.selectInstant(other, fresh.viewGeneration)
+        assertEquals(other, coordinator.state.value.active!!.selectedInstant)
+        val afterSelection = coordinator.state.value
+        blocked.complete(result(simulated.requests.first(), CatalogOrigin.SIMULATED))
+        finished.await()
+        kotlinx.coroutines.yield()
+        assertEquals(afterSelection, coordinator.state.value)
+        Unit
+    }
+
+
+    @Test fun captureWaitsForReplacementActivationAndRequestHandlesResolve() = runBlocking {
+        val entered = CompletableDeferred<Unit>()
+        val release = CompletableDeferred<CatalogLoadResult>()
+        val source = FakeSource(CatalogOrigin.SIMULATED) { request ->
+            if (request.datasetId.value == "hold") {
+                entered.complete(Unit)
+                withContext(NonCancellable) { release.await() }
+            } else CatalogLoadResult.NoData(NoDataReason.EMPTY_SOURCE)
+        }
+        val coordinator = harness(simulated = source).coordinator(this)
+        val participant = coordinator.beginAlternateStartup()
+        val first = coordinator.requestAlternateStartupCatalog(participant,
+            CatalogActivationRequest(a, CatalogOrigin.SIMULATED, DatasetId("hold")))!!
+        entered.await()
+        coordinator.finishAlternateStartup(participant)
+        val capture = async { coordinator.captureSettledCheckpoint() }
+        kotlinx.coroutines.yield()
+        assertFalse(capture.isCompleted)
+        val second = coordinator.requestDebugCatalog(CatalogActivationRequest(a, CatalogOrigin.SIMULATED, DatasetId("failure")))
+        assertEquals(DebugActivationResult.Superseded, first.await())
+        assertTrue(second.await() is DebugActivationResult.Failure)
+        withTimeout(3000) { capture.await() }
+        val failed = coordinator.state.value
+        val checkpoint = coordinator.captureSettledCheckpoint()
+        coordinator.restoreCheckpoint(checkpoint)
+        assertEquals(failed, coordinator.state.value)
+        release.complete(result(source.requests.first(), CatalogOrigin.SIMULATED))
+        Unit
+    }
+
+    @Test fun startupReadAndActivationBothDelayCapture() = runBlocking {
+        val selected = SavedLocation(a, PlaceSearchCandidate(
+            name = "A", countryName = "United States", countryCode = "US", administrativeAreas = emptyList(),
+            coordinates = a.coordinates, timeZone = a.timeZone, sourceReference = "test",
+            attribution = PlaceSearchAttribution("Test", java.net.URI("https://example.org"), "Test", java.net.URI("https://example.org"), null),
+        ))
+        val read = CompletableDeferred<SavedLocationResult>()
+        val entered = CompletableDeferred<Unit>()
+        val release = CompletableDeferred<CatalogLoadResult>()
+        val live = FakeSource(CatalogOrigin.LIVE) { entered.complete(Unit); release.await() }
+        val h = harness(live = live)
+        val coordinator = CatalogActivationCoordinator(this, StartupLocationRestorer { read.await() },
+            h.storage, h.liveRepository, h.sources, h.clock)
+        coordinator.restoreStartup()
+        val capture = async { coordinator.captureSettledCheckpoint() }
+        kotlinx.coroutines.yield()
+        assertFalse(coordinator.state.value.loading)
+        assertFalse(capture.isCompleted)
+        read.complete(SavedLocationResult.Selected(selected))
+        entered.await()
+        assertFalse(capture.isCompleted)
+        release.complete(result(live.requests.single(), CatalogOrigin.LIVE))
+        withTimeout(3000) { capture.await() }
+        assertEquals(a, coordinator.state.value.active?.location)
+        Unit
+    }
+
+
+    @Test fun invalidAndFailedSavedReadsSettleAndRestoreErrorState() = runBlocking {
+        val h = harness()
+        for (restorer in listOf(
+            StartupLocationRestorer { SavedLocationResult.MalformedRecord },
+            StartupLocationRestorer { throw IllegalStateException("read failed") },
+        )) {
+            val coordinator = CatalogActivationCoordinator(this, restorer, h.storage, h.liveRepository, h.sources, h.clock)
+            coordinator.restoreStartup()
+            val saved = withTimeout(3000) { coordinator.captureSettledCheckpoint() }
+            val state = coordinator.state.value
+            assertNull(state.active)
+            assertNotNull(state.lastError)
+            coordinator.requestDebugCatalog(CatalogActivationRequest(a, CatalogOrigin.SIMULATED, DatasetId("error-roundtrip"))).await()
+            coordinator.restoreCheckpoint(saved)
+            assertEquals(state, coordinator.state.value)
+        }
+    }
+
+    @Test fun startupActivationFailureSettlesAndCapturesError() = runBlocking {
+        val location = SavedLocation(a, PlaceSearchCandidate(
+            name = "A", countryName = "United States", countryCode = "US", administrativeAreas = emptyList(),
+            coordinates = a.coordinates, timeZone = a.timeZone, sourceReference = "test",
+            attribution = PlaceSearchAttribution("Test", java.net.URI("https://example.org"), "Test", java.net.URI("https://example.org"), null),
+        ))
+        val entered = CompletableDeferred<Unit>()
+        val release = CompletableDeferred<Unit>()
+        val live = FakeSource(CatalogOrigin.LIVE) { entered.complete(Unit); release.await(); CatalogLoadResult.NoData(NoDataReason.EMPTY_SOURCE) }
+        val h = harness(live = live, restorer = FakeRestorer(SavedLocationResult.Selected(location)))
+        val coordinator = h.coordinator(this)
+        coordinator.restoreStartup()
+        entered.await()
+        val capture = async { coordinator.captureSettledCheckpoint() }
+        kotlinx.coroutines.yield()
+        assertFalse(capture.isCompleted)
+        release.complete(Unit)
+        withTimeout(3000) { capture.await() }
+        assertNotNull(coordinator.state.value.lastError)
+        assertNull(coordinator.state.value.active)
+        Unit
+    }
+
+    @Test fun captureRechecksAfterReadyNotificationWhenActivationStarts() = runBlocking {
+        val entered = CompletableDeferred<Unit>()
+        val release = CompletableDeferred<CatalogLoadResult>()
+        val simulated = FakeSource(CatalogOrigin.SIMULATED) { entered.complete(Unit); release.await() }
+        val coordinator = harness(simulated = simulated).coordinator(this)
+        val participant = coordinator.beginAlternateStartup()
+        val capture = async { coordinator.captureSettledCheckpoint() }
+        kotlinx.coroutines.yield()
+        coordinator.finishAlternateStartup(participant)
+        val completion = coordinator.requestDebugCatalog(CatalogActivationRequest(a, CatalogOrigin.SIMULATED, DatasetId("later")))
+        entered.await()
+        assertFalse(capture.isCompleted)
+        release.complete(result(simulated.requests.single(), CatalogOrigin.SIMULATED))
+        assertTrue(completion.await() is DebugActivationResult.Success)
+        withTimeout(3000) { capture.await() }
+        assertNotNull(coordinator.state.value.active)
+        Unit
+    }
+
+
+
+
     @Test fun exactSelectionAtSampleTieAndReplayIdentityIsExplicit() = runBlocking {
-        val tieInstant = Instant.parse("2026-03-08T20:00:00Z")
+        val tieInstant = Instant.parse("2026-03-08T20:30:00Z")
         val h = harness(clockInstant = tieInstant)
         val coordinator = h.coordinator(this)
         coordinator.committedLocationSelection(a)
@@ -277,8 +495,8 @@ class CatalogActivationCoordinatorTest {
         val facts = coordinator.state.value.active!!.recording.catalog.facts.map { it.validTime }.distinct().sorted()
         val earlier = facts.last { it.isBefore(tieInstant) }
         val later = facts.first { it.isAfter(tieInstant) }
-        assertEquals(6L, java.time.Duration.between(earlier, tieInstant).toHours())
-        assertEquals(6L, java.time.Duration.between(tieInstant, later).toHours())
+        assertEquals(30L, java.time.Duration.between(earlier, tieInstant).toMinutes())
+        assertEquals(30L, java.time.Duration.between(tieInstant, later).toMinutes())
         assertEquals(tieInstant, coordinator.state.value.active?.selectedInstant)
         try {
             CatalogActivationRequest(a, CatalogOrigin.REPLAY, DatasetId("r"))

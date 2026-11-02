@@ -1,0 +1,85 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1800" height="1240" viewBox="0 0 1800 1240">
+<defs>
+ <linearGradient id="sky" x2="0" y2="1"><stop stop-color="#263f57"/><stop offset=".58" stop-color="#577482"/><stop offset="1" stop-color="#d6aa72"/></linearGradient>
+ <linearGradient id="city" x2="0" y2="1"><stop stop-color="#384550"/><stop offset="1" stop-color="#111b26"/></linearGradient>
+ <style>
+ .bg{fill:#edf2f4}.ink{fill:#182c3f;font-family:Inter,Arial,sans-serif}.muted{fill:#5c7080;font-family:Inter,Arial,sans-serif}.white{fill:#f6f8f9;font-family:Inter,Arial,sans-serif}.teal{fill:#79d5c5;font-family:Inter,Arial,sans-serif}.amber{fill:#f8d48d;font-family:Inter,Arial,sans-serif}
+ .title{font:700 34px Inter,Arial,sans-serif;fill:#14283c}.sub{font:16px Inter,Arial,sans-serif;fill:#52697a}.eyebrow{font:700 14px Inter,Arial,sans-serif;letter-spacing:1.6px;fill:#227889}.h{font:700 20px Inter,Arial,sans-serif;fill:#18334b}.body{font:16px Inter,Arial,sans-serif;fill:#304a5d}.small{font:14px Inter,Arial,sans-serif;fill:#5b7182}.tiny{font:12px Inter,Arial,sans-serif;fill:#617789}
+ .phone{fill:#fff;stroke:#afc0c9;stroke-width:2}.screen{fill:url(#sky)}.btn{fill:#18334a;stroke:#8ecdc3;stroke-width:1.5}.panel{fill:#fff;stroke:#d2dee4;stroke-width:2}.line{stroke:#aec0c9;stroke-width:2}.chip{fill:#e3f4f0;stroke:#9ecdc4}.hot{fill:#f9f1df;stroke:#dec48b}.tag{fill:#17394b;opacity:.9}.hair{stroke:#e3edf0;stroke-width:1}
+ </style>
+</defs>
+<rect class="bg" width="1800" height="1240"/>
+<text x="54" y="48" class="eyebrow">OXYGEN · DFM.4 · UI ARTWORK BOARD · OWNER APPROVED · 2026-11-01</text>
+<text x="54" y="94" class="title">A clean forecast screen, with developer detail on demand</text>
+<text x="54" y="126" class="sub">The normal view stays production-like. Debug tools are entered through location search and never replace the forecast readout.</text>
+<rect x="1480" y="38" width="270" height="46" rx="23" class="hot"/><text x="1615" y="67" text-anchor="middle" class="eyebrow" fill="#86651f">OWNER APPROVED · 2026-11-01</text>
+<!-- three cards -->
+<rect x="42" y="158" width="540" height="1016" rx="22" class="panel"/>
+<rect x="630" y="158" width="540" height="1016" rx="22" class="panel"/>
+<rect x="1218" y="158" width="540" height="1016" rx="22" class="panel"/>
+<text x="70" y="198" class="eyebrow">01 · NORMAL MODE · DEFAULT</text>
+<text x="658" y="198" class="eyebrow">02 · DEBUG MENU · #DEBUG</text>
+<text x="1246" y="198" class="eyebrow">03 · MAIN SCREEN · OVERLAY ON</text>
+<!-- mock screen 1 -->
+<rect x="164" y="224" width="296" height="640" rx="28" fill="#0d1b27"/>
+<rect x="174" y="234" width="276" height="620" rx="22" class="screen"/>
+<!-- city silhouette -->
+<path d="M174 600 L195 580 211 590 211 548 230 548 230 580 251 566 251 534 266 534 266 579 287 567 287 518 310 518 310 578 332 555 332 532 347 532 347 579 372 562 372 535 391 535 391 580 425 565 450 584 450 854 174 854Z" fill="url(#city)"/>
+<circle cx="214" cy="604" r="42" fill="#f3c773" opacity=".8"/>
+<text x="312" y="278" text-anchor="middle" class="white" font-size="11" font-weight="700" letter-spacing="1.2">PLACE⌄</text>
+<text x="312" y="410" text-anchor="middle" class="white" font-size="16" letter-spacing=".5">SUN, NOV 1</text>
+<text x="312" y="443" text-anchor="middle" class="white" font-size="14">5:08 PM CST</text>
+<text x="312" y="540" text-anchor="middle" class="white" font-size="74" font-weight="300">58°</text>
+<text x="312" y="576" text-anchor="middle" class="white" font-size="17">Clear</text>
+<text x="312" y="614" text-anchor="middle" class="white" font-size="15">HIGH 63°  /  LOW 54°</text>
+<text x="238" y="665" text-anchor="middle" class="teal" font-size="10" font-weight="700">PRECIP CHANCE</text><text x="238" y="694" text-anchor="middle" class="white" font-size="21">14%</text>
+<text x="386" y="665" text-anchor="middle" class="teal" font-size="10" font-weight="700">WIND</text><circle cx="386" cy="692" r="13" fill="none" stroke="#9cc9c9" stroke-width="2"/><line x1="386" y1="692" x2="393" y2="684" stroke="#f5f8fa" stroke-width="2"/><text x="386" y="724" text-anchor="middle" class="white" font-size="12">E · 7 mph</text>
+<!-- timeline -->
+<rect x="174" y="770" width="276" height="84" rx="0 0 22 22" fill="#101d2b" opacity=".95"/>
+<line x1="195" y1="818" x2="429" y2="818" stroke="#dce9ed" stroke-width="3"/>
+<line x1="312" y1="785" x2="312" y2="841" stroke="#80d8ca" stroke-width="3"/>
+<g stroke="#b9cbd2" stroke-width="2"><line x1="207" y1="809" x2="207" y2="827"/><line x1="237" y1="809" x2="237" y2="827"/><line x1="267" y1="809" x2="267" y2="827"/><line x1="357" y1="809" x2="357" y2="827"/><line x1="387" y1="809" x2="387" y2="827"/><line x1="417" y1="809" x2="417" y2="827"/></g>
+<text x="312" y="842" text-anchor="middle" class="teal" font-size="11">TIME TAPE</text>
+<text x="72" y="914" class="h">Only forecast readout stays prominent</text>
+<text x="72" y="950" class="body">Date · selected time · temperature</text><text x="72" y="979" class="body">Current event · high / low</text><text x="72" y="1008" class="body">Precip chance · wind meter</text>
+<text x="72" y="1038" class="small">Location search remains the entry point.</text><text x="72" y="1070" class="small">Sun is scene illustration. Chance and wind stay as compact</text><text x="72" y="1096" class="small">normal-view metrics. No source/debug status line,</text><text x="72" y="1122" class="small">dataset button, diagnostic text, or overlay by default.</text>
+<!-- screen 2 menu -->
+<rect x="752" y="224" width="296" height="640" rx="28" fill="#0d1b27"/>
+<rect x="762" y="234" width="276" height="620" rx="22" class="screen"/>
+<path d="M762 600 L782 580 810 590 810 548 829 548 829 580 850 566 850 534 866 534 866 579 889 567 889 518 913 518 913 578 938 555 938 532 953 532 953 579 980 562 980 535 999 535 999 580 1038 584 1038 854 762 854Z" fill="url(#city)"/>
+<rect x="762" y="524" width="276" height="330" rx="20" fill="#102638" opacity=".98"/>
+<rect x="866" y="540" width="68" height="5" rx="3" fill="#87a1ae"/>
+<text x="790" y="580" class="white" font-size="22" font-weight="700">Debug menu</text>
+<text x="790" y="605" class="teal" font-size="12">SESSION ACTIVE · DEBUG BUILD</text>
+<rect x="786" y="627" width="228" height="44" rx="12" fill="#193d50"/><text x="804" y="655" class="white" font-size="14">Open catalog picker</text><text x="997" y="655" text-anchor="end" class="teal" font-size="12">#PICKER</text>
+<text x="790" y="701" class="white" font-size="14" font-weight="700">OVERLAY</text><rect x="969" y="683" width="44" height="24" rx="12" fill="#435968"/><circle cx="982" cy="695" r="9" fill="#dce8ec"/><text x="790" y="730" class="small" fill="#c5d4da">Off · production view</text>
+<text x="790" y="763" class="white" font-size="14" font-weight="700">SAVED OVERLAY PRESETS</text>
+<rect x="786" y="778" width="228" height="40" rx="10" fill="#17394b"/><text x="800" y="803" class="white" font-size="13">Forecast QA</text><text x="997" y="803" text-anchor="end" class="teal" font-size="12">USE</text>
+<rect x="786" y="824" width="228" height="22" rx="9" fill="#23495b"/><text x="900" y="840" text-anchor="middle" class="teal" font-size="11">CONFIGURE · SAVE PRESET</text>
+<text x="658" y="914" class="h">Debug access and overlay are separate</text>
+<text x="658" y="950" class="body">#DEBUG opens this menu only in debug builds.</text><text x="658" y="979" class="body">Overlay starts OFF; preset can be restored.</text>
+<text x="658" y="1025" class="small">Exit ends the debug session. #PICKER works</text><text x="658" y="1051" class="small">only while it is active. Release treats both</text><text x="658" y="1077" class="small">commands as ordinary search text.</text>
+<!-- screen 3 overlay -->
+<rect x="1340" y="224" width="296" height="640" rx="28" fill="#0d1b27"/>
+<rect x="1350" y="234" width="276" height="620" rx="22" class="screen"/>
+<path d="M1350 600 L1372 580 1390 590 1390 548 1409 548 1409 580 1430 566 1430 534 1446 534 1446 579 1467 567 1467 518 1490 518 1490 578 1512 555 1512 532 1528 532 1528 579 1553 562 1553 535 1571 535 1571 580 1601 584 1626 854 1350 854Z" fill="url(#city)"/>
+<text x="1488" y="273" text-anchor="middle" class="white" font-size="10" font-weight="700" letter-spacing="1">PLACE⌄</text>
+<!-- overlay cards at upper sky corners -->
+<rect x="1363" y="291" width="115" height="69" rx="9" class="tag"/><text x="1373" y="310" class="teal" font-size="9" font-weight="700">CATALOG</text><text x="1373" y="328" class="white" font-size="10">SIMULATED</text><text x="1373" y="346" class="white" font-size="9">preview · local</text>
+<rect x="1490" y="291" width="122" height="69" rx="9" class="tag"/><text x="1500" y="310" class="teal" font-size="9" font-weight="700">SELECTED FACT</text><text x="1500" y="328" class="white" font-size="10">sample 5:00 PM</text><text x="1500" y="346" class="white" font-size="9">source bounds</text>
+<text x="1488" y="410" text-anchor="middle" class="white" font-size="16" letter-spacing=".5">SUN, NOV 1</text>
+<text x="1488" y="443" text-anchor="middle" class="white" font-size="14">5:08 PM CST</text>
+<text x="1488" y="540" text-anchor="middle" class="white" font-size="74" font-weight="300">58°</text>
+<text x="1488" y="576" text-anchor="middle" class="white" font-size="17">Clear</text>
+<text x="1488" y="614" text-anchor="middle" class="white" font-size="15">HIGH 63°  /  LOW 54°</text>
+<text x="1414" y="665" text-anchor="middle" class="teal" font-size="10" font-weight="700">PRECIP CHANCE</text><text x="1414" y="694" text-anchor="middle" class="white" font-size="21">14%</text>
+<text x="1562" y="665" text-anchor="middle" class="teal" font-size="10" font-weight="700">WIND</text><circle cx="1562" cy="692" r="13" fill="none" stroke="#9cc9c9" stroke-width="2"/><line x1="1562" y1="692" x2="1569" y2="684" stroke="#f5f8fa" stroke-width="2"/><text x="1562" y="724" text-anchor="middle" class="white" font-size="12">E · 7 mph</text>
+<rect x="1350" y="770" width="276" height="84" rx="0 0 22 22" fill="#101d2b" opacity=".95"/>
+<line x1="1371" y1="818" x2="1605" y2="818" stroke="#dce9ed" stroke-width="3"/><line x1="1488" y1="785" x2="1488" y2="841" stroke="#80d8ca" stroke-width="3"/>
+<text x="1488" y="842" text-anchor="middle" class="teal" font-size="11">TIME TAPE</text>
+<text x="1246" y="914" class="h">Overlay adds detail, not a new screen</text>
+<text x="1246" y="950" class="body">Small sky-corner panels keep the readout</text><text x="1246" y="979" class="body">and time tape fully visible and unchanged.</text>
+<text x="1246" y="1025" class="small">Preset selects diagnostic groups: catalog/source,</text><text x="1246" y="1051" class="small">selected fact/sample bounds, and missing-field</text><text x="1246" y="1077" class="small">state. Overlay labels are never forecast facts.</text>
+<rect x="54" y="1190" width="1692" height="1" fill="#cbd8de"/>
+<text x="54" y="1220" class="small">Precipitation chance and wind meter remain normal-view metrics. The sun is illustrative scene art. Source / freshness / stale / offline / error details remain truthful and reachable in a separate details surface.</text>
+</svg>

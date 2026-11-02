@@ -8,8 +8,12 @@ import androidx.room.PrimaryKey
 import androidx.room.Query
 import androidx.room.withTransaction
 import com.fasterxml.jackson.databind.ObjectMapper
+import kotlinx.coroutines.sync.Mutex
+import kotlinx.coroutines.sync.withLock
 import java.net.URI
 import java.time.ZoneId
+import java.util.concurrent.ConcurrentHashMap
+import java.util.concurrent.atomic.AtomicLong
 
 /** Stable, provider-neutral identity for a GeoNames place feature. */
 @JvmInline
@@ -97,27 +101,53 @@ class SavedLocationRepository(
     private val mapper: ObjectMapper = ObjectMapper(),
 ) : StartupLocationRestorer {
     private val dao get() = database.savedLocations()
+    private val locationLocks = ConcurrentHashMap<String, Mutex>()
+    private val locationVersions = ConcurrentHashMap<String, AtomicLong>()
+
+    private fun lockFor(id: LocationId) = locationLocks.getOrPut(id.value) { Mutex() }
+    private fun versionFor(id: LocationId) = locationVersions.getOrPut(id.value) { AtomicLong() }
+
+    /** Captured when a background update is scheduled; a later remove invalidates it. */
+    fun backgroundUpdateVersion(id: LocationId): Long = versionFor(id).get()
+
+    /** Holds the location's storage boundary while updating, so removal runs after and deletes its result. */
+    suspend fun updateSavedLocationIfCurrent(
+        id: LocationId,
+        expectedVersion: Long,
+        update: suspend (CatalogLocation) -> Unit,
+    ): Boolean = lockFor(id).withLock {
+        if (versionFor(id).get() != expectedVersion) return@withLock false
+        val row = dao.find(id.value) ?: return@withLock false
+        val location = decode(row)?.location ?: return@withLock false
+        update(location)
+        versionFor(id).get() == expectedVersion
+    }
 
     suspend fun add(candidate: PlaceSearchCandidate): SavedLocationResult {
         val canonicalId = candidate.canonicalPlaceId ?: return SavedLocationResult.MissingCanonicalId
         val location = candidate.toCatalogLocation(LocationId(canonicalId.value))
-        return database.withTransaction {
-            val current = dao.find(canonicalId.value)
-            if (current != null) {
-                val existing = decode(current) ?: return@withTransaction SavedLocationResult.MalformedRecord
-                if (existing.location.coordinates != location.coordinates || existing.location.timeZone != location.timeZone) {
-                    SavedLocationResult.PointConflict(canonicalId)
-                } else SavedLocationResult.AlreadySaved(existing)
-            } else {
-                val inserted = dao.insert(encode(candidate, location))
-                if (inserted == -1L) {
-                    val raced = dao.find(canonicalId.value)?.let(::decode)
-                        ?: return@withTransaction SavedLocationResult.MalformedRecord
-                    if (raced.location.coordinates != location.coordinates || raced.location.timeZone != location.timeZone)
+        val id = location.id
+        return lockFor(id).withLock {
+            val result = database.withTransaction {
+                val current = dao.find(canonicalId.value)
+                if (current != null) {
+                    val existing = decode(current) ?: return@withTransaction SavedLocationResult.MalformedRecord
+                    if (existing.location.coordinates != location.coordinates || existing.location.timeZone != location.timeZone) {
                         SavedLocationResult.PointConflict(canonicalId)
-                    else SavedLocationResult.AlreadySaved(raced)
-                } else SavedLocationResult.Added(SavedLocation(location, candidate))
+                    } else SavedLocationResult.AlreadySaved(existing)
+                } else {
+                    val inserted = dao.insert(encode(candidate, location))
+                    if (inserted == -1L) {
+                        val raced = dao.find(canonicalId.value)?.let(::decode)
+                            ?: return@withTransaction SavedLocationResult.MalformedRecord
+                        if (raced.location.coordinates != location.coordinates || raced.location.timeZone != location.timeZone)
+                            SavedLocationResult.PointConflict(canonicalId)
+                        else SavedLocationResult.AlreadySaved(raced)
+                    } else SavedLocationResult.Added(SavedLocation(location, candidate))
+                }
             }
+            if (result is SavedLocationResult.Added) versionFor(id).incrementAndGet()
+            result
         }
     }
 
@@ -128,13 +158,18 @@ class SavedLocationRepository(
         SavedLocationResult.Selected(location)
     }
 
-    suspend fun remove(id: LocationId): SavedLocationResult = database.withTransaction {
-        val row = dao.find(id.value) ?: return@withTransaction SavedLocationResult.NoMutation
-        if (decode(row) == null) return@withTransaction SavedLocationResult.MalformedRecord
-        database.datasets().deleteLocation(id.value)
-        if (dao.selectedId() == id.value) dao.clearSelection()
-        dao.delete(id.value)
-        SavedLocationResult.Removed
+    suspend fun remove(id: LocationId): SavedLocationResult {
+        versionFor(id).incrementAndGet()
+        return lockFor(id).withLock {
+            database.withTransaction {
+                val row = dao.find(id.value) ?: return@withTransaction SavedLocationResult.NoMutation
+                if (decode(row) == null) return@withTransaction SavedLocationResult.MalformedRecord
+                database.datasets().deleteLocation(id.value)
+                if (dao.selectedId() == id.value) dao.clearSelection()
+                dao.delete(id.value)
+                SavedLocationResult.Removed
+            }
+        }
     }
 
     override suspend fun restore(): SavedLocationResult = database.withTransaction {

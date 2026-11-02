@@ -50,6 +50,9 @@ import androidx.lifecycle.lifecycleScope
 import java.time.Clock
 import com.oxygen.weather.timeline.data.catalog.CatalogActivationCoordinator
 import com.oxygen.weather.timeline.data.catalog.CatalogOrigin
+import com.oxygen.weather.timeline.data.catalog.DatasetId
+import com.oxygen.weather.timeline.data.catalog.LocationId
+import com.oxygen.weather.timeline.data.catalog.SavedLocationListResult
 import com.oxygen.weather.timeline.data.catalog.CatalogActivationState
 import com.oxygen.weather.timeline.data.catalog.CatalogDatasetStorage
 import com.oxygen.weather.timeline.data.catalog.CatalogSourceRegistry
@@ -70,6 +73,10 @@ class MainActivity : ComponentActivity(), ActivityVariantDelegate.Host {
     override val activity get() = this
     override val activityScope get() = lifecycleScope
     private var variantDelegate: ActivityVariantDelegate? = null
+    private var sessionMenuVisible by mutableStateOf(false)
+    private var closeLocationSelectorAction: (() -> Unit)? = null
+    private var pendingForegroundUpdate: LocationId? = null
+    private var pendingForegroundLoadingObserved = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -92,16 +99,46 @@ class MainActivity : ComponentActivity(), ActivityVariantDelegate.Host {
             RecordedCatalogSource(null),
         ))
         val clock = Clock.systemUTC()
+        val liveCatalogRepository = LiveCatalogRepository(catalogSources, catalogStorage, clock)
         activationCoordinator = CatalogActivationCoordinator(
             scope = lifecycleScope,
             savedLocations = savedLocations,
             storage = catalogStorage,
-            liveRepository = LiveCatalogRepository(catalogSources, catalogStorage, clock),
+            liveRepository = liveCatalogRepository,
             sources = catalogSources,
             clock = clock,
         )
         lifecycleScope.launch {
-            activationCoordinator.state.collect { variantDelegate?.onCatalogActivationState(this@MainActivity, it) }
+            activationCoordinator.state.collect { state ->
+                variantDelegate?.onCatalogActivationState(this@MainActivity, state)
+                val waitingFor = pendingForegroundUpdate
+                if (waitingFor != null && state.selectedLocation?.id == waitingFor) {
+                    if (state.loading) pendingForegroundLoadingObserved = true
+                    else if (pendingForegroundLoadingObserved) {
+                        pendingForegroundUpdate = null
+                        pendingForegroundLoadingObserved = false
+                        val active = state.active?.takeIf {
+                            it.location.id == waitingFor && it.origin == CatalogOrigin.LIVE && state.lastError == null
+                        }
+                        if (active != null) lifecycleScope.launch {
+                            val locations = savedLocations.list() as? SavedLocationListResult.Locations ?: return@launch
+                            locations.values.asSequence().filter { it.location.id != waitingFor }.forEach { saved ->
+                                val id = saved.location.id
+                                val version = savedLocations.backgroundUpdateVersion(id)
+                                try {
+                                    savedLocations.updateSavedLocationIfCurrent(id, version) { location ->
+                                        liveCatalogRepository.load(location, DatasetId("forecast-44d"))
+                                    }
+                                } catch (cancelled: kotlinx.coroutines.CancellationException) {
+                                    throw cancelled
+                                } catch (_: Exception) {
+                                    // Each location update is best effort; its previous catalog remains available.
+                                }
+                            }
+                        }
+                    }
+                }
+            }
         }
         if (variantDelegate?.onMainActivityCreated(this, intent) != true) restoreStartupCatalog()
         val placeSearcher = if (isDebuggable && intent.getBooleanExtra(EXTRA_LOCATION_FIXTURE_SEARCH, false)) {
@@ -142,11 +179,19 @@ class MainActivity : ComponentActivity(), ActivityVariantDelegate.Host {
             val matchingActive = active?.takeIf { it.location == activation.selectedLocation }
             val presenter = remember(matchingActive?.viewGeneration) { matchingActive?.let(::CatalogTimelinePresenter) }
             var catalogLocationSelectorOpen by remember { mutableStateOf(openLocationSelector) }
+            closeLocationSelectorAction = { catalogLocationSelectorOpen = false }
             val selectorScope = rememberCoroutineScope()
             val catalogSelector = remember(placeSearcher, selectorStore, selectorScope) {
-                LocationSelectorController(selectorScope, placeSearcher, selectorStore) {
-                    activationCoordinator.committedLocationSelection(it.location, it.candidate.name)
-                }
+                LocationSelectorController(selectorScope, placeSearcher, selectorStore,
+                    onSearchSubmission = { variantDelegate?.onSearchSubmission(this@MainActivity, it) == true },
+                    beforeSelection = { variantDelegate?.beforeOrdinaryAction(this@MainActivity) },
+                    onSelectionCompleted = { catalogLocationSelectorOpen = false },
+                    onCommittedSelection = { selected ->
+                    pendingForegroundUpdate = selected.location.id
+                    pendingForegroundLoadingObserved = false
+                    activationCoordinator.committedLocationSelection(selected.location, selected.candidate.name)
+                    },
+                )
             }
             val fixturePreview = isDebuggable && (showStormPreview || showClearNightPreview ||
                 debugSelectedHour != null || effectPreview != AtmospherePreview.NONE ||
@@ -187,7 +232,12 @@ class MainActivity : ComponentActivity(), ActivityVariantDelegate.Host {
                                 { variantDelegate?.openCatalogPicker(this@MainActivity) }
                             } else null,
                             onChooseLocation = { catalogLocationSelectorOpen = true },
-                            onRefresh = activationCoordinator::refreshCurrent,
+                            onRefresh = { lifecycleScope.launch {
+                                variantDelegate?.beforeOrdinaryAction(this@MainActivity)
+                                pendingForegroundUpdate = activationCoordinator.state.value.selectedLocation?.id
+                                pendingForegroundLoadingObserved = false
+                                activationCoordinator.refreshCurrent()
+                            } },
                             omitOptionalCityLayers = forceSg2MissingOptionalLayer,
                         )
                         else -> Box(Modifier.fillMaxSize().background(Color(0xFF11263D))) {
@@ -211,8 +261,13 @@ class MainActivity : ComponentActivity(), ActivityVariantDelegate.Host {
                                 ) {
                                     Text("Choose location")
                                 }
-                                if (activation.selectedLocation != null && !activation.loading) {
-                                    TextButton(onClick = activationCoordinator::refreshCurrent) {
+                        if (activation.selectedLocation != null && !activation.loading) {
+                            TextButton(onClick = { lifecycleScope.launch {
+                                variantDelegate?.beforeOrdinaryAction(this@MainActivity)
+                                pendingForegroundUpdate = activationCoordinator.state.value.selectedLocation?.id
+                                pendingForegroundLoadingObserved = false
+                                activationCoordinator.refreshCurrent()
+                                    } }) {
                                         Text("Retry forecast", color = Color.White)
                                     }
                                 }
@@ -222,6 +277,7 @@ class MainActivity : ComponentActivity(), ActivityVariantDelegate.Host {
                     if (!fixturePreview && catalogLocationSelectorOpen) {
                         LocationSelectorPanel(catalogSelector) { catalogLocationSelectorOpen = false }
                     }
+                    if (sessionMenuVisible) variantDelegate?.DebugSessionMenu(this@MainActivity)
                 }
             }
         }
@@ -235,6 +291,14 @@ class MainActivity : ComponentActivity(), ActivityVariantDelegate.Host {
         val handledByVariant = variantDelegate?.onMainActivityNewIntent(this, intent) == true
         if (!handledByVariant && applicationInfo.flags and ApplicationInfo.FLAG_DEBUGGABLE != 0 &&
             intent.getBooleanExtra(EXTRA_LOCATION_SELECTOR, false)) recreate()
+    }
+
+    override fun setDebugSessionMenuVisible(visible: Boolean) {
+        sessionMenuVisible = visible
+    }
+
+    override fun closeLocationSelector() {
+        closeLocationSelectorAction?.invoke()
     }
 
     override fun onDestroy() {

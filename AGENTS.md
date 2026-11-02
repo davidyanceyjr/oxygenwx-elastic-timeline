@@ -38,6 +38,8 @@ Reusable workflows live under `.agents/skills/`. Use a skill when it directly fi
 
 ## Verification
 
+Don't borrow trouble. First make the complete slice work for its intended purpose, refactoring as needed. Do not treat a hypothetical problem as a demonstrated problem or build tests for problems before working code exists. After the slice works, assess and verify relevant potential problems within its scope. Required acceptance and evidence still apply, and tests are added or run only when the user authorizes them.
+
 Use `python scripts/dev.py workflow`, `contract`, `test`, `build`, `lint`, `run`, or `screenshot` as applicable to the authorized task and active plan. Do not add or run tests unless the user asks. Report exact commands and any verification that could not run. Follow a separate full-suite verification plan when work becomes production integration.
 
 Verification stays within the bounded slice. Design and implementation slices check only their scoped behavior and directly affected paths. Do not add RTL, TalkBack, or broad system/environment matrices to those slices; reserve cross-cutting system acceptance for roadmap slices explicitly designated `TEST`. A design slice may capture and inspect its approved states and directly affected interactions. Do not claim checks outside the slice.

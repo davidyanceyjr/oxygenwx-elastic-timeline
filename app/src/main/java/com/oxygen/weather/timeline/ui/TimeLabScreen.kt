@@ -93,9 +93,10 @@ fun TimeLabScreen(
     val currentSelectionCallback = androidx.compose.runtime.rememberUpdatedState(onCommittedLocationSelection)
     val locationSelectorController = if (placeSearcher != null && locationStore != null) {
         remember(placeSearcher, locationStore, locationSelectorScope) {
-            LocationSelectorController(locationSelectorScope, placeSearcher, locationStore) {
-                currentSelectionCallback.value(it)
-            }
+            LocationSelectorController(
+                locationSelectorScope, placeSearcher, locationStore,
+                onCommittedSelection = { currentSelectionCallback.value(it) },
+            )
         }
     } else null
     val haptics = LocalHapticFeedback.current

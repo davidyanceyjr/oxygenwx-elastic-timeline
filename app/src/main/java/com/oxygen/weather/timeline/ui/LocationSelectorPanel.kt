@@ -96,7 +96,7 @@ fun LocationSelectorPanel(
                         Text("Locations", style = MaterialTheme.typography.titleLarge, fontWeight = FontWeight.SemiBold)
                         Text("Search and choose a place manually", style = MaterialTheme.typography.bodySmall)
                     }
-                    TextButton(onClick = onDismiss, modifier = Modifier.semantics {
+                    TextButton(onClick = dismiss, modifier = Modifier.semantics {
                         contentDescription = "Close locations"
                     }) { Text("Close") }
                 }
@@ -134,7 +134,7 @@ fun LocationSelectorPanel(
                             val isSaved = savedLocations.orEmpty().any {
                                 it.location.id.value == candidate.canonicalPlaceId?.value
                             }
-                            CandidateCard(candidate, index, alreadySaved = isSaved, onAdd = { controller.add(candidate) })
+                            CandidateCard(candidate, index, alreadySaved = isSaved, onSelect = { controller.selectCandidate(candidate) })
                             Spacer(Modifier.height(8.dp))
                         }
                     }
@@ -229,7 +229,7 @@ private fun SectionTitle(text: String, modifier: Modifier = Modifier) {
 }
 
 @Composable
-private fun CandidateCard(candidate: PlaceSearchCandidate, index: Int, alreadySaved: Boolean, onAdd: () -> Unit) {
+private fun CandidateCard(candidate: PlaceSearchCandidate, index: Int, alreadySaved: Boolean, onSelect: () -> Unit) {
     var attributionExpanded by remember(candidate.canonicalPlaceId) { mutableStateOf(false) }
     Surface(
         modifier = Modifier.fillMaxWidth().semantics {
@@ -247,12 +247,11 @@ private fun CandidateCard(candidate: PlaceSearchCandidate, index: Int, alreadySa
                         style = MaterialTheme.typography.bodySmall)
                 }
                 Button(
-                    onClick = onAdd,
-                    enabled = !alreadySaved,
+                    onClick = onSelect,
                     modifier = Modifier.semantics {
-                        contentDescription = if (alreadySaved) "${candidate.displayLabel} is already saved" else "Add ${candidate.displayLabel} to saved locations"
+                        contentDescription = "Select ${candidate.displayLabel}${if (alreadySaved) ", already saved" else ", saves if needed"}"
                     },
-                ) { Text(if (alreadySaved) "Saved" else "Add") }
+                ) { Text(if (alreadySaved) "Select" else "Choose") }
             }
             TextButton(
                 onClick = { attributionExpanded = !attributionExpanded },

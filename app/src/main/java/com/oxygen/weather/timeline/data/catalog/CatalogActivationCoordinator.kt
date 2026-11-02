@@ -7,6 +7,8 @@ import com.oxygen.weather.timeline.presentation.SupportedTimeInterval
 import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Job
+import kotlinx.coroutines.CompletableDeferred
+import kotlinx.coroutines.Deferred
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -55,6 +57,12 @@ data class CatalogActivationRequest(
     }
 }
 
+sealed interface DebugActivationResult {
+    data class Success(val selection: ActiveCatalogSelection) : DebugActivationResult
+    data class Failure(val message: String) : DebugActivationResult
+    data object Superseded : DebugActivationResult
+}
+
 /**
  * Application-owned request sequencer. It stages and validates a whole recording, then replaces
  * the active selection with one StateFlow write only if the request is still current.
@@ -78,10 +86,93 @@ class CatalogActivationCoordinator(
     private var activeInterval: SupportedTimeInterval? = null
     private var nextViewGeneration = 0L
     private var pendingSelectionAnchor: Instant? = null
+    private var startupParticipant: Long? = 0L
+    private var nextStartupParticipant = 0L
+    private var activationTerminal = true
+    private var changed = CompletableDeferred<Unit>()
+    private var currentCompletion: CompletableDeferred<DebugActivationResult>? = null
+
+    sealed interface Checkpoint
+
+    private data class SavedCheckpoint(
+        val location: CatalogLocation?,
+        val request: CatalogActivationRequest?,
+        val interval: SupportedTimeInterval?,
+        val anchor: Instant?,
+        val state: CatalogActivationState,
+    ) : Checkpoint
+
+    private fun signalChange() {
+        val previous = changed
+        changed = CompletableDeferred()
+        previous.complete(Unit)
+    }
+
+    fun beginAlternateStartup(): Long = synchronized(this) {
+        val participant = ++nextStartupParticipant
+        startupParticipant = participant
+        signalChange()
+        participant
+    }
+
+    fun finishAlternateStartup(participant: Long): Boolean = synchronized(this) {
+        if (startupParticipant != participant) false else {
+            startupParticipant = null
+            signalChange()
+            true
+        }
+    }
+
+    /** Transfer the alternate participant to saved-location restoration without a ready gap. */
+    fun fallbackStartup(participant: Long): Boolean = synchronized(this) {
+        if (startupParticipant != participant) false else {
+            startRestoreLocked()
+            true
+        }
+    }
+
+    suspend fun captureSettledCheckpoint(): Checkpoint {
+        while (true) {
+            val wait = synchronized(this) {
+                if (startupParticipant == null && activationTerminal) {
+                    return SavedCheckpoint(selectedLocation, lastRequest, activeInterval, pendingSelectionAnchor, mutableState.value)
+                }
+                changed
+            }
+            wait.await()
+        }
+    }
+
+    fun restoreCheckpoint(checkpoint: Checkpoint) = synchronized(this) {
+        val saved = checkpoint as SavedCheckpoint
+        sequence++
+        currentCompletion?.complete(DebugActivationResult.Superseded)
+        currentCompletion = null
+        requestJob?.cancel()
+        requestJob = null
+        selectedLocation = saved.location
+        lastRequest = saved.request
+        activeInterval = saved.interval
+        pendingSelectionAnchor = saved.anchor
+        val active = saved.state.active
+        mutableState.value = saved.state.copy(active = active?.copy(viewGeneration = ++nextViewGeneration))
+        activationTerminal = true
+        signalChange()
+    }
 
     /** Restore independently of selector visibility. A newer committed choice wins the race. */
-    fun restoreStartup() {
-        val restoreSequence = synchronized(this) { ++sequence }
+    fun restoreStartup() = synchronized(this) { startRestoreLocked() }
+
+    private fun startRestoreLocked() {
+        val participant = ++nextStartupParticipant
+        startupParticipant = participant
+        val restoreSequence = ++sequence
+        currentCompletion?.complete(DebugActivationResult.Superseded)
+        currentCompletion = null
+        requestJob?.cancel()
+        requestJob = null
+        activationTerminal = true
+        signalChange()
         scope.launch {
             val result = try {
                 savedLocations.restore()
@@ -89,36 +180,44 @@ class CatalogActivationCoordinator(
                 throw cancelled
             } catch (error: Exception) {
                 synchronized(this@CatalogActivationCoordinator) {
-                    if (sequence == restoreSequence) mutableState.value = mutableState.value.copy(
-                        loading = false,
-                        lastError = error.message ?: "Saved location restoration failed (${error.javaClass.simpleName})",
-                    )
+                    if (startupParticipant == participant) {
+                        if (sequence == restoreSequence) mutableState.value = mutableState.value.copy(
+                            loading = false,
+                            lastError = error.message ?: "Saved location restoration failed (${error.javaClass.simpleName})",
+                        )
+                        startupParticipant = null
+                        signalChange()
+                    }
                 }
                 return@launch
             }
             synchronized(this@CatalogActivationCoordinator) {
-                if (sequence != restoreSequence) return@synchronized
-                when (result) {
-                    is SavedLocationResult.Selected -> {
-                        val nextLocation = result.location?.location
-                        if (selectedLocation != nextLocation) {
-                            pendingSelectionAnchor = mutableState.value.active?.selectedInstant
-                            activeInterval = null
+                if (startupParticipant != participant) return@synchronized
+                if (sequence == restoreSequence) {
+                    when (result) {
+                        is SavedLocationResult.Selected -> {
+                            val nextLocation = result.location?.location
+                            if (selectedLocation != nextLocation) {
+                                pendingSelectionAnchor = mutableState.value.active?.selectedInstant
+                                activeInterval = null
+                            }
+                            selectedLocation = nextLocation
+                            mutableState.value = mutableState.value.copy(
+                                selectedLocation = selectedLocation,
+                                selectedLocationName = result.location?.candidate?.name,
+                            )
+                            result.location?.location?.let {
+                                beginRequest(CatalogActivationRequest(it, CatalogOrigin.LIVE, startupDatasetId))
+                            }
                         }
-                        selectedLocation = nextLocation
-                        mutableState.value = mutableState.value.copy(
-                            selectedLocation = selectedLocation,
-                            selectedLocationName = result.location?.candidate?.name,
+                        else -> mutableState.value = mutableState.value.copy(
+                            loading = false,
+                            lastError = "Saved location restoration was invalid",
                         )
-                        result.location?.location?.let {
-                            beginRequest(CatalogActivationRequest(it, CatalogOrigin.LIVE, startupDatasetId))
-                        }
                     }
-                    else -> mutableState.value = mutableState.value.copy(
-                        loading = false,
-                        lastError = "Saved location restoration was invalid",
-                    )
                 }
+                startupParticipant = null
+                signalChange()
             }
         }
     }
@@ -144,13 +243,21 @@ class CatalogActivationCoordinator(
     }
 
     /** Activate a validated debug choice for this process without persisting a location choice. */
-    fun requestDebugCatalog(request: CatalogActivationRequest) {
+    fun requestDebugCatalog(request: CatalogActivationRequest): Deferred<DebugActivationResult> =
         synchronized(this) {
             selectedLocation = request.location
             mutableState.value = mutableState.value.copy(selectedLocation = request.location)
             beginRequest(request)
         }
-    }
+
+    fun requestAlternateStartupCatalog(participant: Long, request: CatalogActivationRequest): Deferred<DebugActivationResult>? =
+        synchronized(this) {
+            if (startupParticipant != participant) null else {
+                selectedLocation = request.location
+                mutableState.value = mutableState.value.copy(selectedLocation = request.location)
+                beginRequest(request)
+            }
+        }
 
     /** Internal data-path entry point for refreshes and deterministic origin-switch coverage. */
     fun requestCatalog(
@@ -184,9 +291,13 @@ class CatalogActivationCoordinator(
         }
     }
 
-    private fun beginRequest(request: CatalogActivationRequest) {
+    private fun beginRequest(request: CatalogActivationRequest): Deferred<DebugActivationResult> {
         sequence++
+        activationTerminal = false
         val requestSequence = sequence
+        currentCompletion?.complete(DebugActivationResult.Superseded)
+        val completion = CompletableDeferred<DebugActivationResult>()
+        currentCompletion = completion
         requestJob?.cancel()
         lastRequest = request
         val retainsMatching = mutableState.value.active?.location == request.location
@@ -196,6 +307,7 @@ class CatalogActivationCoordinator(
             refreshStatus = null,
             active = mutableState.value.active?.takeIf { retainsMatching },
         )
+        signalChange()
         requestJob = scope.launch {
             try {
                 val staged = loadAndValidate(request, requestSequence)
@@ -214,6 +326,9 @@ class CatalogActivationCoordinator(
                                 refreshStatus = staged.refreshStatus,
                                 lastError = "Refresh failed; showing the last active catalog.",
                             )
+                            activationTerminal = true
+                            completion.complete(DebugActivationResult.Failure("Refresh failed"))
+                            signalChange()
                             return@synchronized
                         }
                         val interval = selectionInterval(staged.recording)
@@ -242,6 +357,9 @@ class CatalogActivationCoordinator(
                             lastError = null,
                             refreshStatus = staged.refreshStatus,
                         )
+                        activationTerminal = true
+                        completion.complete(DebugActivationResult.Success(mutableState.value.active!!))
+                        signalChange()
                     }
                 }
             } catch (cancelled: CancellationException) {
@@ -257,10 +375,14 @@ class CatalogActivationCoordinator(
                             lastError = error.message ?: "Catalog activation failed (${error.javaClass.simpleName})",
                             refreshStatus = status,
                         )
+                        activationTerminal = true
+                        completion.complete(DebugActivationResult.Failure(mutableState.value.lastError ?: "Catalog activation failed"))
+                        signalChange()
                     }
                 }
             }
         }
+        return completion
     }
 
     private suspend fun loadAndValidate(request: CatalogActivationRequest, requestSequence: Long): StagedCatalog {

@@ -67,6 +67,7 @@ import com.oxygen.weather.timeline.presentation.CatalogTimelineView
 import com.oxygen.weather.timeline.presentation.CatalogTimelineScenePresentation
 import com.oxygen.weather.timeline.presentation.CompassDirection
 import com.oxygen.weather.timeline.presentation.InstantTimeAxis
+import com.oxygen.weather.timeline.presentation.scene.FirstCityComposition
 import com.oxygen.weather.timeline.presentation.scene.SceneReading
 import java.time.Instant
 import java.time.format.DateTimeFormatter
@@ -83,7 +84,7 @@ fun CatalogTimeLabScreen(
     onChooseLocation: (() -> Unit)? = null,
     onRefresh: (() -> Unit)? = null,
 ) = CatalogTimeLabScreenContent(
-    view, null, onSelectInstant, onReturnToNow, onBrowseCatalogs, onChooseLocation, onRefresh,
+    view, null, null, onSelectInstant, onReturnToNow, onBrowseCatalogs, onChooseLocation, onRefresh,
 )
 
 @Composable
@@ -96,7 +97,9 @@ fun CatalogTimeLabScreen(
     onRefresh: (() -> Unit)? = null,
     omitOptionalCityLayers: Boolean = false,
 ) = CatalogTimeLabScreenContent(
-    presentation.timeline, presentation.reading,
+    presentation.timeline,
+    presentation.reading,
+    presentation.composition.takeIf { !it.hasWeatherState || presentation.timeline.scene != null },
     onSelectInstant, onReturnToNow, onBrowseCatalogs, onChooseLocation, onRefresh,
     omitOptionalCityLayers,
 )
@@ -105,6 +108,7 @@ fun CatalogTimeLabScreen(
 private fun CatalogTimeLabScreenContent(
     view: CatalogTimelineView,
     sceneReading: SceneReading?,
+    composition: FirstCityComposition?,
     onSelectInstant: (Instant, Long) -> Unit,
     onReturnToNow: () -> Unit,
     onBrowseCatalogs: (() -> Unit)?,
@@ -119,7 +123,12 @@ private fun CatalogTimeLabScreenContent(
     val isRtl = LocalLayoutDirection.current == LayoutDirection.Rtl
     BoxWithConstraints(Modifier.fillMaxSize().background(Color(0xFF11263D))) {
         val compactLayout = compact || maxWidth < 400.dp || maxHeight < 400.dp
-        if (sceneReading != null) {
+        if (composition != null) {
+            CatalogAtmosphericScene(
+                composition = composition,
+                omitOptionalCityLayers = omitOptionalCityLayers,
+            )
+        } else if (sceneReading != null) {
             CatalogAtmosphericScene(
                 reading = sceneReading,
                 zone = view.zone,
