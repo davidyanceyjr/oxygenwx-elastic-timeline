@@ -682,13 +682,13 @@ This workstream establishes an explicit, debug-only set of typed forecast scenar
 **Slice board(s) — behavior and UI artwork:** The product owner approved `.codex/concepts/DFM.4.5-catalog-library-behavior-board.md` with flow `.svg` and PNG preview, UI artwork `.codex/concepts/DFM.4.5-catalog-library-editor-artwork-board.svg` with PNG preview, and authored-range behavior contract `.codex/concepts/DFM.4.5-authored-event-ranges-contract.md` with visual board `.svg` and PNG preview, as shown on 2026-11-02 with no additional constraints. The authored-range board covers half-open event ranges, uncovered baseline periods, overlap rejection, DST, sidecar compatibility, and unchanged schema; the other boards govern `#PICKER` gating, library/editor/SIMULATED/REPLAY transitions, save/cancel without activation, explicit saved-record preview/revalidation, fail-closed preservation, synthetic provenance, and restoration/isolation boundaries. Installed evidence remains required.
 **Evidence:** Cycle 089 complete: `.codex/history/089-dfm45-catalog-library-editor.md`; `.codex/test-artifacts/089-dfm45-catalog-library-editor/README.md`; archived plan `.codex/history/plans/089-dfm45-catalog-library-editor.md`.
 
-### DFM.4.6 — Workbench integration and release acceptance — NEXT
+### DFM.4.6 — Workbench integration and release acceptance — DONE
 
 **Objective/scope:** Verify the combined original DFM.4 outcome on the installed reference device and release variant. This is focused integration acceptance for DFM.4, not a broad app/system TEST matrix; fix only defects within the approved DFM.4 boundary or replan.
 **Depends on:** DFM.4.2, DFM.4.3 and DFM.4.5.
 **Exit:** Final integrated debug and release checks, screenshots, exact restore/no-mutation proof, manual documentation check and original DFM.4 acceptance obligations are recorded and pass.
-**Slice board(s):** Original DFM.4 approved boards above are reference inputs; objective-specific coverage and approval must be confirmed during draft review, with additional approved boards where needed.
-**Evidence:** Draft plan `.codex/plans/draft-dfm46.md`; cycle-specific artifact and history paths assigned when planned.
+**Slice board(s) — OWNER APPROVED 2026-11-02:** Objective-specific behavior board `.codex/concepts/DFM.4.6-integrated-workbench-behavior-board.md` and UI artwork board `.codex/concepts/DFM.4.6-integrated-workbench-ui-artwork-board.svg` (PNG preview alongside). Approval covers the integrated debug journey, exact no-I/O restoration, ordinary-action ordering, release command boundary, and final installed states. Constraint: DFM.4.6 remains integration acceptance only; a draggable/resizable diagnostic panel is deferred to separate follow-up work. Cycle 090 records the boards' relationship to scope and acceptance.
+**Evidence:** Cycle 090 complete: `.codex/history/090-dfm46-workbench-integration-release-acceptance.md`; installed, package, command, ordinary-action, gesture, focused-test, and manual-check evidence `.codex/test-artifacts/090-dfm46-workbench-integration-release-acceptance/README.md`; archived plan `.codex/history/plans/090-dfm46-workbench-integration-release-acceptance.md`.
 
 ## SG — Scene Generation
 
