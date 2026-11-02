@@ -117,6 +117,8 @@ A theme defines a coherent visual world, not only a palette. It may supply:
 
 The theme resolves semantic layer names and asset IDs to its own composition. It supplies parameters to the asset function and determines where the returned object is placed. Different themes may place the same asset family in different regions or use a different spatial structure entirely. A theme may be a landscape, city, ocean, abstract field, orbital scene, or another owner-approved setting. Neither the scene-plan format nor the renderer assumes a planet, sky, horizon, ground, or a particular screen coordinate for a weather event.
 
+**Product-wide cloud placement constraint:** cloud artwork must remain entirely within the top 33% of the atmospheric scene viewport, measured from the top of that theme's scene canvas. The bound includes visible edges, blur, shadow, movement, and transitions. Theme-specific composition may shape and layer clouds within this region but cannot place them below it. This placement rule does not alter cloud-cover support or precipitation meaning; rain and snow may extend below the cloud region.
+
 Weather meaning remains independent of the theme. A theme may change how a supported event is depicted, but may not remove, contradict, or exaggerate its forecast meaning. Theme artwork cannot imply geographic or climatological truth without supported inputs and an explicit product decision.
 
 ### 4.3 Renderer

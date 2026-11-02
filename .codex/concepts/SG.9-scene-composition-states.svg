@@ -1,0 +1,59 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1600" height="1120" viewBox="0 0 1600 1120">
+<defs>
+  <linearGradient id="bg" x2="0" y2="1"><stop stop-color="#101b31"/><stop offset="1" stop-color="#203b58"/></linearGradient>
+  <linearGradient id="day" x2="0" y2="1"><stop stop-color="#71b6dd"/><stop offset="1" stop-color="#d5e8e6"/></linearGradient>
+  <linearGradient id="night" x2="0" y2="1"><stop stop-color="#172647"/><stop offset="1" stop-color="#526280"/></linearGradient>
+  <style>
+    .title{font:700 38px sans-serif;fill:#f5f8fc}.sub{font:20px sans-serif;fill:#bdcad8}.label{font:700 19px sans-serif;fill:#fff}.body{font:17px sans-serif;fill:#dbe5ee}.small{font:15px sans-serif;fill:#c5d3df}.muted{font:15px sans-serif;fill:#aab9c8}.card{fill:#16283c;stroke:#8da7b9;stroke-width:2}.line{stroke:#ffce6a;stroke-width:3;stroke-dasharray:10 8}.cloud{fill:#edf3f4;opacity:.9}.city{fill:#29465b}.rain{stroke:#a9dcf0;stroke-width:4;stroke-linecap:round}.snow{fill:#fff}.pill{fill:#203c53;stroke:#66869b;stroke-width:1.3}
+  </style>
+</defs>
+<rect width="1600" height="1120" fill="url(#bg)"/>
+<text x="64" y="68" class="title">SG.9 · First-theme scene comparison</text>
+<text x="64" y="105" class="sub">OWNER APPROVED · Same selected time and source bounds before and after the composition refactor.</text>
+<text x="64" y="143" class="small">Schematic comparison: preserve approved SG.4 visual meanings; the board defines states and invariants, not new artwork.</text>
+
+<!-- headings -->
+<text x="76" y="193" class="label">SELECTED STATE</text>
+<text x="710" y="193" class="label">CURRENT SCENE (REFERENCE)</text>
+<text x="1188" y="193" class="label">SG.9 COMPOSITION (TARGET)</text>
+
+<!-- row helper backgrounds -->
+<g>
+ <rect x="64" y="214" width="1472" height="112" rx="14" class="card"/>
+ <rect x="64" y="338" width="1472" height="112" rx="14" class="card"/>
+ <rect x="64" y="462" width="1472" height="112" rx="14" class="card"/>
+ <rect x="64" y="586" width="1472" height="112" rx="14" class="card"/>
+ <rect x="64" y="710" width="1472" height="112" rx="14" class="card"/>
+ <rect x="64" y="834" width="1472" height="112" rx="14" class="card"/>
+</g>
+<!-- Labels and typed reading summaries -->
+<g class="body">
+ <text x="84" y="250" class="label">CLEAR · day</text><text x="84" y="280">supported categorical condition</text><text x="84" y="305" class="small">selected instant + point/interval bounds</text>
+ <text x="84" y="374" class="label">Rain · day</text><text x="84" y="404">supported precipitation</text><text x="84" y="429" class="small">chance / amount / rate support retained</text>
+ <text x="84" y="498" class="label">Snow · night</text><text x="84" y="528">supported precipitation</text><text x="84" y="553" class="small">night light input retained</text>
+ <text x="84" y="622" class="label">Storm · day/night</text><text x="84" y="652">supported categorical condition</text><text x="84" y="677" class="small">no new warning semantics</text>
+ <text x="84" y="746" class="label">Probability only</text><text x="84" y="776">chance supported; event evidence absent</text><text x="84" y="801" class="small">does not become a rain event</text>
+ <text x="84" y="870" class="label">Unknown</text><text x="84" y="900">weather support absent</text><text x="84" y="925" class="small">does not become CLEAR or zero</text>
+</g>
+<!-- Mini scene frames: current and target columns, each row aligned -->
+<g>
+ <!-- reference windows -->
+ <g transform="translate(705 226)"><rect width="420" height="88" rx="8" fill="url(#day)"/><path d="M0 58h420v30H0z" fill="#27465b"/><path d="M0 69h420v19H0z" fill="#18354a"/><circle cx="352" cy="22" r="12" fill="#ffe4a0"/><text x="12" y="22" class="small">approved scene meaning</text></g>
+ <g transform="translate(705 350)"><rect width="420" height="88" rx="8" fill="url(#day)"/><path d="M0 58h420v30H0z" fill="#27465b"/><path d="M0 69h420v19H0z" fill="#18354a"/><ellipse cx="195" cy="27" rx="71" ry="16" class="cloud"/><path d="M35 40l-5 13m70-13-5 13m72-13-5 13m73-13-5 13m75-13-5 13m72-13-5 13" class="rain"/></g>
+ <g transform="translate(705 474)"><rect width="420" height="88" rx="8" fill="url(#night)"/><path d="M0 58h420v30H0z" fill="#27465b"/><path d="M0 69h420v19H0z" fill="#18354a"/><circle cx="355" cy="18" r="12" fill="#e3e7ed"/><ellipse cx="195" cy="28" rx="72" ry="16" class="cloud"/><circle cx="60" cy="42" r="3" class="snow"/><circle cx="117" cy="49" r="3" class="snow"/><circle cx="289" cy="44" r="3" class="snow"/></g>
+ <g transform="translate(705 598)"><rect width="420" height="88" rx="8" fill="url(#day)"/><path d="M0 58h420v30H0z" fill="#27465b"/><path d="M0 69h420v19H0z" fill="#18354a"/><circle cx="352" cy="22" r="12" fill="#ffe4a0"/><ellipse cx="195" cy="27" rx="82" ry="19" class="cloud"/><path d="M35 42l-5 12m70-12-5 12m72-12-5 12m73-12-5 12m75-12-5 12" class="rain"/></g>
+ <g transform="translate(705 722)"><rect width="420" height="88" rx="8" fill="url(#day)"/><path d="M0 58h420v30H0z" fill="#27465b"/><path d="M0 69h420v19H0z" fill="#18354a"/><circle cx="352" cy="22" r="12" fill="#ffe4a0"/><text x="16" y="50" class="small">chance fact stays text-led</text></g>
+ <g transform="translate(705 846)"><rect width="420" height="88" rx="8" fill="url(#night)"/><path d="M0 58h420v30H0z" fill="#27465b"/><path d="M0 69h420v19H0z" fill="#18354a"/><text x="16" y="50" class="small">unknown stays visibly unresolved</text></g>
+ <!-- target scene panes: consistent single boundary marker -->
+ <g transform="translate(1180 226)"><rect width="330" height="88" rx="8" fill="url(#day)"/><path d="M0 58h330v30H0z" fill="#27465b"/><path d="M0 69h330v19H0z" fill="#18354a"/><circle cx="280" cy="22" r="12" fill="#ffe4a0"/><text x="12" y="50" class="small">typed CLEAR reading → one composition</text></g>
+ <g transform="translate(1180 350)"><rect width="330" height="88" rx="8" fill="url(#day)"/><path d="M0 58h330v30H0z" fill="#27465b"/><path d="M0 69h330v19H0z" fill="#18354a"/><ellipse cx="160" cy="27" rx="67" ry="16" class="cloud"/><path d="M30 40l-5 13m65-13-5 13m68-13-5 13m70-13-5 13m67-13-5 13" class="rain"/><text x="10" y="82" class="small">same approved rain mapping</text></g>
+ <g transform="translate(1180 474)"><rect width="330" height="88" rx="8" fill="url(#night)"/><path d="M0 58h330v30H0z" fill="#27465b"/><path d="M0 69h330v19H0z" fill="#18354a"/><circle cx="280" cy="18" r="12" fill="#e3e7ed"/><ellipse cx="160" cy="28" rx="67" ry="16" class="cloud"/><circle cx="55" cy="43" r="3" class="snow"/><circle cx="117" cy="48" r="3" class="snow"/><circle cx="239" cy="44" r="3" class="snow"/><text x="10" y="82" class="small">same approved snow mapping</text></g>
+ <g transform="translate(1180 598)"><rect width="330" height="88" rx="8" fill="url(#day)"/><path d="M0 58h330v30H0z" fill="#27465b"/><path d="M0 69h330v19H0z" fill="#18354a"/><circle cx="280" cy="22" r="12" fill="#ffe4a0"/><ellipse cx="160" cy="27" rx="70" ry="19" class="cloud"/><path d="M30 42l-5 12m65-12-5 12m68-12-5 12m70-12-5 12" class="rain"/><text x="10" y="82" class="small">condition meaning preserved</text></g>
+ <g transform="translate(1180 722)"><rect width="330" height="88" rx="8" fill="url(#day)"/><path d="M0 58h330v30H0z" fill="#27465b"/><path d="M0 69h330v19H0z" fill="#18354a"/><circle cx="280" cy="22" r="12" fill="#ffe4a0"/><text x="12" y="50" class="small">no event artwork inferred</text></g>
+ <g transform="translate(1180 846)"><rect width="330" height="88" rx="8" fill="url(#night)"/><path d="M0 58h330v30H0z" fill="#27465b"/><path d="M0 69h330v19H0z" fill="#18354a"/><text x="12" y="50" class="small">unknown remains unknown</text></g>
+</g>
+<line x1="64" y1="978" x2="1536" y2="978" stroke="#7690a6" stroke-width="1"/>
+<text x="70" y="1018" class="label">Acceptance intent</text>
+<text x="70" y="1050" class="body">Same selected instant and source bounds before/after. Scene meaning, readable forecast facts, selected-time behavior, and gesture ownership remain intact.</text>
+<text x="70" y="1082" class="small">Approved 2026-11-01 · current scrub behavior preserved · no new easing, interpolation, weather family, or theme art</text>
+</svg>

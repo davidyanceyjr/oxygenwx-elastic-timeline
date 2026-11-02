@@ -25,6 +25,10 @@ import com.oxygen.weather.timeline.presentation.SkyFrame
 import com.oxygen.weather.timeline.data.PrecipitationAmount
 import com.oxygen.weather.timeline.data.SkyCondition
 import com.oxygen.weather.timeline.presentation.scene.CityTreatment
+import com.oxygen.weather.timeline.presentation.scene.CityCloudAppearance
+import com.oxygen.weather.timeline.presentation.scene.CityPrecipitation
+import com.oxygen.weather.timeline.presentation.scene.FirstCityComposition
+import com.oxygen.weather.timeline.presentation.scene.FirstCityLayer
 import com.oxygen.weather.timeline.presentation.scene.FirstCityTheme
 import com.oxygen.weather.timeline.presentation.scene.SceneReading
 import java.time.ZoneId
@@ -32,6 +36,8 @@ import com.oxygen.weather.timeline.R
 import android.animation.ValueAnimator
 import kotlin.math.PI
 import kotlin.math.sin
+
+private const val CLOUD_REGION_FRACTION = .33f
 
 /** Decorative-only rendering. Legible forecast facts are supplied by UI text above this layer. */
 @Composable
@@ -60,6 +66,85 @@ fun CatalogAtmosphericScene(
     modifier: Modifier = Modifier,
 ) {
     AtmosphericScene(state, localHour, phaseHours, modifier)
+}
+
+/** Catalog renderer: draws the decisions resolved by the first-city composition. */
+@Composable
+fun CatalogAtmosphericScene(
+    composition: FirstCityComposition,
+    omitOptionalCityLayers: Boolean = false,
+    modifier: Modifier = Modifier,
+) {
+    val architecture = ImageBitmap.imageResource(R.drawable.sg2_city_architecture)
+    val canopy = ImageBitmap.imageResource(R.drawable.sg2_city_canopy)
+    val reducedMotion = !ValueAnimator.areAnimatorsEnabled()
+    Canvas(modifier.fillMaxSize()) {
+        composition.layerOrder.forEach { layer ->
+            when (layer) {
+                FirstCityLayer.SKY -> {
+                    val sky = composition.sky
+                    if (sky == null) {
+                        drawCityWorld(composition.treatment)
+                    } else {
+                        val cloudiness = composition.clouds.coverFraction
+                        val storm = composition.precipitation == CityPrecipitation.STORM
+                        drawSkyPalette(sky.condition, sky.daylight, cloudiness, storm)
+                        if (composition.precipitation == CityPrecipitation.RAIN) {
+                            drawRect(Brush.verticalGradient(
+                                0f to Color(0xFF4B6072), .55f to Color(0xFF5F7385),
+                                1f to Color.Transparent,
+                            ))
+                        }
+                        drawCityDiffuseLight(composition.cue.position, composition.treatment, cloudiness)
+                        drawLandscape(
+                            hazeStrength = 0f,
+                            horizon = sceneHorizonColor(sky.condition, sky.daylight, cloudiness, storm),
+                            daylight = sky.daylight,
+                            isStorm = storm,
+                        )
+                    }
+                }
+                FirstCityLayer.BACKGROUND_ARCHITECTURE -> drawAlignedLayer(architecture)
+                FirstCityLayer.CLOUDS -> clipRect(
+                    left = 0f,
+                    top = 0f,
+                    right = size.width,
+                    bottom = size.height * CLOUD_REGION_FRACTION,
+                ) {
+                    val clouds = composition.clouds
+                    drawCityCloudFields(
+                        cloudiness = clouds.coverFraction?.toFloat()?.coerceIn(0f, 1f) ?: 0f,
+                        daylight = clouds.daylight,
+                        localHour = clouds.localHour,
+                        isRain = clouds.appearance == CityCloudAppearance.RAIN,
+                        isSnow = clouds.appearance == CityCloudAppearance.SNOW,
+                        isStorm = clouds.appearance == CityCloudAppearance.STORM,
+                        reducedMotion = reducedMotion,
+                    )
+                }
+                FirstCityLayer.FOREGROUND_ARCHITECTURE -> drawCityForegroundLayer(architecture)
+                FirstCityLayer.CANOPY -> drawAlignedLayer(canopy)
+                FirstCityLayer.TIME_WASH -> drawCityTimeWash(composition.treatment)
+                FirstCityLayer.READOUT_QUIET_ZONE -> drawCityReadoutQuietZone()
+                FirstCityLayer.WINDOW_LIGHTS -> if (!omitOptionalCityLayers) drawCityWindowLights()
+                FirstCityLayer.TIME_CUE -> drawCityTimeCue(composition.cue, composition.treatment)
+                FirstCityLayer.PRECIPITATION -> {
+                    drawRect(
+                        brush = Brush.verticalGradient(
+                            0f to Color.Transparent,
+                            .5f to Color(0x09091828),
+                            1f to Color(0xDD081626),
+                        ),
+                    )
+                    when (composition.precipitation) {
+                        CityPrecipitation.RAIN -> drawCityRainField()
+                        CityPrecipitation.SNOW -> drawCitySnowField()
+                        CityPrecipitation.NONE, CityPrecipitation.STORM -> Unit
+                    }
+                }
+            }
+        }
+    }
 }
 
 /** First-city catalog route. A missing weather state omits all condition marks, never implying clear. */
@@ -97,17 +182,24 @@ fun CatalogAtmosphericScene(
         }
         drawAlignedLayer(architecture)
         if (state != null) {
-            drawCityCloudFields(
-                cloudiness = state.cloudFraction?.toFloat()?.coerceIn(0f, 1f) ?: 0f,
-                daylight = state.daylight,
-                localHour = reading.selectedInstant.atZone(zone).let {
-                    it.hour + it.minute / 60.0 + it.second / 3600.0
-                },
-                isRain = state.depiction == DepictionKind.ILLUSTRATIVE_RAIN,
-                isSnow = state.depiction == DepictionKind.ILLUSTRATIVE_SNOW,
-                isStorm = state.hasStormVisual(),
-                reducedMotion = reducedMotion,
-            )
+            clipRect(
+                left = 0f,
+                top = 0f,
+                right = size.width,
+                bottom = size.height * CLOUD_REGION_FRACTION,
+            ) {
+                drawCityCloudFields(
+                    cloudiness = state.cloudFraction?.toFloat()?.coerceIn(0f, 1f) ?: 0f,
+                    daylight = state.daylight,
+                    localHour = reading.selectedInstant.atZone(zone).let {
+                        it.hour + it.minute / 60.0 + it.second / 3600.0
+                    },
+                    isRain = state.depiction == DepictionKind.ILLUSTRATIVE_RAIN,
+                    isSnow = state.depiction == DepictionKind.ILLUSTRATIVE_SNOW,
+                    isStorm = state.hasStormVisual(),
+                    reducedMotion = reducedMotion,
+                )
+            }
         }
         // Repaint the pixel-aligned lower city after the clouds. The upper skyline stays
         // behind the banks while the near buildings stay in front without altering the PNG.
@@ -142,10 +234,22 @@ private fun DrawScope.drawCityDiffuseLight(
     treatment: CityTreatment,
     state: SceneVisualState,
 ) {
+    drawCityDiffuseLight(
+        FirstCityTheme.cuePosition(reading, zone, treatment),
+        treatment,
+        state.cloudFraction,
+    )
+}
+
+private fun DrawScope.drawCityDiffuseLight(
+    position: Pair<Float, Float>?,
+    treatment: CityTreatment,
+    cloudFraction: Double?,
+) {
     if (treatment == CityTreatment.NIGHT || treatment == CityTreatment.UNAVAILABLE) return
-    val (xFraction, yFraction) = FirstCityTheme.cuePosition(reading, zone, treatment) ?: return
+    val (xFraction, yFraction) = position ?: return
     val center = Offset(size.width * xFraction, size.height * yFraction)
-    val supportedCloudiness = state.cloudFraction?.toFloat()?.coerceIn(0f, 1f) ?: 0f
+    val supportedCloudiness = cloudFraction?.toFloat()?.coerceIn(0f, 1f) ?: 0f
     val dusk = treatment == CityTreatment.DUSK
     val spread = size.width * (.70f + .24f * supportedCloudiness)
     val lightX = (center.x / size.width).coerceIn(.001f, .999f)
@@ -208,8 +312,8 @@ private fun DrawScope.drawCityCloudFields(
         else middle + (last - middle) * smooth(secondSegment).toFloat()
     }
     val alpha = (cloudiness * if (isStorm) .70f else .43f).coerceIn(0f, if (isStorm) .60f else .48f)
-    val y = size.height * .385f
-    val height = size.height * .17f
+    val y = size.height * .025f
+    val height = size.height * .24f
     if (isStorm) {
         val bankWidth = size.width * .82f
         val leftX = size.width * interpolate(-.58f, -.12f, .12f)
@@ -414,6 +518,49 @@ private fun DrawScope.drawCityTimeCue(
     }
 }
 
+private fun DrawScope.drawCityTimeCue(
+    cue: com.oxygen.weather.timeline.presentation.scene.CityCueDecision,
+    treatment: CityTreatment,
+) {
+    val (x, y) = cue.position ?: return
+    val center = Offset(size.width * x, size.height * y)
+    val radius = size.width * .052f * cue.scale
+    if (cue.kind == com.oxygen.weather.timeline.presentation.scene.CityCueKind.MOON) {
+        drawCircle(
+            brush = Brush.radialGradient(
+                colorStops = arrayOf(
+                    0f to Color(0x44E7E7DE),
+                    .52f to Color(0x20E7E7DE),
+                    1f to Color.Transparent,
+                ),
+                center = center,
+                radius = radius * 3.0f,
+            ),
+            radius = radius * 3.0f,
+            center = center,
+        )
+        drawCircle(Color(0xFFF2EAD5), radius * .70f, center)
+        drawCircle(Color(0xFF24334D), radius * .86f,
+            center + Offset(radius * .42f, -radius * .30f))
+    } else {
+        val sun = if (treatment == CityTreatment.DUSK) Color(0xFFFFC9A1) else Color(0xFFFFE8BB)
+        drawCircle(
+            brush = Brush.radialGradient(
+                colorStops = arrayOf(
+                    0f to sun.copy(alpha = .24f),
+                    .52f to sun.copy(alpha = .10f),
+                    1f to Color.Transparent,
+                ),
+                center = center,
+                radius = radius * 3.0f,
+            ),
+            radius = radius * 3.0f,
+            center = center,
+        )
+        drawCircle(sun.copy(alpha = .98f), radius * .57f, center)
+    }
+}
+
 /** Compatibility entry point for callers that still provide the original forecast frame. */
 @Composable
 fun AtmosphericScene(frame: SkyFrame, localHour: Double, modifier: Modifier = Modifier) {
@@ -501,8 +648,17 @@ private fun DrawScope.drawPreviewTurbulence(strength: Float) {
 }
 
 private fun DrawScope.drawSkyPalette(state: SceneVisualState) {
-    val daylight = state.daylight?.toFloat()?.coerceIn(0f, 1f) ?: 0f
-    val cloudiness = state.cloudFraction?.toFloat()?.coerceIn(0f, 1f) ?: 0f
+    drawSkyPalette(state.condition, state.daylight, state.cloudFraction, state.hasStormVisual())
+}
+
+private fun DrawScope.drawSkyPalette(
+    condition: SkyCondition,
+    daylightValue: Double?,
+    cloudFraction: Double?,
+    storm: Boolean,
+) {
+    val daylight = daylightValue?.toFloat()?.coerceIn(0f, 1f) ?: 0f
+    val cloudiness = cloudFraction?.toFloat()?.coerceIn(0f, 1f) ?: 0f
     val twilight = (1f - kotlin.math.abs(daylight - .259f) / .259f).coerceIn(0f, 1f)
 
     val nightTop = Color(0xFF142440)
@@ -518,14 +674,11 @@ private fun DrawScope.drawSkyPalette(state: SceneVisualState) {
     fun skyColor(night: Color, twilightColor: Color, day: Color): Color =
         lerp(lerp(night, twilightColor, twilight), day, daylight)
 
-    val cloudWash = when (state.condition) {
-        com.oxygen.weather.timeline.data.SkyCondition.CLOUDY,
-        com.oxygen.weather.timeline.data.SkyCondition.RAIN,
-        com.oxygen.weather.timeline.data.SkyCondition.STORM -> .10f
+    val cloudWash = when (condition) {
+        SkyCondition.CLOUDY, SkyCondition.RAIN, SkyCondition.STORM -> .10f
         else -> .035f
     } * cloudiness
     val wash = Color(0xFF8293A8).copy(alpha = cloudWash)
-    val storm = state.hasStormVisual()
     val stormTop = Color(0xFF3B526B)
     val stormMid = Color(0xFF697B8D)
     val stormHorizon = Color(0xFF8A8990)
@@ -541,28 +694,35 @@ private fun DrawScope.drawSkyPalette(state: SceneVisualState) {
         wash,
         cloudiness * .34f,
     )
-    val horizon = if (storm) lerp(sceneHorizonColor(state), stormHorizon, .24f) else sceneHorizonColor(state)
+    val sceneHorizon = sceneHorizonColor(condition, daylightValue, cloudFraction, storm)
+    val horizon = if (storm) lerp(sceneHorizon, stormHorizon, .24f) else sceneHorizon
     drawRect(brush = Brush.verticalGradient(0f to top, .58f to mid, 1f to horizon))
 }
 
-private fun sceneHorizonColor(state: SceneVisualState): Color {
-    val daylight = state.daylight?.toFloat()?.coerceIn(0f, 1f) ?: 0f
-    val cloudiness = state.cloudFraction?.toFloat()?.coerceIn(0f, 1f) ?: 0f
+private fun sceneHorizonColor(state: SceneVisualState): Color =
+    sceneHorizonColor(state.condition, state.daylight, state.cloudFraction, state.hasStormVisual())
+
+private fun sceneHorizonColor(
+    condition: SkyCondition,
+    daylightValue: Double?,
+    cloudFraction: Double?,
+    storm: Boolean,
+): Color {
+    val daylight = daylightValue?.toFloat()?.coerceIn(0f, 1f) ?: 0f
+    val cloudiness = cloudFraction?.toFloat()?.coerceIn(0f, 1f) ?: 0f
     val twilight = (1f - kotlin.math.abs(daylight - .259f) / .259f).coerceIn(0f, 1f)
     val night = Color(0xFF6F6572)
     val dusk = Color(0xFFC58D91)
     val day = Color(0xFFE7B98D)
-    val cloudWash = when (state.condition) {
-        com.oxygen.weather.timeline.data.SkyCondition.CLOUDY,
-        com.oxygen.weather.timeline.data.SkyCondition.RAIN,
-        com.oxygen.weather.timeline.data.SkyCondition.STORM -> .10f
+    val cloudWash = when (condition) {
+        SkyCondition.CLOUDY, SkyCondition.RAIN, SkyCondition.STORM -> .10f
         else -> .035f
     } * cloudiness
     val wash = Color(0xFF8293A8).copy(alpha = cloudWash)
     val base = lerp(lerp(night, dusk, twilight), day, daylight).let {
         lerp(it, wash, cloudiness * .38f)
     }
-    return if (state.hasStormVisual()) lerp(base, Color(0xFF8A8990), .24f) else base
+    return if (storm) lerp(base, Color(0xFF8A8990), .24f) else base
 }
 
 /** Storm styling follows the typed condition even when precipitation has its own depiction. */
@@ -635,24 +795,31 @@ private fun DrawScope.drawCloudFields(
     val daylight01 = daylight?.toFloat()?.coerceIn(0f, 1f) ?: 0f
     val farColor = if (isStorm) Color(0xFF8B98A8) else lerp(Color(0xFF91A7C1), Color(0xFFE2EDF4), daylight01)
     val midColor = if (isStorm) Color(0xFF596A7E) else lerp(Color(0xFF7189A5), Color(0xFFD3E1EB), daylight01)
-    drawCloudGroup(
-        shapes = farClouds,
-        cloudiness = cloudiness,
-        selectedHour = selectedHour,
-        rateDpPerHour = 2.0f,
-        color = farColor,
-        alpha = if (isStorm) .48f else .34f,
-        detail = .58f,
-    )
-    drawCloudGroup(
-        shapes = midClouds,
-        cloudiness = cloudiness,
-        selectedHour = selectedHour,
-        rateDpPerHour = 3.5f,
-        color = midColor,
-        alpha = if (isStorm) .62f else .50f,
-        detail = .90f,
-    )
+    clipRect(
+        left = 0f,
+        top = 0f,
+        right = size.width,
+        bottom = size.height * CLOUD_REGION_FRACTION,
+    ) {
+        drawCloudGroup(
+            shapes = farClouds,
+            cloudiness = cloudiness,
+            selectedHour = selectedHour,
+            rateDpPerHour = 2.0f,
+            color = farColor,
+            alpha = if (isStorm) .48f else .34f,
+            detail = .58f,
+        )
+        drawCloudGroup(
+            shapes = midClouds,
+            cloudiness = cloudiness,
+            selectedHour = selectedHour,
+            rateDpPerHour = 3.5f,
+            color = midColor,
+            alpha = if (isStorm) .62f else .50f,
+            detail = .90f,
+        )
+    }
 }
 
 private fun DrawScope.drawCloudGroup(
@@ -708,7 +875,15 @@ private fun DrawScope.drawCloudGroup(
     }
 }
 
-private fun DrawScope.drawLandscape(hazeStrength: Float, horizon: Color, state: SceneVisualState) {
+private fun DrawScope.drawLandscape(hazeStrength: Float, horizon: Color, state: SceneVisualState) =
+    drawLandscape(hazeStrength, horizon, state.daylight, state.hasStormVisual())
+
+private fun DrawScope.drawLandscape(
+    hazeStrength: Float,
+    horizon: Color,
+    daylight: Double?,
+    isStorm: Boolean,
+) {
     val w = size.width
     val h = size.height
     val distant = Path().apply {
@@ -723,8 +898,7 @@ private fun DrawScope.drawLandscape(hazeStrength: Float, horizon: Color, state: 
         lineTo(0f, h)
         close()
     }
-    val isNight = state.daylight == 0.0
-    val isStorm = state.hasStormVisual()
+    val isNight = daylight == 0.0
     val ridgeBase = when {
         isStorm && isNight -> Color(0xFF46566A)
         isStorm -> Color(0xFF557080)

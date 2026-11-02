@@ -34,6 +34,8 @@ The UI layer consumes typed `ForecastView`, which is derived from sample canonic
 
 Every visual enhancement must preserve the timeline's responsiveness, gesture predictability, and readability. A weather-scene change is incomplete if it makes scrubbing feel delayed, changes gesture ownership or arbitration unexpectedly, or obscures forecast values or timeline labels.
 
+Cloud artwork is restricted to the top 33% of the atmospheric scene viewport, measured from the top edge of the scene canvas. The full visible cloud output, including edges, blur, shadow, movement, and transitions, must remain inside that region. This placement rule does not change cloud-cover facts or precipitation meaning; rain and snow may extend below the cloud region.
+
 ## Successor direction and durable boundaries
 
 - **Date window:** a location-scoped catalog targets 44 local calendar dates: D-30 through D-1 as historical dates, followed by D through D+13 as forecast dates. D is the local date at the catalog's `asOf: Instant` in the location's IANA timezone. The shared 44-date horizon does not promise 1,056 hourly values; DST, provider gaps, and partial coverage remain explicit. The owner-directed WX.10R SIMULATED development product is a bounded exception: it provides one fact at every real local-hour instant on each of its 44 dates, with DST dates containing 23 or 25 instants as applicable. Its precipitation probability and sustained wind speed are present on every synthetic hourly fact; absent anchor values are explicit numeric zero. Other nullable synthetic fields, providers, and unrelated replay catalogs retain their own support semantics. This synthetic coverage does not imply complete provider coverage.

@@ -1,0 +1,76 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1600" height="1000" viewBox="0 0 1600 1000">
+<defs>
+ <linearGradient id="bg" x2="0" y2="1"><stop stop-color="#111b30"/><stop offset="1" stop-color="#213c58"/></linearGradient>
+ <marker id="arrow" markerWidth="12" markerHeight="12" refX="10" refY="6" orient="auto"><path d="M0 0L12 6L0 12z" fill="#f4c96c"/></marker>
+ <style>
+ .title{font:700 38px sans-serif;fill:#f6f8fb}.sub{font:20px sans-serif;fill:#c6d3df}.h{font:700 22px sans-serif;fill:#fff}.t{font:17px sans-serif;fill:#e0e9f0}.s{font:16px sans-serif;fill:#becbd7}.node{fill:#1a3149;stroke:#9ab1c2;stroke-width:2}.accent{fill:#274c67;stroke:#a9c1d1;stroke-width:2}.gold{stroke:#f4c96c;stroke-width:4;fill:none;marker-end:url(#arrow)}.rule{fill:#382f28;stroke:#e9c56b;stroke-width:2}
+ </style>
+</defs>
+<rect width="1600" height="1000" fill="url(#bg)"/>
+<text x="60" y="70" class="title">SG.9 · One selected-time reading → one scene composition</text>
+<text x="60" y="108" class="sub">Behavior / state-flow board · OWNER APPROVED 2026-11-01 · no new transition model proposed</text>
+
+<!-- primary sequence -->
+<rect x="60" y="175" width="260" height="200" rx="18" class="node"/>
+<text x="88" y="215" class="h">Forecast input</text>
+<text x="88" y="258" class="t">Canonical catalog</text><text x="88" y="291" class="t">Selected Instant</text>
+<text x="88" y="340" class="s">source point / interval bounds</text>
+
+<path d="M320 274H382" class="gold"/>
+<rect x="390" y="155" width="380" height="240" rx="18" class="accent"/>
+<text x="420" y="198" class="h">Typed scene reading</text>
+<text x="420" y="239" class="t">Condition · cloud cover · light inputs</text>
+<text x="420" y="275" class="t">Precipitation type</text>
+<text x="420" y="311" class="t">Chance · amount · rate support</text>
+<text x="420" y="343" class="s">Solar / light · point / interval bounds</text>
+<text x="420" y="375" class="s">Keep each support state and source bound explicit</text>
+
+<path d="M770 274H840" class="gold"/>
+<rect x="850" y="175" width="310" height="200" rx="18" class="node"/>
+<text x="880" y="215" class="h">Compose once</text>
+<text x="880" y="258" class="t">Sky light + direct cue</text><text x="880" y="291" class="t">Clouds + precipitation</text><text x="880" y="324" class="t">Layer order</text>
+
+<path d="M1160 274H1220" class="gold"/>
+<rect x="1230" y="175" width="310" height="200" rx="18" class="node"/>
+<text x="1260" y="215" class="h">Renderer</text>
+<text x="1260" y="258" class="t">Draws composition</text><text x="1260" y="291" class="t">Does not reselect</text><text x="1260" y="324" class="t">weather meaning</text>
+
+<!-- branch states -->
+<text x="60" y="455" class="h">Support state remains meaningful through the path</text>
+<path d="M750 395V492H230V510" class="gold"/>
+<path d="M750 492H610V510" class="gold"/>
+<path d="M750 492H1000V510" class="gold"/>
+<path d="M750 492H1370V510" class="gold"/>
+
+<rect x="60" y="520" width="340" height="200" rx="18" class="node"/>
+<text x="88" y="562" class="h">Supported event</text>
+<text x="88" y="606" class="t">Rain / snow / storm</text>
+<text x="88" y="646" class="s">Keep supplied type and support</text>
+<text x="88" y="680" class="s">Map to approved scene meaning</text>
+
+<rect x="440" y="520" width="340" height="200" rx="18" class="node"/>
+<text x="468" y="562" class="h">CLEAR reading</text>
+<text x="468" y="606" class="t">Supported CLEAR condition</text>
+<text x="468" y="646" class="s">Preserve existing CLEAR meaning</text>
+<text x="468" y="680" class="s">Do not infer from missing data</text>
+
+<rect x="820" y="520" width="340" height="200" rx="18" class="rule"/>
+<text x="848" y="562" class="h">Probability only</text>
+<text x="848" y="606" class="t">Chance is supported</text>
+<text x="848" y="646" class="s">No event type invented</text>
+<text x="848" y="680" class="s">Keep probability fact readable</text>
+
+<rect x="1200" y="520" width="340" height="200" rx="18" class="rule"/>
+<text x="1228" y="562" class="h">Unknown / unavailable</text>
+<text x="1228" y="606" class="t">Input support is absent</text>
+<text x="1228" y="646" class="s">Never translate to CLEAR / zero</text>
+<text x="1228" y="680" class="s">Keep uncertainty honest</text>
+
+<!-- invariants -->
+<rect x="60" y="780" width="1480" height="150" rx="18" fill="#15293e" stroke="#66859c" stroke-width="2"/>
+<text x="90" y="825" class="h">Invariants across scrubbing</text>
+<text x="90" y="867" class="t">Selected Instant stays authoritative</text>
+<text x="500" y="867" class="t">Source bounds stay attached to the reading</text>
+<text x="1010" y="867" class="t">Existing scrub behavior stays unchanged</text>
+<text x="90" y="905" class="s">One reading, one composition; no nearest-sample renderer decision, string parsing, new easing, or interpolation requirement.</text>
+</svg>

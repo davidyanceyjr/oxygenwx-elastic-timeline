@@ -1,8 +1,12 @@
 package com.oxygen.weather.timeline.presentation.scene
 
+import com.oxygen.weather.timeline.data.SkyCondition
+import com.oxygen.weather.timeline.data.catalog.WeatherCondition
 import java.time.Instant
 import java.time.ZoneId
 import java.time.ZonedDateTime
+import kotlin.math.PI
+import kotlin.math.sin
 
 /** Finite composition contract for the first city. It does not define a reusable theme registry. */
 object FirstCityTheme {
@@ -26,6 +30,90 @@ object FirstCityTheme {
         CityLayer("precipitation", "existing rain/snow drawing slots", backToFrontOrder = 5, required = false,
             fallback = "Omit precipitation marks when weather state is unavailable"),
     )
+
+    /** Resolve catalog values, support, solar position, and the established layer order once. */
+    fun compose(reading: SceneReading, zone: ZoneId): FirstCityComposition {
+        val treatment = treatment(reading, zone)
+        val conditions = reading.conditions?.value
+        val skyCondition = conditions?.let(::skyCondition)
+        val local = reading.selectedInstant.atZone(zone)
+        val localHour = local.hour + local.minute / 60.0 + local.second / 3600.0
+        val visualHour = local.hour + local.minute / 60.0
+        val daylight = sin(((visualHour - 6.0) / 12.0) * PI).coerceIn(0.0, 1.0)
+        val cloudFraction = reading.cloudCoverPercent
+            ?.takeIf { it.evidence == SceneEvidence.SUPPLIED }
+            ?.value?.div(100.0)
+        val rainPositive = reading.rainAmount?.let {
+            it.evidence == SceneEvidence.SUPPLIED && it.value?.valueMillimeters?.let { amount -> amount > 0.0 } == true
+        } == true
+        val snowPositive = reading.snowfall?.let {
+            it.evidence == SceneEvidence.SUPPLIED && it.value?.valueCentimeters?.let { amount -> amount > 0.0 } == true
+        } == true
+        val uniqueAmountEvent = when {
+            rainPositive && !snowPositive -> CityPrecipitation.RAIN
+            snowPositive && !rainPositive -> CityPrecipitation.SNOW
+            else -> null
+        }
+        val conditionIsSupplied = reading.conditions?.let {
+            it.evidence == SceneEvidence.SUPPLIED && !it.value.isNullOrEmpty()
+        } == true
+        val conditionIsCarried = reading.conditions?.let {
+            it.evidence == SceneEvidence.EXPECTED_MISSING &&
+                !it.value.isNullOrEmpty() && it.sourceValidTime != null
+        } == true
+        val precipitation = when {
+            conditionIsSupplied -> conditions?.let(::precipitation)?.takeIf { it != CityPrecipitation.NONE }
+                ?: CityPrecipitation.NONE
+            conditionIsCarried -> uniqueAmountEvent ?: conditions?.let(::precipitation) ?: CityPrecipitation.NONE
+            else -> uniqueAmountEvent ?: CityPrecipitation.NONE
+        }
+        val sky = skyCondition?.let { CitySkyDecision(it, daylight) }
+        val cloudAppearance = when (precipitation) {
+            CityPrecipitation.RAIN -> CityCloudAppearance.RAIN
+            CityPrecipitation.SNOW -> CityCloudAppearance.SNOW
+            CityPrecipitation.STORM -> CityCloudAppearance.STORM
+            CityPrecipitation.NONE -> CityCloudAppearance.GENERAL
+        }
+        val clouds = CityCloudDecision(
+            coverFraction = cloudFraction,
+            daylight = daylight,
+            localHour = localHour,
+            appearance = cloudAppearance,
+            visible = cloudFraction?.let { it > .01 } == true,
+        )
+        val position = cuePosition(reading, zone, treatment)
+        val cue = CityCueDecision(
+            position = position,
+            scale = cueScale(reading, zone, treatment),
+            kind = if (treatment == CityTreatment.NIGHT) CityCueKind.MOON else CityCueKind.SUN,
+            visible = position != null && precipitation != CityPrecipitation.RAIN,
+        )
+        val hasWeatherState = sky != null || clouds.visible || precipitation != CityPrecipitation.NONE
+        val layerOrder = buildList {
+            add(FirstCityLayer.SKY)
+            add(FirstCityLayer.BACKGROUND_ARCHITECTURE)
+            if (clouds.visible) add(FirstCityLayer.CLOUDS)
+            add(FirstCityLayer.FOREGROUND_ARCHITECTURE)
+            add(FirstCityLayer.CANOPY)
+            add(FirstCityLayer.TIME_WASH)
+            add(FirstCityLayer.READOUT_QUIET_ZONE)
+            if (treatment == CityTreatment.DUSK || treatment == CityTreatment.NIGHT) {
+                add(FirstCityLayer.WINDOW_LIGHTS)
+            }
+            if (cue.visible) add(FirstCityLayer.TIME_CUE)
+            if (hasWeatherState) add(FirstCityLayer.PRECIPITATION)
+        }
+        return FirstCityComposition(
+            selectedInstant = reading.selectedInstant,
+            treatment = treatment,
+            sky = sky,
+            cue = cue,
+            clouds = clouds,
+            precipitation = precipitation,
+            hasWeatherState = hasWeatherState,
+            layerOrder = layerOrder,
+        )
+    }
 
     fun treatment(reading: SceneReading, zone: ZoneId): CityTreatment {
         return when (reading.lightPhase) {
@@ -67,6 +155,23 @@ object FirstCityTheme {
         val local: ZonedDateTime = instant.atZone(zone)
         val hour = local.hour + local.minute / 60.0
         return ((hour - 6.0) / 16.0).coerceIn(0.0, 1.0).toFloat()
+    }
+
+    private fun skyCondition(conditions: Set<WeatherCondition>): SkyCondition? = when {
+        WeatherCondition.STORM in conditions -> SkyCondition.STORM
+        WeatherCondition.RAIN in conditions -> SkyCondition.RAIN
+        WeatherCondition.CLOUDY in conditions -> SkyCondition.CLOUDY
+        WeatherCondition.PARTLY_CLOUDY in conditions -> SkyCondition.PARTLY_CLOUDY
+        WeatherCondition.CLEAR in conditions -> SkyCondition.CLEAR
+        WeatherCondition.SNOW in conditions -> SkyCondition.CLOUDY
+        else -> null
+    }
+
+    private fun precipitation(conditions: Set<WeatherCondition>): CityPrecipitation = when {
+        WeatherCondition.STORM in conditions -> CityPrecipitation.STORM
+        WeatherCondition.SNOW in conditions -> CityPrecipitation.SNOW
+        WeatherCondition.RAIN in conditions -> CityPrecipitation.RAIN
+        else -> CityPrecipitation.NONE
     }
 }
 

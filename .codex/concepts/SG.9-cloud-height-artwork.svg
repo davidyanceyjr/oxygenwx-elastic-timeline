@@ -1,0 +1,79 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1600" height="1040" viewBox="0 0 1600 1040">
+  <defs>
+    <linearGradient id="page" x2="0" y2="1"><stop stop-color="#101b31"/><stop offset="1" stop-color="#21354d"/></linearGradient>
+    <linearGradient id="sky" x2="0" y2="1"><stop stop-color="#436486"/><stop offset="1" stop-color="#a9c4d4"/></linearGradient>
+    <linearGradient id="night" x2="0" y2="1"><stop stop-color="#111d39"/><stop offset="1" stop-color="#3a5570"/></linearGradient>
+    <linearGradient id="city" x2="0" y2="1"><stop stop-color="#253d54"/><stop offset="1" stop-color="#182638"/></linearGradient>
+    <clipPath id="cloud-zone"><rect x="0" y="0" width="460" height="115"/></clipPath>
+    <g id="cloud" fill="#e7eef0" fill-opacity=".88">
+      <ellipse cx="75" cy="49" rx="61" ry="28"/><ellipse cx="123" cy="39" rx="51" ry="38"/>
+      <ellipse cx="174" cy="51" rx="65" ry="28"/><ellipse cx="219" cy="56" rx="52" ry="23"/>
+      <path d="M25 55 Q52 38 70 51 Q95 17 123 28 Q151 16 170 43 Q207 28 230 55 Q242 64 230 73 L35 73 Q18 69 25 55Z"/>
+    </g>
+    <g id="rain" stroke="#d7f1fa" stroke-width="2.6" stroke-linecap="round" opacity=".75">
+      <path d="M39 164l-8 22m59-22-8 22m61-22-8 22m57-22-8 22m62-22-8 22m63-22-8 22m62-22-8 22m59-22-8 22m61-22-8 22"/>
+      <path d="M67 212l-8 22m59-22-8 22m61-22-8 22m57-22-8 22m62-22-8 22m63-22-8 22m62-22-8 22m59-22-8 22" opacity=".62"/>
+    </g>
+    <g id="snow" fill="#f5fbff" opacity=".88">
+      <circle cx="52" cy="172" r="3"/><circle cx="120" cy="211" r="4"/><circle cx="182" cy="177" r="3"/><circle cx="240" cy="220" r="4"/><circle cx="303" cy="171" r="3"/><circle cx="365" cy="211" r="4"/><circle cx="410" cy="179" r="3"/>
+      <path d="M89 174v14m-6-7h12m-10-5 8 10m0-10-8 10M334 211v16m-7-8h14m-12-6 10 12m0-12-10 12" stroke="#f5fbff" stroke-width="2"/>
+    </g>
+  </defs>
+  <rect width="1600" height="1040" fill="url(#page)"/>
+  <text x="72" y="76" fill="#fff" font-family="sans-serif" font-size="36" font-weight="700">SG.9 · Cloud height rule</text>
+  <text x="72" y="116" fill="#c4d4e1" font-family="sans-serif" font-size="19">DRAFT FOR OWNER REVIEW · Clouds remain entirely within the upper third of the scene viewport.</text>
+  <text x="72" y="155" fill="#9fd5e5" font-family="sans-serif" font-size="17">BOUND: y = 0.33 × canvas height · includes silhouette edges, blur, shadow, and motion frames</text>
+
+  <g transform="translate(72 194)">
+    <g>
+      <rect width="460" height="590" rx="18" fill="url(#sky)"/>
+      <rect y="190" width="460" height="400" fill="url(#city)"/>
+      <path d="M0 320h48v-105h42v76h38v-146h51v113h38v-86h36v126h51v-173h54v166h38v-95h64v284H0Z" fill="#315067"/>
+      <path d="M0 426h52v-91h56v69h35v-123h67v97h48v-62h57v108h42v-137h65v116h38v-77h48v264H0Z" fill="#1d3145"/>
+      <rect y="0" width="460" height="115" fill="#ffffff" fill-opacity=".06"/>
+      <g clip-path="url(#cloud-zone)" transform="translate(31 5) scale(1.45 .9)"><use href="#cloud"/></g>
+      <line x1="0" x2="460" y1="115" y2="115" stroke="#ffdb75" stroke-width="3" stroke-dasharray="10 7"/>
+      <rect x="12" y="120" width="187" height="28" rx="14" fill="#25364a" fill-opacity=".86"/>
+      <text x="23" y="140" fill="#ffe39a" font-family="sans-serif" font-size="14" font-weight="700">33% CLOUD BOUNDARY</text>
+      <text x="22" y="39" fill="#fff" font-family="sans-serif" font-size="17" font-weight="700">CLOUDY · DAY</text>
+      <rect y="543" width="460" height="47" fill="#101d2a" fill-opacity=".82"/>
+      <text x="20" y="573" fill="#e9f2f6" font-family="sans-serif" font-size="16">Forecast values remain readable above the scene.</text>
+      <rect width="460" height="590" rx="18" fill="none" stroke="#a8c0d3" stroke-width="2"/>
+    </g>
+    <g transform="translate(500 0)">
+      <rect width="460" height="590" rx="18" fill="url(#sky)"/>
+      <rect y="190" width="460" height="400" fill="url(#city)"/>
+      <path d="M0 320h48v-105h42v76h38v-146h51v113h38v-86h36v126h51v-173h54v166h38v-95h64v284H0Z" fill="#315067"/>
+      <path d="M0 426h52v-91h56v69h35v-123h67v97h48v-62h57v108h42v-137h65v116h38v-77h48v264H0Z" fill="#1d3145"/>
+      <g clip-path="url(#cloud-zone)" transform="translate(135 0) scale(1.35 .9)"><use href="#cloud"/></g>
+      <use href="#rain"/>
+      <line x1="0" x2="460" y1="115" y2="115" stroke="#ffdb75" stroke-width="3" stroke-dasharray="10 7"/>
+      <rect x="12" y="120" width="187" height="28" rx="14" fill="#25364a" fill-opacity=".86"/>
+      <text x="23" y="140" fill="#ffe39a" font-family="sans-serif" font-size="14" font-weight="700">33% CLOUD BOUNDARY</text>
+      <text x="22" y="39" fill="#fff" font-family="sans-serif" font-size="17" font-weight="700">RAIN · DAY</text>
+      <rect y="543" width="460" height="47" fill="#101d2a" fill-opacity=".82"/>
+      <text x="20" y="573" fill="#e9f2f6" font-family="sans-serif" font-size="16">Rain continues below the bounded cloud band.</text>
+      <rect width="460" height="590" rx="18" fill="none" stroke="#a8c0d3" stroke-width="2"/>
+    </g>
+    <g transform="translate(1000 0)">
+      <rect width="460" height="590" rx="18" fill="url(#night)"/>
+      <rect y="190" width="460" height="400" fill="#1b2e45"/>
+      <circle cx="381" cy="57" r="23" fill="#e8f1dd" fill-opacity=".9"/>
+      <path d="M0 320h48v-105h42v76h38v-146h51v113h38v-86h36v126h51v-173h54v166h38v-95h64v284H0Z" fill="#294258"/>
+      <path d="M0 426h52v-91h56v69h35v-123h67v97h48v-62h57v108h42v-137h65v116h38v-77h48v264H0Z" fill="#17283a"/>
+      <g clip-path="url(#cloud-zone)" transform="translate(78 3) scale(1.4 .9)"><use href="#cloud" fill="#aab8ce"/></g>
+      <use href="#snow"/>
+      <line x1="0" x2="460" y1="115" y2="115" stroke="#ffdb75" stroke-width="3" stroke-dasharray="10 7"/>
+      <rect x="12" y="120" width="187" height="28" rx="14" fill="#25364a" fill-opacity=".86"/>
+      <text x="23" y="140" fill="#ffe39a" font-family="sans-serif" font-size="14" font-weight="700">33% CLOUD BOUNDARY</text>
+      <text x="22" y="39" fill="#fff" font-family="sans-serif" font-size="17" font-weight="700">SNOW · NIGHT</text>
+      <rect y="543" width="460" height="47" fill="#101d2a" fill-opacity=".82"/>
+      <text x="20" y="573" fill="#e9f2f6" font-family="sans-serif" font-size="16">Cloud cap holds during the night scene.</text>
+      <rect width="460" height="590" rx="18" fill="none" stroke="#a8c0d3" stroke-width="2"/>
+    </g>
+  </g>
+  <text x="72" y="840" fill="#fff" font-family="sans-serif" font-size="22" font-weight="700">Acceptance intent</text>
+  <text x="72" y="878" fill="#c9d8e2" font-family="sans-serif" font-size="18">No cloud pixels cross the dashed boundary in any state or transition. A hard clip may enforce the cap, while rain and snow can occupy the scene below it.</text>
+  <text x="72" y="914" fill="#c9d8e2" font-family="sans-serif" font-size="18">Cloud support, cloud-cover facts, precipitation meaning, city depth, time selection, and readable forecast text stay unchanged.</text>
+  <text x="72" y="982" fill="#ffdc8a" font-family="sans-serif" font-size="17" font-weight="700">DRAFT · Approval pending for both cloud-height behavior and scene artwork.</text>
+</svg>
