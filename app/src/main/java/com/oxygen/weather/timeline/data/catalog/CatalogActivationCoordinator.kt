@@ -251,13 +251,16 @@ class CatalogActivationCoordinator(
         }
 
     /** Preview a recording that must already exist in its SIMULATED or REPLAY namespace. */
-    fun requestSavedCatalogPreview(request: CatalogActivationRequest): Deferred<DebugActivationResult> =
+    fun requestSavedCatalogPreview(
+        request: CatalogActivationRequest,
+        validateSavedMetadata: (CatalogRecording) -> Boolean,
+    ): Deferred<DebugActivationResult> =
         synchronized(this) {
             require(request.origin == CatalogOrigin.SIMULATED || request.origin == CatalogOrigin.REPLAY) {
                 "Saved previews require SIMULATED or REPLAY origin"
             }
             require(!request.forceLiveRefresh) { "Saved previews cannot request a LIVE refresh" }
-            beginRequest(request, savedOnlyPreview = true)
+            beginRequest(request, savedOnlyPreview = true, validateSavedMetadata = validateSavedMetadata)
         }
 
     fun requestAlternateStartupCatalog(participant: Long, request: CatalogActivationRequest): Deferred<DebugActivationResult>? =
@@ -304,6 +307,7 @@ class CatalogActivationCoordinator(
     private fun beginRequest(
         request: CatalogActivationRequest,
         savedOnlyPreview: Boolean = false,
+        validateSavedMetadata: ((CatalogRecording) -> Boolean)? = null,
     ): Deferred<DebugActivationResult> {
         sequence++
         activationTerminal = false
@@ -324,7 +328,7 @@ class CatalogActivationCoordinator(
         signalChange()
         requestJob = scope.launch {
             try {
-                val staged = loadAndValidate(request, requestSequence, completion, savedOnlyPreview)
+                val staged = loadAndValidate(request, requestSequence, completion, savedOnlyPreview, validateSavedMetadata)
                 synchronized(this@CatalogActivationCoordinator) {
                     if (isCurrent(request, requestSequence, completion, savedOnlyPreview)) {
                         val previous = mutableState.value.active
@@ -415,9 +419,10 @@ class CatalogActivationCoordinator(
         requestSequence: Long,
         completion: CompletableDeferred<DebugActivationResult>,
         savedOnlyPreview: Boolean,
+        validateSavedMetadata: ((CatalogRecording) -> Boolean)?,
     ): StagedCatalog {
         val staged = if (savedOnlyPreview) {
-            loadSavedOnly(request)
+            loadSavedOnly(request, requireNotNull(validateSavedMetadata))
         } else when (request.origin) {
             CatalogOrigin.LIVE -> {
                 val result = liveRepository.load(request.location, request.datasetId, request.forceLiveRefresh)
@@ -443,7 +448,10 @@ class CatalogActivationCoordinator(
         return staged
     }
 
-    private suspend fun loadSavedOnly(request: CatalogActivationRequest): StagedCatalog {
+    private suspend fun loadSavedOnly(
+        request: CatalogActivationRequest,
+        validateSavedMetadata: (CatalogRecording) -> Boolean,
+    ): StagedCatalog {
         val namespace = when (request.origin) {
             CatalogOrigin.SIMULATED -> CatalogStorageNamespace.SIMULATED
             CatalogOrigin.REPLAY -> CatalogStorageNamespace.REPLAY
@@ -451,6 +459,9 @@ class CatalogActivationCoordinator(
         }
         return when (val saved = storage.load(request.location, namespace, request.datasetId)) {
             is StoredCatalogResult.Found -> {
+                require(validateSavedMetadata(saved.recording)) {
+                    "Saved catalog metadata is missing or inconsistent with its canonical recording"
+                }
                 val activeRecording = if (request.origin == CatalogOrigin.REPLAY) asReplay(saved.recording)
                     else saved.recording
                 StagedCatalog(activeRecording, CatalogActivationDelivery.CACHE, null, saved.storedAt)

@@ -185,7 +185,7 @@ class CatalogActivationCoordinatorTest : CatalogCoordinatorTestSupport() {
         }
         val preview = coordinator.requestSavedCatalogPreview(
             CatalogActivationRequest(b, CatalogOrigin.SIMULATED, savedId),
-        )
+        ) { true }
         readStarted.await()
 
         val pending = coordinator.state.value
@@ -223,7 +223,7 @@ class CatalogActivationCoordinatorTest : CatalogCoordinatorTestSupport() {
 
         val preview = coordinator.requestSavedCatalogPreview(
             CatalogActivationRequest(b, CatalogOrigin.REPLAY, replayId, replayId),
-        ).await() as DebugActivationResult.Success
+        ) { true }.await() as DebugActivationResult.Success
         val stored = h.storage.load(b, CatalogStorageNamespace.REPLAY, replayId) as StoredCatalogResult.Found
 
         assertEquals(b, preview.selection.location)
@@ -247,7 +247,7 @@ class CatalogActivationCoordinatorTest : CatalogCoordinatorTestSupport() {
 
         val missing = coordinator.requestSavedCatalogPreview(
             CatalogActivationRequest(b, CatalogOrigin.SIMULATED, DatasetId("missing-b")),
-        ).await() as DebugActivationResult.Failure
+        ) { true }.await() as DebugActivationResult.Failure
         assertTrue(missing.message.contains("not found"))
         assertEquals(a, coordinator.state.value.selectedLocation)
         assertEquals("Alpha", coordinator.state.value.selectedLocationName)
@@ -271,7 +271,7 @@ class CatalogActivationCoordinatorTest : CatalogCoordinatorTestSupport() {
 
         val invalid = coordinator.requestSavedCatalogPreview(
             CatalogActivationRequest(b, CatalogOrigin.SIMULATED, invalidId),
-        ).await() as DebugActivationResult.Failure
+        ) { true }.await() as DebugActivationResult.Failure
         assertTrue(invalid.message.contains("invalid"))
         assertEquals(a, coordinator.state.value.selectedLocation)
         assertEquals("Alpha", coordinator.state.value.selectedLocationName)
@@ -280,6 +280,33 @@ class CatalogActivationCoordinatorTest : CatalogCoordinatorTestSupport() {
         assertEquals(liveCallsBeforeInvalidPreview, h.live.requests.size)
         assertEquals(simulatedCallsBeforeInvalidPreview, h.simulated.requests.size)
         assertEquals(writesBeforeInvalidPreview, h.dao.writes)
+    }
+
+    @Test fun savedPreviewMetadataValidatorRunsAfterCoordinatorLoadAndFailsClosed() = runBlocking {
+        val h = harness()
+        val coordinator = h.coordinator(this)
+        coordinator.committedLocationSelection(a, "Alpha")
+        awaitState { coordinator.state.value.active != null }
+        val prior = coordinator.state.value
+        val id = DatasetId("saved-metadata-check")
+        val loaded = result(CatalogLoadRequest(b, id, time), CatalogOrigin.SIMULATED) as CatalogLoadResult.Success
+        val recording = CatalogRecording(loaded.catalog, loaded.expectedSupport, loaded.dailyExpectedSupport)
+        h.storage.save(CatalogStorageNamespace.SIMULATED, recording)
+        val sourceCalls = h.simulated.requests.size
+        val writes = h.dao.writes
+        var validatorRecording: CatalogRecording? = null
+
+        val result = coordinator.requestSavedCatalogPreview(
+            CatalogActivationRequest(b, CatalogOrigin.SIMULATED, id),
+        ) { candidate -> validatorRecording = candidate; false }.await() as DebugActivationResult.Failure
+
+        assertTrue(result.message.contains("metadata"))
+        assertEquals(recording.catalog, validatorRecording?.catalog)
+        assertEquals(a, coordinator.state.value.selectedLocation)
+        assertEquals(prior.active, coordinator.state.value.active)
+        assertEquals(prior.active?.selectedInstant, coordinator.state.value.active?.selectedInstant)
+        assertEquals(sourceCalls, h.simulated.requests.size)
+        assertEquals(writes, h.dao.writes)
     }
 
     @Test fun supersededSavedPreviewCannotPublishOrRestoreOverNewerRequest() = runBlocking {
@@ -305,7 +332,7 @@ class CatalogActivationCoordinatorTest : CatalogCoordinatorTestSupport() {
         }
         val preview = coordinator.requestSavedCatalogPreview(
             CatalogActivationRequest(b, CatalogOrigin.SIMULATED, savedId),
-        )
+        ) { true }
         readStarted.await()
 
         val replacement = coordinator.requestDebugCatalog(

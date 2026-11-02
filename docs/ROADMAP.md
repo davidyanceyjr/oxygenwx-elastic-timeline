@@ -666,15 +666,15 @@ This workstream establishes an explicit, debug-only set of typed forecast scenar
 **Pre-slice evidence:** `.codex/test-artifacts/087-dfm43-clean-view-diagnostic-overlays/pre-slice-main.png` and `README.md`.
 **Evidence:** Cycle 087 closed on scoped implementation, focused JVM/instrumented accessibility checks, and installed Pixel captures; `.codex/test-artifacts/087-dfm43-clean-view-diagnostic-overlays/README.md` records commands, results and limits. The connected run's single unrelated `FirstCitySceneRenderingTest.selectedLocalTimeProducesStableRainAndStormCloudPoses` failure was owner-directed out of scope. Closeout: `.codex/history/087-dfm43-clean-view-diagnostic-overlays.md`; archived plan: `.codex/history/plans/087-dfm43-clean-view-diagnostic-overlays.md`.
 
-### DFM.4.4 — Local synthetic catalog storage and replay snapshots — NEXT
+### DFM.4.4 — Local synthetic catalog storage and replay snapshots — DONE
 
 **Objective/scope:** Build the debug-local catalog authoring and persistence foundation independently of editor UI. Preserve canonical catalog, codec, storage namespaces, selection path and full D-30..D+13 local-date window; do not mutate LIVE/provider/location state or change shared schema.
 **Depends on:** DFM.4.1.
 **Exit:** Debug-local editable simulations and immutable replay snapshots round-trip with full canonical horizon, truthful typed support and safe validated preview boundary; focused lifecycle and failure tests pass.
 **Slice board(s) — Behavior, OWNER APPROVED:** `.codex/concepts/DFM.4.4-local-catalog-storage-board.md` and visual flow `.codex/concepts/DFM.4.4-local-catalog-storage-board.svg` (PNG preview alongside), approved as written on 2026-11-02. UI artwork is not applicable because this is a nonvisual storage/activation foundation independent of editor UI; DFM.4.5 owns the library/editor presentation and installed UI acceptance. Approval covers canonical SIMULATED materialization, editable SIMULATED round-trip, immutable REPLAY snapshots, explicit-preview revalidation, fail-closed behavior, and LIVE/provider/cache/location isolation. Parent DFM.4 boards remain reference inputs.
-**Evidence:** Planned cycle 088: `.codex/plans/088-dfm44-local-catalog-storage.md`; evidence target `.codex/test-artifacts/088-dfm44-local-catalog-storage/`; closeout target `.codex/history/088-dfm44-local-catalog-storage.md`; archived plan target `.codex/history/plans/088-dfm44-local-catalog-storage.md`.
+**Evidence:** Cycle 088 complete: `.codex/history/088-dfm44-local-catalog-storage.md`; `.codex/test-artifacts/088-dfm44-local-catalog-storage/README.md`; archived plan `.codex/history/plans/088-dfm44-local-catalog-storage.md`.
 
-### DFM.4.5 — Catalog library and period-first editor — PLANNED
+### DFM.4.5 — Catalog library and period-first editor — NEXT
 
 **Objective/scope:** Implement the approved debug-only catalog library, period-first event editor, and explicit synthetic preview using the verified storage and coordinator seams. Keep the normal screen and ordinary location paths intact.
 **Depends on:** DFM.4.2 and DFM.4.4.
