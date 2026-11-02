@@ -214,12 +214,14 @@ class MainActivity : ComponentActivity(), ActivityVariantDelegate.Host {
                             openLocationSelectorOnLaunch = openLocationSelector,
                             showDebugLocationLauncher = isDebuggable,
                         )
-                        matchingActive != null && presenter != null -> CatalogTimeLabScreen(
-                            presentation = presenter.scenePresentation(activation).let { presentation ->
+                        matchingActive != null && presenter != null -> run {
+                            val scenePresentation = presenter.scenePresentation(activation).let { presentation ->
                                 if (forceSg2NullWeather) presentation.copy(
                                     timeline = presentation.timeline.copy(scene = null),
                                 ) else presentation
-                            },
+                            }
+                            CatalogTimeLabScreen(
+                            presentation = scenePresentation,
                             onSelectInstant = activationCoordinator::selectInstant,
                             onReturnToNow = {
                                 activationCoordinator.selectInstant(
@@ -239,7 +241,10 @@ class MainActivity : ComponentActivity(), ActivityVariantDelegate.Host {
                                 activationCoordinator.refreshCurrent()
                             } },
                             omitOptionalCityLayers = forceSg2MissingOptionalLayer,
-                        )
+                            diagnosticOverlay = if (isDebuggable) ({
+                                variantDelegate?.MainScreenOverlay(this@MainActivity, scenePresentation.diagnostics)
+                            }) else null,
+                        ) }
                         else -> Box(Modifier.fillMaxSize().background(Color(0xFF11263D))) {
                             Column(
                                 Modifier.align(Alignment.Center).padding(25.dp),

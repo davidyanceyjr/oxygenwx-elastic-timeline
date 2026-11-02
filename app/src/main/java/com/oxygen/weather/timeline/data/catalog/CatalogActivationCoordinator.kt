@@ -250,6 +250,16 @@ class CatalogActivationCoordinator(
             beginRequest(request)
         }
 
+    /** Preview a recording that must already exist in its SIMULATED or REPLAY namespace. */
+    fun requestSavedCatalogPreview(request: CatalogActivationRequest): Deferred<DebugActivationResult> =
+        synchronized(this) {
+            require(request.origin == CatalogOrigin.SIMULATED || request.origin == CatalogOrigin.REPLAY) {
+                "Saved previews require SIMULATED or REPLAY origin"
+            }
+            require(!request.forceLiveRefresh) { "Saved previews cannot request a LIVE refresh" }
+            beginRequest(request, savedOnlyPreview = true)
+        }
+
     fun requestAlternateStartupCatalog(participant: Long, request: CatalogActivationRequest): Deferred<DebugActivationResult>? =
         synchronized(this) {
             if (startupParticipant != participant) null else {
@@ -291,7 +301,10 @@ class CatalogActivationCoordinator(
         }
     }
 
-    private fun beginRequest(request: CatalogActivationRequest): Deferred<DebugActivationResult> {
+    private fun beginRequest(
+        request: CatalogActivationRequest,
+        savedOnlyPreview: Boolean = false,
+    ): Deferred<DebugActivationResult> {
         sequence++
         activationTerminal = false
         val requestSequence = sequence
@@ -299,20 +312,21 @@ class CatalogActivationCoordinator(
         val completion = CompletableDeferred<DebugActivationResult>()
         currentCompletion = completion
         requestJob?.cancel()
-        lastRequest = request
-        val retainsMatching = mutableState.value.active?.location == request.location
+        val stateBeforeRequest = mutableState.value
+        if (!savedOnlyPreview) lastRequest = request
+        val retainsMatching = savedOnlyPreview || stateBeforeRequest.active?.location == request.location
         mutableState.value = mutableState.value.copy(
             loading = true,
             lastError = null,
             refreshStatus = null,
-            active = mutableState.value.active?.takeIf { retainsMatching },
+            active = stateBeforeRequest.active?.takeIf { retainsMatching },
         )
         signalChange()
         requestJob = scope.launch {
             try {
-                val staged = loadAndValidate(request, requestSequence)
+                val staged = loadAndValidate(request, requestSequence, completion, savedOnlyPreview)
                 synchronized(this@CatalogActivationCoordinator) {
-                    if (isCurrent(request, requestSequence)) {
+                    if (isCurrent(request, requestSequence, completion, savedOnlyPreview)) {
                         val previous = mutableState.value.active
                         val failedRefresh = staged.refreshStatus in setOf(
                             CatalogRefreshStatus.NO_DATA,
@@ -332,15 +346,22 @@ class CatalogActivationCoordinator(
                             return@synchronized
                         }
                         val interval = selectionInterval(staged.recording)
+                        val previousTargetSelection = previous?.takeIf { it.location == request.location }
                         val selectedInstant = chooseSelectedInstant(
-                            previous?.selectedInstant ?: pendingSelectionAnchor,
+                            if (savedOnlyPreview) previousTargetSelection?.selectedInstant
+                            else previous?.selectedInstant ?: pendingSelectionAnchor,
                             interval, staged.recording, request.origin,
                         )
                         val nextGeneration = ++nextViewGeneration
                         pendingSelectionAnchor = null
                         activeInterval = interval
+                        selectedLocation = request.location
+                        lastRequest = request
                         mutableState.value = mutableState.value.copy(
                             selectedLocation = request.location,
+                            selectedLocationName = if (savedOnlyPreview &&
+                                mutableState.value.selectedLocation != request.location) null
+                                else mutableState.value.selectedLocationName,
                             active = ActiveCatalogSelection(
                                 location = request.location,
                                 recording = staged.recording,
@@ -366,15 +387,19 @@ class CatalogActivationCoordinator(
                 throw cancelled
             } catch (error: Exception) {
                 synchronized(this@CatalogActivationCoordinator) {
-                    if (isCurrent(request, requestSequence)) {
-                        val prior = mutableState.value.active?.takeIf { it.location == request.location }
+                    if (isCurrent(request, requestSequence, completion, savedOnlyPreview)) {
                         val status = (error as? LiveCatalogUnavailableException)?.status
-                        mutableState.value = mutableState.value.copy(
-                            active = prior,
-                            loading = false,
-                            lastError = error.message ?: "Catalog activation failed (${error.javaClass.simpleName})",
-                            refreshStatus = status,
-                        )
+                        val message = error.message ?: "Catalog activation failed (${error.javaClass.simpleName})"
+                        mutableState.value = if (savedOnlyPreview) {
+                            stateBeforeRequest.copy(loading = false, lastError = message, refreshStatus = status)
+                        } else {
+                            mutableState.value.copy(
+                                active = mutableState.value.active?.takeIf { it.location == request.location },
+                                loading = false,
+                                lastError = message,
+                                refreshStatus = status,
+                            )
+                        }
                         activationTerminal = true
                         completion.complete(DebugActivationResult.Failure(mutableState.value.lastError ?: "Catalog activation failed"))
                         signalChange()
@@ -385,8 +410,15 @@ class CatalogActivationCoordinator(
         return completion
     }
 
-    private suspend fun loadAndValidate(request: CatalogActivationRequest, requestSequence: Long): StagedCatalog {
-        val staged = when (request.origin) {
+    private suspend fun loadAndValidate(
+        request: CatalogActivationRequest,
+        requestSequence: Long,
+        completion: CompletableDeferred<DebugActivationResult>,
+        savedOnlyPreview: Boolean,
+    ): StagedCatalog {
+        val staged = if (savedOnlyPreview) {
+            loadSavedOnly(request)
+        } else when (request.origin) {
             CatalogOrigin.LIVE -> {
                 val result = liveRepository.load(request.location, request.datasetId, request.forceLiveRefresh)
                 val recording = result.recording ?: throw LiveCatalogUnavailableException(
@@ -404,11 +436,30 @@ class CatalogActivationCoordinator(
             }
             CatalogOrigin.SIMULATED, CatalogOrigin.REPLAY -> loadIsolated(request)
         }
-        currentCoroutineSequence(request, requestSequence)
+        currentCoroutineSequence(request, requestSequence, completion, savedOnlyPreview)
         // The codec is the canonical whole-recording envelope validator. A source result that
         // cannot be recorded must not become active even if a provider boundary returned it.
         if (request.origin != CatalogOrigin.REPLAY) RecordedCatalogCodec.encode(staged.recording)
         return staged
+    }
+
+    private suspend fun loadSavedOnly(request: CatalogActivationRequest): StagedCatalog {
+        val namespace = when (request.origin) {
+            CatalogOrigin.SIMULATED -> CatalogStorageNamespace.SIMULATED
+            CatalogOrigin.REPLAY -> CatalogStorageNamespace.REPLAY
+            CatalogOrigin.LIVE -> error("LIVE cannot use saved-only preview")
+        }
+        return when (val saved = storage.load(request.location, namespace, request.datasetId)) {
+            is StoredCatalogResult.Found -> {
+                val activeRecording = if (request.origin == CatalogOrigin.REPLAY) asReplay(saved.recording)
+                    else saved.recording
+                StagedCatalog(activeRecording, CatalogActivationDelivery.CACHE, null, saved.storedAt)
+            }
+            is StoredCatalogResult.Invalid -> error(
+                "Saved ${request.origin.name} catalog is invalid: ${saved.reasons.joinToString("; ")}",
+            )
+            StoredCatalogResult.Missing -> error("Saved ${request.origin.name} catalog was not found")
+        }
     }
 
     private suspend fun loadIsolated(request: CatalogActivationRequest): StagedCatalog {
@@ -492,14 +543,26 @@ class CatalogActivationCoordinator(
         return SupportedTimeInterval(window.startInclusive, window.endExclusive.minusNanos(1))
     }
 
-    private fun currentCoroutineSequence(request: CatalogActivationRequest, requestSequence: Long) {
+    private fun currentCoroutineSequence(
+        request: CatalogActivationRequest,
+        requestSequence: Long,
+        completion: CompletableDeferred<DebugActivationResult>,
+        savedOnlyPreview: Boolean,
+    ) {
         synchronized(this) {
-            if (!isCurrent(request, requestSequence)) throw CancellationException("Catalog request was superseded")
+            if (!isCurrent(request, requestSequence, completion, savedOnlyPreview)) {
+                throw CancellationException("Catalog request was superseded")
+            }
         }
     }
 
-    private fun isCurrent(request: CatalogActivationRequest, requestSequence: Long): Boolean =
-        sequence == requestSequence && selectedLocation == request.location
+    private fun isCurrent(
+        request: CatalogActivationRequest,
+        requestSequence: Long,
+        completion: CompletableDeferred<DebugActivationResult>,
+        savedOnlyPreview: Boolean,
+    ): Boolean = sequence == requestSequence && currentCompletion === completion &&
+        (savedOnlyPreview || selectedLocation == request.location)
 
     private data class StagedCatalog(
         val recording: CatalogRecording,

@@ -1,0 +1,120 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1920" height="1080" viewBox="0 0 1920 1080">
+<defs>
+ <style>
+  .bg{fill:#edf2f4}.title{font:700 38px 'DejaVu Sans',Arial,sans-serif;fill:#14283c}.sub{font:17px 'DejaVu Sans',Arial,sans-serif;fill:#52697a}.eye{font:700 14px 'DejaVu Sans',Arial,sans-serif;letter-spacing:1.6px;fill:#227889}.h{font:700 20px 'DejaVu Sans',Arial,sans-serif;fill:#18334b}.body{font:15px 'DejaVu Sans',Arial,sans-serif;fill:#304a5d}.small{font:13px 'DejaVu Sans',Arial,sans-serif;fill:#5b7182}.white{fill:#f7fafb;font-family:'DejaVu Sans',Arial,sans-serif}.teal{fill:#76d5c5;font-family:'DejaVu Sans',Arial,sans-serif}.panel{fill:#fff;stroke:#cfdae0;stroke-width:2}.normal{fill:#e7f2f0;stroke:#79b8ac;stroke-width:2}.debug{fill:#eaf0f7;stroke:#8aa8c0;stroke-width:2}.warn{fill:#fff4dc;stroke:#dec27e;stroke-width:2}.dark{fill:#183248}.chip{fill:#173b4d;stroke:#5eb6a9;stroke-width:1.5}.mutedline{stroke:#b8c7ce;stroke-width:2}.arrow{stroke:#30898e;stroke-width:3;fill:none;marker-end:url(#arr)}.dash{stroke-dasharray:7 6}
+ </style>
+ <marker id="arr" markerWidth="10" markerHeight="10" refX="8" refY="5" orient="auto"><path d="M0 0L10 5L0 10Z" fill="#30898e"/></marker>
+</defs>
+<rect class="bg" width="1920" height="1080"/>
+<text x="52" y="42" class="eye">OXYGEN · DFM.4.3 · BEHAVIOR BOARD · OWNER APPROVED · 2026-11-01</text>
+<text x="52" y="91" class="title">One clean forecast, with diagnostics available on demand</text>
+<text x="52" y="124" class="sub">The overlay reads the active forecast. It never becomes another source of weather facts.</text>
+<rect x="1573" y="34" width="294" height="48" rx="24" class="normal"/>
+<text x="1720" y="64" text-anchor="middle" class="eye">OWNER APPROVED</text>
+
+<!-- top row: normal, debug session, menu -->
+<rect x="46" y="164" width="418" height="238" rx="18" class="normal"/>
+<text x="72" y="202" class="eye">01 · NORMAL FORECAST</text>
+<text x="72" y="239" class="h">Clean summary is the default</text>
+<text x="72" y="272" class="body">Date · selected time · temperature · event</text>
+<text x="72" y="297" class="body">High / low · precip chance · wind meter</text>
+<text x="72" y="331" class="small">Atmosphere, location, refresh and time tape stay.</text>
+<text x="72" y="359" class="small">No dataset button or diagnostic status row.</text>
+
+<rect x="525" y="164" width="418" height="238" rx="18" class="debug"/>
+<text x="551" y="202" class="eye">02 · #DEBUG · DEBUG BUILD</text>
+<text x="551" y="239" class="h">Enter debug session</text>
+<text x="551" y="272" class="body">Checkpoint behavior remains with DFM.4.2.</text>
+<rect x="551" y="300" width="154" height="42" rx="12" class="dark"/>
+<text x="628" y="327" text-anchor="middle" class="white" font-size="14">OVERLAY OFF</text>
+<text x="724" y="327" class="small">new session default</text>
+<text x="551" y="372" class="small">Release command stays ordinary search text.</text>
+
+<rect x="1004" y="164" width="418" height="238" rx="18" class="debug"/>
+<text x="1030" y="202" class="eye">03 · DEBUG MENU</text>
+<text x="1030" y="239" class="h">Visibility and preset are separate</text>
+<text x="1030" y="272" class="body">Toggle overlay · choose preset · configure groups</text>
+<text x="1030" y="301" class="body">Save or update a local display preset.</text>
+<text x="1030" y="339" class="small">Choosing a preset selects groups only.</text>
+<text x="1030" y="368" class="small">It does not turn the overlay on or alter facts.</text>
+
+<rect x="1483" y="164" width="390" height="238" rx="18" class="warn"/>
+<text x="1509" y="202" class="eye">RELEASE / BOUNDARY</text>
+<text x="1509" y="239" class="h">No developer effect</text>
+<text x="1509" y="272" class="body">#DEBUG is not dispatched in release.</text>
+<text x="1509" y="301" class="body">#PICKER remains session-gated.</text>
+<text x="1509" y="339" class="small">Catalog authoring/storage is a later slice.</text>
+<text x="1509" y="368" class="small">No provider, cache, or location mutation.</text>
+
+<!-- arrows -->
+<path class="arrow" d="M464 282H510"/>
+<path class="arrow" d="M943 282H989"/>
+<text x="472" y="265" class="small">#DEBUG</text>
+<text x="951" y="265" class="small">configure / toggle</text>
+
+<!-- preset/editor contract -->
+<rect x="46" y="443" width="553" height="284" rx="18" class="panel"/>
+<text x="72" y="481" class="eye">04 · CONFIGURE DISPLAY PRESET</text>
+<text x="72" y="518" class="h">Persist display choices locally</text>
+<rect x="74" y="543" width="24" height="24" rx="4" fill="#227f7a"/><path d="M79 555l6 6 10-13" stroke="#fff" stroke-width="3" fill="none"/>
+<text x="112" y="562" class="body">Catalog/source and freshness</text>
+<rect x="74" y="579" width="24" height="24" rx="4" fill="#227f7a"/><path d="M79 591l6 6 10-13" stroke="#fff" stroke-width="3" fill="none"/>
+<text x="112" y="598" class="body">Selected sample and source bounds</text>
+<rect x="74" y="615" width="24" height="24" rx="4" fill="#fff" stroke="#78909c" stroke-width="2"/>
+<text x="112" y="634" class="body">Missing-field summary</text>
+<text x="72" y="682" class="small">Groups label diagnostics; unavailable stays unavailable.</text>
+<rect x="72" y="694" width="198" height="24" rx="12" class="normal"/>
+<text x="171" y="711" text-anchor="middle" class="eye" font-size="11">SAVE LOCAL PRESET</text>
+
+<!-- overlay state -->
+<rect x="625" y="443" width="807" height="284" rx="18" class="dark"/>
+<text x="651" y="481" class="teal" font-size="14" font-weight="700" letter-spacing="1.4">05 · OVERLAY ON · SAME FORECAST AND SELECTED INSTANT</text>
+<rect x="651" y="503" width="244" height="91" rx="12" class="chip"/>
+<text x="669" y="530" class="teal" font-size="12" font-weight="700">DIAGNOSTIC · SOURCE</text>
+<text x="669" y="556" class="white" font-size="14">LIVE · source identity</text>
+<text x="669" y="578" class="white" font-size="13">fresh / stale / offline state</text>
+<rect x="913" y="503" width="236" height="91" rx="12" class="chip"/>
+<text x="931" y="530" class="teal" font-size="12" font-weight="700">DIAGNOSTIC · SAMPLE</text>
+<text x="931" y="556" class="white" font-size="14">selected instant</text>
+<text x="931" y="578" class="white" font-size="13">fact time and support bounds</text>
+<rect x="1167" y="503" width="239" height="91" rx="12" class="chip"/>
+<text x="1185" y="530" class="teal" font-size="12" font-weight="700">DIAGNOSTIC · MISSING</text>
+<text x="1185" y="556" class="white" font-size="14">named unavailable fields</text>
+<text x="1185" y="578" class="white" font-size="13">never substitute zero</text>
+<line x1="651" y1="614" x2="1406" y2="614" stroke="#668296" stroke-width="1"/>
+<text x="651" y="647" class="white" font-size="14">Core readout, precip chance, wind, scene, time tape and gesture ownership remain as-is.</text>
+<text x="651" y="676" class="teal" font-size="13">Overlay is a view of current state, never a second forecast.</text>
+<text x="651" y="706" class="white" font-size="13">Panels stay in upper sky corners; they do not cover labels or the tape.</text>
+
+<!-- source details route -->
+<rect x="1458" y="443" width="415" height="284" rx="18" class="panel"/>
+<text x="1484" y="481" class="eye">06 · DETAILS REMAIN REACHABLE</text>
+<text x="1484" y="518" class="h">Time tape action</text>
+<rect x="1484" y="538" width="358" height="54" rx="12" class="debug"/>
+<text x="1663" y="572" text-anchor="middle" class="body">Browse forecast values</text>
+<text x="1484" y="625" class="body">Source · product meaning · freshness</text>
+<text x="1484" y="651" class="body">Stale / offline / load and refresh errors</text>
+<text x="1484" y="684" class="small">Keep this reachable in the existing browser.</text>
+<text x="1484" y="708" class="small">No new source or navigation path.</text>
+
+<!-- exit/invariants -->
+<rect x="46" y="766" width="880" height="246" rx="18" class="panel"/>
+<text x="72" y="804" class="eye">07 · HIDE OVERLAY OR END SESSION</text>
+<text x="72" y="843" class="h">Return to the clean forecast composition</text>
+<text x="72" y="878" class="body">Hide → clean screen; Exit / ordinary action → DFM.4.2 restore, session ends, overlay off.</text>
+<text x="72" y="915" class="body">The forecast, active catalog, location and selected instant do not change from overlay/preset actions.</text>
+<text x="72" y="955" class="small">Time-tape browse retains its current row-selection and daily/hourly behavior.</text>
+<text x="72" y="984" class="small">Rain chance remains distinct from amount; missing data is not zero; no weather is inferred.</text>
+
+<rect x="952" y="766" width="921" height="246" rx="18" class="warn"/>
+<text x="978" y="804" class="eye">APPROVAL QUESTIONS BUILT INTO THIS BOARD</text>
+<text x="978" y="843" class="h">Confirm the clean-view boundary and detail route</text>
+<text x="978" y="878" class="body">The clean main removes the title/status block, dataset control and secondary sample/amount rows.</text>
+<text x="978" y="915" class="body">Source, freshness, stale/offline and error outcomes remain reachable via Browse forecast values.</text>
+<text x="978" y="955" class="small">Parent DFM.4 boards are references; this board applies only to DFM.4.3.</text>
+<text x="978" y="984" class="small">Installed screenshots remain acceptance evidence, not board approval.</text>
+
+<line x1="46" y1="1035" x2="1873" y2="1035" class="mutedline"/>
+<text x="52" y="1063" class="small">Slice boundary: no catalog authoring/storage/replay work, theme redesign, provider/cache mutation, or broad TEST matrix.</text>
+<text x="1865" y="1063" text-anchor="end" class="small">Reference baseline: DFM.4.2 · evidence capture 087</text>
+</svg>

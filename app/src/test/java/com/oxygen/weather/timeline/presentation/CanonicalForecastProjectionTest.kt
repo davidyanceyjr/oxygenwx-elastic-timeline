@@ -45,6 +45,47 @@ class CanonicalForecastProjectionTest {
     }
 
     @Test
+    fun diagnosticsUseDeclaredSampleSupportAndKeepZeroDistinctFromMissing() {
+        val date = LocalDate.parse("2026-10-28")
+        val valid = date.atTime(9, 0).atZone(zone).toInstant()
+        val rainBounds = AccumulationInterval(valid.minusSeconds(3600), valid)
+        val facts = CanonicalWeatherFacts(
+            validTime = valid,
+            temperatureC = 0.0,
+            rainAmountMillimeters = AccumulatedMillimeters(0.0, rainBounds),
+        )
+        val expected = mapOf(date to mapOf(
+            CatalogField.TEMPERATURE_C to ExpectedFieldSupport.Points(setOf(valid)),
+            CatalogField.WIND_SPEED_KPH to ExpectedFieldSupport.Points(setOf(valid)),
+            CatalogField.RAIN_AMOUNT_MILLIMETERS to ExpectedFieldSupport.Intervals(setOf(rainBounds)),
+            // This declaration does not match the sample and must not imply missingness.
+            CatalogField.VISIBILITY_KM to ExpectedFieldSupport.Points(setOf(valid.plusSeconds(3600))),
+        ))
+        val (catalog, _) = snapshot(date, listOf(facts), support = expected)
+        val active = ActiveCatalogSelection(
+            location = catalog.location,
+            recording = CatalogRecording(catalog, expected),
+            origin = CatalogOrigin.LIVE,
+            datasetId = catalog.datasetId,
+            replayRecordingId = null,
+            delivery = CatalogActivationDelivery.SOURCE,
+            freshness = CatalogFreshness.FRESH,
+            storedAt = null,
+            selectedInstant = valid.plusSeconds(900),
+            viewGeneration = 1L,
+        )
+        val diagnostics = CatalogTimelinePresenter(active).scenePresentation(
+            CatalogActivationState(active = active),
+        ).diagnostics
+
+        assertTrue(diagnostics.selection.first().contains("Selected"))
+        assertTrue(diagnostics.selection.first().contains("sample"))
+        assertTrue(diagnostics.selection.any { it.contains("Point fields @") && it.contains("temp") })
+        assertTrue(diagnostics.selection.any { it.contains("Intervals: rain") })
+        assertEquals(listOf("wind"), diagnostics.missingFields)
+    }
+
+    @Test
     fun tiesChooseEarlierSampleAndDoNotBorrowAcrossDayBoundary() {
         val date = LocalDate.parse("2026-10-28")
         val nine = date.atTime(9, 0).atZone(zone).toInstant()

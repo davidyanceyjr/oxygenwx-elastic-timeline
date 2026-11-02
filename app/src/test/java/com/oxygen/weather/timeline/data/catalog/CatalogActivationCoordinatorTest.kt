@@ -31,6 +31,7 @@ open class CatalogCoordinatorTestSupport {
         protected val rows = mutableListOf<CatalogDatasetRow>()
         var reads = 0
         var writes = 0
+        var beforeFind: suspend () -> Unit = {}
         override suspend fun replace(row: CatalogDatasetRow) {
             writes++
             rows.removeAll { it.locationId == row.locationId && it.storageNamespace == row.storageNamespace && it.datasetId == row.datasetId && it.asOfEpochSecond == row.asOfEpochSecond && it.asOfNano == row.asOfNano }
@@ -38,6 +39,7 @@ open class CatalogCoordinatorTestSupport {
         }
         override suspend fun findCandidates(locationId: String, namespace: String, datasetId: String): List<CatalogDatasetRow> {
             reads++
+            beforeFind()
             return rows.filter { it.locationId == locationId && it.storageNamespace == namespace && it.datasetId == datasetId }
                 .sortedWith(compareByDescending<CatalogDatasetRow> { it.asOfEpochSecond }.thenByDescending { it.asOfNano })
         }
@@ -49,6 +51,13 @@ open class CatalogCoordinatorTestSupport {
         override suspend fun deleteDataset(locationId: String, namespace: String, datasetId: String): Int =
             rows.removeAll { it.locationId == locationId && it.storageNamespace == namespace && it.datasetId == datasetId }.let { if (it) 1 else 0 }
         override suspend fun deleteLocation(locationId: String): Int = rows.removeAll { it.locationId == locationId }.let { if (it) 1 else 0 }
+        fun corrupt(locationId: String, namespace: String, datasetId: String) {
+            val index = rows.indexOfFirst {
+                it.locationId == locationId && it.storageNamespace == namespace && it.datasetId == datasetId
+            }
+            check(index >= 0)
+            rows[index] = rows[index].copy(payload = byteArrayOf(0, 1, 2))
+        }
         override suspend fun persistLive(row: CatalogDatasetRow, retentionLimit: Int): Boolean {
             replace(row)
             liveRetentionOrder(row.locationId).drop(retentionLimit).forEach { deleteWindow(it.locationId, it.datasetId, it.asOfEpochSecond, it.asOfNano) }
@@ -150,6 +159,167 @@ open class CatalogCoordinatorTestSupport {
 }
 
 class CatalogActivationCoordinatorTest : CatalogCoordinatorTestSupport() {
+    @Test fun savedPreviewForAnotherLocationRetainsPublishedSelectionUntilAtomicCommit() = runBlocking {
+        val h = harness()
+        val coordinator = h.coordinator(this)
+        coordinator.committedLocationSelection(a, "Alpha")
+        awaitState { coordinator.state.value.active != null }
+        val old = coordinator.state.value.active!!
+        coordinator.selectInstant(old.selectedInstant.plusSeconds(3600), old.viewGeneration)
+        val before = coordinator.state.value
+
+        val savedId = DatasetId("saved-b")
+        val savedAsOf = time.minusSeconds(5 * 24 * 60 * 60L)
+        val loaded = result(CatalogLoadRequest(b, savedId, savedAsOf), CatalogOrigin.SIMULATED)
+            as CatalogLoadResult.Success
+        h.storage.save(CatalogStorageNamespace.SIMULATED,
+            CatalogRecording(loaded.catalog, loaded.expectedSupport, loaded.dailyExpectedSupport))
+        val writesBeforePreview = h.dao.writes
+        val sourceLoadsBeforePreview = h.simulated.requests.size
+
+        val readStarted = CompletableDeferred<Unit>()
+        val releaseRead = CompletableDeferred<Unit>()
+        h.dao.beforeFind = {
+            readStarted.complete(Unit)
+            withContext(NonCancellable) { releaseRead.await() }
+        }
+        val preview = coordinator.requestSavedCatalogPreview(
+            CatalogActivationRequest(b, CatalogOrigin.SIMULATED, savedId),
+        )
+        readStarted.await()
+
+        val pending = coordinator.state.value
+        assertTrue(pending.loading)
+        assertEquals(a, pending.selectedLocation)
+        assertEquals("Alpha", pending.selectedLocationName)
+        assertEquals(before.active, pending.active)
+        assertEquals(before.active?.selectedInstant, pending.active?.selectedInstant)
+
+        releaseRead.complete(Unit)
+        val activated = withTimeout(3000) { preview.await() } as DebugActivationResult.Success
+        assertEquals(b, coordinator.state.value.selectedLocation)
+        assertEquals(b, activated.selection.location)
+        assertEquals(savedId, activated.selection.datasetId)
+        assertEquals(savedAsOf, activated.selection.selectedInstant)
+        assertEquals(CatalogActivationDelivery.CACHE, activated.selection.delivery)
+        assertNull(coordinator.state.value.selectedLocationName)
+        assertEquals(writesBeforePreview, h.dao.writes)
+        assertEquals(sourceLoadsBeforePreview, h.simulated.requests.size)
+    }
+
+    @Test fun savedReplayPreviewProjectsReplayWithoutChangingCapturedRecording() = runBlocking {
+        val h = harness()
+        val coordinator = h.coordinator(this)
+        coordinator.committedLocationSelection(a)
+        awaitState { coordinator.state.value.active != null }
+
+        val replayId = DatasetId("saved-replay-b")
+        val captured = result(CatalogLoadRequest(b, replayId, time), CatalogOrigin.SIMULATED)
+            as CatalogLoadResult.Success
+        val recording = CatalogRecording(captured.catalog, captured.expectedSupport, captured.dailyExpectedSupport)
+        h.storage.save(CatalogStorageNamespace.REPLAY, recording)
+        val writesBeforePreview = h.dao.writes
+        val sourceLoadsBeforePreview = h.replay.requests.size
+
+        val preview = coordinator.requestSavedCatalogPreview(
+            CatalogActivationRequest(b, CatalogOrigin.REPLAY, replayId, replayId),
+        ).await() as DebugActivationResult.Success
+        val stored = h.storage.load(b, CatalogStorageNamespace.REPLAY, replayId) as StoredCatalogResult.Found
+
+        assertEquals(b, preview.selection.location)
+        assertEquals(CatalogOrigin.REPLAY, preview.selection.origin)
+        assertEquals(CatalogOrigin.REPLAY, preview.selection.recording.catalog.provenance.origin)
+        assertEquals(CatalogOrigin.SIMULATED, stored.recording.catalog.provenance.origin)
+        assertArrayEquals(RecordedCatalogCodec.encode(recording), RecordedCatalogCodec.encode(stored.recording))
+        assertEquals(writesBeforePreview, h.dao.writes)
+        assertEquals(sourceLoadsBeforePreview, h.replay.requests.size)
+    }
+
+    @Test fun missingAndInvalidSavedPreviewsKeepPriorSelectionAndDoNoFallbackWrites() = runBlocking {
+        val h = harness()
+        val coordinator = h.coordinator(this)
+        coordinator.committedLocationSelection(a, "Alpha")
+        awaitState { coordinator.state.value.active != null }
+        val before = coordinator.state.value
+        val liveCalls = h.live.requests.size
+        val simulatedCalls = h.simulated.requests.size
+        val writes = h.dao.writes
+
+        val missing = coordinator.requestSavedCatalogPreview(
+            CatalogActivationRequest(b, CatalogOrigin.SIMULATED, DatasetId("missing-b")),
+        ).await() as DebugActivationResult.Failure
+        assertTrue(missing.message.contains("not found"))
+        assertEquals(a, coordinator.state.value.selectedLocation)
+        assertEquals("Alpha", coordinator.state.value.selectedLocationName)
+        assertEquals(before.active, coordinator.state.value.active)
+        assertEquals(before.active?.selectedInstant, coordinator.state.value.active?.selectedInstant)
+        assertEquals(before.active?.viewGeneration, coordinator.state.value.active?.viewGeneration)
+        assertEquals(liveCalls, h.live.requests.size)
+        assertEquals(simulatedCalls, h.simulated.requests.size)
+        assertEquals(writes, h.dao.writes)
+
+        val invalidId = DatasetId("invalid-b")
+        val loaded = result(CatalogLoadRequest(b, invalidId, time), CatalogOrigin.SIMULATED)
+            as CatalogLoadResult.Success
+        h.storage.save(CatalogStorageNamespace.SIMULATED,
+            CatalogRecording(loaded.catalog, loaded.expectedSupport, loaded.dailyExpectedSupport))
+        h.dao.corrupt(b.id.value, CatalogStorageNamespace.SIMULATED.name, invalidId.value)
+        val writesBeforeInvalidPreview = h.dao.writes
+        val liveCallsBeforeInvalidPreview = h.live.requests.size
+        val simulatedCallsBeforeInvalidPreview = h.simulated.requests.size
+        val invalidBefore = coordinator.state.value.active
+
+        val invalid = coordinator.requestSavedCatalogPreview(
+            CatalogActivationRequest(b, CatalogOrigin.SIMULATED, invalidId),
+        ).await() as DebugActivationResult.Failure
+        assertTrue(invalid.message.contains("invalid"))
+        assertEquals(a, coordinator.state.value.selectedLocation)
+        assertEquals("Alpha", coordinator.state.value.selectedLocationName)
+        assertEquals(invalidBefore, coordinator.state.value.active)
+        assertEquals(invalidBefore?.selectedInstant, coordinator.state.value.active?.selectedInstant)
+        assertEquals(liveCallsBeforeInvalidPreview, h.live.requests.size)
+        assertEquals(simulatedCallsBeforeInvalidPreview, h.simulated.requests.size)
+        assertEquals(writesBeforeInvalidPreview, h.dao.writes)
+    }
+
+    @Test fun supersededSavedPreviewCannotPublishOrRestoreOverNewerRequest() = runBlocking {
+        val h = harness()
+        val coordinator = h.coordinator(this)
+        coordinator.committedLocationSelection(a)
+        awaitState { coordinator.state.value.active != null }
+
+        val savedId = DatasetId("saved-b-pending")
+        val loaded = result(CatalogLoadRequest(b, savedId, time), CatalogOrigin.SIMULATED)
+            as CatalogLoadResult.Success
+        h.storage.save(CatalogStorageNamespace.SIMULATED,
+            CatalogRecording(loaded.catalog, loaded.expectedSupport, loaded.dailyExpectedSupport))
+        val readStarted = CompletableDeferred<Unit>()
+        val releaseRead = CompletableDeferred<Unit>()
+        var blockedFirstRead = false
+        h.dao.beforeFind = {
+            if (!blockedFirstRead) {
+                blockedFirstRead = true
+                readStarted.complete(Unit)
+                withContext(NonCancellable) { releaseRead.await() }
+            }
+        }
+        val preview = coordinator.requestSavedCatalogPreview(
+            CatalogActivationRequest(b, CatalogOrigin.SIMULATED, savedId),
+        )
+        readStarted.await()
+
+        val replacement = coordinator.requestDebugCatalog(
+            CatalogActivationRequest(a, CatalogOrigin.SIMULATED, DatasetId("newer-a")),
+        )
+        val replacementResult = withTimeout(3000) { replacement.await() } as DebugActivationResult.Success
+        val replacementState = coordinator.state.value
+        assertEquals(a, replacementResult.selection.location)
+
+        releaseRead.complete(Unit)
+        assertEquals(DebugActivationResult.Superseded, withTimeout(3000) { preview.await() })
+        assertEquals(replacementState, coordinator.state.value)
+    }
+
     @Test fun aToBToARaceOnlyPublishesNewestMatchingLocationRequest() = runBlocking {
         val firstA = CompletableDeferred<CatalogLoadResult>()
         var aCalls = 0

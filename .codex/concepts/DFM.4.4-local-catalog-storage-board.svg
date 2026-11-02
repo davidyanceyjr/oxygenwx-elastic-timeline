@@ -1,0 +1,107 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1600" height="1200" viewBox="0 0 1600 1200">
+  <defs>
+    <linearGradient id="bg" x2="0" y2="1"><stop stop-color="#101b2b"/><stop offset="1" stop-color="#17283a"/></linearGradient>
+    <linearGradient id="sim" x2="1" y2="1"><stop stop-color="#174d62"/><stop offset="1" stop-color="#1c6a71"/></linearGradient>
+    <linearGradient id="rep" x2="1" y2="1"><stop stop-color="#584672"/><stop offset="1" stop-color="#76558a"/></linearGradient>
+    <linearGradient id="preview" x2="1" y2="1"><stop stop-color="#77622d"/><stop offset="1" stop-color="#a0782f"/></linearGradient>
+    <filter id="shadow" x="-20%" y="-20%" width="140%" height="150%"><feDropShadow dx="0" dy="8" stdDeviation="10" flood-color="#07101a" flood-opacity=".45"/></filter>
+    <marker id="arrow" markerWidth="12" markerHeight="12" refX="10" refY="6" orient="auto"><path d="M1 1L11 6 1 11" fill="none" stroke="#9ab0c3" stroke-width="2"/></marker>
+    <marker id="redArrow" markerWidth="12" markerHeight="12" refX="10" refY="6" orient="auto"><path d="M1 1L11 6 1 11" fill="none" stroke="#f08d82" stroke-width="2"/></marker>
+    <style>
+      text{font-family:Inter,Arial,sans-serif;fill:#edf4fa}.title{font-size:36px;font-weight:700;letter-spacing:.2px}.subtitle{font-size:17px;fill:#afc0d0}.eyebrow{font-size:13px;font-weight:700;letter-spacing:1.5px;fill:#a9bfd1}.head{font-size:21px;font-weight:700}.body{font-size:16px;fill:#d3dfe8}.small{font-size:14px;fill:#b9c9d5}.tag{font-size:13px;font-weight:700;letter-spacing:1px}.node{filter:url(#shadow)}.line{fill:none;stroke:#8fa8bb;stroke-width:2.5;marker-end:url(#arrow)}.badline{fill:none;stroke:#e98a7e;stroke-width:2.5;marker-end:url(#redArrow)}
+    </style>
+  </defs>
+  <rect width="1600" height="1200" fill="url(#bg)"/>
+  <circle cx="1430" cy="120" r="180" fill="#3a6072" opacity=".12"/><circle cx="130" cy="1080" r="220" fill="#806b37" opacity=".09"/>
+  <text x="72" y="67" class="eyebrow">OXYGEN TIME LAB · DFM.4.4 · BEHAVIOR BOARD</text>
+  <text x="72" y="119" class="title">Local catalog storage &amp; replay snapshots</text>
+  <text x="72" y="153" class="subtitle">Nonvisual foundation · authored periods become canonical synthetic catalogs · preview only after saved-record validation</text>
+  <rect x="1310" y="51" width="218" height="40" rx="20" fill="#493a27" stroke="#d3a64c"/>
+  <text x="1419" y="77" text-anchor="middle" class="tag" fill="#f4cb71">DRAFT · REVIEW PENDING</text>
+
+  <!-- author and canonicalization -->
+  <g class="node">
+    <rect x="72" y="205" width="390" height="208" rx="20" fill="#213449" stroke="#6d8aa1" stroke-width="1.5"/>
+    <text x="100" y="240" class="eyebrow">01 · AUTHORING INPUT</text>
+    <text x="100" y="278" class="head">Editable SIMULATED draft</text>
+    <text x="100" y="311" class="body">Name + location identity + IANA zone</text>
+    <text x="100" y="338" class="body">Authored local-time period + typed events</text>
+    <text x="100" y="379" class="small">Only existing supported forecast fields</text>
+  </g>
+  <path d="M462 309H520" class="line"/>
+  <g class="node">
+    <rect x="530" y="205" width="510" height="208" rx="20" fill="#243a4d" stroke="#6d8aa1" stroke-width="1.5"/>
+    <text x="558" y="240" class="eyebrow">02 · CANONICAL MATERIALIZATION</text>
+    <text x="558" y="278" class="head">Build the existing full horizon</text>
+    <text x="558" y="311" class="body">D−30…D+13 local dates; event period is not</text>
+    <text x="558" y="338" class="body">a shortened catalog window</text>
+    <text x="558" y="379" class="small">Baseline outside period · DST-aware real hours</text>
+  </g>
+  <path d="M1040 309H1094" class="line"/>
+  <g class="node">
+    <rect x="1104" y="205" width="424" height="208" rx="20" fill="#243a4d" stroke="#6d8aa1" stroke-width="1.5"/>
+    <text x="1132" y="240" class="eyebrow">03 · VALIDATE</text>
+    <text x="1132" y="278" class="head">Typed support &amp; identity</text>
+    <text x="1132" y="311" class="body">Missing ≠ zero · chance ≠ amount</text>
+    <text x="1132" y="338" class="body">No unsupported condition invented</text>
+    <text x="1132" y="379" class="small">Horizon, timezone and metadata agree</text>
+  </g>
+  <path d="M1316 413V468H852" class="line"/>
+  <path d="M852 468H757V500" class="line"/>
+  <text x="1090" y="454" class="small">valid</text>
+  <path d="M1306 413V468H1430V500" class="badline"/>
+  <text x="1360" y="454" class="small" fill="#f0a197">invalid</text>
+
+  <!-- persistence lanes -->
+  <g class="node">
+    <rect x="532" y="510" width="450" height="183" rx="20" fill="url(#sim)" stroke="#65b7bb" stroke-width="1.5"/>
+    <text x="562" y="547" class="eyebrow">04A · SAVE / REOPEN</text>
+    <text x="562" y="586" class="head">SIMULATED · editable</text>
+    <text x="562" y="619" class="body">Debug-local namespace · fixture-distinct ID</text>
+    <text x="562" y="651" class="small">Round-trip preserves catalog + metadata</text>
+  </g>
+  <g class="node">
+    <rect x="1030" y="510" width="498" height="183" rx="20" fill="url(#rep)" stroke="#b4a0d2" stroke-width="1.5"/>
+    <text x="1060" y="547" class="eyebrow">04B · EXPLICIT SNAPSHOT</text>
+    <text x="1060" y="586" class="head">REPLAY · immutable</text>
+    <text x="1060" y="619" class="body">Captures saved SIMULATED values + origin</text>
+    <text x="1060" y="651" class="small">Distinct ID / namespace · edits cannot alter it</text>
+  </g>
+  <path d="M982 601H1018" class="line"/>
+  <text x="1000" y="582" text-anchor="middle" class="small">capture</text>
+  <path d="M1490 413H1552V880H1538" class="badline"/>
+
+  <!-- preview boundary -->
+  <path d="M757 693V746H640V779" class="line"/>
+  <path d="M1279 693V746H1005V779" class="line"/>
+  <g class="node">
+    <rect x="445" y="790" width="735" height="185" rx="22" fill="#263c4d" stroke="#dfb95b" stroke-width="2"/>
+    <text x="480" y="829" class="eyebrow" fill="#f4cf75">05 · ONLY EXPLICIT PREVIEW CROSSES THIS BOUNDARY</text>
+    <text x="480" y="868" class="head">Revalidate the selected saved record at activation</text>
+    <text x="480" y="903" class="body">Identity · namespace/origin · location · horizon · codec · metadata · content</text>
+    <text x="480" y="940" class="small">Then use the existing coordinator path; preserve selected-time authority and synthetic provenance.</text>
+  </g>
+  <path d="M1180 881H1240" class="line"/>
+  <g class="node">
+    <rect x="1250" y="790" width="278" height="185" rx="20" fill="#4a2d34" stroke="#e68c80" stroke-width="1.5"/>
+    <text x="1276" y="829" class="eyebrow" fill="#f0a197">FAIL CLOSED</text>
+    <text x="1276" y="866" class="head" style="font-size:18px">Missing / invalid /</text>
+    <text x="1276" y="891" class="head" style="font-size:18px">changed / mismatched</text>
+    <text x="1276" y="927" class="small">Keep active catalog + selected</text>
+    <text x="1276" y="949" class="small">time unchanged; no fallback/write</text>
+  </g>
+  <path d="M812 975V1016" class="line"/>
+  <g class="node">
+    <rect x="445" y="1025" width="735" height="104" rx="20" fill="url(#preview)" stroke="#e7c56c" stroke-width="1.5"/>
+    <text x="480" y="1065" class="eyebrow">06 · VALID SAVED PREVIEW</text>
+    <text x="480" y="1100" class="head">Synthetic catalog activates through existing selection path</text>
+  </g>
+  <path d="M1180 1077H1228V1039" class="line"/>
+  <g class="node">
+    <rect x="1238" y="1010" width="290" height="119" rx="18" fill="#1b3340" stroke="#65b7bb" stroke-width="1.5"/>
+    <text x="1264" y="1047" class="eyebrow">UNCHANGED BOUNDARY</text>
+    <text x="1264" y="1081" class="body">LIVE / provider / cache /</text>
+    <text x="1264" y="1107" class="body">location state untouched</text>
+  </g>
+  <text x="72" y="1164" class="small">Exit debug: DFM.4.1/4.2 checkpoint restores prior catalog + exact selected time without I/O. UI artwork is not applicable; editor UI belongs to DFM.4.5.</text>
+</svg>

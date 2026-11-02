@@ -8,6 +8,7 @@ import com.oxygen.weather.timeline.data.catalog.CatalogActivationCoordinator
 import com.oxygen.weather.timeline.data.catalog.CatalogActivationState
 import com.oxygen.weather.timeline.data.catalog.PlaceSearcher
 import com.oxygen.weather.timeline.data.catalog.SavedLocationRepository
+import com.oxygen.weather.timeline.presentation.CatalogDiagnosticPresentation
 import java.util.ServiceLoader
 
 /** Optional build-variant behavior. Release has no provider; debug behavior stays out of main DEX. */
@@ -21,6 +22,7 @@ interface ActivityVariantDelegate {
     suspend fun beforeOrdinaryAction(host: Host) = Unit
     fun isDebugSessionActive(host: Host): Boolean = false
     @Composable fun DebugSessionMenu(host: Host) = Unit
+    @Composable fun MainScreenOverlay(host: Host, diagnostics: CatalogDiagnosticPresentation) = Unit
 
     interface Host {
         val activity: Activity

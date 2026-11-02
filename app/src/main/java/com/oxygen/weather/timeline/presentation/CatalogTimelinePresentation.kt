@@ -4,8 +4,10 @@ import com.oxygen.weather.timeline.data.PrecipitationAmount
 import com.oxygen.weather.timeline.data.SkyCondition
 import com.oxygen.weather.timeline.data.catalog.ActiveCatalogSelection
 import com.oxygen.weather.timeline.data.catalog.CatalogActivationState
+import com.oxygen.weather.timeline.data.catalog.CatalogField
 import com.oxygen.weather.timeline.data.catalog.CatalogWindow
 import com.oxygen.weather.timeline.data.catalog.CatalogWindowResult
+import com.oxygen.weather.timeline.data.catalog.ExpectedFieldSupport
 import com.oxygen.weather.timeline.data.catalog.WeatherCondition
 import com.oxygen.weather.timeline.presentation.atmosphere.AtmospherePreview
 import com.oxygen.weather.timeline.presentation.atmosphere.DepictionKind
@@ -57,6 +59,7 @@ data class CatalogTimelineView(
     val windDirectionDegrees: Double?,
     val meaning: String,
     val source: String,
+    val product: String,
     val selectedLocationName: String?,
     val status: String,
     val scene: SceneVisualState?,
@@ -70,6 +73,14 @@ data class CatalogTimelineScenePresentation(
     val timeline: CatalogTimelineView,
     val reading: SceneReading,
     val composition: FirstCityComposition,
+    val diagnostics: CatalogDiagnosticPresentation,
+)
+
+/** Typed, read-only values for the optional variant-provided diagnostic overlay. */
+data class CatalogDiagnosticPresentation(
+    val catalog: List<String>,
+    val selection: List<String>,
+    val missingFields: List<String>,
 )
 
 /** Construct once per published dataset; selected projections remain cheap during scrubbing. */
@@ -88,6 +99,8 @@ class CatalogTimelinePresenter(private val active: ActiveCatalogSelection) {
     private val timeFormat = DateTimeFormatter.ofPattern("h:mm a z", Locale.US)
     private val selectedTimeFormat = DateTimeFormatter.ofPattern("h:mm:ss a z", Locale.US)
     private val updateFormat = DateTimeFormatter.ofPattern("MMM d, h:mm a z", Locale.US)
+    private val diagnosticTimeFormat = DateTimeFormatter.ofPattern("MMM d, h:mm:ss a z", Locale.US)
+    private val diagnosticSupportTimeFormat = DateTimeFormatter.ofPattern("h:mm a", Locale.US)
     private val days = window.days.map { day ->
         val anchor = interval.clamp(InstantTimeAxis.dailyOverviewAnchor(day.date, zone))
         val overview = CanonicalForecastProjection.project(catalog, window, anchor, ForecastDisplayUnits.IMPERIAL)
@@ -137,7 +150,78 @@ class CatalogTimelinePresenter(private val active: ActiveCatalogSelection) {
             timeline = view(state, selected, reading, composition),
             reading = reading,
             composition = composition,
+            diagnostics = diagnostics(state, selected),
         )
+    }
+
+    private fun diagnostics(state: CatalogActivationState, selected: Instant): CatalogDiagnosticPresentation {
+        val projected = CanonicalForecastProjection.project(catalog, window, selected, ForecastDisplayUnits.IMPERIAL)
+        val sample = projected.factSample
+        val product = projected.productSegment
+        val provenance = projected.provenance
+        val catalogLines = listOf(
+            "Origin: ${active.origin.name}",
+            "Product: ${product?.productId ?: provenance.productId ?: "unavailable"}",
+            "Source: ${product?.sourceId ?: provenance.sourceId ?: "unavailable"}",
+            "Delivery: ${active.delivery.name}",
+            "Freshness: ${active.freshness?.name ?: "unavailable"}",
+            "Loading: ${state.loading}",
+            "Refresh status: ${state.refreshStatus?.name ?: "unavailable"}",
+            "Error: ${state.lastError ?: "unavailable"}",
+        )
+        val day = sample?.let { candidate -> window.days.firstOrNull { it.date == candidate.validTime.atZone(zone).toLocalDate() } }
+        val matched = if (sample == null || day == null) emptyList() else day.expectedFieldSupport()
+            .mapNotNull { (field, support) ->
+                when (support) {
+                    is ExpectedFieldSupport.Points -> if (sample.validTime in support.instants)
+                        field to "${field.name} point ${sample.validTime}" else null
+                    is ExpectedFieldSupport.Intervals -> {
+                        val interval = sampleInterval(sample.facts, field)
+                        if (interval != null && interval in support.intervals && interval.end == sample.validTime)
+                            field to "${field.diagnosticLabel()} ${diagnosticSupportTime(interval.start)}–${diagnosticSupportTime(interval.end)}" else null
+                    }
+                }
+            }
+        val pointFields = matched.filter { " point " in it.second }.map { it.first.diagnosticLabel() }
+        val intervalSupport = matched.filter { it.second.contains("–") }.map { it.second }
+        val selectionLines = listOf(
+            "Selected ${diagnosticTime(selected)} · sample ${sample?.validTime?.let(::diagnosticTime) ?: "unavailable"}",
+            if (pointFields.isEmpty()) "Point support: unavailable" else
+                "Point fields @ ${sample?.validTime?.let(::diagnosticSupportTime)} · ${pointFields.joinToString()}",
+            if (intervalSupport.isEmpty()) "Interval support: unavailable" else "Intervals: ${intervalSupport.joinToString("; ")}",
+        )
+        val missing = matched.mapNotNull { (field, _) ->
+            if (sample?.facts?.hasValue(field) == false) field.diagnosticLabel() else null
+        }.let { fields -> when { sample == null -> listOf("unavailable"); fields.isEmpty() -> listOf("none"); else -> fields } }
+        return CatalogDiagnosticPresentation(catalogLines, selectionLines, missing)
+    }
+
+    private fun sampleInterval(facts: com.oxygen.weather.timeline.data.catalog.CanonicalWeatherFacts, field: CatalogField) = when (field) {
+        CatalogField.RAIN_AMOUNT_MILLIMETERS -> facts.rainAmountMillimeters?.interval
+        CatalogField.TOTAL_PRECIPITATION_MILLIMETERS -> facts.totalPrecipitationMillimeters?.interval
+        CatalogField.SNOWFALL_CENTIMETERS -> facts.snowfallCentimeters?.interval
+        else -> null
+    }
+
+    private fun com.oxygen.weather.timeline.data.catalog.CanonicalWeatherFacts.hasValue(field: CatalogField): Boolean = when (field) {
+        CatalogField.CONDITIONS -> conditions.isNotEmpty()
+        CatalogField.PHENOMENA -> phenomena.isNotEmpty()
+        CatalogField.TEMPERATURE_C -> temperatureC != null
+        CatalogField.PRECIPITATION_PROBABILITY_PERCENT -> precipitationProbabilityPercent != null
+        CatalogField.THUNDERSTORM_PROBABILITY_PERCENT -> thunderstormProbabilityPercent != null
+        CatalogField.RELATIVE_HUMIDITY_PERCENT -> relativeHumidityPercent != null
+        CatalogField.CLOUD_COVER_PERCENT -> cloudCoverPercent != null
+        CatalogField.WIND_SPEED_KPH -> windSpeedKph != null
+        CatalogField.WIND_GUST_KPH -> windGustKph != null
+        CatalogField.WIND_DIRECTION_DEGREES -> windDirectionDegrees != null
+        CatalogField.RAIN_AMOUNT_MILLIMETERS -> rainAmountMillimeters != null
+        CatalogField.TOTAL_PRECIPITATION_MILLIMETERS -> totalPrecipitationMillimeters != null
+        CatalogField.PRECIPITATION_RATE -> precipitationRate != null
+        CatalogField.SNOWFALL_CENTIMETERS -> snowfallCentimeters != null
+        CatalogField.SNOW_DEPTH_CENTIMETERS -> snowDepthCentimeters != null
+        CatalogField.SURFACE_PRESSURE_HPA -> surfacePressureHpa != null
+        CatalogField.MEAN_SEA_LEVEL_PRESSURE_HPA -> meanSeaLevelPressureHpa != null
+        CatalogField.VISIBILITY_KM -> visibilityKm != null
     }
 
     private fun selectedInstant(state: CatalogActivationState): Instant =
@@ -222,6 +306,7 @@ class CatalogTimelinePresenter(private val active: ActiveCatalogSelection) {
             windDirectionDegrees = displayFact?.facts?.windDirectionDegrees,
             meaning = projected.meaning.label(),
             source = sourceId,
+            product = projected.productSegment?.productId ?: projected.provenance.productId ?: "Product unavailable",
             selectedLocationName = state.selectedLocationName,
             status = status,
             scene = composition.compatibilitySceneState(reading),
@@ -232,6 +317,31 @@ class CatalogTimelinePresenter(private val active: ActiveCatalogSelection) {
     }
 
     private fun formatTime(instant: Instant): String = instant.atZone(zone).format(timeFormat)
+
+    private fun diagnosticTime(instant: Instant): String = instant.atZone(zone).format(diagnosticTimeFormat)
+
+    private fun diagnosticSupportTime(instant: Instant): String = instant.atZone(zone).format(diagnosticSupportTimeFormat)
+
+    private fun CatalogField.diagnosticLabel(): String = when (this) {
+        CatalogField.CONDITIONS -> "conditions"
+        CatalogField.PHENOMENA -> "phenomena"
+        CatalogField.TEMPERATURE_C -> "temp"
+        CatalogField.PRECIPITATION_PROBABILITY_PERCENT -> "precip%"
+        CatalogField.THUNDERSTORM_PROBABILITY_PERCENT -> "thunder%"
+        CatalogField.RELATIVE_HUMIDITY_PERCENT -> "humidity"
+        CatalogField.CLOUD_COVER_PERCENT -> "cloud%"
+        CatalogField.WIND_SPEED_KPH -> "wind"
+        CatalogField.WIND_GUST_KPH -> "gust"
+        CatalogField.WIND_DIRECTION_DEGREES -> "wind dir"
+        CatalogField.RAIN_AMOUNT_MILLIMETERS -> "rain"
+        CatalogField.TOTAL_PRECIPITATION_MILLIMETERS -> "total precip"
+        CatalogField.PRECIPITATION_RATE -> "precip rate"
+        CatalogField.SNOWFALL_CENTIMETERS -> "snowfall"
+        CatalogField.SNOW_DEPTH_CENTIMETERS -> "snow depth"
+        CatalogField.SURFACE_PRESSURE_HPA -> "surface pressure"
+        CatalogField.MEAN_SEA_LEVEL_PRESSURE_HPA -> "sea level pressure"
+        CatalogField.VISIBILITY_KM -> "visibility"
+    }
 
     private companion object {
         val DISPLAY_CONDITIONS = setOf(

@@ -1,0 +1,192 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1920" height="1320" viewBox="0 0 1920 1320">
+<defs>
+ <linearGradient id="night" x1="0" y1="0" x2="0" y2="1"><stop stop-color="#10233b"/><stop offset=".48" stop-color="#223a53"/><stop offset="1" stop-color="#526679"/></linearGradient>
+ <linearGradient id="city" x1="0" y1="0" x2="0" y2="1"><stop stop-color="#263a52"/><stop offset="1" stop-color="#101b2b"/></linearGradient>
+ <style>
+  .bg{fill:#edf2f4}.title{font:700 38px 'DejaVu Sans',Arial,sans-serif;fill:#14283c}.sub{font:17px 'DejaVu Sans',Arial,sans-serif;fill:#52697a}.eye{font:700 14px 'DejaVu Sans',Arial,sans-serif;letter-spacing:1.5px;fill:#227889}.h{font:700 20px 'DejaVu Sans',Arial,sans-serif;fill:#18334b}.body{font:15px 'DejaVu Sans',Arial,sans-serif;fill:#304a5d}.small{font:13px 'DejaVu Sans',Arial,sans-serif;fill:#5b7182}.tiny{font:11px 'DejaVu Sans',Arial,sans-serif;fill:#617789}.white{fill:#f7fafb;font-family:'DejaVu Sans',Arial,sans-serif}.teal{fill:#83ddcf;font-family:'DejaVu Sans',Arial,sans-serif}.panel{fill:#fff;stroke:#cfdae0;stroke-width:2}.phone{fill:#091522;stroke:#97acb6;stroke-width:2}.screen{fill:url(#night)}.sheet{fill:#10283a;stroke:#76909f;stroke-width:1}.diag{fill:#153d50;fill-opacity:.96;stroke:#7ad1c0;stroke-width:1.2}.chip{fill:#e4f2ef;stroke:#a8d1c9;stroke-width:1.4}.warn{fill:#fff4dc;stroke:#dec27e;stroke-width:2}.muted{fill:#bdcbd2}.line{stroke:#bed0d7;stroke-width:1.5}.soft{stroke:#91aab5;stroke-width:1}
+ </style>
+</defs>
+<rect class="bg" width="1920" height="1320"/>
+<text x="48" y="42" class="eye">OXYGEN · DFM.4.3 · UI ARTWORK BOARD · OWNER APPROVED · 2026-11-01</text>
+<text x="48" y="91" class="title">Clean forecast first. Diagnostics only when invited.</text>
+<text x="48" y="124" class="sub">Same immersive scene and time tape; the debug overlay adds labeled source evidence without changing the forecast readout.</text>
+<rect x="1582" y="34" width="289" height="48" rx="24" class="chip"/>
+<text x="1726" y="64" text-anchor="middle" class="eye">OWNER APPROVED</text>
+
+<!-- column cards -->
+<rect x="40" y="158" width="590" height="852" rx="22" class="panel"/>
+<rect x="665" y="158" width="590" height="852" rx="22" class="panel"/>
+<rect x="1290" y="158" width="590" height="852" rx="22" class="panel"/>
+<text x="68" y="198" class="eye">01 · CLEAN MAIN · LIVE DEFAULT</text>
+<text x="693" y="198" class="eye">02 · DEBUG MENU · OVERLAY OFF</text>
+<text x="1318" y="198" class="eye">03 · SAME MAIN · OVERLAY ON</text>
+
+<!-- clean target phone -->
+<g transform="translate(197 218)">
+ <rect x="0" y="0" width="276" height="620" rx="28" class="phone"/>
+ <rect x="9" y="9" width="258" height="602" rx="21" class="screen"/>
+ <text x="23" y="29" class="white" font-size="11">11:42</text><circle cx="211" cy="23" r="6" fill="#edf4f8"/><path d="M226 17v13m-5-8h10" stroke="#edf4f8" stroke-width="2"/><text x="241" y="28" class="white" font-size="10">100%</text>
+ <text x="25" y="62" class="white" font-size="13" font-weight="700" letter-spacing=".8">CHICAGO</text>
+ <text x="194" y="62" class="teal" font-size="10" font-weight="700">↻</text><text x="218" y="62" class="white" font-size="10" font-weight="700">PLACE⌄</text>
+ <!-- night scene -->
+ <circle cx="218" cy="126" r="22" fill="#f5e5bd"/><circle cx="228" cy="119" r="20" fill="#1d334d"/>
+ <path d="M9 305 Q41 292 67 306 Q94 281 133 302 Q161 286 193 306 Q226 289 267 302 L267 553 L9 553Z" fill="url(#city)" opacity=".98"/>
+ <path d="M9 378 L29 365 42 372 42 346 59 346 59 377 77 365 77 338 94 338 94 379 110 367 110 325 131 325 131 374 151 355 151 340 167 340 167 377 188 362 188 329 209 329 209 376 234 357 234 343 248 343 248 372 267 365 267 553 9 553Z" fill="url(#city)"/>
+ <g fill="#cfb476" opacity=".5">
+  <rect x="22" y="397" width="5" height="7"/><rect x="36" y="411" width="5" height="7"/><rect x="55" y="389" width="5" height="7"/><rect x="73" y="421" width="5" height="7"/><rect x="91" y="395" width="5" height="7"/><rect x="111" y="409" width="5" height="7"/><rect x="131" y="388" width="5" height="7"/><rect x="151" y="414" width="5" height="7"/><rect x="171" y="395" width="5" height="7"/><rect x="193" y="420" width="5" height="7"/><rect x="215" y="390" width="5" height="7"/><rect x="239" y="409" width="5" height="7"/>
+ </g>
+ <text x="138" y="156" text-anchor="middle" class="white" font-size="14" letter-spacing="1.2">SUN, NOV 1</text>
+ <text x="138" y="178" text-anchor="middle" class="white" font-size="12">11:26 PM CST</text>
+ <text x="138" y="251" text-anchor="middle" class="white" font-size="67" font-weight="300">54°</text>
+ <text x="138" y="278" text-anchor="middle" class="white" font-size="17">Partly cloudy</text>
+ <text x="138" y="304" text-anchor="middle" class="white" font-size="12" font-weight="600">HIGH 60°  /  LOW 51°</text>
+ <!-- compact normal metrics -->
+ <g transform="translate(41 435)">
+  <path d="M11 1C7 8 2 13 2 19a9 9 0 0018 0C20 13 15 8 11 1Z" fill="#a8e4ef"/><text x="11" y="39" text-anchor="middle" class="white" font-size="17">1%</text>
+  <circle cx="185" cy="17" r="16" fill="none" stroke="#b8d7db" stroke-width="2"/><path d="M185 17l7-10" stroke="#fff" stroke-width="2"/><text x="185" y="39" text-anchor="middle" class="white" font-size="16">6 mph</text>
+ </g>
+ <!-- timeline -->
+ <rect x="9" y="518" width="258" height="83" fill="#091a2a" opacity=".92"/>
+ <g class="muted" font-size="10" text-anchor="middle">
+  <text x="32" y="543">THU</text><text x="69" y="543">FRI</text><text x="106" y="543">SAT</text><text x="143" y="543" class="white">SUN</text><text x="180" y="543">MON</text><text x="217" y="543">TUE</text><text x="253" y="543">WED</text>
+ </g>
+ <line x1="20" y1="566" x2="256" y2="566" stroke="#c9d6da" stroke-width="1.5"/>
+ <g stroke="#a7bbc3" stroke-width="1"><line x1="32" y1="559" x2="32" y2="574"/><line x1="69" y1="559" x2="69" y2="574"/><line x1="106" y1="559" x2="106" y2="574"/><line x1="180" y1="559" x2="180" y2="574"/><line x1="217" y1="559" x2="217" y2="574"/><line x1="253" y1="559" x2="253" y2="574"/></g>
+ <line x1="143" y1="548" x2="143" y2="583" stroke="#edd189" stroke-width="2"/><circle cx="143" cy="566" r="4" fill="#edd189"/>
+ <rect x="115" y="585" width="57" height="18" rx="9" fill="#20374c"/><text x="143" y="598" text-anchor="middle" class="white" font-size="10">11:26 PM</text>
+ <rect x="111" y="605" width="54" height="3" rx="2" fill="#f5f7f8"/>
+</g>
+<text x="68" y="876" class="h">A calm, readable default</text>
+<text x="68" y="908" class="body">Date/time · temp/event · high/low · chance · wind</text>
+<text x="68" y="934" class="body">Place, refresh, atmosphere and tape remain.</text>
+<text x="68" y="975" class="small">No status row, dataset control, or diagnostics.</text>
+
+<!-- clean target phone -->
+<g transform="translate(822 218)">
+ <rect x="0" y="0" width="276" height="620" rx="28" class="phone"/>
+ <rect x="9" y="9" width="258" height="602" rx="21" class="screen"/>
+ <text x="23" y="29" class="white" font-size="11">11:42</text><circle cx="211" cy="23" r="6" fill="#edf4f8"/><path d="M226 17v13m-5-8h10" stroke="#edf4f8" stroke-width="2"/><text x="241" y="28" class="white" font-size="10">100%</text>
+ <text x="25" y="62" class="white" font-size="13" font-weight="700" letter-spacing=".8">CHICAGO</text>
+ <text x="194" y="62" class="teal" font-size="10" font-weight="700">↻</text><text x="218" y="62" class="white" font-size="10" font-weight="700">PLACE⌄</text>
+ <!-- night scene -->
+ <circle cx="218" cy="126" r="22" fill="#f5e5bd"/><circle cx="228" cy="119" r="20" fill="#1d334d"/>
+ <path d="M9 305 Q41 292 67 306 Q94 281 133 302 Q161 286 193 306 Q226 289 267 302 L267 553 L9 553Z" fill="url(#city)" opacity=".98"/>
+ <path d="M9 378 L29 365 42 372 42 346 59 346 59 377 77 365 77 338 94 338 94 379 110 367 110 325 131 325 131 374 151 355 151 340 167 340 167 377 188 362 188 329 209 329 209 376 234 357 234 343 248 343 248 372 267 365 267 553 9 553Z" fill="url(#city)"/>
+ <g fill="#cfb476" opacity=".5">
+  <rect x="22" y="397" width="5" height="7"/><rect x="36" y="411" width="5" height="7"/><rect x="55" y="389" width="5" height="7"/><rect x="73" y="421" width="5" height="7"/><rect x="91" y="395" width="5" height="7"/><rect x="111" y="409" width="5" height="7"/><rect x="131" y="388" width="5" height="7"/><rect x="151" y="414" width="5" height="7"/><rect x="171" y="395" width="5" height="7"/><rect x="193" y="420" width="5" height="7"/><rect x="215" y="390" width="5" height="7"/><rect x="239" y="409" width="5" height="7"/>
+ </g>
+ <text x="138" y="156" text-anchor="middle" class="white" font-size="14" letter-spacing="1.2">SUN, NOV 1</text>
+ <text x="138" y="178" text-anchor="middle" class="white" font-size="12">11:26 PM CST</text>
+ <text x="138" y="251" text-anchor="middle" class="white" font-size="67" font-weight="300">54°</text>
+ <text x="138" y="278" text-anchor="middle" class="white" font-size="17">Partly cloudy</text>
+ <text x="138" y="304" text-anchor="middle" class="white" font-size="12" font-weight="600">HIGH 60°  /  LOW 51°</text>
+ <!-- compact normal metrics -->
+ <g transform="translate(41 435)">
+  <path d="M11 1C7 8 2 13 2 19a9 9 0 0018 0C20 13 15 8 11 1Z" fill="#a8e4ef"/><text x="11" y="39" text-anchor="middle" class="white" font-size="17">1%</text>
+  <circle cx="185" cy="17" r="16" fill="none" stroke="#b8d7db" stroke-width="2"/><path d="M185 17l7-10" stroke="#fff" stroke-width="2"/><text x="185" y="39" text-anchor="middle" class="white" font-size="16">6 mph</text>
+ </g>
+ <!-- timeline -->
+ <rect x="9" y="518" width="258" height="83" fill="#091a2a" opacity=".92"/>
+ <g class="muted" font-size="10" text-anchor="middle">
+  <text x="32" y="543">THU</text><text x="69" y="543">FRI</text><text x="106" y="543">SAT</text><text x="143" y="543" class="white">SUN</text><text x="180" y="543">MON</text><text x="217" y="543">TUE</text><text x="253" y="543">WED</text>
+ </g>
+ <line x1="20" y1="566" x2="256" y2="566" stroke="#c9d6da" stroke-width="1.5"/>
+ <g stroke="#a7bbc3" stroke-width="1"><line x1="32" y1="559" x2="32" y2="574"/><line x1="69" y1="559" x2="69" y2="574"/><line x1="106" y1="559" x2="106" y2="574"/><line x1="180" y1="559" x2="180" y2="574"/><line x1="217" y1="559" x2="217" y2="574"/><line x1="253" y1="559" x2="253" y2="574"/></g>
+ <line x1="143" y1="548" x2="143" y2="583" stroke="#edd189" stroke-width="2"/><circle cx="143" cy="566" r="4" fill="#edd189"/>
+ <rect x="115" y="585" width="57" height="18" rx="9" fill="#20374c"/><text x="143" y="598" text-anchor="middle" class="white" font-size="10">11:26 PM</text>
+ <rect x="111" y="605" width="54" height="3" rx="2" fill="#f5f7f8"/>
+</g>
+<!-- DFM.4.3 menu additions over the existing DFM.4.2 debug menu -->
+<rect x="831" y="523" width="258" height="306" rx="18" fill="#10283a" stroke="#7592a1" stroke-width="1.5"/>
+<rect x="924" y="535" width="72" height="5" rx="2.5" fill="#94a9b2"/>
+<text x="850" y="570" class="white" font-size="18" font-weight="700">Debug menu</text>
+<text x="850" y="590" class="teal" font-size="9" font-weight="700">SESSION ACTIVE · DEBUG BUILD</text>
+<rect x="847" y="601" width="226" height="35" rx="9" fill="#193d50"/>
+<text x="860" y="623" class="white" font-size="11">Open catalog picker</text><text x="1058" y="623" text-anchor="end" class="teal" font-size="9">#PICKER</text>
+<text x="850" y="659" class="white" font-size="11" font-weight="700">DIAGNOSTIC OVERLAY</text>
+<rect x="1030" y="642" width="42" height="22" rx="11" fill="#445967"/><circle cx="1041" cy="653" r="8" fill="#e4edf0"/>
+<text x="850" y="678" class="muted" font-size="9">Off · clean forecast underneath</text>
+<text x="850" y="704" class="white" font-size="10" font-weight="700">SAVED DISPLAY PRESET</text>
+<rect x="847" y="711" width="226" height="32" rx="8" fill="#17394b" stroke="#7294a2" stroke-width="1"/>
+<text x="860" y="732" class="white" font-size="10">Forecast QA</text><text x="1058" y="732" text-anchor="end" class="teal" font-size="9">SELECT</text>
+<rect x="847" y="750" width="226" height="31" rx="8" fill="#e3f4ef" stroke="#9ecdc4"/>
+<text x="960" y="770" text-anchor="middle" fill="#18334b" font-family="'DejaVu Sans',Arial,sans-serif" font-size="10" font-weight="700">CONFIGURE GROUPS</text>
+<text x="960" y="808" text-anchor="middle" class="teal" font-size="10">EXIT DEBUG</text>
+<text x="693" y="876" class="h">Debug controls stay off the forecast</text>
+<text x="693" y="908" class="body">Date/time · temp/event · high/low · chance · wind</text>
+<text x="693" y="934" class="body">Place + refresh and the responsive time tape remain.</text>
+<text x="693" y="975" class="small">Sun/moon stays scene art; no diagnostic overlay.</text>
+
+<!-- overlay target phone -->
+<g transform="translate(1447 218)">
+ <rect x="0" y="0" width="276" height="620" rx="28" class="phone"/>
+ <rect x="9" y="9" width="258" height="602" rx="21" class="screen"/>
+ <text x="23" y="29" class="white" font-size="11">11:42</text><circle cx="211" cy="23" r="6" fill="#edf4f8"/><path d="M226 17v13m-5-8h10" stroke="#edf4f8" stroke-width="2"/><text x="241" y="28" class="white" font-size="10">100%</text>
+ <text x="25" y="62" class="white" font-size="13" font-weight="700" letter-spacing=".8">CHICAGO</text>
+ <text x="194" y="62" class="teal" font-size="10" font-weight="700">↻</text><text x="218" y="62" class="white" font-size="10" font-weight="700">PLACE⌄</text>
+ <circle cx="218" cy="126" r="22" fill="#f5e5bd"/><circle cx="228" cy="119" r="20" fill="#1d334d"/>
+ <path d="M9 305 Q41 292 67 306 Q94 281 133 302 Q161 286 193 306 Q226 289 267 302 L267 553 L9 553Z" fill="url(#city)" opacity=".98"/>
+ <path d="M9 378 L29 365 42 372 42 346 59 346 59 377 77 365 77 338 94 338 94 379 110 367 110 325 131 325 131 374 151 355 151 340 167 340 167 377 188 362 188 329 209 329 209 376 234 357 234 343 248 343 248 372 267 365 267 553 9 553Z" fill="url(#city)"/>
+ <g fill="#cfb476" opacity=".5">
+  <rect x="22" y="397" width="5" height="7"/><rect x="36" y="411" width="5" height="7"/><rect x="55" y="389" width="5" height="7"/><rect x="73" y="421" width="5" height="7"/><rect x="91" y="395" width="5" height="7"/><rect x="111" y="409" width="5" height="7"/><rect x="131" y="388" width="5" height="7"/><rect x="151" y="414" width="5" height="7"/><rect x="171" y="395" width="5" height="7"/><rect x="193" y="420" width="5" height="7"/><rect x="215" y="390" width="5" height="7"/><rect x="239" y="409" width="5" height="7"/>
+ </g>
+ <!-- upper scene diagnostic cards -->
+ <rect x="17" y="77" width="116" height="53" rx="7" class="diag"/>
+ <text x="24" y="92" class="teal" font-size="7.5" font-weight="700">DIAG · SOURCE</text>
+ <text x="24" y="106" class="white" font-size="8">LIVE · open-meteo</text>
+ <text x="24" y="120" class="white" font-size="7.5">fresh · saved time</text>
+ <rect x="141" y="77" width="118" height="53" rx="7" class="diag"/>
+ <text x="148" y="92" class="teal" font-size="7.5" font-weight="700">DIAG · FACT SAMPLE</text>
+ <text x="148" y="106" class="white" font-size="8">11:00 PM CST</text>
+ <text x="148" y="120" class="white" font-size="7.5">selected 11:26 PM</text>
+ <rect x="39" y="135" width="198" height="20" rx="7" class="diag"/>
+ <text x="138" y="149" text-anchor="middle" class="white" font-size="7.5">DIAG · missing fields listed unavailable</text>
+ <!-- readout matches clean state -->
+ <text x="138" y="177" text-anchor="middle" class="white" font-size="14" letter-spacing="1.2">SUN, NOV 1</text>
+ <text x="138" y="198" text-anchor="middle" class="white" font-size="12">11:26 PM CST</text>
+ <text x="138" y="251" text-anchor="middle" class="white" font-size="67" font-weight="300">54°</text>
+ <text x="138" y="278" text-anchor="middle" class="white" font-size="17">Partly cloudy</text>
+ <text x="138" y="304" text-anchor="middle" class="white" font-size="12" font-weight="600">HIGH 60°  /  LOW 51°</text>
+ <g transform="translate(41 435)">
+  <path d="M11 1C7 8 2 13 2 19a9 9 0 0018 0C20 13 15 8 11 1Z" fill="#a8e4ef"/><text x="11" y="39" text-anchor="middle" class="white" font-size="17">1%</text>
+  <circle cx="185" cy="17" r="16" fill="none" stroke="#b8d7db" stroke-width="2"/><path d="M185 17l7-10" stroke="#fff" stroke-width="2"/><text x="185" y="39" text-anchor="middle" class="white" font-size="16">6 mph</text>
+ </g>
+ <rect x="9" y="518" width="258" height="83" fill="#091a2a" opacity=".92"/>
+ <g class="muted" font-size="10" text-anchor="middle">
+  <text x="32" y="543">THU</text><text x="69" y="543">FRI</text><text x="106" y="543">SAT</text><text x="143" y="543" class="white">SUN</text><text x="180" y="543">MON</text><text x="217" y="543">TUE</text><text x="253" y="543">WED</text>
+ </g>
+ <line x1="20" y1="566" x2="256" y2="566" stroke="#c9d6da" stroke-width="1.5"/>
+ <g stroke="#a7bbc3" stroke-width="1"><line x1="32" y1="559" x2="32" y2="574"/><line x1="69" y1="559" x2="69" y2="574"/><line x1="106" y1="559" x2="106" y2="574"/><line x1="180" y1="559" x2="180" y2="574"/><line x1="217" y1="559" x2="217" y2="574"/><line x1="253" y1="559" x2="253" y2="574"/></g>
+ <line x1="143" y1="548" x2="143" y2="583" stroke="#edd189" stroke-width="2"/><circle cx="143" cy="566" r="4" fill="#edd189"/>
+ <rect x="115" y="585" width="57" height="18" rx="9" fill="#20374c"/><text x="143" y="598" text-anchor="middle" class="white" font-size="10">11:26 PM</text>
+ <rect x="111" y="605" width="54" height="3" rx="2" fill="#f5f7f8"/>
+</g>
+<text x="1318" y="876" class="h">Diagnostic panels stay in the upper sky</text>
+<text x="1318" y="908" class="body">Choose groups · save a local display preset</text>
+<text x="1318" y="934" class="body">Preset choice stays separate from overlay visibility.</text>
+<text x="1318" y="975" class="small">The active overlay is opt-in and follows the selected time.</text>
+
+<!-- preset configuration inset and detail route -->
+<rect x="40" y="1033" width="940" height="243" rx="18" class="panel"/>
+<text x="68" y="1070" class="eye">04 · CONFIGURE A LOCAL DISPLAY PRESET · DEBUG MENU STATE</text>
+<rect x="70" y="1090" width="392" height="150" rx="13" fill="#f4f7f8" stroke="#c7d6dc" stroke-width="1.5"/>
+<text x="90" y="1118" class="h">Overlay visibility: OFF</text>
+<rect x="90" y="1132" width="18" height="18" rx="3" fill="#227f7a"/><path d="M94 1140l4 4 7-9" stroke="#fff" stroke-width="2" fill="none"/><text x="120" y="1146" class="body">Catalog / source / freshness</text>
+<rect x="90" y="1162" width="18" height="18" rx="3" fill="#227f7a"/><path d="M94 1170l4 4 7-9" stroke="#fff" stroke-width="2" fill="none"/><text x="120" y="1176" class="body">Selected sample / support bounds</text>
+<rect x="90" y="1192" width="18" height="18" rx="3" fill="#fff" stroke="#708b98" stroke-width="1.5"/><text x="120" y="1206" class="body">Missing fields</text>
+<rect x="485" y="1090" width="455" height="150" rx="13" fill="#10283a"/>
+<text x="508" y="1118" class="teal" font-size="13" font-weight="700">SAVED LOCAL DISPLAY PRESET</text>
+<text x="508" y="1148" class="white" font-size="14">Name: Forecast QA</text>
+<text x="508" y="1174" class="white" font-size="13">Save groups only · no forecast or source changes</text>
+<rect x="508" y="1190" width="174" height="34" rx="10" class="chip"/><text x="595" y="1212" text-anchor="middle" class="eye" font-size="11">SAVE PRESET</text>
+<text x="700" y="1212" class="teal" font-size="12">Selection does not enable overlay</text>
+
+<rect x="1000" y="1033" width="880" height="243" rx="18" class="warn"/>
+<text x="1028" y="1070" class="eye">DETAILS + ACCEPTANCE BOUNDARY</text>
+<text x="1028" y="1107" class="h">Keep source details reachable from the time tape</text>
+<text x="1028" y="1138" class="body">Existing “Browse forecast values” retains source, product, freshness/stale, offline and error details.</text>
+<text x="1028" y="1168" class="body">Browsing does not change time; selecting a row keeps existing navigation behavior.</text>
+<text x="1028" y="1208" class="small">Artwork proposal only. Installed captures and scoped interactions are still required for acceptance.</text>
+<text x="1028" y="1235" class="small">Catalog editor/storage and release integration remain separate DFM.4 slices.</text>
+<text x="48" y="1305" class="small">Reference boards: DFM.4 session flow · normal/debug overlay · catalog picker. Scene is schematic; installed artwork remains unchanged. Baseline capture is in cycle evidence.</text>
+</svg>

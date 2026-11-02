@@ -38,7 +38,7 @@ Reusable workflows live under `.agents/skills/`. Use a skill when it directly fi
 
 ## Verification
 
-Don't borrow trouble. First make the complete slice work for its intended purpose, refactoring as needed. Do not treat a hypothetical problem as a demonstrated problem or build tests for problems before working code exists. After the slice works, assess and verify relevant potential problems within its scope. Required acceptance and evidence still apply, and tests are added or run only when the user authorizes them.
+Don't borrow trouble. Do not guess how code behaves or invent defects, causes, error paths, race conditions, or tests for unproven scenarios. Do not add speculative error-prevention behavior. Implement the intended behavior, then fix errors when evidence shows they occur. First make the complete slice work for its intended purpose, refactoring as needed. Do not treat a hypothetical problem as a demonstrated problem or build tests for problems before working code exists. After the slice works, assess and verify relevant potential problems within its scope. Required acceptance and evidence still apply, and tests are added or run only when the user authorizes them.
 
 Use `python scripts/dev.py workflow`, `contract`, `test`, `build`, `lint`, `run`, or `screenshot` as applicable to the authorized task and active plan. Do not add or run tests unless the user asks. Report exact commands and any verification that could not run. Follow a separate full-suite verification plan when work becomes production integration.
 

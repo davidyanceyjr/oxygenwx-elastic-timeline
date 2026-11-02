@@ -96,12 +96,14 @@ fun CatalogTimeLabScreen(
     onChooseLocation: (() -> Unit)? = null,
     onRefresh: (() -> Unit)? = null,
     omitOptionalCityLayers: Boolean = false,
+    diagnosticOverlay: (@Composable () -> Unit)? = null,
 ) = CatalogTimeLabScreenContent(
     presentation.timeline,
     presentation.reading,
     presentation.composition.takeIf { !it.hasWeatherState || presentation.timeline.scene != null },
     onSelectInstant, onReturnToNow, onBrowseCatalogs, onChooseLocation, onRefresh,
     omitOptionalCityLayers,
+    diagnosticOverlay,
 )
 
 @Composable
@@ -115,6 +117,7 @@ private fun CatalogTimeLabScreenContent(
     onChooseLocation: (() -> Unit)?,
     onRefresh: (() -> Unit)?,
     omitOptionalCityLayers: Boolean = false,
+    diagnosticOverlay: (@Composable () -> Unit)? = null,
 ) {
     var precision by remember(view.generation) { mutableStateOf(false) }
     var browserOpen by remember { mutableStateOf(false) }
@@ -144,6 +147,11 @@ private fun CatalogTimeLabScreenContent(
                 ) / 3600.0,
             )
         }
+        diagnosticOverlay?.let { content ->
+            Box(Modifier.fillMaxWidth().align(Alignment.TopCenter).statusBarsPadding().padding(top = 56.dp)) {
+                content()
+            }
+        }
         Column(
             Modifier.fillMaxWidth().align(Alignment.TopCenter).statusBarsPadding()
                 .padding(horizontal = 25.dp),
@@ -151,15 +159,10 @@ private fun CatalogTimeLabScreenContent(
             Spacer(Modifier.height(if (compactLayout) 5.dp else 19.dp))
             if (compactLayout) {
                 Column(Modifier.fillMaxWidth()) {
-                    Text("OXYGEN  /  TIME LAB", color = Color.White, fontSize = 11.sp,
-                        letterSpacing = 2.sp, fontWeight = FontWeight.SemiBold)
-                    Text(view.meaning, color = Color.White, fontSize = 11.sp,
-                        modifier = Modifier.testTag("catalogMeaning"))
                     Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween) {
                         Column(Modifier.weight(1f)) {
                             Text(view.selectedLocationName ?: "Selected location", color = Color.White,
                                 fontSize = 13.sp, fontWeight = FontWeight.Medium)
-                            Text(view.source, color = Color(0xCDE4EDF5), fontSize = 11.sp)
                         }
                         Row {
                             onRefresh?.let { TextButton(onClick = it) { Text("Refresh", color = Color.White) } }
@@ -169,16 +172,9 @@ private fun CatalogTimeLabScreenContent(
                 }
             } else {
                 Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween) {
-                    Column {
-                        Text("OXYGEN  /  TIME LAB", color = Color.White, fontSize = 11.sp,
-                            letterSpacing = 2.sp, fontWeight = FontWeight.SemiBold)
-                        Text(view.selectedLocationName ?: "Selected location", color = Color.White, fontSize = 13.sp,
-                            fontWeight = FontWeight.Medium)
-                        Text(view.source, color = Color(0xCDE4EDF5), fontSize = 11.sp)
-                    }
+                    Text(view.selectedLocationName ?: "Selected location", color = Color.White, fontSize = 13.sp,
+                        fontWeight = FontWeight.Medium)
                     Column(horizontalAlignment = Alignment.End) {
-                        Text(view.meaning, color = Color.White, fontSize = 11.sp,
-                            modifier = Modifier.testTag("catalogMeaning"))
                         Row {
                             onRefresh?.let { TextButton(onClick = it) { Text("Refresh", color = Color.White) } }
                             onChooseLocation?.let { TextButton(onClick = it) { Text("Place", color = Color.White) } }
@@ -186,11 +182,6 @@ private fun CatalogTimeLabScreenContent(
                     }
                 }
             }
-            Text(view.status, color = Color(0xCDE4EDF5), fontSize = 11.sp)
-            onBrowseCatalogs?.let { browse ->
-                TextButton(onClick = browse) { Text("Datasets", color = Color.White) }
-            }
-            view.error?.let { Text(it, color = Color(0xFFFFD1C9), fontSize = 11.sp) }
         }
         Column(
             Modifier.fillMaxWidth().align(Alignment.Center).offset(y = (-20).dp).padding(horizontal = 25.dp)
@@ -231,12 +222,6 @@ private fun CatalogTimeLabScreenContent(
                 fontWeight = FontWeight.Light, modifier = Modifier.testTag("forecastTemperature"))
             Text(view.condition ?: "Condition unavailable", color = Color.White,
                 fontSize = 22.sp, textAlign = TextAlign.Center)
-            Text(view.factTimeLabel?.let { if (it.startsWith("Condition from ")) it else "Fact sample $it" }
-                ?: "No hourly fact for selected hour",
-                color = Color(0xDDECF3F8), fontSize = 12.sp,
-                modifier = Modifier.testTag("catalogFactTime"))
-            view.precipitationFact?.let { Text(it, color = Color(0xDDECF3F8), fontSize = 11.sp,
-                textAlign = TextAlign.Center) }
             Text("HIGH ${view.high ?: "—"}    /    LOW ${view.low ?: "—"}",
                 color = Color(0xFFECF3F8), fontSize = 12.sp)
         }
@@ -505,8 +490,9 @@ private fun CatalogForecastBrowser(
         title = { Text(if (precision) "Hourly facts" else "Daily forecasts") },
         text = {
             Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
-                Text("${view.meaning} · ${view.source} · ${view.status}")
+                Text("${view.meaning} · ${view.product} · ${view.source} · ${view.status}")
                 Text("Selected ${view.selectedTimeLabel}; fact sample ${view.factTimeLabel ?: "unavailable"}")
+                view.error?.let { Text("Load or refresh error: $it") }
                 TextButton(onClick = { onSetPrecision(!precision) }) {
                     Text(if (precision) "Browse dates" else "Browse fact times")
                 }

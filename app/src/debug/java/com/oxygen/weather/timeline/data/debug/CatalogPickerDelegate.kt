@@ -15,13 +15,18 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
+import androidx.compose.material3.Checkbox
 import androidx.compose.material3.darkColorScheme
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedButton
+import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -30,6 +35,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
 import com.oxygen.weather.timeline.ActivityVariantDelegate
+import com.oxygen.weather.timeline.presentation.CatalogDiagnosticPresentation
 import com.oxygen.weather.timeline.data.catalog.CatalogActivationCoordinator
 import com.oxygen.weather.timeline.data.catalog.CatalogActivationRequest
 import com.oxygen.weather.timeline.data.catalog.CatalogActivationState
@@ -48,6 +54,23 @@ import kotlinx.coroutines.ensureActive
 import java.time.Duration
 import java.time.Instant
 
+internal enum class DiagnosticGroup {
+    CATALOG, SELECTION, MISSING;
+
+    fun label() = when (this) {
+        CATALOG -> "Catalog and delivery state"
+        SELECTION -> "Selected time and sample support"
+        MISSING -> "Unavailable fields"
+    }
+}
+
+internal object DiagnosticPresetCodec {
+    fun encode(groups: Set<DiagnosticGroup>) = groups.sortedBy { it.ordinal }.joinToString(",") { it.name }
+    fun decode(value: String) = value.split(',').mapNotNull { name ->
+        DiagnosticGroup.entries.firstOrNull { it.name == name }
+    }.toSet()
+}
+
 /** Debug-build request decoder. MainActivity remains the sole activation owner. */
 class CatalogPickerDelegate : ActivityVariantDelegate {
     private var requestError: String? = null
@@ -56,6 +79,11 @@ class CatalogPickerDelegate : ActivityVariantDelegate {
     private var sessionGeneration = 0L
     private var sessionCheckpoint: CatalogActivationCoordinator.Checkpoint? = null
     private val sessionRequestJobs = linkedSetOf<Job>()
+    private var overlayVisible by mutableStateOf(false)
+    private var selectedGroups by mutableStateOf(DiagnosticGroup.entries.toSet())
+    private var configurePresets by mutableStateOf(false)
+    private var presetName by mutableStateOf("")
+    private var selectedPreset by mutableStateOf<String?>(null)
 
     override fun onMainActivityCreated(host: ActivityVariantDelegate.Host, intent: Intent): Boolean {
         if (!hasCatalogRequest(intent)) return false
@@ -102,6 +130,37 @@ class CatalogPickerDelegate : ActivityVariantDelegate {
 
     override fun isDebugSessionActive(host: ActivityVariantDelegate.Host) = sessionCheckpoint != null
 
+    @Composable
+    override fun MainScreenOverlay(host: ActivityVariantDelegate.Host, diagnostics: CatalogDiagnosticPresentation) {
+        if (!overlayVisible) return
+        val anyGroup = selectedGroups.isNotEmpty()
+        Surface(
+            modifier = Modifier.fillMaxWidth().padding(horizontal = 18.dp),
+            color = Color(0xE6102030), shape = RoundedCornerShape(14.dp), tonalElevation = 3.dp,
+        ) {
+            androidx.compose.foundation.layout.Column(Modifier.padding(10.dp)) {
+                Text("DIAGNOSTICS · LIVE VIEW", color = Color(0xFF9FE5D7), fontWeight = FontWeight.Bold,
+                    style = MaterialTheme.typography.labelSmall)
+                if (DiagnosticGroup.CATALOG in selectedGroups) Text(
+                    "Catalog diagnostics · ${diagnostics.catalog.joinToString(" · ")}",
+                    color = Color.White, style = MaterialTheme.typography.labelSmall,
+                )
+                if (DiagnosticGroup.SELECTION in selectedGroups) {
+                    Text("Time diagnostics · ${diagnostics.selection.firstOrNull() ?: "unavailable"}", color = Color.White,
+                        style = MaterialTheme.typography.labelSmall)
+                    diagnostics.selection.drop(1).forEach {
+                        Text(it, color = Color.White, style = MaterialTheme.typography.labelSmall)
+                    }
+                }
+                if (DiagnosticGroup.MISSING in selectedGroups) Text(
+                    "Missing-field diagnostics · ${diagnostics.missingFields.joinToString()}",
+                    color = Color.White, style = MaterialTheme.typography.labelSmall,
+                )
+                if (!anyGroup) Text("No diagnostic groups selected", color = Color.White, style = MaterialTheme.typography.labelSmall)
+            }
+        }
+    }
+
     override suspend fun beforeOrdinaryAction(host: ActivityVariantDelegate.Host) {
         cancelPendingEntry()
         restoreAndEndSession(host)
@@ -144,14 +203,19 @@ class CatalogPickerDelegate : ActivityVariantDelegate {
                             ) {
                                 Text("Open catalog picker     #PICKER")
                             }
-                            Spacer(Modifier.height(10.dp))
                             Row(Modifier.fillMaxWidth(), verticalAlignment = Alignment.CenterVertically) {
-                                Text("OVERLAY", style = MaterialTheme.typography.labelLarge, fontWeight = FontWeight.Bold)
-                                Spacer(Modifier.weight(1f))
-                                Text("OFF", color = MaterialTheme.colorScheme.onSurfaceVariant)
+                                Text("Diagnostic overlay", color = Color.White)
+                                androidx.compose.foundation.layout.Spacer(Modifier.weight(1f))
+                                androidx.compose.material3.Switch(checked = overlayVisible, onCheckedChange = { overlayVisible = it })
                             }
-                            Text("Production view", style = MaterialTheme.typography.bodySmall,
-                                color = MaterialTheme.colorScheme.onSurfaceVariant)
+                            Text("Saved display presets", style = MaterialTheme.typography.labelMedium, color = Color(0xFF9FE5D7))
+                            savedPresets(host).forEach { (name, groups) ->
+                                TextButton(onClick = { selectedGroups = groups; selectedPreset = name }) {
+                                    Text(if (selectedPreset == name) "$name · selected" else name, color = Color.White)
+                                }
+                            }
+                            TextButton(onClick = { configurePresets = true }) { Text("Configure and save preset", color = Color.White) }
+                            Spacer(Modifier.height(10.dp))
                             Spacer(Modifier.height(12.dp))
                             Row(Modifier.fillMaxWidth(), verticalAlignment = Alignment.CenterVertically) {
                                 TextButton(onClick = { host.setDebugSessionMenuVisible(false) }) { Text("Continue") }
@@ -162,6 +226,33 @@ class CatalogPickerDelegate : ActivityVariantDelegate {
                     }
                 }
             }
+        }
+        if (configurePresets) {
+            AlertDialog(
+                onDismissRequest = { configurePresets = false },
+                title = { Text("Diagnostic display groups") },
+                text = {
+                    androidx.compose.foundation.layout.Column {
+                        DiagnosticGroup.entries.forEach { group ->
+                            Row(verticalAlignment = Alignment.CenterVertically) {
+                                Checkbox(checked = group in selectedGroups, onCheckedChange = { checked ->
+                                    selectedGroups = if (checked) selectedGroups + group else selectedGroups - group
+                                })
+                                Text(group.label())
+                            }
+                        }
+                        OutlinedTextField(value = presetName, onValueChange = { presetName = it.take(32) }, label = { Text("Preset name") })
+                        savedPresets(host).forEach { (name, groups) ->
+                            TextButton(onClick = { presetName = name; selectedGroups = groups; selectedPreset = name }) { Text("Update $name") }
+                        }
+                    }
+                },
+                confirmButton = { TextButton(
+                    enabled = presetName.isNotBlank(),
+                    onClick = { savePreset(host, presetName, selectedGroups); selectedPreset = presetName.trim(); configurePresets = false },
+                ) { Text("Save") } },
+                dismissButton = { TextButton(onClick = { configurePresets = false }) { Text("Cancel") } },
+            )
         }
     }
 
@@ -273,6 +364,9 @@ class CatalogPickerDelegate : ActivityVariantDelegate {
     internal fun enterDebugSession(host: ActivityVariantDelegate.Host, checkpoint: CatalogActivationCoordinator.Checkpoint) {
         sessionCheckpoint = checkpoint
         sessionGeneration++
+        overlayVisible = false
+        selectedGroups = DiagnosticGroup.entries.toSet()
+        selectedPreset = null
         host.closeLocationSelector()
         host.setDebugSessionMenuVisible(true)
     }
@@ -287,10 +381,28 @@ class CatalogPickerDelegate : ActivityVariantDelegate {
         sessionGeneration++
         sessionRequestJobs.toList().forEach(Job::cancel)
         sessionRequestJobs.clear()
+        overlayVisible = false
+        configurePresets = false
         host.setDebugSessionMenuVisible(false)
         val checkpoint = sessionCheckpoint
         sessionCheckpoint = null
         if (checkpoint != null) host.activationCoordinator.restoreCheckpoint(checkpoint)
+    }
+
+    private fun preferences(host: ActivityVariantDelegate.Host) =
+        host.activity.getSharedPreferences("debug_diagnostic_presets", android.content.Context.MODE_PRIVATE)
+
+    private fun savedPresets(host: ActivityVariantDelegate.Host): List<Pair<String, Set<DiagnosticGroup>>> =
+        preferences(host).all.entries.mapNotNull { (key, value) ->
+            if (!key.startsWith("preset:") || value !is String) return@mapNotNull null
+            val groups = DiagnosticPresetCodec.decode(value)
+            key.removePrefix("preset:") to groups
+        }.sortedBy { it.first }
+
+    private fun savePreset(host: ActivityVariantDelegate.Host, rawName: String, groups: Set<DiagnosticGroup>) {
+        val name = rawName.trim().take(32)
+        if (name.isEmpty()) return
+        preferences(host).edit().putString("preset:$name", DiagnosticPresetCodec.encode(groups)).apply()
     }
 
     private fun showPicker(host: ActivityVariantDelegate.Host) {
