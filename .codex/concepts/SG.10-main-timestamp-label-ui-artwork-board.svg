@@ -1,0 +1,48 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1440" height="900" viewBox="0 0 1440 900" role="img" aria-labelledby="title desc">
+  <title id="title">SG.10 main timestamp label artwork board</title>
+  <desc id="desc">Product owner approved this artwork board as written on 2026-11-02. Before and proposed main readout states. The only copy change removes the word Selected from the date and time line.</desc>
+  <defs>
+    <linearGradient id="page" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#f3f6fa"/>
+      <stop offset="1" stop-color="#dce5ee"/>
+    </linearGradient>
+    <linearGradient id="scene" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#18304d"/>
+      <stop offset="1" stop-color="#0a1b30"/>
+    </linearGradient>
+  </defs>
+  <rect width="1440" height="900" fill="url(#page)"/>
+  <text x="72" y="78" fill="#172b43" font-family="sans-serif" font-size="34" font-weight="700">SG.10 · Main forecast timestamp</text>
+  <text x="72" y="116" fill="#4e6176" font-family="sans-serif" font-size="19">Owner-selected scope: remove one word from the main date/time line only.</text>
+
+  <g font-family="sans-serif">
+    <rect x="72" y="164" width="610" height="528" rx="22" fill="#fff" stroke="#b3c0cd" stroke-width="2"/>
+    <rect x="758" y="164" width="610" height="528" rx="22" fill="#fff" stroke="#6c96bd" stroke-width="3"/>
+    <text x="106" y="210" fill="#5d6d7e" font-size="18" font-weight="700" letter-spacing="2">CURRENT</text>
+    <text x="792" y="210" fill="#315f8d" font-size="18" font-weight="700" letter-spacing="2">PROPOSED</text>
+
+    <rect x="106" y="238" width="542" height="320" rx="14" fill="url(#scene)"/>
+    <rect x="792" y="238" width="542" height="320" rx="14" fill="url(#scene)"/>
+    <path d="M106 502 L192 431 L254 477 L344 386 L414 464 L496 405 L570 465 L648 420 L648 558 L106 558 Z" fill="#25486b"/>
+    <path d="M792 502 L878 431 L940 477 L1030 386 L1100 464 L1182 405 L1256 465 L1334 420 L1334 558 L792 558 Z" fill="#25486b"/>
+    <text x="377" y="326" text-anchor="middle" fill="#fff" font-size="27" font-weight="600">Chicago</text>
+    <text x="377" y="414" text-anchor="middle" fill="#fff" font-size="76" font-weight="300">59°</text>
+    <text x="377" y="460" text-anchor="middle" fill="#fff" font-size="27">cloudy</text>
+    <text x="1063" y="326" text-anchor="middle" fill="#fff" font-size="27" font-weight="600">Chicago</text>
+    <text x="1063" y="414" text-anchor="middle" fill="#fff" font-size="76" font-weight="300">59°</text>
+    <text x="1063" y="460" text-anchor="middle" fill="#fff" font-size="27">cloudy</text>
+
+    <text x="377" y="526" text-anchor="middle" fill="#fff" font-size="20">MON Nov 2 · Selected 6:25:31 PM CST</text>
+    <text x="1063" y="526" text-anchor="middle" fill="#fff" font-size="20">MON Nov 2 · 6:25:31 PM CST</text>
+
+    <text x="106" y="612" fill="#34475b" font-size="17" font-weight="700">CURRENT LINE</text>
+    <text x="106" y="644" fill="#34475b" font-size="19">MON Nov 2 · Selected 6:25:31 PM CST</text>
+    <text x="792" y="612" fill="#315f8d" font-size="17" font-weight="700">AFTER SELECTION MOVES</text>
+    <text x="792" y="644" fill="#315f8d" font-size="19">THU Nov 5 · 12:00:00 PM CST</text>
+  </g>
+
+  <rect x="72" y="728" width="1296" height="112" rx="16" fill="#fff" stroke="#c1ccd6" stroke-width="2"/>
+  <text x="100" y="770" fill="#172b43" font-family="sans-serif" font-size="20" font-weight="700">Keep unchanged</text>
+  <text x="280" y="770" fill="#34475b" font-family="sans-serif" font-size="19">Selected instant · weekday/date/timezone · city · forecast facts · gestures</text>
+  <text x="100" y="812" fill="#34475b" font-family="sans-serif" font-size="18">The “Selected location” fallback and forecast-browser “Selected …” copy stay as they are.</text>
+</svg>

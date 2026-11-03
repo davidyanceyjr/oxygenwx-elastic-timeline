@@ -6,6 +6,7 @@ import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.gestures.awaitEachGesture
 import androidx.compose.foundation.gestures.awaitFirstDown
 import androidx.compose.foundation.gestures.detectHorizontalDragGestures
@@ -23,6 +24,7 @@ import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
@@ -44,6 +46,12 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.Path
+import androidx.compose.ui.graphics.Shadow
+import androidx.compose.ui.graphics.StrokeCap
+import androidx.compose.ui.graphics.StrokeJoin
+import androidx.compose.ui.graphics.drawscope.Stroke
+import androidx.compose.ui.graphics.drawscope.rotate
 import androidx.compose.ui.graphics.drawscope.drawIntoCanvas
 import androidx.compose.ui.graphics.nativeCanvas
 import androidx.compose.ui.input.pointer.pointerInput
@@ -59,7 +67,11 @@ import androidx.compose.ui.semantics.role
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.semantics.stateDescription
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.SpanStyle
+import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.LayoutDirection
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -74,6 +86,8 @@ import java.time.format.DateTimeFormatter
 import java.util.Locale
 import kotlinx.coroutines.withTimeoutOrNull
 import kotlin.math.abs
+import kotlin.math.cos
+import kotlin.math.sin
 
 @Composable
 fun CatalogTimeLabScreen(
@@ -124,6 +138,19 @@ private fun CatalogTimeLabScreenContent(
     val compact = with(LocalDensity.current) { fontScale >= 1.3f }
     val latestSelected by rememberUpdatedState(view.selectedInstant)
     val isRtl = LocalLayoutDirection.current == LayoutDirection.Rtl
+    val locale = Locale.getDefault()
+    val selectedDateLabels = remember(view.selectedInstant, view.zone, locale) {
+        val date = view.selectedInstant.atZone(view.zone)
+        DateTimeFormatter.ofPattern("EEE", locale).format(date).uppercase(locale) to
+            DateTimeFormatter.ofPattern("MMM d", locale).format(date)
+    }
+    val readoutShadow = with(LocalDensity.current) {
+        Shadow(
+            color = Color.Black.copy(alpha = 0.32f),
+            offset = Offset(0f, 1.dp.toPx()),
+            blurRadius = 2.dp.toPx(),
+        )
+    }
     BoxWithConstraints(Modifier.fillMaxSize().background(Color(0xFF11263D))) {
         val compactLayout = compact || maxWidth < 400.dp || maxHeight < 400.dp
         if (composition != null) {
@@ -150,37 +177,6 @@ private fun CatalogTimeLabScreenContent(
         diagnosticOverlay?.let { content ->
             Box(Modifier.fillMaxWidth().align(Alignment.TopCenter).statusBarsPadding().padding(top = 56.dp)) {
                 content()
-            }
-        }
-        Column(
-            Modifier.fillMaxWidth().align(Alignment.TopCenter).statusBarsPadding()
-                .padding(horizontal = 25.dp),
-        ) {
-            Spacer(Modifier.height(if (compactLayout) 5.dp else 19.dp))
-            if (compactLayout) {
-                Column(Modifier.fillMaxWidth()) {
-                    Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween) {
-                        Column(Modifier.weight(1f)) {
-                            Text(view.selectedLocationName ?: "Selected location", color = Color.White,
-                                fontSize = 13.sp, fontWeight = FontWeight.Medium)
-                        }
-                        Row {
-                            onRefresh?.let { TextButton(onClick = it) { Text("Refresh", color = Color.White) } }
-                            onChooseLocation?.let { TextButton(onClick = it) { Text("Place", color = Color.White) } }
-                        }
-                    }
-                }
-            } else {
-                Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween) {
-                    Text(view.selectedLocationName ?: "Selected location", color = Color.White, fontSize = 13.sp,
-                        fontWeight = FontWeight.Medium)
-                    Column(horizontalAlignment = Alignment.End) {
-                        Row {
-                            onRefresh?.let { TextButton(onClick = it) { Text("Refresh", color = Color.White) } }
-                            onChooseLocation?.let { TextButton(onClick = it) { Text("Place", color = Color.White) } }
-                        }
-                    }
-                }
             }
         }
         Column(
@@ -214,38 +210,84 @@ private fun CatalogTimeLabScreenContent(
                 },
             horizontalAlignment = Alignment.CenterHorizontally,
         ) {
-            Text(view.heading, color = Color.White, fontSize = 13.sp, letterSpacing = 2.sp)
-            Text("Selected ${view.selectedTimeLabel}", color = Color.White, fontSize = 12.sp,
-                modifier = Modifier.testTag("catalogSelectedTime"))
+            Text(
+                view.selectedLocationName ?: "Selected location",
+                color = Color.White,
+                fontSize = if (compactLayout) 21.sp else 24.sp,
+                fontWeight = FontWeight.SemiBold,
+                textAlign = TextAlign.Center,
+                style = TextStyle(shadow = readoutShadow),
+                modifier = Modifier.testTag("catalogSelectedLocation"),
+            )
             Text(view.temperature ?: "—", color = Color.White,
                 fontSize = if (compactLayout) 78.sp else 102.sp,
-                fontWeight = FontWeight.Light, modifier = Modifier.testTag("forecastTemperature"))
+                fontWeight = FontWeight.Light,
+                style = TextStyle(shadow = readoutShadow),
+                modifier = Modifier.testTag("forecastTemperature"))
             Text(view.condition ?: "Condition unavailable", color = Color.White,
-                fontSize = 22.sp, textAlign = TextAlign.Center)
+                fontSize = 22.sp, fontWeight = FontWeight.Medium, textAlign = TextAlign.Center,
+                style = TextStyle(shadow = readoutShadow))
+            Text(
+                buildAnnotatedString {
+                    withStyle(SpanStyle(fontSize = 14.sp, fontWeight = FontWeight.SemiBold)) {
+                        append("${selectedDateLabels.first} ")
+                    }
+                    withStyle(SpanStyle(fontSize = 12.sp, fontWeight = FontWeight.Normal)) {
+                        append("${selectedDateLabels.second} · ${view.selectedTimeLabel}")
+                    }
+                },
+                color = Color.White,
+                textAlign = TextAlign.Center,
+                style = TextStyle(shadow = readoutShadow),
+                modifier = Modifier.testTag("catalogSelectedTime"),
+            )
             Text("HIGH ${view.high ?: "—"}    /    LOW ${view.low ?: "—"}",
-                color = Color(0xFFECF3F8), fontSize = 12.sp)
+                color = Color(0xFFECF3F8), fontSize = 12.sp,
+                style = TextStyle(shadow = readoutShadow))
         }
         Column(Modifier.fillMaxWidth().align(Alignment.BottomCenter).navigationBarsPadding()) {
             CompositionLocalProvider(LocalLayoutDirection provides LayoutDirection.Ltr) {
                 Row(
                     Modifier.fillMaxWidth().padding(horizontal = 27.dp),
-                    horizontalArrangement = Arrangement.SpaceBetween,
+                    horizontalArrangement = Arrangement.Center,
                     verticalAlignment = Alignment.CenterVertically,
                 ) {
                     Column(
                         horizontalAlignment = Alignment.CenterHorizontally,
-                        modifier = Modifier.semantics(mergeDescendants = true) {
+                        modifier = Modifier.weight(1f).semantics(mergeDescendants = true) {
                             contentDescription = "Precipitation chance ${view.precipitationChance ?: "unavailable"}"
                         },
                     ) {
-                        RainSignalIcon()
+                        CatalogPrecipitationIcon()
                         Text(view.precipitationChance ?: "Unknown", color = Color.White,
                             fontSize = 19.sp, fontWeight = FontWeight.Medium,
                             modifier = Modifier.testTag("catalogPrecipitationChance"))
                     }
+                    Box(
+                        modifier = Modifier.weight(1f).heightIn(min = 56.dp)
+                            .semantics(mergeDescendants = true) {
+                                contentDescription = "Choose location"
+                            }
+                            .clickable(
+                                enabled = onChooseLocation != null,
+                                role = Role.Button,
+                            ) { onChooseLocation?.invoke() },
+                        contentAlignment = Alignment.Center,
+                    ) {
+                        CatalogMagnifierIcon()
+                    }
+                    Box(
+                        modifier = Modifier.weight(1f).heightIn(min = 56.dp)
+                            .semantics(mergeDescendants = true) {
+                                contentDescription = "Settings"
+                            },
+                        contentAlignment = Alignment.Center,
+                    ) {
+                        CatalogSettingsIcon()
+                    }
                     Column(
                         horizontalAlignment = Alignment.CenterHorizontally,
-                        modifier = Modifier.semantics(mergeDescendants = true) {
+                        modifier = Modifier.weight(1f).semantics(mergeDescendants = true) {
                             val direction = CompassDirection.fromBearing(view.windDirectionDegrees)
                             contentDescription = buildString {
                                 append("Wind speed ${view.wind ?: "unavailable"}")
@@ -253,7 +295,7 @@ private fun CatalogTimeLabScreenContent(
                             }
                         },
                     ) {
-                        CompassIndicator(view.windDirectionDegrees)
+                        CatalogWindIndicator(view.windDirectionDegrees)
                         Text(view.wind ?: "Unknown", color = Color.White,
                             fontSize = 19.sp, fontWeight = FontWeight.Medium,
                             modifier = Modifier.testTag("catalogWind"))
@@ -277,6 +319,127 @@ private fun CatalogTimeLabScreenContent(
                 onSetPrecision = { precision = it },
                 onDismiss = { browserOpen = false },
             )
+        }
+    }
+}
+
+@Composable
+private fun CatalogPrecipitationIcon() {
+    Canvas(Modifier.size(36.dp)) {
+        val color = Color.White.copy(alpha = 0.67f)
+        val stroke = Stroke(
+            width = 1.6.dp.toPx(),
+            cap = StrokeCap.Round,
+            join = StrokeJoin.Round,
+        )
+        fun drop(centerX: Float, top: Float, diameter: Float) = Path().apply {
+            moveTo(centerX, top)
+            cubicTo(centerX - diameter * .15f, top + diameter * .20f,
+                centerX - diameter * .52f, top + diameter * .56f,
+                centerX - diameter * .46f, top + diameter * .72f)
+            cubicTo(centerX - diameter * .39f, top + diameter * 1.05f,
+                centerX + diameter * .39f, top + diameter * 1.05f,
+                centerX + diameter * .46f, top + diameter * .72f)
+            cubicTo(centerX + diameter * .52f, top + diameter * .56f,
+                centerX + diameter * .15f, top + diameter * .20f,
+                centerX, top)
+            close()
+        }
+        drawPath(drop(size.width * .50f, size.height * .02f, size.width * .30f), color, style = stroke)
+        drawPath(drop(size.width * .26f, size.height * .46f, size.width * .27f), color, style = stroke)
+        drawPath(drop(size.width * .74f, size.height * .46f, size.width * .27f), color, style = stroke)
+    }
+}
+
+@Composable
+private fun CatalogMagnifierIcon() {
+    Canvas(Modifier.size(32.dp)) {
+        val color = Color.White.copy(alpha = 0.67f)
+        val stroke = 2.dp.toPx()
+        val center = Offset(size.width * .42f, size.height * .42f)
+        drawCircle(color, size.minDimension * .27f, center, style = Stroke(stroke))
+        drawLine(
+            color,
+            start = Offset(size.width * .62f, size.height * .62f),
+            end = Offset(size.width * .88f, size.height * .88f),
+            strokeWidth = stroke,
+            cap = StrokeCap.Round,
+        )
+    }
+}
+
+@Composable
+private fun CatalogSettingsIcon() {
+    Canvas(Modifier.size(32.dp)) {
+        val color = Color.White.copy(alpha = 0.67f)
+        val center = Offset(size.width / 2f, size.height / 2f)
+        val radius = size.minDimension * .46f
+        val gear = Path()
+        for (tooth in 0 until 8) {
+            val base = tooth * 45f
+            val points = listOf(
+                (base - 22.5f) to .70f,
+                (base - 13f) to .70f,
+                (base - 13f) to .94f,
+                (base + 13f) to .94f,
+                (base + 13f) to .70f,
+                (base + 22.5f) to .70f,
+            )
+            points.forEach { (degrees, scale) ->
+                val radians = Math.toRadians(degrees.toDouble())
+                val point = Offset(
+                    center.x + cos(radians).toFloat() * radius * scale,
+                    center.y + sin(radians).toFloat() * radius * scale,
+                )
+                if (gear.isEmpty) gear.moveTo(point.x, point.y) else gear.lineTo(point.x, point.y)
+            }
+        }
+        gear.close()
+        drawPath(
+            gear,
+            color,
+            style = Stroke(width = 1.8.dp.toPx(), join = StrokeJoin.Round),
+        )
+        drawCircle(color, radius * .27f, center, style = Stroke(width = 1.8.dp.toPx()))
+    }
+}
+
+@Composable
+private fun CatalogWindIndicator(bearingDegrees: Double?) {
+    Canvas(Modifier.size(32.dp)) {
+        val color = Color.White.copy(alpha = 0.67f)
+        val center = Offset(size.width / 2f, size.height / 2f)
+        val radius = size.minDimension * .43f
+        val stroke = 1.4.dp.toPx()
+        drawCircle(color, radius, center, style = Stroke(width = stroke))
+        repeat(8) { tick ->
+            rotate(tick * 45f, center) {
+                drawLine(
+                    color,
+                    start = Offset(center.x, center.y - radius + 1.dp.toPx()),
+                    end = Offset(
+                        center.x,
+                        center.y - radius + if (tick % 2 == 0) 5.dp.toPx() else 3.dp.toPx(),
+                    ),
+                    strokeWidth = stroke,
+                )
+            }
+        }
+        bearingDegrees?.let { bearing ->
+            rotate(bearing.toFloat(), center) {
+                val needle = Path().apply {
+                    moveTo(center.x, center.y + radius * .42f)
+                    lineTo(center.x, center.y - radius * .72f)
+                    moveTo(center.x - radius * .22f, center.y - radius * .38f)
+                    lineTo(center.x, center.y - radius * .72f)
+                    lineTo(center.x + radius * .22f, center.y - radius * .38f)
+                }
+                drawPath(
+                    needle,
+                    color,
+                    style = Stroke(width = stroke, cap = StrokeCap.Round, join = StrokeJoin.Round),
+                )
+            }
         }
     }
 }

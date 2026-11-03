@@ -1,0 +1,105 @@
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="1440" height="1050" viewBox="0 0 1440 1050" role="img" aria-labelledby="title desc">
+  <title id="title">SG.5 city and selected forecast readout artwork board</title>
+  <desc id="desc">The current installed screen is shown as a reference cap beside a revised target layout. The top scene area is clear of City, Place, and Refresh controls. The central reading presents the city as a label with temperature and atmosphere; a magnifying glass beside precipitation opens the location menu, and a gear beside wind represents settings. The weekday is slightly emphasized in the supporting date and time line. Both indicators and both menu icons are 33 percent transparent.</desc>
+  <defs>
+    <linearGradient id="page" x2="0" y2="1"><stop stop-color="#eef3f7"/><stop offset="1" stop-color="#d9e2ea"/></linearGradient>
+    <linearGradient id="sky" x2="0" y2="1"><stop stop-color="#718ba5"/><stop offset=".58" stop-color="#61788d"/><stop offset="1" stop-color="#253d55"/></linearGradient>
+    <linearGradient id="shade" x2="0" y2="1"><stop stop-color="#152b40" stop-opacity=".08"/><stop offset=".47" stop-color="#10253b" stop-opacity=".15"/><stop offset="1" stop-color="#06182a" stop-opacity=".72"/></linearGradient>
+    <filter id="softShadow" x="-30%" y="-30%" width="160%" height="180%"><feGaussianBlur in="SourceAlpha" stdDeviation="2"/><feOffset dy="1.2"/><feComponentTransfer><feFuncA type="linear" slope=".30"/></feComponentTransfer><feMerge><feMergeNode/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+    <clipPath id="targetClip"><rect x="430" y="160" width="410" height="796" rx="34"/></clipPath>
+    <style>
+      .label{font:700 19px sans-serif;letter-spacing:1.2px;fill:#25384b}.note{font:16px sans-serif;fill:#344a5e}.small{font:14px sans-serif;fill:#516477}.white{font-family:Arial,sans-serif;fill:#fff}.call{stroke:#e7a83b;stroke-width:2;fill:none}.dot{fill:#e7a83b}
+    </style>
+  </defs>
+  <rect width="1440" height="1050" fill="url(#page)"/>
+  <text x="48" y="54" class="label" font-size="25">SG.5 — CITY + SELECTED FORECAST READOUT</text>
+  <text x="48" y="84" class="small">Reference cap and product-owner-approved revised target · not installed acceptance evidence</text>
+
+  <text x="56" y="126" class="label">CURRENT SCREEN CAP</text>
+  <text x="56" y="148" class="small">Current installed capture (upper context included).</text>
+  <rect x="48" y="166" width="300" height="617" rx="20" fill="#12263c"/>
+  <image x="55" y="174" width="286" height="588" preserveAspectRatio="xMidYMid meet" xlink:href="SG.4-device-current.png"/>
+  <rect x="55" y="174" width="286" height="588" rx="7" fill="none" stroke="#8191a0"/>
+  <text x="56" y="816" class="small">Cap: Florence / cloudy. Current upper metadata and</text>
+  <text x="56" y="837" class="small">center facts show the hierarchy being reorganized.</text>
+
+  <text x="430" y="126" class="label">PROPOSED COMPOSITION</text>
+  <text x="430" y="148" class="small">Revised target: open top scene; proposed hierarchy shown schematically.</text>
+  <g clip-path="url(#targetClip)" transform="translate(0 24)">
+    <rect x="430" y="136" width="410" height="820" fill="url(#sky)"/>
+    <circle cx="512" cy="314" r="34" fill="#ffe2a2" opacity=".92"/>
+    <!-- Scene silhouette echoes the existing city cap without proposing new scene artwork. -->
+    <path d="M430 590h40v-82h28v82h20V468h43v122h20V525h29v65h24V430h44v160h19V480h38v110h22V392h39v198h25V500h39v90h20v366H430z" fill="#24517c" opacity=".86"/>
+    <path d="M430 660h48v-52h48v52h36v-77h56v77h29v-45h42v45h37v-88h58v88h31v-54h49v54h28v296H430z" fill="#132f4b" opacity=".88"/>
+    <path d="M430 136h410v820H430z" fill="url(#shade)"/>
+    <!-- Clear scene at top: city, Place, and Refresh controls are removed from this area. -->
+    <!-- City remains a label in the central reading; location menu is a separate lower control. -->
+    <text x="635" y="352" text-anchor="middle" class="white" font-size="34" font-weight="700" filter="url(#softShadow)">Chicago</text>
+    <path d="M731 336c-7 0-12 5-12 12 0 9 12 20 12 20s12-11 12-20c0-7-5-12-12-12zm0 8a4 4 0 1 1 0 8 4 4 0 0 1 0-8z" fill="none" stroke="#fff" stroke-width="1.8" opacity=".92"/>
+    <!-- Fast-scan weather facts -->
+    <text x="635" y="472" text-anchor="middle" class="white" font-size="112" font-weight="300" filter="url(#softShadow)">33°</text>
+    <text x="635" y="518" text-anchor="middle" class="white" font-size="32" font-weight="600" filter="url(#softShadow)">Windy</text>
+    <!-- The weekday has a modest size/weight increase to support timeline scrubbing. -->
+    <!-- Selected date and time plus daily range remain supporting context. -->
+    <text x="576" y="557" text-anchor="middle" class="white" font-size="23" font-weight="700" opacity=".98" filter="url(#softShadow)">FRI</text>
+    <text x="672" y="557" text-anchor="middle" class="white" font-size="17" opacity=".94" filter="url(#softShadow)">NOV 1 · 7:34 AM</text>
+    <text x="635" y="590" text-anchor="middle" class="white" font-size="18" opacity=".92" filter="url(#softShadow)">HIGH 36°  /  LOW 28°</text>
+    <!-- Lower indicator row: each indicator and its neighboring action icon is 33% transparent. -->
+    <!-- Four matching outline icons are evenly spaced; magnifier opens the location menu. -->
+    <g opacity=".67">
+      <path d="M480 678c-2 4-6 8-6 11a6 6 0 0 0 12 0c0-3-4-7-6-11zm-11 11c-2 3-4 6-4 8a4 4 0 0 0 8 0c0-2-2-5-4-8zm22 0c-2 3-4 6-4 8a4 4 0 0 0 8 0c0-2-2-5-4-8z" fill="none" stroke="#fff" stroke-width="2" stroke-linejoin="round"/>
+      <text x="480" y="724" text-anchor="middle" class="white" font-size="21">72%</text>
+    </g>
+    <g opacity=".67" fill="none" stroke="#fff" stroke-width="2.4" stroke-linecap="round">
+      <circle cx="586" cy="694" r="9"/><path d="M593 701l8 8"/>
+    </g>
+    <!-- Settings gear sits to the left of the wind indicator. -->
+    <g opacity=".67" fill="none" stroke="#fff" stroke-width="2.1" stroke-linejoin="round">
+      <path d="M692 678l3-3 4 2 4-2 3 3 4 1v4l3 3-2 4 1 4-4 2-2 4h-4l-4 3-4-3h-4l-2-4-4-2 1-4-2-4 3-3v-4z"/>
+      <circle cx="692" cy="687" r="4.5"/>
+    </g>
+    <!-- Wind compass and speed. -->
+    <g opacity=".67">
+      <circle cx="798" cy="694" r="15" fill="none" stroke="#fff" stroke-width="2"/>
+      <path d="M798 681v5m0 16v5m-13-13h5m16 0h5m-22-9l3 3m13 13l3 3m0-19l-3 3m-13 13l-3 3" stroke="#fff" stroke-width="1.5"/>
+      <path d="M798 685l4 13-4-3-4 3z" fill="none" stroke="#fff" stroke-width="1.7" stroke-linejoin="round"/>
+      <text x="798" y="724" text-anchor="middle" class="white" font-size="21">12 mph</text>
+    </g>
+    <text x="465" y="832" class="white" font-size="16" opacity=".8">THU     FRI     SAT      SUN     MON     TUE</text>
+    <line x1="430" y1="874" x2="840" y2="874" stroke="#ffffff" stroke-opacity=".38"/>
+    <line x1="635" y1="858" x2="635" y2="890" stroke="#ffe09a" stroke-width="3"/>
+    <rect x="588" y="898" width="95" height="39" rx="20" fill="#142c44" fill-opacity=".78"/>
+    <text x="635" y="924" text-anchor="middle" class="white" font-size="17">7:34 AM</text>
+  </g>
+  <rect x="430" y="160" width="410" height="796" rx="34" fill="none" stroke="#16324b" stroke-width="3"/>
+
+  <!-- Callouts -->
+  <path d="M742 359 C850 359 858 207 902 207" class="call"/><circle cx="742" cy="359" r="4" class="dot"/>
+  <text x="920" y="199" class="label">1 · CITY IS PART OF THE WEATHER READING</text>
+  <text x="920" y="224" class="note">City, temperature, and atmosphere read at a glance.</text><text x="920" y="246" class="note">City stays a label; the magnifier opens location search.</text>
+
+  <path d="M700 472 C856 472 854 337 902 337" class="call"/><circle cx="700" cy="472" r="4" class="dot"/>
+  <text x="920" y="329" class="label">2 · TEMPERATURE LEADS THE NUMERIC FACTS</text>
+  <text x="920" y="354" class="note">Keep current temperature formatting and unavailable behavior.</text>
+
+  <path d="M706 518 C865 518 860 450 902 450" class="call"/><circle cx="706" cy="518" r="4" class="dot"/>
+  <text x="920" y="442" class="label">3 · ATMOSPHERE COMPLETES THE QUICK READ</text>
+  <text x="920" y="467" class="note">Use the currently supplied presentation label;</text><text x="920" y="489" class="note">this slice adds no category mapping.</text>
+
+  <path d="M700 557 C856 557 860 558 902 558" class="call"/><circle cx="700" cy="557" r="4" class="dot"/>
+  <text x="920" y="550" class="label">4 · WEEKDAY HELPS TRACK SCRUB POSITION</text>
+  <text x="920" y="575" class="note">FRI is just slightly larger; date and selected time</text><text x="920" y="597" class="note">stay attached to the same forecast reading.</text>
+
+  <path d="M720 472 C877 640 867 682 902 682" class="call"/><circle cx="720" cy="472" r="4" class="dot"/>
+  <text x="920" y="674" class="label">5 · LOWER METRICS + SHORTCUTS</text>
+  <text x="920" y="699" class="note">Rain and wind indicators, magnifier, and gear</text><text x="920" y="721" class="note">are each 33% transparent (67% opacity).</text>
+
+  <rect x="900" y="770" width="490" height="145" rx="16" fill="#ffffff" stroke="#bdc9d3"/>
+  <text x="926" y="806" class="label">PRESERVE</text>
+  <text x="926" y="837" class="note">Open upper scene · lower weather facts · timeline</text>
+  <text x="926" y="862" class="note">Subtle text separation · selected-time authority</text>
+  <text x="926" y="887" class="note">Screen/timeline gesture ownership and responsiveness</text>
+  <text x="900" y="945" class="small">Top city, Place, and Refresh controls are removed;</text>
+  <text x="900" y="965" class="small">magnifier opens location menu; gear represents settings.</text>
+  <text x="48" y="1000" class="small">Revised and approved 2026-11-02. Scene silhouette is schematic, not proposed scene artwork.</text>
+</svg>
