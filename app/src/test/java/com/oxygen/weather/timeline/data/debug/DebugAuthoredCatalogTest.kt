@@ -1,6 +1,7 @@
 package com.oxygen.weather.timeline.data.debug
 
 import com.oxygen.weather.timeline.data.catalog.*
+import com.oxygen.weather.timeline.presentation.symbol.WeatherSymbolId
 import java.time.Instant
 import java.time.LocalDateTime
 import java.time.ZoneId
@@ -40,6 +41,39 @@ class DebugAuthoredCatalogTest {
         override suspend fun deleteDataset(locationId: String, namespace: String, datasetId: String): Int = rows.removeAll { it.locationId == locationId && it.storageNamespace == namespace && it.datasetId == datasetId }.let { if (it) 1 else 0 }
         override suspend fun persistLive(row: CatalogDatasetRow, retentionLimit: Int) = false
         override suspend fun deleteLocation(locationId: String): Int = rows.removeAll { it.locationId == locationId }.let { if (it) 1 else 0 }
+    }
+
+    @Test fun simulatedEventRangeSymbolSelectorPersistsWithoutChangingCanonicalFacts() = runBlocking {
+        val start = LocalDateTime.parse("2026-11-03T08:00")
+        val end = start.plusHours(8)
+        val events = DebugSkySymbolRangeFixture.events(start)
+        val definition = DebugAuthoredCatalog(
+            "Sky symbol range", location, DatasetId("sky-symbol-range-v1"),
+            Instant.parse("2026-11-03T18:00:00Z"), start, end, events.first().values, events,
+        )
+        val dao = DatasetMemory()
+        val storage = CatalogDatasetStorage(dao)
+        val repository = DebugAuthoredCatalogRepository(
+            storage,
+            DebugAuthoredCatalogMetadataStore(MetadataMemory()),
+        )
+
+        val recording = repository.save(definition)
+        val reopened = requireNotNull(repository.reopen(location, definition.datasetId))
+
+        assertEquals(WeatherSymbolId.entries, reopened.first.events.map { it.symbolId })
+        assertEquals(8, reopened.first.events.size)
+        reopened.first.events.forEachIndexed { index, event ->
+            assertEquals(start.plusHours(index.toLong()), event.startLocal)
+            assertEquals(event.startLocal.plusHours(1), event.endLocalExclusive)
+            val rangeFact = recording.catalog.facts.single {
+                val local = it.validTime.atZone(location.timeZone).toLocalDateTime()
+                local >= event.startLocal && local < event.endLocalExclusive
+            }
+            assertEquals(event.values.fact(rangeFact.validTime), rangeFact)
+            assertTrue(rangeFact.conditions.isEmpty())
+            assertNull(rangeFact.cloudCoverPercent)
+        }
     }
 
     @Test fun authoredPeriodOverridesEveryRealLocalHourAndKeepsFullDstWindow() = runBlocking {

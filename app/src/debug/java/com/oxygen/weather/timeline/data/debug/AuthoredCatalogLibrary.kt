@@ -59,6 +59,8 @@ import com.oxygen.weather.timeline.data.catalog.DatasetId
 import com.oxygen.weather.timeline.data.catalog.SavedLocation
 import com.oxygen.weather.timeline.data.catalog.WeatherCondition
 import com.oxygen.weather.timeline.data.catalog.WeatherPhenomenon
+import com.oxygen.weather.timeline.presentation.symbol.WeatherSymbolId
+import com.oxygen.weather.timeline.presentation.symbol.WeatherSymbolIcon
 import java.time.Instant
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
@@ -82,6 +84,7 @@ private data class EventDraft(
     val conditions: Set<WeatherCondition> = setOf(WeatherCondition.CLEAR),
     val phenomena: Set<WeatherPhenomenon> = emptySet(),
     val measurements: Map<String, String> = emptyMap(),
+    val symbolId: WeatherSymbolId? = null,
 )
 
 private data class MeasurementField(val key: String, val label: String)
@@ -244,6 +247,7 @@ internal fun AuthoredCatalogLibrary(
                     end = event.endLocalExclusive.toString(),
                     conditions = event.values.conditions,
                     phenomena = event.values.phenomena,
+                    symbolId = event.symbolId,
                     measurements = measurementFields.mapNotNull { field ->
                         valueFor(field.key, event.values)?.let { field.key to it.toString() }
                     }.toMap(),
@@ -400,6 +404,7 @@ internal fun AuthoredCatalogLibrary(
                     horizontalArrangement = Arrangement.SpaceBetween,
                 ) {
                     SectionTitle("STEP 2", "PLACE SUPPORTED EVENTS")
+                    Row {
                     TextButton(onClick = {
                         runCatching {
                             val envelopeEndTime = parseLocalDateTime(envelopeEnd)
@@ -412,6 +417,26 @@ internal fun AuthoredCatalogLibrary(
                             error = null
                         }.onFailure { error = it.message ?: "Check the local period before adding an event." }
                     }) { Text("+ ADD EVENT", style = MaterialTheme.typography.labelMedium) }
+                    TextButton(onClick = {
+                        runCatching {
+                            val day = parseLocalDateTime(envelopeStart).toLocalDate()
+                            val start = day.atTime(8, 0)
+                            val end = start.plusHours(8)
+                            envelopeStart = start.toString()
+                            envelopeEnd = end.toString()
+                            events.clear()
+                            events.addAll(DebugSkySymbolRangeFixture.events(start).map { event ->
+                                EventDraft(
+                                    start = event.startLocal.toString(),
+                                    end = event.endLocalExclusive.toString(),
+                                    conditions = emptySet(),
+                                    symbolId = event.symbolId,
+                                )
+                            })
+                            error = null
+                        }.onFailure { error = it.message ?: "Set a valid local date before loading the Sky review ranges." }
+                    }) { Text("8 SYMBOL RANGES", style = MaterialTheme.typography.labelMedium) }
+                    }
                 }
                 EventTimeline(envelopeStart, envelopeEnd, events)
                 events.forEachIndexed { index, draft ->
@@ -473,6 +498,7 @@ internal fun AuthoredCatalogLibrary(
                                             parseLocalDateTime(draft.start),
                                             parseLocalDateTime(draft.end),
                                             values,
+                                            draft.symbolId,
                                         )
                                     }
                                     require(definitions.isNotEmpty()) { "Add at least one supported event." }
@@ -784,6 +810,37 @@ private fun EventEditorCard(
                 DateTimeField(draft.start, { onChange(draft.copy(start = it)) }, "START", Modifier.weight(1f))
                 DateTimeField(draft.end, { onChange(draft.copy(end = it)) }, "END · EXCLUSIVE", Modifier.weight(1f))
             }
+            Row(Modifier.fillMaxWidth(), verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.spacedBy(10.dp)) {
+                Column(Modifier.weight(1f), verticalArrangement = Arrangement.spacedBy(2.dp)) {
+                    Text("SIMULATED SYMBOL", color = MutedText, style = MaterialTheme.typography.labelSmall,
+                        fontWeight = FontWeight.Medium)
+                    Text(draft.symbolId?.label ?: "No symbol selected", color = Ink,
+                        style = MaterialTheme.typography.bodySmall, fontWeight = FontWeight.SemiBold)
+                    Row(horizontalArrangement = Arrangement.spacedBy(8.dp), verticalAlignment = Alignment.CenterVertically) {
+                        PreviewSymbolTile(draft.symbolId, 48)
+                        PreviewSymbolTile(draft.symbolId, 24)
+                        Text("48 dp  ·  24 dp", color = MutedText, style = MaterialTheme.typography.labelSmall)
+                    }
+                }
+                TextButton(
+                    onClick = { onChange(draft.copy(symbolId = null)) },
+                    enabled = draft.symbolId != null,
+                    contentPadding = PaddingValues(horizontal = 4.dp, vertical = 0.dp),
+                ) { Text("CLEAR", color = MutedText, style = MaterialTheme.typography.labelSmall) }
+            }
+            WeatherSymbolId.entries.chunked(4).forEach { rowSymbols ->
+                Row(horizontalArrangement = Arrangement.spacedBy(5.dp)) {
+                    rowSymbols.forEach { symbol ->
+                        FilterChip(
+                            selected = draft.symbolId == symbol,
+                            onClick = { onChange(draft.copy(symbolId = symbol)) },
+                            label = { Text(symbol.label, fontSize = 9.sp, maxLines = 1, overflow = TextOverflow.Ellipsis) },
+                            modifier = Modifier.weight(1f),
+                        )
+                    }
+                }
+            }
             Text("CONDITION", color = MutedText, style = MaterialTheme.typography.labelSmall, fontWeight = FontWeight.Medium)
             WeatherCondition.entries.chunked(3).forEach { rowConditions ->
                 Row(horizontalArrangement = Arrangement.spacedBy(5.dp)) {
@@ -867,6 +924,20 @@ private fun EventEditorCard(
                 Text("Blank means unavailable; explicit 0 remains a supplied value.", color = MutedText,
                     style = MaterialTheme.typography.bodySmall)
             }
+        }
+    }
+}
+
+@Composable
+private fun PreviewSymbolTile(symbol: WeatherSymbolId?, sizeDp: Int) {
+    Box(
+        modifier = Modifier.size((sizeDp + 8).dp).background(Navy, RoundedCornerShape(9.dp)),
+        contentAlignment = Alignment.Center,
+    ) {
+        if (symbol != null) {
+            WeatherSymbolIcon(symbol, Modifier.size(sizeDp.dp), contentDescription = null)
+        } else {
+            Text("—", color = Color.White.copy(alpha = .7f), fontSize = 15.sp)
         }
     }
 }

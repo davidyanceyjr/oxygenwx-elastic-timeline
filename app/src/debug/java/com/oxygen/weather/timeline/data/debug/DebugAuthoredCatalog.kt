@@ -3,6 +3,7 @@ package com.oxygen.weather.timeline.data.debug
 import android.content.SharedPreferences
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.oxygen.weather.timeline.data.catalog.*
+import com.oxygen.weather.timeline.presentation.symbol.WeatherSymbolId
 import java.security.MessageDigest
 import java.time.Instant
 import java.time.LocalDate
@@ -43,6 +44,8 @@ data class DebugAuthoredEvent(
     val startLocal: LocalDateTime,
     val endLocalExclusive: LocalDateTime,
     val values: DebugAuthoredWeatherValues,
+    /** Debug-only illustration selector; never materialized into CanonicalWeatherFacts. */
+    val symbolId: WeatherSymbolId? = null,
 ) {
     init {
         require(startLocal < endLocalExclusive) { "Event range must be non-empty" }
@@ -284,7 +287,7 @@ class DebugAuthoredCatalogMetadataStore(private val backend: DebugAuthoredMetada
     private fun remove(key: String) = backend.remove(key)
 
     private fun encode(value: DebugAuthoredCatalogMetadata): String = mapper.writeValueAsString(mapper.createObjectNode().apply {
-        put("schemaVersion", 2)
+        put("schemaVersion", 3)
         put("name", value.name); put("locationId", value.locationId); put("datasetId", value.datasetId)
         put("asOf", value.asOf.toString()); put("startLocal", value.startLocal.toString())
         put("endLocalExclusive", value.endLocalExclusive.toString()); put("recordingSha256", value.recordingSha256)
@@ -292,6 +295,7 @@ class DebugAuthoredCatalogMetadataStore(private val backend: DebugAuthoredMetada
             value.events.forEach { event -> add(mapper.createObjectNode().apply {
                 put("startLocal", event.startLocal.toString())
                 put("endLocalExclusive", event.endLocalExclusive.toString())
+                event.symbolId?.let { put("symbolId", it.name) }
                 set<com.fasterxml.jackson.databind.JsonNode>("values", authoredValuesNode(event.values))
             }) }
         })
@@ -300,11 +304,12 @@ class DebugAuthoredCatalogMetadataStore(private val backend: DebugAuthoredMetada
     private fun decode(json: String): DebugAuthoredCatalogMetadata? = try {
         val node = mapper.readTree(json)
         val schemaVersion = node.get("schemaVersion")?.asInt() ?: 1
-        require(schemaVersion in 1..2) { "Unsupported authored metadata version" }
+        require(schemaVersion in 1..3) { "Unsupported authored metadata version" }
         val events = node.get("events")?.map { event -> DebugAuthoredEvent(
             LocalDateTime.parse(event.required("startLocal").asText()),
             LocalDateTime.parse(event.required("endLocalExclusive").asText()),
             authoredValues(event.required("values")),
+            event.get("symbolId")?.asText()?.let { id -> WeatherSymbolId.entries.firstOrNull { it.name == id } },
         ) } ?: emptyList()
         DebugAuthoredCatalogMetadata(node.required("name").asText(), node.required("locationId").asText(),
             node.required("datasetId").asText(), Instant.parse(node.required("asOf").asText()),
