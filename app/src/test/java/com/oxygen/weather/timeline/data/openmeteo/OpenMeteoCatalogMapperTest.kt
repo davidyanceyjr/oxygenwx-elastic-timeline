@@ -79,15 +79,17 @@ class OpenMeteoCatalogMapperTest {
         assertFalse(mapped.expectedSupport.containsKey(date.plusDays(14)))
     }
 
-    @Test fun `legacy captured provider catalog round trips through v2 with solar events unavailable`() {
+    @Test fun `legacy captured provider catalog preserves missing lunar values in v4 support metadata`() {
         val request = request(Instant.parse("2026-10-28T14:57:55.714828Z"))
         val input = javaClass.getResourceAsStream("/openmeteo/provider-response-public-chicago.json")!!.use { it.readBytes() }
         val mapped = OpenMeteoCatalogMapper.decode(input, request).success()
         val original = CatalogRecording(mapped.catalog, mapped.expectedSupport, mapped.dailyExpectedSupport)
         val encoded = RecordedCatalogCodec.encode(original)
-        assertEquals(2, mapper.readTree(encoded).path("schemaVersion").intValue())
+        assertEquals(4, mapper.readTree(encoded).path("schemaVersion").intValue())
         assertNull(mapped.catalog.dailySummaries.first().sunriseInstant)
         assertNull(mapped.catalog.dailySummaries.first().sunsetInstant)
+        assertNull(mapped.catalog.dailySummaries.first().moonPhase)
+        assertNull(mapped.catalog.dailySummaries.first().moonriseInstant)
         val decoded = (RecordedCatalogCodec.decode(encoded) as RecordingDecodeResult.Success).recording
         assertEquals(original.catalog, decoded.catalog)
         assertEquals(original.expectedSupport.keys, decoded.expectedSupport.keys)
@@ -107,7 +109,7 @@ class OpenMeteoCatalogMapperTest {
         assertTrue(hash.matches(Regex("[a-f0-9]{64}")))
     }
 
-    @Test fun `solar events map as absolute instants, remain nullable, and round trip through v3`() {
+    @Test fun `solar events map as absolute instants, remain nullable, and round trip through v4 when lunar fields are present`() {
         val date = LocalDate.parse("2026-07-10")
         val request = request(date.atTime(12, 0).atZone(chicago.timeZone).toInstant())
         val response = fixture(request, -5 * 3600, listOf(date.atTime(12, 0).atZone(chicago.timeZone).toInstant()), listOf(date))
@@ -123,7 +125,7 @@ class OpenMeteoCatalogMapperTest {
         val encoded = RecordedCatalogCodec.encode(CatalogRecording(
             mapped.catalog, mapped.expectedSupport, mapped.dailyExpectedSupport,
         ))
-        assertEquals(3, mapper.readTree(encoded).path("schemaVersion").intValue())
+        assertEquals(4, mapper.readTree(encoded).path("schemaVersion").intValue())
         val decoded = (RecordedCatalogCodec.decode(encoded) as RecordingDecodeResult.Success).recording
         assertEquals(mapped.catalog.dailySummaries, decoded.catalog.dailySummaries)
         assertArrayEquals(encoded, RecordedCatalogCodec.encode(decoded))
@@ -136,6 +138,77 @@ class OpenMeteoCatalogMapperTest {
         assertNull(missing.sunsetInstant)
         assertFalse(missing.has(DailyCatalogField.SUNRISE))
         assertFalse(missing.has(DailyCatalogField.SUNSET))
+    }
+
+    @Test fun `lunar events and daily phase map independently and round trip through v4`() {
+        val date = LocalDate.parse("2026-07-10")
+        val request = request(date.atTime(12, 0).atZone(chicago.timeZone).toInstant())
+        val response = fixture(request, -5 * 3600, listOf(date.atTime(12, 0).atZone(chicago.timeZone).toInstant()), listOf(date))
+        val summary = mapBytes(response, request).success().catalog.dailySummaries.single()
+        assertEquals(date.atTime(20, 10).atZone(chicago.timeZone).toInstant(), summary.moonriseInstant)
+        assertEquals(date.atTime(5, 20).atZone(chicago.timeZone).toInstant(), summary.moonsetInstant)
+        assertEquals(.125, summary.moonPhase!!, 0.0)
+        assertTrue(summary.has(DailyCatalogField.MOONRISE))
+        assertTrue(summary.has(DailyCatalogField.MOONSET))
+        assertTrue(summary.has(DailyCatalogField.MOON_PHASE))
+
+        val mapped = mapBytes(response, request).success()
+        val encoded = RecordedCatalogCodec.encode(CatalogRecording(mapped.catalog, mapped.expectedSupport, mapped.dailyExpectedSupport))
+        assertEquals(4, mapper.readTree(encoded).path("schemaVersion").intValue())
+        val decoded = (RecordedCatalogCodec.decode(encoded) as RecordingDecodeResult.Success).recording
+        assertEquals(mapped.catalog, decoded.catalog)
+        assertEquals(mapped.dailyExpectedSupport, decoded.dailyExpectedSupport)
+        assertArrayEquals(encoded, RecordedCatalogCodec.encode(decoded))
+
+        val lunarFields = setOf(DailyCatalogField.MOONRISE, DailyCatalogField.MOONSET, DailyCatalogField.MOON_PHASE)
+        val legacySupport = mapped.dailyExpectedSupport.mapValues { (_, fields) -> fields - lunarFields }
+        fun catalogWithSummaries(summaries: List<ProviderDailySummary>) = CanonicalCatalog(
+            mapped.catalog.location, mapped.catalog.datasetId, mapped.catalog.provenance,
+            mapped.catalog.asOf, mapped.catalog.facts, mapped.catalog.productSegments, summaries,
+        )
+        val withoutMoon = catalogWithSummaries(mapped.catalog.dailySummaries.map {
+            it.copy(moonriseInstant = null, moonsetInstant = null, moonPhase = null)
+        })
+        val v3Bytes = RecordedCatalogCodec.encode(CatalogRecording(withoutMoon, mapped.expectedSupport, legacySupport))
+        assertEquals(3, mapper.readTree(v3Bytes).path("schemaVersion").intValue())
+        val v3Decoded = (RecordedCatalogCodec.decode(v3Bytes) as RecordingDecodeResult.Success).recording
+        assertEquals(withoutMoon, v3Decoded.catalog)
+        assertTrue(v3Decoded.catalog.dailySummaries.all { it.moonriseInstant == null && it.moonsetInstant == null && it.moonPhase == null })
+
+        val withoutSolarOrMoon = catalogWithSummaries(withoutMoon.dailySummaries.map {
+            it.copy(sunriseInstant = null, sunsetInstant = null)
+        })
+        val v2Bytes = RecordedCatalogCodec.encode(CatalogRecording(withoutSolarOrMoon, mapped.expectedSupport, legacySupport))
+        assertEquals(2, mapper.readTree(v2Bytes).path("schemaVersion").intValue())
+        assertEquals(withoutSolarOrMoon, (RecordedCatalogCodec.decode(v2Bytes) as RecordingDecodeResult.Success).recording.catalog)
+
+        val daily = response.path("daily")
+        (daily.path("moonrise") as ArrayNode).set(0, mapper.nodeFactory.nullNode())
+        (daily.path("moon_phase") as ArrayNode).set(0, mapper.nodeFactory.nullNode())
+        val partial = mapBytes(response, request).success().catalog.dailySummaries.single()
+        assertNull(partial.moonriseInstant)
+        assertNotNull(partial.moonsetInstant)
+        assertNull(partial.moonPhase)
+    }
+
+    @Test fun `lunar event retains provider row ownership when its absolute instant crosses midnight`() {
+        val date = LocalDate.parse("2026-07-10")
+        val request = request(date.atTime(12, 0).atZone(chicago.timeZone).toInstant())
+        val response = fixture(request, -5 * 3600,
+            listOf(date.atTime(12, 0).atZone(chicago.timeZone).toInstant()), listOf(date))
+        (response.path("daily").path("moonrise") as ArrayNode).set(
+            0, mapper.nodeFactory.numberNode(date.plusDays(1).atTime(0, 35).atZone(chicago.timeZone).toEpochSecond()),
+        )
+        val mapped = mapBytes(response, request).success()
+        val summary = mapped.catalog.dailySummaries.single()
+        val event = date.plusDays(1).atTime(0, 35).atZone(chicago.timeZone).toInstant()
+        assertEquals(date, summary.date)
+        assertEquals(event, summary.moonriseInstant)
+        assertFalse(event < summary.support.end)
+        val window = (CatalogWindow.create(mapped.catalog, mapped.expectedSupport,
+            dailyExpectedSupport = mapped.dailyExpectedSupport) as CatalogWindowResult.Success).window
+        assertEquals(CoverageStatus.COMPLETE,
+            window.days.single { it.date == date }.dailyCoverage.getValue(DailyCatalogField.MOONRISE))
     }
 
     @Test fun `buffered live capture can emit a clipped v2 candidate and coverage report`() {
@@ -382,6 +455,9 @@ class OpenMeteoCatalogMapperTest {
         "precipitation_probability_max" -> 0.0
         "sunrise" -> date.atTime(6, 30).atZone(chicago.timeZone).toEpochSecond().toDouble()
         "sunset" -> date.atTime(18, 30).atZone(chicago.timeZone).toEpochSecond().toDouble()
+        "moonrise" -> date.atTime(20, 10).atZone(chicago.timeZone).toEpochSecond().toDouble()
+        "moonset" -> date.atTime(5, 20).atZone(chicago.timeZone).toEpochSecond().toDouble()
+        "moon_phase" -> .125
         else -> 0.0
     }
     private fun hourUnit(name: String) = when (name) {
@@ -399,7 +475,8 @@ class OpenMeteoCatalogMapperTest {
     }
     private fun dayUnit(name: String) = when (name) {
         "time" -> "unixtime"
-        "sunrise", "sunset" -> "unixtime"
+        "sunrise", "sunset", "moonrise", "moonset" -> "unixtime"
+        "moon_phase" -> "fraction"
         "weather_code" -> "wmo code"
         "temperature_2m_max", "temperature_2m_min" -> "°C"
         "precipitation_probability_max" -> "%"

@@ -35,6 +35,7 @@ enum class CityPrecipitation { NONE, RAIN, SNOW, STORM }
 enum class FirstCityLayer {
     SKY,
     BACKGROUND_ARCHITECTURE,
+    LUNAR_CUE,
     CLOUDS,
     FOREGROUND_ARCHITECTURE,
     CANOPY,
@@ -51,6 +52,7 @@ data class FirstCityComposition(
     val treatment: CityTreatment,
     val sky: CitySkyDecision?,
     val cue: CityCueDecision,
+    val moonCue: CityCueDecision,
     val clouds: CityCloudDecision,
     val precipitation: CityPrecipitation,
     val hasWeatherState: Boolean,

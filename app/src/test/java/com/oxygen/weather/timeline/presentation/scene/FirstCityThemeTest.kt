@@ -6,6 +6,8 @@ import java.time.ZoneId
 import java.time.ZonedDateTime
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertNull
+import org.junit.Assert.assertNotNull
+import org.junit.Assert.assertTrue
 import org.junit.Test
 
 class FirstCityThemeTest {
@@ -41,5 +43,65 @@ class FirstCityThemeTest {
         assertNull(FirstCityTheme.cuePosition(after, zone, CityTreatment.DUSK))
         assertNull(FirstCityTheme.cuePosition(reading(middayInstant, null), zone, CityTreatment.DAY))
         assertEquals(middayInstant, midday.selectedInstant)
+    }
+
+    @Test fun `moon follows neighboring rise to set events and keeps neutral phase stage`() {
+        val rise = ZonedDateTime.of(2026, 10, 31, 22, 0, 0, 0, zone).toInstant()
+        val set = ZonedDateTime.of(2026, 11, 1, 6, 0, 0, 0, zone).toInstant()
+        val selected = rise.plus(Duration.between(rise, set).dividedBy(2))
+        val events = listOf(
+            LunarEvent(LocalDate.parse("2026-10-31"), LunarEventKind.RISE, rise),
+            LunarEvent(LocalDate.parse("2026-11-01"), LunarEventKind.SET, set),
+        )
+        val reading = reading(selected, null).copy(
+            lunarDay = LunarDayFacts(LocalDate.parse("2026-11-01"), .125, null, set),
+            lunarEvents = events,
+        )
+        val cue = FirstCityTheme.lunarPosition(reading)
+        assertNotNull(cue)
+        assertEquals(.5f, cue!!.first, .001f)
+        assertEquals(.18f, cue.second, .01f)
+        assertEquals(.8f, FirstCityTheme.lunarScale(reading), .001f)
+        assertEquals("Waxing Crescent", FirstCityTheme.phaseLabel(reading.lunarDay?.phase))
+        assertEquals("New Moon", FirstCityTheme.phaseLabel(1.0))
+        assertEquals(listOf(
+            "New Moon", "Waxing Crescent", "First Quarter", "Waxing Gibbous",
+            "Full Moon", "Waning Gibbous", "Last Quarter", "Waning Crescent",
+        ), (0..7).map { FirstCityTheme.phaseLabel(it / 8.0) })
+        assertNull(FirstCityTheme.phaseLabel(null))
+
+        val exactRise = reading.copy(selectedInstant = rise)
+        assertEquals(.12f to .42f, FirstCityTheme.lunarPosition(exactRise))
+        assertEquals(1.28f, FirstCityTheme.lunarScale(exactRise), .001f)
+        val exactSet = reading.copy(selectedInstant = set)
+        assertEquals(.88f to .42f, FirstCityTheme.lunarPosition(exactSet))
+        assertEquals(1.28f, FirstCityTheme.lunarScale(exactSet), .001f)
+        val unresolved = reading.copy(lunarEvents = listOf(events.last()))
+        assertNull(FirstCityTheme.lunarPosition(unresolved))
+        val setThenRise = listOf(
+            LunarEvent(LocalDate.parse("2026-10-31"), LunarEventKind.SET, selected.minusSeconds(3600)),
+            LunarEvent(LocalDate.parse("2026-11-01"), LunarEventKind.RISE, selected.plusSeconds(3600)),
+        )
+        assertNull(FirstCityTheme.lunarPosition(reading.copy(lunarEvents = setThenRise)))
+    }
+
+    @Test fun `cloud layer occludes a supported lunar cue`() {
+        val rise = ZonedDateTime.of(2026, 10, 31, 22, 0, 0, 0, zone).toInstant()
+        val set = ZonedDateTime.of(2026, 11, 1, 6, 0, 0, 0, zone).toInstant()
+        val selected = rise.plus(Duration.between(rise, set).dividedBy(2))
+        val cloudy = reading(selected, null).copy(
+            cloudCoverPercent = ScenePoint(selected, selected, 80.0, SceneEvidence.SUPPLIED, null),
+            lunarEvents = listOf(
+                LunarEvent(LocalDate.parse("2026-10-31"), LunarEventKind.RISE, rise),
+                LunarEvent(LocalDate.parse("2026-11-01"), LunarEventKind.SET, set),
+            ),
+        )
+
+        val composition = FirstCityTheme.compose(cloudy, zone)
+
+        assertTrue(composition.moonCue.visible)
+        assertTrue(composition.clouds.visible)
+        assertTrue(composition.layerOrder.indexOf(FirstCityLayer.LUNAR_CUE) <
+            composition.layerOrder.indexOf(FirstCityLayer.CLOUDS))
     }
 }

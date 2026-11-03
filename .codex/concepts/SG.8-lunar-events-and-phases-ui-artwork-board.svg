@@ -1,0 +1,130 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1900" height="1200" viewBox="0 0 1900 1200">
+<defs>
+  <linearGradient id="paper" x2="0" y2="1"><stop stop-color="#eef5f7"/><stop offset="1" stop-color="#dce8ed"/></linearGradient>
+  <linearGradient id="night" x2="0" y2="1"><stop stop-color="#172842"/><stop offset="1" stop-color="#3e5972"/></linearGradient>
+  <linearGradient id="dusk" x2="0" y2="1"><stop stop-color="#394c6a"/><stop offset=".65" stop-color="#b67c83"/><stop offset="1" stop-color="#edb783"/></linearGradient>
+  <clipPath id="screen"><rect x="18" y="56" width="342" height="404" rx="18"/></clipPath>
+  <style>
+    .title{font:700 38px 'DejaVu Sans',sans-serif;fill:#18334b}.sub{font:20px 'DejaVu Sans',sans-serif;fill:#49677d}
+    .eyebrow{font:700 16px 'DejaVu Sans',sans-serif;letter-spacing:2px;fill:#00859b}.label{font:700 15px 'DejaVu Sans',sans-serif;letter-spacing:1.3px;fill:#00859b}
+    .body{font:16px 'DejaVu Sans',sans-serif;fill:#244259}.small{font:13px 'DejaVu Sans',sans-serif;fill:#58738a}.card{fill:#fff;stroke:#c7d7df;stroke-width:2}
+    .phone{fill:#fff;stroke:#9db4c2;stroke-width:2}.pill{fill:#e8f0f3}.bright{fill:#f6e4b5;stroke:#fff1d1;stroke-width:2}
+  </style>
+</defs>
+<rect width="1900" height="1200" fill="url(#paper)"/>
+<text x="54" y="46" class="eyebrow">OXYGEN · SG.8 · UI ARTWORK BOARD · OWNER APPROVED 2026-11-02</text>
+<text x="54" y="96" class="title">One selected-time Moon, with event-timed crossings and a daily phase cue.</text>
+<text x="54" y="132" class="sub">The same scene clock as the Sun; lunar events and phase remain separate, honest inputs.</text>
+
+<!-- Phone state 1 -->
+<g transform="translate(54 172)">
+ <rect width="378" height="590" rx="26" class="phone"/>
+ <text x="18" y="32" class="label">BEFORE MOONRISE</text>
+ <g clip-path="url(#screen)">
+  <rect x="18" y="56" width="342" height="404" fill="url(#night)"/>
+  <circle cx="104" cy="112" r="2" fill="#dce8f1"/><circle cx="295" cy="150" r="2" fill="#dce8f1"/><circle cx="242" cy="91" r="1.8" fill="#dce8f1"/>
+  <path fill="#7995ae" d="M18 383h35v-44h28v31h24v-61h34v62h27v-38h28v44h27v-74h36v65h25v-48h25v63h35v40H18z"/>
+  <path fill="#263f59" d="M18 423h342v37H18z"/>
+  <text x="33" y="446" fill="#fff" font-size="12" font-family="sans-serif">Wed · 8:10 PM CDT</text>
+ </g>
+ <circle cx="31" cy="484" r="10" fill="#53616c" stroke="#d8e2e5" stroke-width="2"/><circle cx="31" cy="484" r="3" fill="#f6e4b5"/>
+ <text x="50" y="489" class="body">Waxing Gibbous</text>
+ <text x="19" y="516" class="small">Moonrise 9:02 PM · next event</text>
+ <rect x="18" y="536" width="342" height="34" rx="17" class="pill"/>
+ <text x="30" y="558" class="small">Selected time stays on the timeline</text>
+</g>
+
+<!-- Phone state 2 -->
+<g transform="translate(482 172)">
+ <rect width="378" height="590" rx="26" class="phone"/>
+ <text x="18" y="32" class="label">PROVIDER MOONRISE</text>
+ <g clip-path="url(#screen)">
+  <rect x="18" y="56" width="342" height="404" fill="url(#night)"/>
+  <circle cx="104" cy="112" r="2" fill="#dce8f1"/><circle cx="295" cy="150" r="2" fill="#dce8f1"/>
+  <circle cx="268" cy="383" r="34" class="bright"/>
+  <path fill="#7995ae" d="M18 383h35v-44h28v31h24v-61h34v62h27v-38h28v44h27v-74h36v65h25v-48h25v63h35v40H18z"/>
+  <path fill="#263f59" d="M18 423h342v37H18z"/>
+  <text x="33" y="446" fill="#fff" font-size="12" font-family="sans-serif">Wed · 9:02 PM CDT</text>
+  <path d="M268 353v16" stroke="#ffe7b6" stroke-width="2" stroke-dasharray="4 4"/>
+ </g>
+ <circle cx="31" cy="484" r="10" fill="#53616c" stroke="#d8e2e5" stroke-width="2"/><circle cx="31" cy="484" r="3" fill="#f6e4b5"/>
+ <text x="50" y="489" class="body">Waxing Gibbous</text>
+ <text x="19" y="516" class="small">Moonrise · provider event instant</text>
+ <rect x="18" y="536" width="342" height="34" rx="17" class="pill"/>
+ <text x="30" y="558" class="small">At horizon · largest visual cue</text>
+</g>
+
+<!-- Phone state 3 -->
+<g transform="translate(910 172)">
+ <rect width="378" height="590" rx="26" class="phone"/>
+ <text x="18" y="32" class="label">BETWEEN EVENTS · CLOUD OVERLAP</text>
+ <g clip-path="url(#screen)">
+  <rect x="18" y="56" width="342" height="404" fill="url(#night)"/>
+  <circle cx="104" cy="112" r="2" fill="#dce8f1"/>
+  <circle cx="210" cy="216" r="20" class="bright"/>
+  <path fill="#aabac4" d="M145 198c5-17 24-22 38-13 8-18 34-17 42 2 18-8 38 5 38 23h-118c-9 0-13-6-13-12z" opacity=".95"/>
+  <path fill="#7995ae" d="M18 383h35v-44h28v31h24v-61h34v62h27v-38h28v44h27v-74h36v65h25v-48h25v63h35v40H18z"/>
+  <path fill="#263f59" d="M18 423h342v37H18z"/>
+  <text x="33" y="446" fill="#fff" font-size="12" font-family="sans-serif">Thu · 12:20 AM CDT</text>
+ </g>
+ <circle cx="31" cy="484" r="10" fill="#53616c" stroke="#d8e2e5" stroke-width="2"/><circle cx="31" cy="484" r="3" fill="#f6e4b5"/>
+ <text x="50" y="489" class="body">Waxing Gibbous</text>
+ <text x="19" y="516" class="small">High path · smaller than horizon cue</text>
+ <rect x="18" y="536" width="342" height="34" rx="17" class="pill"/>
+ <text x="30" y="558" class="small">Illustrative scale · no measured size claim</text>
+</g>
+
+<!-- Phone state 4 -->
+<g transform="translate(1338 172)">
+ <rect width="378" height="590" rx="26" class="phone"/>
+ <text x="18" y="32" class="label">INDEPENDENTLY MISSING INPUTS</text>
+ <g clip-path="url(#screen)">
+  <rect x="18" y="56" width="342" height="404" fill="url(#dusk)"/>
+  <path fill="#7995ae" d="M18 383h35v-44h28v31h24v-61h34v62h27v-38h28v44h27v-74h36v65h25v-48h25v63h35v40H18z"/>
+  <path fill="#263f59" d="M18 423h342v37H18z"/>
+  <text x="33" y="446" fill="#fff" font-size="12" font-family="sans-serif">Thu · 7:15 PM CDT</text>
+ </g>
+ <text x="19" y="489" class="body">Moon phase unavailable</text>
+ <text x="19" y="516" class="small">Moonrise 8:41 PM · event still known</text>
+ <rect x="18" y="536" width="342" height="34" rx="17" class="pill"/>
+ <text x="30" y="558" class="small">No phase guessed; event remains visible</text>
+</g>
+
+<rect x="54" y="800" width="862" height="320" rx="22" class="card"/>
+<text x="82" y="844" class="label">PHASE CUE · PROPOSED STYLE</text>
+<text x="82" y="880" class="body">Use a calm, compact phase token beside explicit stage text.</text>
+<text x="82" y="912" class="body">Waxing / waning wording carries direction; the glyph does not claim</text>
+<text x="82" y="944" class="body">hemisphere-specific illumination orientation or exact phase timing.</text>
+<text x="82" y="992" class="small">Approved art direction: stage text; neutral phase-cycle marker.</text>
+<text x="82" y="1020" class="small">Eight-stage cycle marker; position is a phase index, not Moon orientation.</text>
+<g fill="#53616c" stroke="#a8bac4" stroke-width="2">
+ <circle cx="116" cy="1058" r="17"/><circle cx="212" cy="1058" r="17"/><circle cx="308" cy="1058" r="17"/><circle cx="404" cy="1058" r="17"/>
+ <circle cx="500" cy="1058" r="17"/><circle cx="596" cy="1058" r="17"/><circle cx="692" cy="1058" r="17"/><circle cx="788" cy="1058" r="17"/>
+</g>
+<g fill="#f6e4b5">
+ <circle cx="116" cy="1043" r="4"/><circle cx="222.6" cy="1047.4" r="4"/><circle cx="319" cy="1047" r="4"/><circle cx="414.6" cy="1047.4" r="4"/>
+ <circle cx="500" cy="1043" r="4"/><circle cx="584" cy="1047.4" r="4"/><circle cx="679" cy="1047" r="4"/><circle cx="773.4" cy="1047.4" r="4"/>
+</g>
+<g class="small" text-anchor="middle">
+ <text x="116" y="1090">New moon</text>
+ <text x="212" y="1086">Waxing</text><text x="212" y="1102">crescent</text>
+ <text x="308" y="1090">First quarter</text>
+ <text x="404" y="1086">Waxing</text><text x="404" y="1102">gibbous</text>
+ <text x="500" y="1090">Full moon</text>
+ <text x="596" y="1086">Waning</text><text x="596" y="1102">gibbous</text>
+ <text x="692" y="1090">Last quarter</text>
+ <text x="788" y="1086">Waning</text><text x="788" y="1102">crescent</text>
+</g>
+
+<rect x="946" y="800" width="770" height="320" rx="22" class="card"/>
+<text x="974" y="844" class="label">VISUAL + BEHAVIOR BOUNDARIES</text>
+<text x="974" y="880" class="body">• Horizon crossings land on provider moonrise / moonset instants.</text>
+<text x="974" y="908" class="body">• Between known rise→set events, path motion is illustrative.</text>
+<text x="974" y="936" class="body">• Cue grows near horizons and shrinks high on the path, like the Sun.</text>
+<text x="974" y="964" class="body">• Size is style only; it does not claim actual diameter or altitude.</text>
+<text x="974" y="992" class="body">• Phase follows selected local date; no invented intraday change.</text>
+<text x="974" y="1020" class="body">• Missing phase/event stay independent; clouds never move their times.</text>
+<text x="974" y="1048" class="body">• If an event is unavailable, retain any known phase cue.</text>
+<text x="974" y="1082" class="small">Portrait concept states · final installed layout is subject to scoped review.</text>
+<text x="1812" y="1162" class="small" text-anchor="end">Owner approved 2026-11-02 · installed acceptance remains required.</text>
+</svg>

@@ -105,6 +105,9 @@ fun CatalogAtmosphericScene(
                     }
                 }
                 FirstCityLayer.BACKGROUND_ARCHITECTURE -> drawAlignedLayer(architecture)
+                FirstCityLayer.LUNAR_CUE -> if (composition.moonCue.visible) {
+                    drawCityTimeCue(composition.moonCue, composition.treatment)
+                }
                 FirstCityLayer.CLOUDS -> clipRect(
                     left = 0f,
                     top = 0f,
@@ -127,7 +130,9 @@ fun CatalogAtmosphericScene(
                 FirstCityLayer.TIME_WASH -> drawCityTimeWash(composition.treatment)
                 FirstCityLayer.READOUT_QUIET_ZONE -> drawCityReadoutQuietZone()
                 FirstCityLayer.WINDOW_LIGHTS -> if (!omitOptionalCityLayers) drawCityWindowLights()
-                FirstCityLayer.TIME_CUE -> drawCityTimeCue(composition.cue, composition.treatment)
+                FirstCityLayer.TIME_CUE -> {
+                    if (composition.cue.visible) drawCityTimeCue(composition.cue, composition.treatment)
+                }
                 FirstCityLayer.PRECIPITATION -> {
                     drawRect(
                         brush = Brush.verticalGradient(

@@ -44,7 +44,10 @@ object RecordedCatalogCodec {
         val catalog = recording.catalog
         val root = mapper.createObjectNode()
         val hasSolarEvents = catalog.dailySummaries.any { it.sunriseInstant != null || it.sunsetInstant != null }
+        val hasLunarData = catalog.dailySummaries.any { it.moonriseInstant != null || it.moonsetInstant != null || it.moonPhase != null } ||
+            recording.dailyExpectedSupport.values.any { fields -> fields.any { it in setOf(DailyCatalogField.MOONRISE, DailyCatalogField.MOONSET, DailyCatalogField.MOON_PHASE) } }
         val version = when {
+            hasLunarData -> 4
             catalog.productSegments.isEmpty() && catalog.dailySummaries.isEmpty() && recording.dailyExpectedSupport.isEmpty() -> 1
             hasSolarEvents -> 3
             else -> 2
@@ -121,6 +124,11 @@ object RecordedCatalogCodec {
                         putNullable("sunriseInstant", summary.sunriseInstant?.toString())
                         putNullable("sunsetInstant", summary.sunsetInstant?.toString())
                     }
+                    if (version >= 4) {
+                        putNullable("moonriseInstant", summary.moonriseInstant?.toString())
+                        putNullable("moonsetInstant", summary.moonsetInstant?.toString())
+                        putNumber("moonPhase", summary.moonPhase)
+                    }
                     put("origin", summary.origin.name)
                 }) }
             })
@@ -147,7 +155,7 @@ object RecordedCatalogCodec {
             return RecordingDecodeResult.Failure(RecordingError.MALFORMED, "schemaVersion must be an integer")
         }
         val version = root["schemaVersion"].takeIf { it.canConvertToInt() }?.intValue() ?: 0
-        if (version !in 1..3) {
+        if (version !in 1..4) {
             return RecordingDecodeResult.Failure(RecordingError.UNSUPPORTED_VERSION, "Unsupported schemaVersion")
         }
         return try {
@@ -176,7 +184,11 @@ object RecordedCatalogCodec {
                     enum(node.required("productKind")), node.required("sourceId").nullableString(), node.required("productId").nullableString(), node.required("issuedAt").nullableString()?.let(Instant::parse))
             } else emptyList()
             val summaries = if (version >= 2) root.required("dailySummaries").array().map { node ->
-                node.fieldsExact(*(if (version == 2) arrayOf("date", "support", "temperatureMaxC", "temperatureMinC", "precipitationProbabilityMaxPercent", "conditions", "phenomena", "rainAmountMillimeters", "totalPrecipitationMillimeters", "snowfallCentimeters", "origin") else arrayOf("date", "support", "temperatureMaxC", "temperatureMinC", "precipitationProbabilityMaxPercent", "conditions", "phenomena", "rainAmountMillimeters", "totalPrecipitationMillimeters", "snowfallCentimeters", "sunriseInstant", "sunsetInstant", "origin")))
+                node.fieldsExact(*(when (version) {
+                    2 -> arrayOf("date", "support", "temperatureMaxC", "temperatureMinC", "precipitationProbabilityMaxPercent", "conditions", "phenomena", "rainAmountMillimeters", "totalPrecipitationMillimeters", "snowfallCentimeters", "origin")
+                    3 -> arrayOf("date", "support", "temperatureMaxC", "temperatureMinC", "precipitationProbabilityMaxPercent", "conditions", "phenomena", "rainAmountMillimeters", "totalPrecipitationMillimeters", "snowfallCentimeters", "sunriseInstant", "sunsetInstant", "origin")
+                    else -> arrayOf("date", "support", "temperatureMaxC", "temperatureMinC", "precipitationProbabilityMaxPercent", "conditions", "phenomena", "rainAmountMillimeters", "totalPrecipitationMillimeters", "snowfallCentimeters", "sunriseInstant", "sunsetInstant", "moonriseInstant", "moonsetInstant", "moonPhase", "origin")
+                }))
                 val conditions = node.required("conditions").array().map { enum<WeatherCondition>(it) }
                 val phenomena = node.required("phenomena").array().map { enum<WeatherPhenomenon>(it) }
                 require(conditions.size == conditions.distinct().size && phenomena.size == phenomena.distinct().size) { "Duplicate daily enum value" }
@@ -193,6 +205,9 @@ object RecordedCatalogCodec {
                     snowfallCentimeters = node.required("snowfallCentimeters").nullableNumber(),
                     sunriseInstant = if (version >= 3) node.required("sunriseInstant").nullableString()?.let(Instant::parse) else null,
                     sunsetInstant = if (version >= 3) node.required("sunsetInstant").nullableString()?.let(Instant::parse) else null,
+                    moonriseInstant = if (version >= 4) node.required("moonriseInstant").nullableString()?.let(Instant::parse) else null,
+                    moonsetInstant = if (version >= 4) node.required("moonsetInstant").nullableString()?.let(Instant::parse) else null,
+                    moonPhase = if (version >= 4) node.required("moonPhase").nullableNumber() else null,
                     origin = enum(node.required("origin")),
                 )
             } else emptyList()

@@ -42,6 +42,10 @@ data class ScenePoint<T>(
     val representativeCell: RepresentativeCell?,
 )
 
+enum class LunarEventKind { RISE, SET }
+data class LunarEvent(val date: LocalDate, val kind: LunarEventKind, val instant: Instant)
+data class LunarDayFacts(val date: LocalDate, val phase: Double?, val rise: Instant?, val set: Instant?)
+
 /** A typed interval value retaining the source's exact half-open bounds and valid time. */
 data class SceneInterval<T>(
     val sourceBounds: AccumulationInterval,
@@ -63,6 +67,8 @@ data class SceneReading(
     val snowfall: SceneInterval<AccumulatedSnowfallCentimeters>? = null,
     val lightInterval: LightInterval,
     val solarEvents: SolarDayEvents? = null,
+    val lunarDay: LunarDayFacts? = null,
+    val lunarEvents: List<LunarEvent> = emptyList(),
 ) {
     /** Compatibility constructor for existing theme-only callers that supply no weather tracks. */
     @Deprecated("Catalog weather values are carried by the typed SceneReading fields")
@@ -102,6 +108,8 @@ class SemanticScenePlan internal constructor(
     private val snowfall: List<SceneInterval<AccumulatedSnowfallCentimeters>>,
     private val lightIntervals: List<LightInterval>,
     private val solarEventsByDate: Map<LocalDate, SolarDayEvents>,
+    private val lunarDaysByDate: Map<LocalDate, LunarDayFacts>,
+    private val lunarEvents: List<LunarEvent>,
 ) {
     fun evaluate(selectedInstant: Instant): SceneReading {
         require(selectedInstant >= windowStart && selectedInstant < windowEnd)
@@ -119,6 +127,8 @@ class SemanticScenePlan internal constructor(
                 selectedInstant >= it.startInclusive && selectedInstant < it.endExclusive
             }),
             solarEvents = solarEventsByDate[selectedInstant.atZone(zoneId).toLocalDate()],
+            lunarDay = lunarDaysByDate[selectedInstant.atZone(zoneId).toLocalDate()],
+            lunarEvents = lunarEvents,
         )
     }
 }
@@ -153,6 +163,13 @@ object SemanticSceneGenerator {
         val solarEventsByDate = catalog.dailySummaries.associate { summary ->
             summary.date to SolarDayEvents(summary.date, summary.sunriseInstant, summary.sunsetInstant)
         }
+        val lunarDaysByDate = catalog.dailySummaries.associate { summary ->
+            summary.date to LunarDayFacts(summary.date, summary.moonPhase, summary.moonriseInstant, summary.moonsetInstant)
+        }
+        val lunarEvents = catalog.dailySummaries.flatMap { summary -> listOfNotNull(
+            summary.moonriseInstant?.let { LunarEvent(summary.date, LunarEventKind.RISE, it) },
+            summary.moonsetInstant?.let { LunarEvent(summary.date, LunarEventKind.SET, it) },
+        ) }.sortedBy { it.instant }
         val lights = lightIntervals(start, end, window.zoneId, solarEventsByDate)
         val canonical = buildString {
             append(VERSION).append('|').append(catalog.datasetId.value).append('|')
@@ -162,7 +179,7 @@ object SemanticSceneGenerator {
             append(conditions).append('|').append(phenomena).append('|').append(cloudCoverPercent).append('|')
             append(precipitationChancePercent).append('|').append(precipitationRate).append('|')
             append(rainAmount).append('|').append(totalPrecipitation).append('|').append(snowfall).append('|')
-            append(lights).append('|').append(solarEventsByDate)
+            append(lights).append('|').append(solarEventsByDate).append('|').append(lunarDaysByDate).append('|').append(lunarEvents)
             // Non-scene catalog changes still identify a new snapshot.
             append('|').append(catalog.facts.map { it.toString() }).append('|').append(catalog.dailySummaries)
         }
@@ -183,6 +200,8 @@ object SemanticSceneGenerator {
             snowfall = snowfall,
             lightIntervals = lights,
             solarEventsByDate = solarEventsByDate,
+            lunarDaysByDate = lunarDaysByDate,
+            lunarEvents = lunarEvents,
         )
     }
 }

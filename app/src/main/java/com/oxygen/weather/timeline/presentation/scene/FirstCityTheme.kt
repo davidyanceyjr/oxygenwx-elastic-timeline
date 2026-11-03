@@ -86,12 +86,20 @@ object FirstCityTheme {
             position = position,
             scale = cueScale(reading, zone, treatment),
             kind = if (treatment == CityTreatment.NIGHT) CityCueKind.MOON else CityCueKind.SUN,
-            visible = position != null && precipitation != CityPrecipitation.RAIN,
+            visible = position != null && treatment != CityTreatment.NIGHT && precipitation != CityPrecipitation.RAIN,
+        )
+        val moonPosition = lunarPosition(reading)
+        val moonCue = CityCueDecision(
+            position = moonPosition,
+            scale = lunarScale(reading),
+            kind = CityCueKind.MOON,
+            visible = moonPosition != null,
         )
         val hasWeatherState = sky != null || clouds.visible || precipitation != CityPrecipitation.NONE
         val layerOrder = buildList {
             add(FirstCityLayer.SKY)
             add(FirstCityLayer.BACKGROUND_ARCHITECTURE)
+            if (moonCue.visible) add(FirstCityLayer.LUNAR_CUE)
             if (clouds.visible) add(FirstCityLayer.CLOUDS)
             add(FirstCityLayer.FOREGROUND_ARCHITECTURE)
             add(FirstCityLayer.CANOPY)
@@ -108,6 +116,7 @@ object FirstCityTheme {
             treatment = treatment,
             sky = sky,
             cue = cue,
+            moonCue = moonCue,
             clouds = clouds,
             precipitation = precipitation,
             hasWeatherState = hasWeatherState,
@@ -148,6 +157,36 @@ object FirstCityTheme {
             ((reading.selectedInstant.epochSecond - sunrise.epochSecond).toDouble() /
                 (sunset.epochSecond - sunrise.epochSecond).toDouble()).coerceIn(0.0, 1.0).toFloat()
         }
+        return 1.28f - .48f * kotlin.math.sin(progress * Math.PI).toFloat()
+    }
+
+    fun phaseLabel(phase: Double?): String? {
+        if (phase == null || !phase.isFinite() || phase !in 0.0..1.0) return null
+        val stages = listOf("New Moon", "Waxing Crescent", "First Quarter", "Waxing Gibbous", "Full Moon", "Waning Gibbous", "Last Quarter", "Waning Crescent")
+        val index = kotlin.math.floor(phase * 8.0 + .5).toInt() % 8
+        return stages[index]
+    }
+
+    fun lunarPosition(reading: SceneReading): Pair<Float, Float>? {
+        val events = reading.lunarEvents
+        events.firstOrNull { it.instant == reading.selectedInstant }?.let { event ->
+            return (if (event.kind == LunarEventKind.RISE) .12f else .88f) to .42f
+        }
+        val before = events.lastOrNull { it.instant < reading.selectedInstant } ?: return null
+        val after = events.firstOrNull { it.instant > reading.selectedInstant } ?: return null
+        if (before.kind != LunarEventKind.RISE || after.kind != LunarEventKind.SET) return null
+        val progress = ((reading.selectedInstant.epochSecond - before.instant.epochSecond).toDouble() /
+            (after.instant.epochSecond - before.instant.epochSecond).toDouble()).coerceIn(0.0, 1.0).toFloat()
+        return (.12f + .76f * progress) to (.42f - .24f * kotlin.math.sin(progress * Math.PI).toFloat())
+    }
+
+    fun lunarScale(reading: SceneReading): Float {
+        val events = reading.lunarEvents
+        val before = events.lastOrNull { it.instant <= reading.selectedInstant } ?: return 1.28f
+        val after = events.firstOrNull { it.instant >= reading.selectedInstant } ?: return 1.28f
+        if (before.kind != LunarEventKind.RISE || after.kind != LunarEventKind.SET || before.instant == after.instant) return 1.28f
+        val progress = ((reading.selectedInstant.epochSecond - before.instant.epochSecond).toDouble() /
+            (after.instant.epochSecond - before.instant.epochSecond).toDouble()).coerceIn(0.0, 1.0).toFloat()
         return 1.28f - .48f * kotlin.math.sin(progress * Math.PI).toFloat()
     }
 

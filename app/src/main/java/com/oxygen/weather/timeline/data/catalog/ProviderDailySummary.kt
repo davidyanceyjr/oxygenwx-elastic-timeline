@@ -6,9 +6,10 @@ import java.time.LocalDate
 enum class DailyCatalogField {
     TEMPERATURE_MAX_C, TEMPERATURE_MIN_C, PRECIPITATION_PROBABILITY_MAX_PERCENT,
     CONDITIONS, PHENOMENA, RAIN_AMOUNT, TOTAL_PRECIPITATION, SNOWFALL, SUNRISE, SUNSET,
+    MOONRISE, MOONSET, MOON_PHASE,
 }
 
-/** Provider-supplied day-level values. Support always spans the real IANA local calendar day. */
+/** Provider-supplied day-level values. Daily support spans the real IANA local day; event Instants remain absolute and may cross midnight. */
 data class ProviderDailySummary(
     val date: LocalDate,
     val support: AccumulationInterval,
@@ -22,6 +23,9 @@ data class ProviderDailySummary(
     val snowfallCentimeters: Double? = null,
     val sunriseInstant: Instant? = null,
     val sunsetInstant: Instant? = null,
+    val moonriseInstant: Instant? = null,
+    val moonsetInstant: Instant? = null,
+    val moonPhase: Double? = null,
     val origin: DailyValueOrigin = DailyValueOrigin.PROVIDER_SUPPLIED,
 ) {
     init {
@@ -34,6 +38,7 @@ data class ProviderDailySummary(
         require(sunriseInstant == null || sunriseInstant >= support.start && sunriseInstant < support.end)
         require(sunsetInstant == null || sunsetInstant >= support.start && sunsetInstant < support.end)
         require(sunriseInstant == null || sunsetInstant == null || sunriseInstant < sunsetInstant)
+        require(moonPhase == null || moonPhase.isFinite() && moonPhase in 0.0..1.0)
     }
 
     fun has(field: DailyCatalogField): Boolean = when (field) {
@@ -47,6 +52,9 @@ data class ProviderDailySummary(
         DailyCatalogField.SNOWFALL -> snowfallCentimeters != null
         DailyCatalogField.SUNRISE -> sunriseInstant != null
         DailyCatalogField.SUNSET -> sunsetInstant != null
+        DailyCatalogField.MOONRISE -> moonriseInstant != null
+        DailyCatalogField.MOONSET -> moonsetInstant != null
+        DailyCatalogField.MOON_PHASE -> moonPhase != null
     }
 }
 

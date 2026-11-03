@@ -179,6 +179,9 @@ object OpenMeteoCatalogMapper {
                         snowfallCentimeters = values["snowfall_sum"],
                         sunriseInstant = values["sunrise"]?.let { it.toEventInstant("sunrise", date) },
                         sunsetInstant = values["sunset"]?.let { it.toEventInstant("sunset", date) },
+                        moonriseInstant = values["moonrise"]?.let { it.toEventInstant("moonrise", date) },
+                        moonsetInstant = values["moonset"]?.let { it.toEventInstant("moonset", date) },
+                        moonPhase = values["moon_phase"]?.also { require(it in 0.0..1.0) { "moon_phase on $date must be in [0, 1]" } },
                     )
                 } catch (e: Exception) { throw IllegalArgumentException("Invalid daily value on $date: ${e.message}") }
             }
@@ -290,6 +293,8 @@ object OpenMeteoCatalogMapper {
     private fun dailyUnit(name: String): String = when (name) {
         "time" -> "unixtime"
         "sunrise", "sunset" -> "unixtime"
+        "moonrise", "moonset" -> "unixtime"
+        "moon_phase" -> "fraction"
         "weather_code" -> "wmo code"
         "temperature_2m_max", "temperature_2m_min" -> "°C"
         "precipitation_probability_max" -> "%"
@@ -302,6 +307,6 @@ object OpenMeteoCatalogMapper {
     private fun JsonNode.requiredText(name: String): String = required(name).takeIf { it.isTextual }?.asText() ?: error("$name must be text")
     private fun JsonNode.requiredLong(name: String): Long = required(name).takeIf { it.isIntegralNumber && it.canConvertToLong() }?.longValue() ?: error("$name must be an integer")
     private fun JsonNode.longArray(): List<Long> { require(isArray); return map { it.takeIf { n -> n.isIntegralNumber && n.canConvertToLong() }?.longValue() ?: error("time values must be integer Unix seconds") } }
-    private val DAILY_EXPECTED = setOf(DailyCatalogField.TEMPERATURE_MAX_C, DailyCatalogField.TEMPERATURE_MIN_C, DailyCatalogField.PRECIPITATION_PROBABILITY_MAX_PERCENT, DailyCatalogField.CONDITIONS, DailyCatalogField.PHENOMENA, DailyCatalogField.RAIN_AMOUNT, DailyCatalogField.TOTAL_PRECIPITATION, DailyCatalogField.SNOWFALL, DailyCatalogField.SUNRISE, DailyCatalogField.SUNSET)
+    private val DAILY_EXPECTED = setOf(DailyCatalogField.TEMPERATURE_MAX_C, DailyCatalogField.TEMPERATURE_MIN_C, DailyCatalogField.PRECIPITATION_PROBABILITY_MAX_PERCENT, DailyCatalogField.CONDITIONS, DailyCatalogField.PHENOMENA, DailyCatalogField.RAIN_AMOUNT, DailyCatalogField.TOTAL_PRECIPITATION, DailyCatalogField.SNOWFALL, DailyCatalogField.SUNRISE, DailyCatalogField.SUNSET, DailyCatalogField.MOONRISE, DailyCatalogField.MOONSET, DailyCatalogField.MOON_PHASE)
     const val SOURCE_ID = "open-meteo-forecast-api"
 }

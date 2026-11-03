@@ -1,0 +1,107 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1800" height="1200" viewBox="0 0 1800 1200" role="img" aria-labelledby="title desc">
+<title id="title">SG.8 lunar events and phases behavior board</title>
+<desc id="desc">Owner-approved behavior board showing the Open-Meteo daily lunar data path, selected-time event and phase tracks, eight-stage mapping, missing value behavior, and approved constraints.</desc>
+<defs>
+ <linearGradient id="bg" x2="1" y2="1"><stop stop-color="#0b1725"/><stop offset="1" stop-color="#102b3b"/></linearGradient>
+ <marker id="arrow" markerWidth="10" markerHeight="10" refX="8" refY="5" orient="auto"><path d="M0 0L10 5L0 10Z" fill="#6fd4bd"/></marker>
+ <style>
+  text{font-family:Inter,'DejaVu Sans',sans-serif;fill:#edf4f7}.title{font-size:38px;font-weight:750}.subtitle{font-size:17px;fill:#abc0cc}
+  .eyebrow{font-size:14px;font-weight:700;letter-spacing:1.4px}.head{font-size:22px;font-weight:700}.body{font-size:17px}.small{font-size:14px}.tiny{font-size:12px}
+  .mint{fill:#7be0c9}.blue{fill:#a6caff}.amber{fill:#f2bd78}.muted{fill:#abc0cc}.red{fill:#efaaa1}
+  .panel{fill:#132c3c;stroke:#375a6c;stroke-width:2}.card{fill:#19384a;stroke:#42687a;stroke-width:2}.soft{fill:#102637;stroke:#355768;stroke-width:1.5}
+  .flow{stroke:#6fd4bd;stroke-width:3;fill:none;marker-end:url(#arrow)}
+ </style>
+</defs>
+<rect width="1800" height="1200" fill="url(#bg)"/>
+<circle cx="1700" cy="80" r="190" fill="#1b3a49" opacity=".32"/>
+<text x="58" y="42" class="eyebrow mint">OXYGEN · SCENE GENERATION · SG.8</text>
+<text x="58" y="91" class="title">Moon events follow selected time; phase stays a daily fact.</text>
+<text x="60" y="124" class="subtitle">Sun-like event contract, lunar-specific phase track · owner approved 2026-11-02</text>
+<rect x="1450" y="36" width="290" height="42" rx="21" fill="#153e3c" stroke="#4eb7a4" stroke-width="1.5"/>
+<text x="1595" y="63" class="eyebrow mint" text-anchor="middle">OWNER APPROVED</text>
+
+<rect x="55" y="151" width="1690" height="272" rx="22" class="panel"/>
+<text x="82" y="190" class="eyebrow mint">01 · DATA TO SELECTED-TIME SCENE</text>
+<g>
+ <rect x="82" y="213" width="300" height="112" rx="15" class="card"/>
+ <text x="104" y="245" class="eyebrow blue">DAILY PROVIDER VALUES</text>
+ <text x="104" y="276" class="body">moonrise · moonset · phase</text>
+ <text x="104" y="304" class="small muted">Date rows + location timezone</text>
+ <path d="M392 269h46" class="flow"/>
+ <rect x="452" y="213" width="324" height="112" rx="15" class="card"/>
+ <text x="474" y="245" class="eyebrow blue">CANONICAL DAILY SUMMARY</text>
+ <text x="474" y="276" class="body">Optional typed fields</text>
+ <text x="474" y="304" class="small muted">Absolute event Instants · phase value</text>
+ <path d="M786 269h46" class="flow"/>
+ <rect x="846" y="213" width="316" height="112" rx="15" class="card"/>
+ <text x="868" y="245" class="eyebrow blue">CATALOG + REPLAY</text>
+ <text x="868" y="276" class="body">Preserve supplied values</text>
+ <text x="868" y="304" class="small muted">Older snapshots decode as unavailable</text>
+ <path d="M1172 269h46" class="flow"/>
+ <rect x="1232" y="213" width="480" height="112" rx="15" class="card"/>
+ <text x="1254" y="245" class="eyebrow blue">SHARED SCENE READING</text>
+ <text x="1254" y="276" class="body">Selected Instant + active location zone</text>
+ <text x="1254" y="304" class="small muted">Resolve local date; Moon, Sun, weather stay independent</text>
+</g>
+<rect x="82" y="345" width="1630" height="53" rx="13" class="soft"/>
+<text x="104" y="378" class="body"><tspan class="amber">TIMELINE AUTHORITY</tspan><tspan dx="18">Scrub, animation, theme, loading, and phase art never change the selected Instant.</tspan></text>
+
+<rect x="55" y="443" width="810" height="365" rx="22" class="panel"/>
+<text x="82" y="482" class="eyebrow mint">02 · EVENT TRACK · EXACT CROSSINGS, ILLUSTRATIVE PATH</text>
+<rect x="82" y="507" width="756" height="88" rx="14" class="card"/>
+<text x="105" y="539" class="eyebrow blue">CHRONOLOGICAL EVENT STREAM</text>
+<text x="105" y="572" class="body">prior rise → supplied set → supplied rise → next set</text>
+<path d="M128 635h660" stroke="#6f8da0" stroke-width="4"/>
+<circle cx="156" cy="635" r="11" fill="#f2bd78"/><circle cx="358" cy="635" r="11" fill="#a6caff"/>
+<circle cx="560" cy="635" r="11" fill="#f2bd78"/><circle cx="762" cy="635" r="11" fill="#a6caff"/>
+<text x="156" y="671" class="small amber" text-anchor="middle">RISE</text><text x="358" y="671" class="small blue" text-anchor="middle">SET</text>
+<text x="560" y="671" class="small amber" text-anchor="middle">RISE</text><text x="762" y="671" class="small blue" text-anchor="middle">SET</text>
+<text x="105" y="712" class="body">Each horizon crossing lands on its provider event Instant.</text>
+<text x="105" y="741" class="small muted">Pair across local-date boundaries when needed; draw only a span bounded</text>
+<text x="105" y="765" class="small muted">by known rise then set. Cue is Sun-like: largest near horizons, smallest high on path.</text>
+<text x="105" y="790" class="tiny amber">Scale is illustrative; unresolved event history gives no Moon position or size claim.</text>
+
+<rect x="885" y="443" width="860" height="365" rx="22" class="panel"/>
+<text x="912" y="482" class="eyebrow mint">03 · DAILY PHASE TRACK · PROPOSED EIGHT-STAGE BINS</text>
+<text x="912" y="520" class="body">Use the provider's daily cycle fraction for the selected local date.</text>
+<text x="912" y="549" class="small muted">Equal-width bins centered on these conventional landmarks; endpoints wrap.</text>
+<g>
+ <rect x="912" y="575" width="93" height="72" rx="12" class="card"/><text x="958" y="607" class="eyebrow amber" text-anchor="middle">0.000</text><text x="958" y="632" class="tiny" text-anchor="middle">NEW</text>
+ <rect x="1010" y="575" width="93" height="72" rx="12" class="card"/><text x="1056" y="607" class="eyebrow amber" text-anchor="middle">0.125</text><text x="1056" y="632" class="tiny" text-anchor="middle">WAX CRES</text>
+ <rect x="1108" y="575" width="93" height="72" rx="12" class="card"/><text x="1154" y="607" class="eyebrow amber" text-anchor="middle">0.250</text><text x="1154" y="632" class="tiny" text-anchor="middle">1ST QTR</text>
+ <rect x="1206" y="575" width="93" height="72" rx="12" class="card"/><text x="1252" y="607" class="eyebrow amber" text-anchor="middle">0.375</text><text x="1252" y="632" class="tiny" text-anchor="middle">WAX GIB</text>
+ <rect x="1304" y="575" width="93" height="72" rx="12" class="card"/><text x="1350" y="607" class="eyebrow amber" text-anchor="middle">0.500</text><text x="1350" y="632" class="tiny" text-anchor="middle">FULL</text>
+ <rect x="1402" y="575" width="93" height="72" rx="12" class="card"/><text x="1448" y="607" class="eyebrow amber" text-anchor="middle">0.625</text><text x="1448" y="632" class="tiny" text-anchor="middle">WAN GIB</text>
+ <rect x="1500" y="575" width="93" height="72" rx="12" class="card"/><text x="1546" y="607" class="eyebrow amber" text-anchor="middle">0.750</text><text x="1546" y="632" class="tiny" text-anchor="middle">LAST QTR</text>
+ <rect x="1598" y="575" width="93" height="72" rx="12" class="card"/><text x="1644" y="607" class="eyebrow amber" text-anchor="middle">0.875</text><text x="1644" y="632" class="tiny" text-anchor="middle">WAN CRES</text>
+</g>
+<text x="912" y="686" class="body">Stage stays constant through the selected local date; no intraday transition is inferred.</text>
+<text x="912" y="716" class="small muted">Proposed mapping only · neutral cycle marker + named stage avoids an unsupported</text>
+<text x="912" y="741" class="small muted">hemisphere-specific lit-side/orientation claim. Owner may approve or revise bins.</text>
+<text x="912" y="778" class="small red">Invalid / absent phase: no phase cue. Do not clamp or synthesize.</text>
+
+<rect x="55" y="829" width="810" height="277" rx="22" class="panel"/>
+<text x="82" y="868" class="eyebrow mint">04 · INDEPENDENT MISSINGNESS</text>
+<rect x="82" y="891" width="360" height="166" rx="14" class="card"/>
+<text x="104" y="924" class="eyebrow amber">PHASE KNOWN · EVENT MISSING</text>
+<text x="104" y="957" class="body">Keep named phase cue.</text>
+<text x="104" y="987" class="small muted">Omit unprovided Moon position</text>
+<text x="104" y="1014" class="small muted">and crossing claims.</text>
+<rect x="458" y="891" width="380" height="166" rx="14" class="card"/>
+<text x="480" y="924" class="eyebrow blue">EVENT KNOWN · PHASE MISSING</text>
+<text x="480" y="957" class="body">Keep supplied crossing.</text>
+<text x="480" y="987" class="small muted">No phase icon or stage label</text>
+<text x="480" y="1014" class="small muted">is invented.</text>
+<text x="82" y="1081" class="small muted">Null in one lunar field never clears or fabricates another.</text>
+
+<rect x="885" y="829" width="860" height="277" rx="22" class="panel"/>
+<text x="912" y="868" class="eyebrow mint">05 · SHARED INVARIANTS + OWNER REVIEW</text>
+<text x="912" y="906" class="body">• Replay preserves fields; older recordings decode lunar values as unavailable.</text>
+<text x="912" y="937" class="body">• Sun keeps SG.3 event times; Moon does not redefine daylight or weather.</text>
+<text x="912" y="968" class="body">• Text/accessibility states phase and event facts; art is not the fact source.</text>
+<text x="912" y="999" class="body">• Cloud overlap may hide art, never alter lunar event or phase data.</text>
+<rect x="912" y="1022" width="806" height="59" rx="12" fill="#153e3c" stroke="#4eb7a4" stroke-width="1.5"/>
+<text x="932" y="1047" class="small mint">APPROVED: eight phase bins · cross-date event pairing ·</text>
+<text x="932" y="1068" class="small mint">neutral phase marker · independent missingness · Sun-like scale.</text>
+<text x="1740" y="1160" class="small muted" text-anchor="end">Owner approved 2026-11-02 · installed acceptance remains required.</text>
+</svg>
