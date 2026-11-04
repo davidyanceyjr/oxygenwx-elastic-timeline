@@ -490,6 +490,42 @@ internal fun AuthoredCatalogLibrary(
                             error = null
                         }.onFailure { error = it.message ?: "Set a valid local date before loading the Visibility + Wind ranges." }
                     }) { Text("VISIBILITY + WIND RANGES", style = MaterialTheme.typography.labelMedium) }
+                    TextButton(onClick = {
+                        runCatching {
+                            val day = parseLocalDateTime(envelopeStart).toLocalDate()
+                            val start = day.atTime(8, 0)
+                            envelopeStart = start.toString()
+                            envelopeEnd = start.plusHours(8).toString()
+                            events.clear()
+                            events.addAll(DebugStormFallbackSymbolRangeFixture.events(start).map { event ->
+                                EventDraft(
+                                    start = event.startLocal.toString(),
+                                    end = event.endLocalExclusive.toString(),
+                                    conditions = emptySet(),
+                                    symbolId = event.symbolId,
+                                )
+                            })
+                            error = null
+                        }.onFailure { error = it.message ?: "Set a valid local date before loading the Storms + Fallback ranges." }
+                    }) { Text("STORMS + FALLBACK RANGES", style = MaterialTheme.typography.labelMedium) }
+                    TextButton(onClick = {
+                        runCatching {
+                            val day = parseLocalDateTime(envelopeStart).toLocalDate()
+                            val start = day.atTime(8, 0)
+                            envelopeStart = start.toString()
+                            envelopeEnd = start.plusHours(8).toString()
+                            events.clear()
+                            events.addAll(DebugAdditionalEventsSymbolRangeFixture.events(start).map { event ->
+                                EventDraft(
+                                    start = event.startLocal.toString(),
+                                    end = event.endLocalExclusive.toString(),
+                                    conditions = emptySet(),
+                                    symbolId = event.symbolId,
+                                )
+                            })
+                            error = null
+                        }.onFailure { error = it.message ?: "Set a valid local date before loading the Additional Events ranges." }
+                    }) { Text("ADDITIONAL EVENTS RANGES", style = MaterialTheme.typography.labelMedium) }
                     }
                 }
                 EventTimeline(envelopeStart, envelopeEnd, events)

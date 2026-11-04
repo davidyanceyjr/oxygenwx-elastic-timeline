@@ -17,6 +17,8 @@ Design and implementation slices do not run RTL, TalkBack, or broad system/envir
 
 WX.1, WX.2, WX.3, WX.5, WX.6, WX.9–WX.13, WX.13R, WX.15–WX.20, WX.22, WX.23, WX.24, WX.10R, WX.25, and WX.26 are `DONE`. WX.27 and WX.28 are `DEFERRED` until the product is finished and polished and release-readiness work is appropriate. WX.30 was cancelled by the owner on 2026-11-03 because no defect in the app's actual source path had been demonstrated; any future need must be planned as a new slice through the workflow. WX.31 remains `DEFERRED` pending a separately established need and workflow review. G.5, SG.0, SG.1, SG.2, SG.3, SG.4, SG.4a, SG.9, and BT.1 are `DONE`; cycle 079 was owner-accepted with unverified rain/unavailable-weather assigned to SG.4 and later SG slices, cycle 080 closed SG.3, cycle 081 closed SG.4 with focused installed evidence and owner-directed test limits, cycle 082 closed SG.4a with installed cloud-height evidence, and cycle 083 closed SG.9 with the typed catalog scene path and installed state comparisons. DFM.4.1–DFM.4.6 are `DONE` in cycles 085–090. **SG.5 is `DONE` in cycle 091;** SG.10 is `DONE` in cycle 092 with approved boards and installed evidence; SG.6 is `DEFERRED`, SG.7 remains `PLANNED` and depends on SG.6, and SG.8 is `DONE` in cycle 093 with approved boards, provider-boundary resolution, responsive compact layout, focused tests, and installed evidence. DFM.4's revised behavior/workbench and clean-main/readout artwork boards were approved on 2026-11-01, as recorded in the DFM.4 slice below; DFM.4.6 closed the split DFM.4 workstream in cycle 090 on 2026-11-02. The SG.5 behavior and UI artwork boards were approved on 2026-11-02; cycle 091 closed with installed evidence and scoped NOT RUN states recorded in its closeout and evidence README. SG.8 lunar work remains separate from SG.4; its approved board constraints and cycle plan are recorded below. Every unfinished slice requires its objective-specific behavior board and, for UI/visual work, UI artwork board(s) before its cycle plan can be finalized. The owner-directed P.2.16 correction is DONE in cycle 048. SG work does not depend on deferred release-readiness slices.
 
+WA.1–WA.6 are `DONE`; the six-row Weather Artwork sequence is complete.
+
 ### Owner-directed reprioritization — 2026-11-01
 
 DFM.4 was promoted from `PLANNED` to `NEXT` so the debug workbench and location-search command session can be completed before further UI-related slices. SG.5 was moved from `NEXT` to `PLANNED`; SG.6–SG.8 remain `PLANNED`. Existing slice dependencies are unchanged. At reprioritization, DFM.4's supplemental clean-main/readout artwork was still pending; the product owner subsequently approved the revised board set on 2026-11-01, as recorded in the DFM.4 slice below.
@@ -28,6 +30,12 @@ DFM.4 was promoted from `PLANNED` to `NEXT` so the debug workbench and location-
 **Owner-directed deferral and sequencing update — 2026-11-02:** The owner deferred SG.6. SG.7 remains ineligible because it depends on SG.6; SG.8 became the next eligible SG slice. The owner approved SG.8's behavior and UI artwork boards and requested activation of cycle 093.
 
 **Owner-directed cancellation — 2026-11-03:** The owner cancelled WX.30 before implementation because no defect in the app's actual source path had been demonstrated. Remove its plan and board artifacts and clear the current-cycle pointer; any future need must be assessed and planned as a new slice through the workflow. WX.31 is deferred until an independent provider/failover need is established and reviewed through that workflow.
+
+**Owner-directed sequencing update — 2026-11-03:** After WA.4 completed, the owner directed planning of WA.5. WA.5 is the sole `NEXT` slice; its dependency WA.4 is `DONE`, the shared behavior and UI artwork boards are approved, and WA.6 remains `PLANNED` behind WA.5.
+
+**Cycle execution update — 2026-11-03:** WA.5 completed in cycle 098 with installed Pixel 3 XL evidence for all eight Storms + Fallback symbols and a saved/reopened authored simulation. Scoped results and unrun checks are recorded in the cycle closeout and evidence README. WA.6 is now the sole `NEXT` slice.
+
+**Cycle execution update — 2026-11-03:** WA.6 completed in cycle 099 with installed Pixel 3 XL evidence for all eight Additional Events symbols and a saved/reopened authored simulation. Scoped results and unrun checks are recorded in the cycle closeout and evidence README. The six-row Weather Artwork sequence is complete; WA.6 is no longer NEXT.
 
 ## Build tooling
 
@@ -735,21 +743,21 @@ The WA workstream implements the full 48-symbol weather-event artwork catalog fr
 **Slice board(s):** Shared behavior/mapping board `.codex/concepts/WA.1-weather-symbol-library-behavior-board.md` and artwork board `Oxygen_forecast_weather_symbol_board.png`, both approved 2026-11-03. The behavior board governs the full 48-ID mapping contract; this slice implements only the Visibility + Wind row.
 **Evidence:** Cycle 097 archived plan `.codex/history/plans/097-wa4-visibility-wind-symbols.md`; installed artifacts `.codex/test-artifacts/097-wa4-visibility-wind-symbols/`; closeout `.codex/history/097-wa4-visibility-wind-symbols.md`.
 
-### WA.5 — Implement storm and fallback symbols — PLANNED
+### WA.5 — Implement storm and fallback symbols — DONE
 
 **Objective/scope:** Implement the fifth concept-board row: Thunderstorm, Thunderstorm with rain, Thunderstorm with hail, Thunderstorm with snow, Squall, Tropical cyclone, Tornado/funnel, and Condition unavailable. Keep unknown/unavailable distinct from clear and keep hazard artwork separate from official warning level or instructions.
 **Depends on:** WA.4.
 **Exit:** All eight entries resolve to scalable, documented artwork through the shared API; compound storm and fallback distinctions remain identifiable at intended sizes, with labels retaining precise meaning; unavailable never resolves to clear; scoped installed evidence covers this row and directly affected use.
 **Slice board(s):** Shared behavior/mapping board `.codex/concepts/WA.1-weather-symbol-library-behavior-board.md` and artwork board `Oxygen_forecast_weather_symbol_board.png`, both approved 2026-11-03. The behavior board governs the full 48-ID mapping contract; this slice implements only the Storms + Fallback row.
-**Evidence:** Allocate cycle-specific plan, artifact directory, and history record when planned.
+**Evidence:** Cycle 098 archived plan `.codex/history/plans/098-wa5-storm-fallback-symbols.md`; installed captures and scoped results `.codex/test-artifacts/098-wa5-storm-fallback-symbols/README.md`; closeout `.codex/history/098-wa5-storm-fallback-symbols.md`.
 
-### WA.6 — Implement additional-event symbols — PLANNED
+### WA.6 — Implement additional-event symbols — DONE
 
 **Objective/scope:** Implement the sixth concept-board row: Dry thunderstorm, Tropical storm, Waterspout, Frost, Extreme heat, Extreme cold, Dust/sandstorm, and Volcanic ash. Preserve event names and avoid interpreting artwork as an official alert or as unsupported measurements.
 **Depends on:** WA.5.
 **Exit:** All eight entries resolve to scalable, documented artwork through the shared API; event distinctions remain identifiable at intended sizes, with labels retaining precise meaning; scoped installed evidence covers this row and directly affected use.
 **Slice board(s):** Shared behavior/mapping board `.codex/concepts/WA.1-weather-symbol-library-behavior-board.md` and artwork board `Oxygen_forecast_weather_symbol_board.png`, both approved 2026-11-03. The behavior board governs the full 48-ID mapping contract; this slice implements only the Additional Events row.
-**Evidence:** Allocate cycle-specific plan, artifact directory, and history record when planned.
+**Evidence:** Cycle 099 closeout `.codex/history/099-wa6-additional-event-symbols.md`; installed captures and scoped results `.codex/test-artifacts/099-wa6-additional-event-symbols/README.md`; archived plan `.codex/history/plans/099-wa6-additional-event-symbols.md`.
 
 ## SG — Scene Generation
 
