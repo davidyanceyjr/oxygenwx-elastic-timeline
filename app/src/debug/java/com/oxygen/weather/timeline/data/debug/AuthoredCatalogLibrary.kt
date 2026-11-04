@@ -404,7 +404,7 @@ internal fun AuthoredCatalogLibrary(
                     horizontalArrangement = Arrangement.SpaceBetween,
                 ) {
                     SectionTitle("STEP 2", "PLACE SUPPORTED EVENTS")
-                    Row {
+                    Column(horizontalAlignment = Alignment.End) {
                     TextButton(onClick = {
                         runCatching {
                             val envelopeEndTime = parseLocalDateTime(envelopeEnd)
@@ -436,6 +436,24 @@ internal fun AuthoredCatalogLibrary(
                             error = null
                         }.onFailure { error = it.message ?: "Set a valid local date before loading the Sky review ranges." }
                     }) { Text("8 SYMBOL RANGES", style = MaterialTheme.typography.labelMedium) }
+                    TextButton(onClick = {
+                        runCatching {
+                            val day = parseLocalDateTime(envelopeStart).toLocalDate()
+                            val start = day.atTime(8, 0)
+                            envelopeStart = start.toString()
+                            envelopeEnd = start.plusHours(8).toString()
+                            events.clear()
+                            events.addAll(DebugRainIceSymbolRangeFixture.events(start).map { event ->
+                                EventDraft(
+                                    start = event.startLocal.toString(),
+                                    end = event.endLocalExclusive.toString(),
+                                    conditions = emptySet(),
+                                    symbolId = event.symbolId,
+                                )
+                            })
+                            error = null
+                        }.onFailure { error = it.message ?: "Set a valid local date before loading the Rain + Ice ranges." }
+                    }) { Text("RAIN + ICE RANGES", style = MaterialTheme.typography.labelMedium) }
                     }
                 }
                 EventTimeline(envelopeStart, envelopeEnd, events)

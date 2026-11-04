@@ -28,11 +28,21 @@ enum class WeatherSymbolId(val label: String) {
     PARTLY_CLOUDY_NIGHT("Partly cloudy night"),
     MOSTLY_CLOUDY("Mostly cloudy"),
     CLOUDY_OVERCAST("Cloudy or overcast"),
+    DRIZZLE("Drizzle"),
+    RAIN("Rain"),
+    HEAVY_RAIN("Heavy rain"),
+    RAIN_SHOWERS("Rain showers"),
+    FREEZING_DRIZZLE("Freezing drizzle"),
+    FREEZING_RAIN("Freezing rain"),
+    ICE_PELLETS("Ice pellets"),
+    HAIL("Hail"),
 }
 
 enum class WeatherSymbolArtwork {
     SUN, MOON, MOSTLY_SUNNY, MOSTLY_CLEAR_NIGHT, PARTLY_SUNNY_CLOUDY,
     PARTLY_CLOUDY_NIGHT, MOSTLY_CLOUDY, CLOUDY_OVERCAST,
+    DRIZZLE, RAIN, HEAVY_RAIN, RAIN_SHOWERS, FREEZING_DRIZZLE,
+    FREEZING_RAIN, ICE_PELLETS, HAIL,
 }
 
 data class WeatherSymbolDefinition(val id: WeatherSymbolId, val artwork: WeatherSymbolArtwork)
@@ -48,12 +58,20 @@ object WeatherSymbolCatalog {
         WeatherSymbolDefinition(WeatherSymbolId.PARTLY_CLOUDY_NIGHT, WeatherSymbolArtwork.PARTLY_CLOUDY_NIGHT),
         WeatherSymbolDefinition(WeatherSymbolId.MOSTLY_CLOUDY, WeatherSymbolArtwork.MOSTLY_CLOUDY),
         WeatherSymbolDefinition(WeatherSymbolId.CLOUDY_OVERCAST, WeatherSymbolArtwork.CLOUDY_OVERCAST),
+        WeatherSymbolDefinition(WeatherSymbolId.DRIZZLE, WeatherSymbolArtwork.DRIZZLE),
+        WeatherSymbolDefinition(WeatherSymbolId.RAIN, WeatherSymbolArtwork.RAIN),
+        WeatherSymbolDefinition(WeatherSymbolId.HEAVY_RAIN, WeatherSymbolArtwork.HEAVY_RAIN),
+        WeatherSymbolDefinition(WeatherSymbolId.RAIN_SHOWERS, WeatherSymbolArtwork.RAIN_SHOWERS),
+        WeatherSymbolDefinition(WeatherSymbolId.FREEZING_DRIZZLE, WeatherSymbolArtwork.FREEZING_DRIZZLE),
+        WeatherSymbolDefinition(WeatherSymbolId.FREEZING_RAIN, WeatherSymbolArtwork.FREEZING_RAIN),
+        WeatherSymbolDefinition(WeatherSymbolId.ICE_PELLETS, WeatherSymbolArtwork.ICE_PELLETS),
+        WeatherSymbolDefinition(WeatherSymbolId.HAIL, WeatherSymbolArtwork.HAIL),
     )
     private val byId = definitions.associateBy(WeatherSymbolDefinition::id)
     fun resolve(id: WeatherSymbolId): WeatherSymbolDefinition = requireNotNull(byId[id])
 }
 
-/** Static, size-independent Sky-row symbol renderer. Layout and placement belong to the caller. */
+/** Static, size-independent symbol renderer. Layout and placement belong to the caller. */
 @Composable
 fun WeatherSymbolIcon(
     symbol: WeatherSymbolId,
@@ -103,6 +121,14 @@ fun WeatherSymbolIcon(
                         drawCloud(30f, 45f, 64f, 39f, foreground = false)
                         drawCloud(18f, 57f, 68f, 37f, foreground = true)
                     }
+                    WeatherSymbolArtwork.DRIZZLE -> drawPrecipitation(drops = 3, small = true)
+                    WeatherSymbolArtwork.RAIN -> drawPrecipitation(drops = 3)
+                    WeatherSymbolArtwork.HEAVY_RAIN -> drawPrecipitation(drops = 5, heavy = true)
+                    WeatherSymbolArtwork.RAIN_SHOWERS -> drawPrecipitation(drops = 3, sun = true)
+                    WeatherSymbolArtwork.FREEZING_DRIZZLE -> drawPrecipitation(drops = 2, small = true, freezing = true)
+                    WeatherSymbolArtwork.FREEZING_RAIN -> drawPrecipitation(drops = 2, freezing = true)
+                    WeatherSymbolArtwork.ICE_PELLETS -> drawPrecipitation(pellets = true)
+                    WeatherSymbolArtwork.HAIL -> drawPrecipitation(hail = true)
                 }
             }
         }
@@ -145,6 +171,52 @@ private fun DrawScope.drawStars(points: List<Offset>) {
         drawLine(Color(0xFFD9F3FF), Offset(point.x - r * 1.7f, point.y), Offset(point.x + r * 1.7f, point.y), 1.2f, StrokeCap.Round)
         drawLine(Color(0xFFD9F3FF), Offset(point.x, point.y - r * 1.7f), Offset(point.x, point.y + r * 1.7f), 1.2f, StrokeCap.Round)
         drawCircle(Color.White, r * .7f, point)
+    }
+}
+
+/** Rain + Ice row, composed from the shared cloud and type-specific precipitation. */
+private fun DrawScope.drawPrecipitation(
+    drops: Int = 0, small: Boolean = false, heavy: Boolean = false,
+    sun: Boolean = false, freezing: Boolean = false,
+    pellets: Boolean = false, hail: Boolean = false,
+) {
+    if (sun) drawSun(28f, 26f, 11f)
+    drawCloud(17f, 22f, 68f, 42f)
+    if (drops > 0) {
+        val xs = when (drops) {
+            5 -> listOf(25f, 37f, 49f, 61f, 73f)
+            2 -> listOf(35f, 58f)
+            else -> listOf(31f, 50f, 69f)
+        }
+        xs.forEachIndexed { index, x ->
+            val y = if (index % 2 == 0) 74f else 79f
+            val length = if (small) 4f else if (heavy) 13f else 9f
+            drawLine(Color(0xFF55D8FF), Offset(x + 2f, y - length), Offset(x - 2f, y),
+                strokeWidth = if (small) 2.2f else if (heavy) 4.3f else 3.3f,
+                cap = StrokeCap.Round)
+        }
+    }
+    if (freezing) {
+        val center = Offset(78f, 77f)
+        drawLine(Color.White, Offset(center.x - 7f, center.y), Offset(center.x + 7f, center.y), 2f)
+        drawLine(Color.White, Offset(center.x, center.y - 7f), Offset(center.x, center.y + 7f), 2f)
+        drawLine(Color.White, Offset(center.x - 5f, center.y - 5f), Offset(center.x + 5f, center.y + 5f), 1.7f)
+        drawLine(Color.White, Offset(center.x - 5f, center.y + 5f), Offset(center.x + 5f, center.y - 5f), 1.7f)
+    }
+    if (pellets) {
+        listOf(Offset(31f, 69f), Offset(49f, 76f), Offset(68f, 69f)).forEach {
+            val diamond = Path().apply {
+                moveTo(it.x, it.y - 4f); lineTo(it.x + 4f, it.y)
+                lineTo(it.x, it.y + 4f); lineTo(it.x - 4f, it.y); close()
+            }
+            drawPath(diamond, Color(0xFFE7F5FF))
+        }
+    }
+    if (hail) {
+        listOf(Offset(31f, 70f), Offset(50f, 77f), Offset(69f, 70f)).forEach {
+            drawCircle(Color(0xFF48C6F4), 6f, it)
+            drawCircle(Color(0xFFE5F8FF), 2.5f, Offset(it.x - 1.5f, it.y - 2f))
+        }
     }
 }
 

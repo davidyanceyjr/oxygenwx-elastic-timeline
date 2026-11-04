@@ -61,7 +61,36 @@ class DebugAuthoredCatalogTest {
         val recording = repository.save(definition)
         val reopened = requireNotNull(repository.reopen(location, definition.datasetId))
 
-        assertEquals(WeatherSymbolId.entries, reopened.first.events.map { it.symbolId })
+        assertEquals(WeatherSymbolId.entries.take(8), reopened.first.events.map { it.symbolId })
+        assertEquals(8, reopened.first.events.size)
+        reopened.first.events.forEachIndexed { index, event ->
+            assertEquals(start.plusHours(index.toLong()), event.startLocal)
+            assertEquals(event.startLocal.plusHours(1), event.endLocalExclusive)
+            val rangeFact = recording.catalog.facts.single {
+                val local = it.validTime.atZone(location.timeZone).toLocalDateTime()
+                local >= event.startLocal && local < event.endLocalExclusive
+            }
+            assertEquals(event.values.fact(rangeFact.validTime), rangeFact)
+            assertTrue(rangeFact.conditions.isEmpty())
+            assertNull(rangeFact.cloudCoverPercent)
+        }
+    }
+
+    @Test fun rainIceRangesPersistWithoutCanonicalWeatherFacts() = runBlocking {
+        val start = LocalDateTime.parse("2026-11-03T08:00")
+        val events = DebugRainIceSymbolRangeFixture.events(start)
+        val definition = DebugAuthoredCatalog(
+            "Rain and ice symbol range", location, DatasetId("rain-ice-symbol-range-v1"),
+            Instant.parse("2026-11-03T18:00:00Z"), start, start.plusHours(8), events.first().values, events,
+        )
+        val repository = DebugAuthoredCatalogRepository(
+            CatalogDatasetStorage(DatasetMemory()),
+            DebugAuthoredCatalogMetadataStore(MetadataMemory()),
+        )
+
+        val recording = repository.save(definition)
+        val reopened = requireNotNull(repository.reopen(location, definition.datasetId))
+        assertEquals(WeatherSymbolId.entries.drop(8), reopened.first.events.map { it.symbolId })
         assertEquals(8, reopened.first.events.size)
         reopened.first.events.forEachIndexed { index, event ->
             assertEquals(start.plusHours(index.toLong()), event.startLocal)

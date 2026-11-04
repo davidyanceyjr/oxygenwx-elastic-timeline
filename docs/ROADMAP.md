@@ -711,15 +711,15 @@ The WA workstream implements the full 48-symbol weather-event artwork catalog fr
 **Slice board(s):** Shared behavior/mapping board `.codex/concepts/WA.1-weather-symbol-library-behavior-board.md` and UI artwork board `Oxygen_forecast_weather_symbol_board.png`, both approved by the product owner on 2026-11-03. The behavior board governs the full 48-ID mapping contract; this slice implements only the Sky row.
 **Evidence:** Plan `.codex/plans/094-weather-symbol-library.md`; target artifacts `.codex/test-artifacts/094-weather-symbol-library/`; closeout `.codex/history/094-weather-symbol-library.md`.
 
-### WA.2 — Implement rain and ice symbols — NEXT
+### WA.2 — Implement rain and ice symbols — DONE
 
 **Objective/scope:** Implement the second concept-board row: Drizzle, Rain, Heavy rain, Rain showers, Freezing drizzle, Freezing rain, Ice pellets/sleet, and Hail. Preserve freezing and precipitation-type distinctions; apply the board footnote's provider-defined “sleet” normalization.
 **Depends on:** WA.1.
 **Exit:** All eight entries resolve to scalable, documented artwork through the shared API; rain/freezing distinctions and pellet/hail shapes remain identifiable at intended sizes, with labels retaining precise meaning; scoped installed evidence covers this row and directly affected use.
 **Slice board(s):** Shared behavior/mapping board `.codex/concepts/WA.1-weather-symbol-library-behavior-board.md` and artwork board `Oxygen_forecast_weather_symbol_board.png`, both approved 2026-11-03. The behavior board governs the full 48-ID mapping contract; this slice implements only the Rain + Ice row.
-**Evidence:** Allocate cycle-specific plan, artifact directory, and history record when planned.
+**Evidence:** Cycle 095 complete: `.codex/history/095-wa2-rain-ice-symbols.md`; installed captures and focused results `.codex/test-artifacts/095-wa2-rain-ice-symbols/README.md`; archived plan `.codex/history/plans/095-wa2-rain-ice-symbols.md`.
 
-### WA.3 — Implement snow and mixed-precipitation symbols — PLANNED
+### WA.3 — Implement snow and mixed-precipitation symbols — NEXT
 
 **Objective/scope:** Implement the third concept-board row: Flurries/snow grains, Snow, Heavy snow, Snow showers, Rain and snow/sleet, Wintry mix, Graupel, and Ice crystals. Preserve supplied component names where available; do not equate graupel, ice pellets, and ice crystals.
 **Depends on:** WA.2.
