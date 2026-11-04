@@ -1,0 +1,37 @@
+digraph G6 {
+  graph [label="G.6  |  CLOSED HISTORY COMPACTION\nBehavior board • owner approved 2026-11-04 • documentation only", labelloc=t, fontsize=29, fontname="DejaVu Sans", fontcolor="#edf4f7", bgcolor="#102233", pad=0.45, nodesep=0.42, ranksep=0.75, splines=polyline];
+  node [shape=box, style="rounded,filled", color="#64869a", fillcolor="#1b394b", fontcolor="#edf4f7", fontname="DejaVu Sans", fontsize=17, margin="0.26,0.18", penwidth=1.7];
+  edge [color="#83c9bf", fontcolor="#edf4f7", fontname="DejaVu Sans", fontsize=14, penwidth=2, arrowsize=0.8];
+
+  proposal [label="OWNER APPROVED PROPOSAL\nDraft board + bounded plan", fillcolor="#24536a"];
+  board [shape=diamond, label="Board separately\napproved?", fillcolor="#71542e", color="#edc477"];
+  wait [label="WAIT\nNo compaction targets change", fillcolor="#613b3e", color="#df8985"];
+  activate [label="FINALIZE + ACTIVATE CYCLE 100\nRecheck scope, status, references"];
+  proposal -> board;
+  board -> wait [label="NO"];
+  board -> activate [label="YES"];
+
+  audit [label="AUDIT 49 DONE LEAVES\nBuild Tooling, G, P.1, P.2, ATM, DFM, WA\nCheck closeout + recovery + lasting rules"];
+  authority [shape=diamond, label="All lasting rules\nin authority?", fillcolor="#71542e", color="#edc477"];
+  revised [label="PRESERVE AFFECTED ENTRY\nReturn revised proposal before new scope", fillcolor="#613b3e", color="#df8985"];
+  compact [label="COMPACT ELIGIBLE DONE LEAVES\nKeep ID, title, status, order, dependency\nKeep outcome, exit, board approval, exact links", fillcolor="#245247", color="#7ad3b8"];
+  activate -> audit -> authority;
+  authority -> revised [label="NO"];
+  authority -> compact [label="YES"];
+
+  verify [label="VERIFY FOUR STALE PLANS\n002, draft-dfm44, draft-dfm45, draft-dfm46\nCheck closed/superseded successor + references"];
+  safe [shape=diamond, label="Recovery and\nreferences valid?", fillcolor="#71542e", color="#edc477"];
+  preserve [label="PRESERVE FAILED CANDIDATE\nRecord limitation", fillcolor="#613b3e", color="#df8985"];
+  move [label="MOVE CONTENT-PRESERVED DRAFTS\nTo history/plans/drafts\nFix DFM.4.6 successor relative link", fillcolor="#245247", color="#7ad3b8"];
+  compact -> verify -> safe;
+  safe -> preserve [label="NO"];
+  safe -> move [label="YES"];
+
+  final [label="VALIDATE + CLOSE\nCheck active work, order, links, workflow, diff\nRecord exact evidence and before/after counts", fillcolor="#24536a"];
+  preserve -> final;
+  move -> final;
+
+  protected [label="PROTECTED THROUGHOUT\nUnfinished + WX/SG leaves • WX.27 parked plan\nWX.10 fixture • authority • actual evidence\nPre-existing skill edit • unresolved WA/SG statuses", fillcolor="#293a52", color="#a8b9d2"];
+  {rank=same; audit; protected}
+  protected -> audit [style=dashed, arrowhead=none, color="#a8b9d2"];
+}

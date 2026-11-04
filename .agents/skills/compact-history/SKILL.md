@@ -12,7 +12,11 @@ specific planning tool.
 
 The governing principle is: **active context should contain information that
 can change the next decision; completed execution detail belongs in durable
-history.** Treat compaction as context hygiene, not feature work.
+history.** The goal is to materially reduce the routine working set without
+losing decision-relevant meaning, evidence, or recovery paths. Use concise
+summaries and durable links so completed detail can remain available on demand
+without loading it routinely. Treat compaction as context hygiene, not feature
+work.
 
 ## Inspect and classify
 
@@ -24,8 +28,14 @@ and content to infer each area's role; do not classify by age or filename
 alone. Check the working tree and available version-control status before
 proposing changes.
 
-Before modifying files, produce a reviewable analysis that identifies relevant
-files or sections and classifies each as:
+Running this skill always begins with a **read-only analysis phase**. During
+this phase, do not edit, create, move, rename, truncate, or delete repository
+files; do not change metadata or invoke commands that can mutate the repository,
+device, or external state. Read-only inspection and demonstrably read-only
+checks are allowed; identify any such checks in the report.
+
+Produce a reviewable analysis that identifies relevant files or sections and
+classifies each as:
 
 - **ACTIVE** — current or near-future work, unresolved matters, or information
   that could still change a planning or implementation decision.
@@ -39,11 +49,27 @@ files or sections and classifies each as:
 
 State proposed actions, protected material, authority that must be promoted,
 the recovery path for every proposed relocation or reduction, and an estimate of
-active-context reduction when practical. Prefer a dry run if repository tools
-provide one. The default is analysis only: do not edit until the user explicitly
-asks to apply the compaction. An explicit apply request authorizes the scoped
-context changes described by the analysis; it does not authorize unrelated
-product work or destruction of repository history.
+active-context reduction when practical. Identify any policy prerequisites,
+unresolved status conflicts, and read-only validation that is still needed.
+Prefer a dry run if repository tools provide one.
+
+Present this analysis as a proposed change report, then **stop and wait for the
+user's explicit approval before applying any compaction**. Running the skill,
+requesting an audit, or asking for recommendations is not approval to edit.
+Approval authorizes only the specific changes listed in the report. If new
+scope or necessary changes arise during application, stop and present a revised
+report for approval before proceeding. If approval is not given, leave the
+repository unchanged. This approval gate controls whether and what to change; it
+does not replace the compaction objective. After approval, carry out the listed
+changes to reduce routine context while preserving its meaning and recovery.
+
+When applying changes, follow the repository's required planning, approval,
+and evidence workflow, including for documentation-only work where it applies.
+Preserve required workflow rules, commands, build configuration, and cycle
+allocation semantics. Do not change application code, build files, or workflow
+tools as part of context compaction. If a proposed read-guidance change could
+weaken a required workflow gate, retain the existing instruction and report the
+constraint instead.
 
 ## Protect ongoing work and authority
 
@@ -73,22 +99,46 @@ For roadmaps, preserve every unfinished item, its order, dependencies, blocked
 state, and acceptance obligations. Keep a clear completed frontier and useful
 identifiers/titles. Reduce completed prose only when completion and acceptance
 are supported by the record and the detailed outcome is recoverable elsewhere.
-Use a compact status and history reference where the local convention permits;
-do not silently reorder or change scope.
+Keep the canonical ordered roadmap when project policy requires one. Compact
+completed slices to their stable IDs, titles, statuses, and useful history or
+evidence references where the local convention permits; do not remove their
+identity, silently reorder work, or change scope. Archive repeated DONE-slice
+narrative only when the closed cycle record remains discoverable and supports
+the completion claim.
 
 For plans, archive or otherwise separate only plans that are verifiably
 complete. Never archive active, planned, blocked, partially complete, or
 current-pointer plans. Preserve a historical copy and keep active plan
-discovery unambiguous.
+discovery unambiguous. A stale copy under an open-plans directory may be
+removed or relocated only after confirming its cycle is closed and its durable
+archived plan and closeout exist. If a roadmap marks work DEFERRED while a plan
+calls it PLANNED, retain it and report the mismatch for owner resolution; do
+not infer that the plan is disposable.
+
+One-time intake prompts and draft roadmaps are archive candidates only after
+their task is complete or their proposal is explicitly superseded. Confirm that
+the successor or closeout is identifiable, any continuing requirements have
+been promoted to current authority, and references are updated or remain
+resolvable. Preserve audit records on demand when they document how the
+canonical roadmap or authority was established. Do not archive a still-used
+specification merely because its proposal or workstream is old.
+
+Do not archive prior board or artwork revisions based only on version numbers
+or filenames. Check approval records and historical references first; preserve
+the approved artifact and any earlier version needed to reconstruct a decision.
+Byte-identical duplicates may be proposed for removal after hash and reference
+checks, with the retained copy identified.
 
 Keep only unresolved blockers in the active blocker view. Record resolved
 outcomes durably and promote any continuing constraint or decision before
 removing resolved blocker narrative from routine context.
 
 Treat screenshots, logs, test output, and generated reports as on-demand
-context unless project policy says otherwise. Do not delete required evidence
-to reduce what agents read; adjust read policy or add precise references where
-safe.
+context unless project policy says otherwise. This skill changes context
+organization, not evidence retention: do not delete, relocate, or offload actual
+evidence required at its project-defined path. Adjust read policy or add precise
+references where safe. Any offloading policy needs separate project authority
+that defines an auditable, recoverable destination before evidence is moved.
 
 Inspect startup and agent instructions for broad rules that repeatedly load
 archives, closed plans, history, or evidence. Narrow routine reads to active
@@ -113,7 +163,8 @@ verification limits, and evidence locations needed for audit or reconstruction.
 
 ## Apply and validate
 
-When asked to apply, make changes in this order:
+Only after the user explicitly approves the proposed change report, apply the
+listed changes in this order:
 
 1. Promote enduring knowledge to durable authority.
 2. Move or compact completed details while preserving their recovery path.
@@ -141,9 +192,14 @@ the complete final diff. Do not add unrelated tests or implementation changes.
 
 ## Report the result
 
-Report what was compacted and archived, what was retained, what authority was
-promoted, which files remain routine context, and which historical areas should
-be read on demand. Include validation performed, unresolved risks or owner
-decisions, and before/after line or byte counts when available. Treat these
-counts as context-size proxies; do not claim exact token savings unless they
-were measured.
+During analysis, report the proposed compaction and exact affected paths,
+protected material, recovery paths, required approvals or prerequisites,
+read-only checks performed, unresolved decisions, and estimated context-size
+reduction when practical. Then stop for approval.
+
+After approved application, report what was compacted and archived, what was
+retained, what authority was promoted, which files remain routine context, and
+which historical areas should be read on demand. Include validation performed,
+unresolved risks or owner decisions, and before/after line or byte counts when
+available. Treat these counts as context-size proxies; do not claim exact token
+savings unless they were measured.

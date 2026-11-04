@@ -73,39 +73,47 @@ Project-wide, every unfinished slice on every roadmap requires an objective-spec
 
 ### G.1 — Adopt and apply the roadmap specification — DONE
 
-**Objective/scope:** Define the lightweight roadmap format and migrate every existing Oxygen Time Lab leaf slice to it. Documentation only; leave application behavior unchanged.
+**Objective/scope:** Define the lightweight roadmap format and migrate every existing Oxygen Time Lab leaf slice to it.
 **Depends on:** None.
 **Exit:** `docs/ROADMAP_SPECIFICATION.md` defines status, required slice fields, evidence, and failure/replanning rules; every roadmap leaf slice conforms; `AGENTS.md` identifies the roadmap specification as authority; `git diff --check` passes.
 **Evidence:** `.codex/history/008-roadmap-specification.md`; `.codex/history/plans/008-roadmap-specification.md`; `.codex/test-artifacts/008-roadmap-specification/README.md`.
 
 ### G.2 — Adopt applicable oxygenWX skills and agent rules — DONE
 
-**Objective/scope:** Bring the reusable oxygenWX planning, review, execution, context-audit, history-compaction, and model-rating skills into this repository's `.agents/skills/`, adapted to Oxygen Time Lab authorities and constraints. Adapt the project `AGENTS.md` with relevant cycle, architecture, verification, and UI rules. Do not change application source or the sibling oxygenWX checkout.
+**Objective/scope:** Bring the reusable oxygenWX planning, review, execution, context-audit, history-compaction, and model-rating skills into this repository's `.agents/skills/`, adapted to Oxygen Time Lab authorities and constraints.
 **Depends on:** G.1.
 **Exit:** The selected skill set is installed with valid skill metadata and no production-only assumptions; `AGENTS.md` describes this project's actual workflow and nonnegotiable boundaries; skill validation and `git diff --check` pass; adoption evidence and limitations are recorded.
 **Evidence:** `.codex/history/009-agent-skills-ruleset.md`; `.codex/history/plans/009-agent-skills-ruleset.md`; `.codex/test-artifacts/009-agent-skills-ruleset/README.md`.
 
 ### G.3 — Adopt the Oxygen experience specification — DONE
 
-**Objective/scope:** Verify and adopt `docs/OXYGEN_EXPERIENCE_SPECIFICATION.md` as the experience-level companion to `docs/SPECIFICATION.md`; reconcile current-tree discrepancies and stale README claims. Documentation only; no application behavior changes.
+**Objective/scope:** Verify and adopt `docs/OXYGEN_EXPERIENCE_SPECIFICATION.md` as the experience-level companion to `docs/SPECIFICATION.md`; reconcile current-tree discrepancies and stale README claims.
 **Depends on:** G.1 and G.2.
 **Exit:** The authority relationship is explicit, the proposal's status reflects adoption without claiming unverified acceptance, current behavior discrepancies and owner decisions are recorded, stale README behavior claims are corrected, and documentation/workflow checks plus `git diff --check` pass.
 **Evidence:** `.codex/history/022-experience-spec-adoption.md`; `.codex/history/plans/022-experience-spec-adoption.md`; `.codex/test-artifacts/022-experience-spec-adoption/README.md`.
 
 ### G.4 — Ingest the Living Atmosphere Engine proposal — DONE
 
-**Objective/scope:** Reconcile OXY-ATM-001 against controlling prototype and experience authorities and the current source tree; adopt it as a subordinate architecture proposal for roadmap planning; add bounded ATM/ENV follow-ups. Documentation and cycle records only.
+**Objective/scope:** Reconcile OXY-ATM-001 against controlling prototype and experience authorities and the current source tree; adopt it as a subordinate architecture proposal for roadmap planning; add bounded ATM/ENV follow-ups.
 **Depends on:** G.3.
 **Exit:** Authority precedence and adoption limits are explicit; every cited source path is compared with the proposal's baseline; conflicts and missing evidence are recorded; proposed ATM/ENV slices use this roadmap's leaf format; documentation checks pass without application changes.
 **Evidence:** `.codex/history/023-atmosphere-spec-intake.md`; `.codex/history/plans/023-atmosphere-spec-intake.md`; `.codex/test-artifacts/023-atmosphere-spec-intake/README.md`.
 
 ### G.5 — Resolve specification audit findings — DONE
 
-**Objective/scope:** Resolve the ten prioritized findings in `findings.md` as one documentation-only clarification of `docs/SPECIFICATION.md` and `docs/OXYGEN_EXPERIENCE_SPECIFICATION.md`. Preserve prototype facts, adopted successor boundaries, and SG.0's separate objective; no app implementation.
+**Objective/scope:** Resolve the ten prioritized findings in `findings.md` as one documentation-only clarification of `docs/SPECIFICATION.md` and `docs/OXYGEN_EXPERIENCE_SPECIFICATION.md`.
 **Depends on:** G.3.
-**Exit:** The approved behavior board and constraints are recorded; all ten findings have explicit dispositions; the two specifications agree on selected-time navigation, data gaps, reset, calendar swipes, conditional alert scope, and acceptance evidence; obsolete or repetitive companion prose no longer obscures current authority; final documentation diff and `git diff --check` are inspected.
+**Exit:** All ten findings have explicit dispositions; both specifications agree on selected-time navigation, data gaps, reset, calendar swipes, conditional alert scope, and acceptance evidence.
 **Slice board(s) — Behavior:** Owner-approved 2026-10-30 at `.codex/concepts/G.5-specification-clarity-behavior-board.md`, with no additional constraints. The board governs the selected-time, availability, reset, and alert contract in plan 074. This documentation-only slice has no UI implementation or visual change.
-**Evidence:** `.codex/test-artifacts/074-g5-specification-clarity/README.md`, `.codex/history/074-g5-specification-clarity.md`, and `.codex/history/plans/074-g5-specification-clarity.md`.
+**Evidence:** `.codex/test-artifacts/074-g5-specification-clarity/README.md`; `.codex/history/074-g5-specification-clarity.md`; `.codex/history/plans/074-g5-specification-clarity.md`.
+
+### G.6 — Compact closed workflow history — DONE
+
+**Objective/scope:** Reduce routine context in 47 completed G, P.1, P.2, ATM, DFM, and WA roadmap entries and relocate four verified stale plan records. Leave BT.1 and WA.3 intact under the owner-approved revised scope. Preserve all active work, durable authority, and exact recovery paths. Documentation and workflow records only.
+**Depends on:** None.
+**Exit:** Every reduced entry retains its ID, title, DONE status, order, dependency, concise outcome and exit, board approval reference, and exact history/evidence links; applicable lasting rules are confirmed in authority before reduction; four stale plans remain content-preserved and discoverable under `.codex/history/plans/drafts/`; active and deferred records remain intact; references resolve; workflow and final diff checks pass.
+**Slice board(s) — Behavior:** Owner-approved flowchart `.codex/concepts/G.6-history-compaction-behavior-board.svg` on 2026-11-04 (editable `.dot`, review `.png`, and detailed `.md` at the same stem); no additional constraints stated. No UI artwork board applies.
+**Evidence:** `.codex/test-artifacts/100-g6-history-compaction/README.md`; `.codex/history/100-g6-history-compaction.md`; `.codex/history/plans/100-g6-history-compaction.md`.
 
 ## WX — OxygenWX unified 44-day weather catalog and production data path
 
@@ -379,21 +387,21 @@ Project-wide, every unfinished slice on every roadmap requires an objective-spec
 **Objective/scope:** Establish the standalone Android Compose scaffold, deterministic canonical-unit forecast fixture, typed presentation, pure time projection, atmospheric scene, and core time-tape interactions without changing oxygenWX.
 **Depends on:** None.
 **Exit:** The isolated app and core timeline implementation exist, architecture/isolation checks are recorded, and remaining installed acceptance is tracked separately.
-**Evidence:** `.codex/history/001-elastic-timeline-prototype.md`. Cycle 001 explicitly records Android build, install, and device evidence as outstanding at that time; see P.1.2 for the later launch baseline.
+**Evidence:** `.codex/history/001-elastic-timeline-prototype.md`.
 
 ### P.1.2 — Install and record the device baseline — DONE
 
 **Objective/scope:** Build, install, launch, and capture the existing standalone app on the Pixel 3 XL; record representative timeline states without changing application source.
 **Depends on:** P.1.1.
-**Exit:** Installed foreground app is confirmed and actual device screenshots plus reproduction/device details are recorded. This exit does not imply full accessibility or environment acceptance.
-**Evidence:** `.codex/history/002-p1-pixel-install.md`, `.codex/history/007-visual-baseline.md`, and local captures under `.codex/test-artifacts/002-p1-pixel-install/` and `.codex/test-artifacts/007-visual-baseline/` (including the later hourly long-press capture documented in that folder's README).
+**Exit:** Installed foreground app is confirmed and actual device screenshots plus reproduction/device details are recorded.
+**Evidence:** `.codex/history/002-p1-pixel-install.md`; `.codex/history/007-visual-baseline.md`; `.codex/test-artifacts/002-p1-pixel-install/`; `.codex/test-artifacts/007-visual-baseline/`.
 
 ### P.1.3 — Run Android unit tests and lint — DONE
 
 **Objective/scope:** Run the app's debug unit-test and lint tasks on an Android host; diagnose only failures in those tasks.
 **Depends on:** P.1.1.
 **Exit:** `:app:testDebugUnitTest` and `:app:lintDebug` both pass, or a reproducible blocker with command output and affected scope is recorded; do not mark DONE on an unexplained failure.
-**Evidence:** `.codex/history/010-android-host-checks.md`; logs and host details under `.codex/test-artifacts/010-android-host-checks/`.
+**Evidence:** `.codex/history/010-android-host-checks.md`; `.codex/test-artifacts/010-android-host-checks/`.
 
 ## P.2 — Owner review, visual polish, and installed acceptance
 
@@ -402,7 +410,7 @@ Project-wide, every unfinished slice on every roadmap requires an objective-spec
 **Objective/scope:** Replace localized focus-day expansion with a uniform hourly scale and magnify the selected day/hour label while keeping it centered at the playhead.
 **Depends on:** P.1.1.
 **Exit:** Daily/hourly labels and ticks show the uniform scale and selected-time cue in installed captures; selected time remains authoritative through scale animation.
-**Evidence:** `.codex/history/003-time-label-magnification.md`; captures under `.codex/test-artifacts/003-time-label-magnification/`.
+**Evidence:** `.codex/history/003-time-label-magnification.md`; `.codex/test-artifacts/003-time-label-magnification/`.
 
 ### P.2.2 — Subtle timeline playhead — DONE
 
@@ -416,101 +424,101 @@ Project-wide, every unfinished slice on every roadmap requires an objective-spec
 **Objective/scope:** Shift selected time by 24 hours on a main-display horizontal swipe while preserving hour-of-day, and realign by double-tap within fixture bounds.
 **Depends on:** P.2.1.
 **Exit:** On-device left/right swipes and double-tap produce the specified selected-time changes, with actual outcome recorded.
-**Evidence:** `.codex/history/005-main-display-navigation.md`; captures under `.codex/test-artifacts/005-main-display-navigation/`.
+**Evidence:** `.codex/history/005-main-display-navigation.md`; `.codex/test-artifacts/005-main-display-navigation/`.
 
 ### P.2.4 — Remove visible hints and expose the scale action — DONE
 
 **Objective/scope:** Remove prototype instructional/mode-control rows and the NOW button; retain direct gestures, double-tap realignment, and the timeline's screen-reader scale action.
 **Depends on:** P.2.3.
-**Exit:** Installed UI has no removed visible controls, and source/semantics expose the daily/hourly custom accessibility action. Manual TalkBack acceptance remains a separate slice.
+**Exit:** Installed UI has no removed visible controls, and source/semantics expose the daily/hourly custom accessibility action.
 **Evidence:** `.codex/history/006-remove-timeline-hints.md`; `.codex/test-artifacts/006-remove-timeline-hints/pixel-3xl.png`.
 
 ### P.2.5 — Verify timeline gesture arbitration and time stability — DONE
 
-**Objective/scope:** On the Pixel 3 XL, review immediate drag versus stationary hold, hourly scrubbing, release/collapse, and selected-time stability; assess responsiveness, gesture predictability, and readability. Fixes are out of scope for this evidence-gathering slice.
+**Objective/scope:** On the Pixel 3 XL, review immediate drag versus stationary hold, hourly scrubbing, release/collapse, and selected-time stability; assess responsiveness, gesture predictability, and readability.
 **Depends on:** P.1.2, P.2.1, P.2.4, and P.2.5a.
-**Exit:** Each gesture is exercised and its observed result recorded with screenshots; selected timestamp continuity and all three cross-cutting visual-quality checks receive an evidence-backed pass/fail disposition. Confirmed defects get separate implementation slices.
-**Evidence:** Original evidence and blocker investigation: `.codex/history/010-gesture-acceptance.md`, `.codex/test-artifacts/010-gesture-acceptance/`, and `.codex/test-artifacts/011-blocker-investigation/README.md`. Recheck: `.codex/test-artifacts/012-gesture-acceptance-recheck/README.md` and `.codex/history/012-gesture-acceptance-recheck.md`.
+**Exit:** Each gesture is exercised and its observed result recorded with screenshots; selected timestamp continuity and all three cross-cutting visual-quality checks receive an evidence-backed pass/fail disposition.
+**Evidence:** `.codex/history/010-gesture-acceptance.md`; `.codex/test-artifacts/010-gesture-acceptance/`; `.codex/test-artifacts/011-blocker-investigation/README.md`; `.codex/test-artifacts/012-gesture-acceptance-recheck/README.md`; `.codex/history/012-gesture-acceptance-recheck.md`.
 
 ### P.2.5a — Align forecast time label with selected hourly tick — DONE
 
 **Objective/scope:** Make the forecast summary's displayed hour use the same nearest-hour convention as the hourly tape's selected tick, while preserving fractional selection and interpolated forecast values during a drag.
 **Depends on:** P.2.1.
-**Exit:** On the installed Pixel 3 XL, fractional-hour positions no longer show different hours in the forecast summary and selected tape label; after release/collapse and stationary re-entry, the same rounded selected hour remains visible. The change does not quantize selection during movement or alter interpolated values.
+**Exit:** On the installed Pixel 3 XL, fractional-hour positions no longer show different hours in the forecast summary and selected tape label; after release/collapse and stationary re-entry, the same rounded selected hour remains visible.
 **Evidence:** `.codex/history/011-hour-label-alignment.md`; `.codex/test-artifacts/011-hour-label-alignment/`.
 
 ### P.2.6 — Review readability at large text and constrained layouts — DONE
 
-**Objective/scope:** Review representative large system font, landscape/small-screen layout, and bright/dark sky contrast on the installed app. Fixes are out of scope for this evidence-gathering slice.
+**Objective/scope:** Review representative large system font, landscape/small-screen layout, and bright/dark sky contrast on the installed app.
 **Depends on:** P.1.2.
-**Exit:** Actual screenshots for each condition are reviewed; essential forecast values and timeline labels are readable and unclipped, with findings and any confirmed defect ownership recorded. Confirmed defects get separate implementation slices.
-**Evidence:** Prior findings and recovery: `.codex/history/013-responsive-readability.md`, `.codex/history/014-responsive-readability-recovery.md`, and `.codex/history/014-landscape-high-low.md`; final fresh installed review: `.codex/history/015-responsive-readability-review.md` and `.codex/test-artifacts/015-responsive-readability-review/`.
+**Exit:** Actual screenshots for each condition are reviewed; essential forecast values and timeline labels are readable and unclipped, with findings and any confirmed defect ownership recorded.
+**Evidence:** `.codex/history/013-responsive-readability.md`; `.codex/history/014-responsive-readability-recovery.md`; `.codex/history/014-landscape-high-low.md`; `.codex/history/015-responsive-readability-review.md`; `.codex/test-artifacts/015-responsive-readability-review/`.
 
 ### P.2.12 — Restore Android build host and complete P.2.6 evidence — DONE
 
-**Objective/scope:** Provision official Android SDK command-line tools and required SDK packages on the current host, build/install the current prototype on the Pixel 3 XL, and complete the missing exact-time and continuous-contact gesture evidence for P.2.6. Evidence and host setup only; no app changes.
+**Objective/scope:** Provision official Android SDK command-line tools and required SDK packages on the current host, build/install the current prototype on the Pixel 3 XL, and complete the missing exact-time and continuous-contact gesture evidence for P.2.6.
 **Depends on:** None.
-**Exit:** A fresh build succeeds with supported tooling; required installed captures show the exact bright/night fixture times; immediate drag and continuous hold-then-drag outcomes, selected-time continuity, and all P.2.6 condition dispositions are recorded. If a host/device/tool blocker prevents the exit, record it with command output and preserve P.2.6 as BLOCKED.
+**Exit:** A fresh build succeeds with supported tooling; required installed captures show the exact bright/night fixture times; immediate drag and continuous hold-then-drag outcomes, selected-time continuity, and all P.2.6 condition dispositions are recorded.
 **Evidence:** `.codex/history/014-responsive-readability-recovery.md`; `.codex/test-artifacts/014-responsive-readability-recovery/`.
 
 ### P.2.11 — Preserve high/low values in landscape at large font — DONE
 
-**Objective/scope:** Keep the forecast high/low values visible as text in the compact landscape layout at 1.3 system font scale; they are absent from the installed capture. Preserve selected-time authority, timeline responsiveness, predictable gesture ownership, accessible text, and DEMO DATA semantics. Review compact landscape and 1.3 font scale; record RTL and reduced-motion applicability and verify they remain unaffected if layout/animation behavior changes.
+**Objective/scope:** Keep the forecast high/low values visible as text in the compact landscape layout at 1.3 system font scale; they are absent from the installed capture.
 **Depends on:** None.
-**Exit:** Actual installed Pixel 3 XL captures show both high/low values as readable text alongside the date, heading, other essential forecast values, DEMO DATA label, and timeline labels at compact landscape and 1.3 font scale. Responsiveness, gesture ownership, and readability receive evidence-backed dispositions; RTL and reduced-motion applicability are recorded.
-**Evidence:** Finding: `.codex/history/013-responsive-readability.md`; installed captures and review: `.codex/test-artifacts/014-landscape-high-low/README.md`; outcome: `.codex/history/014-landscape-high-low.md`.
+**Exit:** Actual installed Pixel 3 XL captures show both high/low values as readable text alongside the date, heading, other essential forecast values, DEMO DATA label, and timeline labels at compact landscape and 1.3 font scale.
+**Evidence:** `.codex/history/013-responsive-readability.md`; `.codex/test-artifacts/014-landscape-high-low/README.md`; `.codex/history/014-landscape-high-low.md`.
 
 ### P.2.7 — Accept the TalkBack scale action — DONE
 
 **Objective/scope:** Manually traverse the timeline with TalkBack and invoke its daily/hourly custom action; verify understandable semantics and selected-time continuity.
 **Depends on:** P.2.4.
-**Exit:** TalkBack reaches the timeline, announces useful control/state semantics, invokes the daily/hourly scale action in both directions, and records the spoken label, visible scale, and selected-time continuity after each action. Any confirmed defect gets a separate implementation slice.
-**Evidence:** Prior attempts: `.codex/test-artifacts/016-talkback-timeline/README.md`, `.codex/history/016-talkback-timeline.md`, `.codex/test-artifacts/017-talkback-timeline-recheck/README.md`, and `.codex/history/017-talkback-timeline-recheck.md`. Installed acceptance and limitations: `.codex/test-artifacts/019-talkback-scale-action/README.md` and `.codex/history/019-talkback-scale-action.md`.
+**Exit:** TalkBack reaches the timeline, announces useful control/state semantics, invokes the daily/hourly scale action in both directions, and records the spoken label, visible scale, and selected-time continuity after each action.
+**Evidence:** `.codex/test-artifacts/016-talkback-timeline/README.md`; `.codex/history/016-talkback-timeline.md`; `.codex/test-artifacts/017-talkback-timeline-recheck/README.md`; `.codex/history/017-talkback-timeline-recheck.md`; `.codex/test-artifacts/019-talkback-scale-action/README.md`; `.codex/history/019-talkback-scale-action.md`.
 
 ### P.2.13 — Add a screen-reader forecast browser — DONE
 
-**Objective/scope:** Provide a TalkBack-actionable, linear forecast browser with daily/hourly rows sourced from the same forecast projection and selected-time state as the visual timeline. Keep decorative ticks and animation out of the spoken data path; do not add a visible scale-control row.
+**Objective/scope:** Provide a TalkBack-actionable, linear forecast browser with daily/hourly rows sourced from the same forecast projection and selected-time state as the visual timeline.
 **Depends on:** P.2.4.
-**Exit:** The timeline exposes a standard accessibility click plus a named custom action to open the browser; daily and hourly rows expose their date/time and forecast values, identify the selected row, and selecting a row updates the existing timeline and summary timestamp. Installed Pixel 3 XL evidence shows the browser in daily/hourly states and the hourly list scrolled to the selected Sunday, Oct 25, 12 PM row. This does not replace the separate manual TalkBack scale-action acceptance in P.2.7.
-**Evidence:** `.codex/test-artifacts/018-talkback-forecast-browser/README.md`, installed screenshots and accessibility hierarchy; closeout: `.codex/history/018-talkback-forecast-browser.md`.
+**Exit:** The timeline exposes a standard accessibility click plus a named custom action to open the browser; daily and hourly rows expose their date/time and forecast values, identify the selected row, and selecting a row updates the existing timeline and summary timestamp.
+**Evidence:** `.codex/test-artifacts/018-talkback-forecast-browser/README.md`; `.codex/history/018-talkback-forecast-browser.md`.
 
 ### P.2.8 — Verify reduced-motion behavior — DONE
 
-**Objective/scope:** Review the installed app with the platform reduced-motion/animation setting enabled and record the bounded behavior needed for this prototype. This slice gathers acceptance evidence; any implementation fix gets its own slice.
+**Objective/scope:** Review the installed app with the platform reduced-motion/animation setting enabled and record the bounded behavior needed for this prototype.
 **Depends on:** P.1.2.
 **Exit:** The relevant system setting and app response are recorded; selected time and scale remain understandable without disorienting motion, and any required change has its own bounded slice and evidence.
-**Evidence:** `.codex/test-artifacts/020-reduced-motion/README.md` and `.codex/history/020-reduced-motion.md`.
+**Evidence:** `.codex/test-artifacts/020-reduced-motion/README.md`; `.codex/history/020-reduced-motion.md`.
 
 ### P.2.9 — Verify RTL and close installed acceptance — DONE
 
-**Objective/scope:** Review timeline chronology, gesture directions, and labels under a system RTL locale. Reconcile the installed acceptance evidence; use existing TalkBack acceptance without repeating TalkBack tests in this cycle, per the product owner's direction to revisit before final production release.
+**Objective/scope:** Review timeline chronology, gesture directions, and labels under a system RTL locale.
 **Depends on:** P.2.5, P.2.6, P.2.7, P.2.8, and P.2.11.
-**Exit:** Installed RTL screenshots and direct-touch observations establish that chronology, gesture directions, fixture bounds, and visible labels remain understandable. Existing P.2.7/P.2.13 TalkBack outcomes are linked without retest; RTL-specific spoken behavior is recorded as unverified per the product owner's decision to revisit TalkBack before final production release. The required P.2 evidence and limitations are reconciled, the three cross-cutting visual-quality checks are recorded, and residual scope is explicitly dispositioned. Confirmed defects get separate implementation slices.
-**Evidence:** Cycle 021 (`021-p2-acceptance-closure`): `.codex/test-artifacts/021-p2-acceptance-closure/README.md` and installed captures; closeout: `.codex/history/021-p2-acceptance-closure.md`. Existing P.2 evidence is linked from the history record.
+**Exit:** Installed RTL screenshots and direct-touch observations establish that chronology, gesture directions, fixture bounds, and visible labels remain understandable.
+**Evidence:** `021-p2-acceptance-closure`; `.codex/test-artifacts/021-p2-acceptance-closure/README.md`; `.codex/history/021-p2-acceptance-closure.md`.
 
 ### P.2.14 — Group precipitation and wind metrics with visual signals — DONE
 
-**Objective/scope:** Replace the visible `PRECIP CHANCE` and `WIND` headings with the approved rain-signal and compass indicators, keeping the precipitation value on the left and wind speed on the right as visible text grouped with their indicators. Add an optional synthetic wind-direction fact to the normal demo fixture so the compass needle is data-driven; represent unknown direction with a neutral compass. Preserve the full-screen scene, DEMO DATA provenance, selected-time behavior, and bottom timeline.
+**Objective/scope:** Replace the visible `PRECIP CHANCE` and `WIND` headings with the approved rain-signal and compass indicators, keeping the precipitation value on the left and wind speed on the right as visible text grouped with their indicators.
 **Depends on:** None.
-**Exit:** The installed Pixel 3 XL reference-state capture matches the approved metric arrangement: no visible metric headings; rain signal above its probability value; compass above wind speed; both values remain readable text. The compass face and placement remain fixed and north-up, while its non-animated needle reflects the selected sample's wind-from direction and is absent when direction is unknown. Focused tests cover bearing validation/projection, NE mapping, and unknown-direction handling; existing precipitation and wind formatting remains unchanged. This slice does not run application-wide accessibility/TalkBack, font-scale, RTL, reduced-motion, responsiveness, or gesture-ownership suites; those remain in their dedicated suite cycle(s).
+**Exit:** The installed Pixel 3 XL reference-state capture matches the approved metric arrangement: no visible metric headings; rain signal above its probability value; compass above wind speed; both values remain readable text.
 **Concept artwork:** Owner approved 2026-10-26 at `docs/mockups/approved-precipitation-wind-metrics.png`; installed source baseline at `docs/mockups/app_screen_original.png`.
-**Evidence:** Cycle 042 (`042-p2-wind-metrics`): `.codex/test-artifacts/042-p2-wind-metrics/README.md`, including installed baseline and target captures; closeout `.codex/history/042-p2-wind-metrics.md`; archived plan `.codex/history/plans/042-p2-wind-metrics.md`.
+**Evidence:** `042-p2-wind-metrics`; `.codex/test-artifacts/042-p2-wind-metrics/README.md`; `.codex/history/042-p2-wind-metrics.md`; `.codex/history/plans/042-p2-wind-metrics.md`.
 
 ### P.2.15 — Keep hourly precision active until an explicit tap — DONE
 
-**Objective/scope:** Preserve hourly precision after the activating hold-and-drag is released. A tap on the main forecast area exits hourly mode without changing the selected time; a tap on the timeline exits hourly mode and selects the time under the tap. Update the adopted interaction contract and implement the bounded gesture-state change without new visible controls.
+**Objective/scope:** Preserve hourly precision after the activating hold-and-drag is released.
 **Depends on:** P.2.1, P.2.3, and P.2.5.
-**Exit:** Installed Pixel 3 XL interaction evidence confirms hold-and-drag enters hourly mode, release ends dragging while hourly mode remains visible, main-area tap returns to daily mode with the same selected time, and timeline tap returns to daily mode at the tapped time. Existing timeline labels, forecast values, gesture ownership, and accessibility scale semantics remain intact. Workflow, contract, debug build/install, and `git diff --check` pass. No tests are added or run in this cycle.
+**Exit:** Installed Pixel 3 XL interaction evidence confirms hold-and-drag enters hourly mode, release ends dragging while hourly mode remains visible, main-area tap returns to daily mode with the same selected time, and timeline tap returns to daily mode at the tapped time.
 **Concept artwork:** Owner waived the UI artwork requirement for this slice only on 2026-10-27. `.codex/concepts/P.2.15-hourly-mode-retention.svg` is retained as an unapproved interaction storyboard, not a gate or acceptance artifact.
-**Evidence:** Cycle 046 (`046-p2-hourly-mode-retention`): `.codex/test-artifacts/046-p2-hourly-mode-retention/README.md`; closeout `.codex/history/046-p2-hourly-mode-retention.md`; archived plan `.codex/history/plans/046-p2-hourly-mode-retention.md`.
+**Evidence:** `046-p2-hourly-mode-retention`; `.codex/test-artifacts/046-p2-hourly-mode-retention/README.md`; `.codex/history/046-p2-hourly-mode-retention.md`; `.codex/history/plans/046-p2-hourly-mode-retention.md`.
 
 ### P.2.16 — Make hourly scrubbing continuous and directionally consistent — DONE
 
-**Objective/scope:** Correct the reported lag and uneven forward/backward response while scrubbing the uniform hourly timeline. Keep the selected timestamp authoritative and make finger movement produce continuous, predictable hourly selection in both directions. Preserve the 480 ms hold, uniform hourly spacing, sticky precision mode, gesture ownership, timeline layout, and all accessibility actions. Limit source changes to the timeline gesture/projection and drawing path needed to meet the responsiveness objective; do not redesign the experience or change forecast data.
+**Objective/scope:** Correct the reported lag and uneven forward/backward response while scrubbing the uniform hourly timeline.
 **Depends on:** P.2.15.
-**Exit:** On the installed Pixel 3 XL, repeated forward and backward scrubs show continuous selected-time movement with comparable response to equal finger travel, no visible lag during and after precision entry, and no time jump from scale animation. Hold activation, selected-time stability, clamping, release persistence, explicit tap exits, timeline readability, and forecast values remain intact. Record responsiveness, predictable gesture ownership, and readability with installed evidence. Workflow, contract, debug build/install, and `git diff --check` pass. Do not add or run tests unless requested.
+**Exit:** On the installed Pixel 3 XL, repeated forward and backward scrubs show continuous selected-time movement with comparable response to equal finger travel, no visible lag during and after precision entry, and no time jump from scale animation.
 **Concept artwork:** Owner waived the concept artwork requirement for P.2.16 only on 2026-10-27. `.codex/concepts/P.2.16-hourly-scrub-responsiveness.svg` remains an unapproved planning aid, not a gate or acceptance artifact. The waiver does not apply to other slices.
-**Evidence:** Cycle 048 (`048-p2-hourly-scrub-responsiveness`): `.codex/test-artifacts/048-p2-hourly-scrub-responsiveness/README.md`; closeout `.codex/history/048-p2-hourly-scrub-responsiveness.md`; archived plan `.codex/history/plans/048-p2-hourly-scrub-responsiveness.md`.
+**Evidence:** `048-p2-hourly-scrub-responsiveness`; `.codex/test-artifacts/048-p2-hourly-scrub-responsiveness/README.md`; `.codex/history/048-p2-hourly-scrub-responsiveness.md`; `.codex/history/plans/048-p2-hourly-scrub-responsiveness.md`.
 
 ## P.3 — Deprecated oxygenWX integration feasibility — DEFERRED
 
@@ -556,68 +564,68 @@ Project-wide, every unfinished slice on every roadmap requires an objective-spec
 
 ### ATM.0 — Capture installed pre-engine atmosphere baseline — DONE
 
-**Objective/scope:** Establish the installed app baseline before renderer changes by consolidating the existing Pixel 3 XL visual, gesture, reduced-motion, RTL, and accessibility reviews. No new capture cycle is needed.
+**Objective/scope:** Establish the installed app baseline before renderer changes by consolidating the existing Pixel 3 XL visual, gesture, reduced-motion, RTL, and accessibility reviews.
 **Depends on:** G.4.
 **Exit:** Existing installed evidence covers daily/hourly navigation, main-view swipe and double-tap Now, bright/night and large-font landscape readability, reduced motion, RTL, TalkBack, responsiveness, gesture predictability, and forecast readability; documented limitations remain explicit.
-**Evidence:** Daily/hourly and main-view navigation: `.codex/history/005-main-display-navigation.md`, `.codex/history/012-gesture-acceptance-recheck.md`, and `.codex/history/007-visual-baseline.md`, with captures under the matching `.codex/test-artifacts/` directories. Bright/night and landscape large-font readability: `.codex/history/014-landscape-high-low.md` and `.codex/history/015-responsive-readability-review.md`, with matching artifacts. TalkBack: `.codex/history/018-talkback-forecast-browser.md` and `.codex/history/019-talkback-scale-action.md`, with matching artifacts. Reduced motion: `.codex/history/020-reduced-motion.md` and `.codex/test-artifacts/020-reduced-motion/`. RTL and final P.2 disposition: `.codex/history/021-p2-acceptance-closure.md` and `.codex/test-artifacts/021-p2-acceptance-closure/`. Known limits are recorded in those histories, including qualitative responsiveness and no RTL-specific TalkBack review.
+**Evidence:** `.codex/history/005-main-display-navigation.md`; `.codex/history/012-gesture-acceptance-recheck.md`; `.codex/history/007-visual-baseline.md`; `.codex/test-artifacts/`; `.codex/history/014-landscape-high-low.md`; `.codex/history/015-responsive-readability-review.md`; `.codex/history/018-talkback-forecast-browser.md`; `.codex/history/019-talkback-scale-action.md`; `.codex/history/020-reduced-motion.md`; `.codex/test-artifacts/020-reduced-motion/`; `.codex/history/021-p2-acceptance-closure.md`; `.codex/test-artifacts/021-p2-acceptance-closure/`.
 
 ### ATM.1 — Pure typed scene projection and static fallback — DONE
 
-**Objective/scope:** Add a pure typed mapper from existing `SkyFrame`, selected time and explicit effect/environment inputs to immutable scene state, with a coherent static fallback and an adapter seam. Preserve missingness and distinguish condition identity from rain probability. Do not change visible layout, timeline physics, or gestures.
+**Objective/scope:** Add a pure typed mapper from existing `SkyFrame`, selected time and explicit effect/environment inputs to immutable scene state, with a coherent static fallback and an adapter seam.
 **Depends on:** ATM.0.
-**Exit:** Scene state derives only from typed inputs; absent values remain absent; rain probability cannot become rain intensity; `selectedHour`, forecast facts, accessibility text, and gesture ownership remain unchanged; the current renderer still provides the accepted baseline. Focused tests/build checks are planned subject to the repository's test authorization rule.
-**Evidence:** Cycle 024 (`024-atm1-scene-projection`): `.codex/test-artifacts/024-atm1-scene-projection/README.md`; closeout: `.codex/history/024-atm1-scene-projection.md`; archived plan: `.codex/history/plans/024-atm1-scene-projection.md`.
+**Exit:** Scene state derives only from typed inputs; absent values remain absent; rain probability cannot become rain intensity; `selectedHour`, forecast facts, accessibility text, and gesture ownership remain unchanged; the current renderer still provides the accepted baseline.
+**Evidence:** `024-atm1-scene-projection`; `.codex/test-artifacts/024-atm1-scene-projection/README.md`; `.codex/history/024-atm1-scene-projection.md`; `.codex/history/plans/024-atm1-scene-projection.md`.
 
 ### ATM.2 — Sky, light and illustrative celestial layer — DONE
 
-**Objective/scope:** Add time-aware sky palettes, diffuse light, and illustrative sun/moon artwork with a static/reduced-motion path. No solar ephemeris or moon-phase claims.
+**Objective/scope:** Add time-aware sky palettes, diffuse light, and illustrative sun/moon artwork with a static/reduced-motion path.
 **Depends on:** ATM.1.
-**Exit:** Clear/cloudy/day/dusk/night transitions are continuous across fixture samples; essential text remains readable; installed Pixel 3 XL checks cover daily/hourly, bright/dark, portrait/landscape, default/large font, RTL and reduced-motion states; timeline responsiveness and gesture ownership remain accepted.
-**Evidence:** Cycle 025 (`025-atm2-sky-light-celestial`): `.codex/test-artifacts/025-atm2-sky-light-celestial/README.md`; closeout: `.codex/history/025-atm2-sky-light-celestial.md`; archived plan and approved concept: `.codex/history/plans/025-atm2-sky-light-celestial.md` and `.codex/history/plans/025-atm2-sky-light-celestial-concept.png`.
+**Exit:** Clear/cloudy/day/dusk/night transitions are continuous across fixture samples.
+**Evidence:** `025-atm2-sky-light-celestial`; `.codex/test-artifacts/025-atm2-sky-light-celestial/README.md`; `.codex/history/025-atm2-sky-light-celestial.md`; `.codex/history/plans/025-atm2-sky-light-celestial.md`; `.codex/history/plans/025-atm2-sky-light-celestial-concept.png`.
 
 ### ATM.3a — Consolidate ATM.3 evidence and dependency-order corrective work — DONE
 
-**Objective/scope:** Reuse completed ATM.3 installed evidence, capture the missing 7:30 PM fractional sample and one corrected 8 PM sample after discovering a cycle-030 artifact mismatch, then map source and acceptance dependencies. Evidence and planning only; no application changes.
+**Objective/scope:** Reuse completed ATM.3 installed evidence, capture the missing 7:30 PM fractional sample and one corrected 8 PM sample after discovering a cycle-030 artifact mismatch, then map source and acceptance dependencies.
 **Depends on:** None. This bounded audit can proceed while ATM.3 is blocked.
-**Exit:** Prior evidence is cited by exact path; the two targeted Pixel 3 XL captures disposition the missing fractional and 8 PM states with limitations; device settings are restored; and a source/acceptance dependency map recommends the first corrective slice. ATM.3 remains BLOCKED until its complete exit is met.
-**Evidence:** Cycle 031 (`031-atm3-blocker-confirmation`): `.codex/test-artifacts/031-atm3-blocker-confirmation/README.md`; closeout: `.codex/history/031-atm3-blocker-confirmation.md`; archived plan: `.codex/history/plans/031-atm3-blocker-confirmation.md`.
+**Exit:** Prior evidence is cited by exact path; the two targeted Pixel 3 XL captures disposition the missing fractional and 8 PM states with limitations; device settings are restored; and a source/acceptance dependency map recommends the first corrective slice.
+**Evidence:** `031-atm3-blocker-confirmation`; `.codex/test-artifacts/031-atm3-blocker-confirmation/README.md`; `.codex/history/031-atm3-blocker-confirmation.md`; `.codex/history/plans/031-atm3-blocker-confirmation.md`.
 
 ### ATM.3 — Deterministic multi-depth cloud renderer — DONE
 
-**Objective/scope:** Complete the deterministic far/mid cloud renderer driven by supported cloud-cover inputs and selected-time phase. Correct the recorded selected-time release/observability, large-font clipping, and RTL rendering findings needed for its installed acceptance. No precipitation or terrain redesign.
+**Objective/scope:** Complete the deterministic far/mid cloud renderer driven by supported cloud-cover inputs and selected-time phase.
 **Depends on:** ATM.2.
-**Exit:** Cloud visuals respond smoothly and deterministically to supported cloud-cover and selected-time inputs without reseeding or popping at sample boundaries; phase changes are perceptible but restrained; the static path is legible. The exact selected moment remains authoritative and is consistently disclosed in the forecast summary and timeline semantics after release. Installed Pixel 3 XL review covers clear/overcast and daily/hourly states, compact/1.3 font, RTL and reduced motion; it confirms no clipping, coherent RTL chronology, timeline responsiveness, gesture predictability, accessible selected-time disclosure, and readable forecast facts.
-**Evidence:** Cycles `026-atm3-cloud-renderer` through `031-atm3-blocker-confirmation` are recorded in `.codex/history/`; installed evidence is in `.codex/test-artifacts/026-atm3-cloud-renderer/` through `.codex/test-artifacts/031-atm3-blocker-confirmation/`. Cycle 030 recorded 1.3-font clipping and a zero-motion idle pair; cycle 031 corrected the 8 PM capture and added a fractional sample. At that point, RTL still rendered LTR, release hid and rounded the selected time, and cloud phase movement was visually unconfirmed. Cycle `032-atm3-corrective-acceptance` resolved these findings and completed the selected-time, large-font, RTL, cloud-phase, reduced-motion, and TalkBack acceptance. The owner-confirmed TalkBack pass is recorded without a transcript. Evidence: `.codex/test-artifacts/032-atm3-corrective-acceptance/README.md`; closeout: `.codex/history/032-atm3-corrective-acceptance.md`; archived plan: `.codex/history/plans/032-atm3-corrective-acceptance.md`.
+**Exit:** Cloud visuals respond smoothly and deterministically to supported cloud-cover and selected-time inputs without reseeding or popping at sample boundaries; phase changes are perceptible but restrained; the static path is legible.
+**Evidence:** `026-atm3-cloud-renderer`; `031-atm3-blocker-confirmation`; `.codex/history/`; `.codex/test-artifacts/026-atm3-cloud-renderer/`; `.codex/test-artifacts/031-atm3-blocker-confirmation/`; `032-atm3-corrective-acceptance`; `.codex/test-artifacts/032-atm3-corrective-acceptance/README.md`; `.codex/history/032-atm3-corrective-acceptance.md`; `.codex/history/plans/032-atm3-corrective-acceptance.md`.
 
 ### ATM.3b — Deterministic hourly precipitation demo data — DONE
 
-**Objective/scope:** Expand the deterministic DEMO DATA fixture and typed hourly forecast projection with precipitation inputs for visual design: stepped hourly chance values, explicit rain and snow identities, and explicit hourly precipitation totals where supplied. Keep chance and total as separate nullable/typed signals; never derive totals or snow from chance or temperature. Use a generic precipitation-chance label for both rain and snow. No renderer, timeline, gesture, or live-provider changes.
+**Objective/scope:** Expand the deterministic DEMO DATA fixture and typed hourly forecast projection with precipitation inputs for visual design: stepped hourly chance values, explicit rain and snow identities, and explicit hourly precipitation totals where supplied.
 **Depends on:** ATM.3.
-**Exit:** Normal hourly fixture navigation exposes dry and multiple precipitation-chance levels, rain hours with differing explicit totals, a missing-total case, and an explicitly typed snow case. Projection preserves chance, type, amount, and missingness independently; the visible chance label is accurate for rain and snow; the fixture remains deterministic and labeled DEMO DATA. No precipitation rendering or timeline behavior changes.
-**Evidence:** Cycle 034 (`034-atm3b-precipitation-demo-data`): `.codex/test-artifacts/034-atm3b-precipitation-demo-data/`; closeout: `.codex/history/034-atm3b-precipitation-demo-data.md`; archived plan: `.codex/history/plans/034-atm3b-precipitation-demo-data.md`.
+**Exit:** Normal hourly fixture navigation exposes dry and multiple precipitation-chance levels, rain hours with differing explicit totals, a missing-total case, and an explicitly typed snow case.
+**Evidence:** `034-atm3b-precipitation-demo-data`; `.codex/test-artifacts/034-atm3b-precipitation-demo-data/`; `.codex/history/034-atm3b-precipitation-demo-data.md`; `.codex/history/plans/034-atm3b-precipitation-demo-data.md`.
 
 ### ATM.4 — Bounded rain and snow depiction — DONE
 
-**Objective/scope:** Add clearly visible precipitation artwork driven by typed hourly condition, chance, and optional amount. Chance selects stepped ambient moisture coverage; it does not select falling-rain heaviness. Explicit hourly totals may control illustrative rain heaviness; missing totals remain unknown. Snow requires an explicit typed condition or clearly labeled synthetic fixture; never infer it from temperature.
+**Objective/scope:** Add clearly visible precipitation artwork driven by typed hourly condition, chance, and optional amount.
 **Depends on:** ATM.3 and ATM.3b.
-**Exit:** Rain falls visibly across the atmospheric view; stepped chance states produce distinct, understandable moisture coverage; explicit hourly totals distinguish illustrative rain heaviness without implying measured intensity beyond the DEMO DATA fixture. Explicit snow has a coherent, distinct depiction. Static/reduced-motion states remain understandable, and forecast facts and timeline remain readable. Paired installed Pixel 3 XL captures show absent/present effects and representative chance/amount steps at normal phone viewing size; focused checks cover the typed mappings and relevant timeline interactions. Cross-app RTL, TalkBack, font-scale, and other accessibility/layout matrices are separate cycles.
-**Evidence:** Retry cycle 035 (`035-atm4-bounded-precipitation`): `.codex/test-artifacts/035-atm4-bounded-precipitation/README.md` and installed captures; closeout: `.codex/history/035-atm4-bounded-precipitation.md`; archived plan: `.codex/history/plans/035-atm4-bounded-precipitation.md`. Prior rejected attempt retained at `.codex/history/033-atm4-bounded-precipitation.md` and `.codex/test-artifacts/033-atm4-bounded-precipitation/README.md`. RTL, TalkBack, large-font, landscape, other devices, and frame-time measurements were not part of this slice and are not claimed.
+**Exit:** Rain falls visibly across the atmospheric view; stepped chance states produce distinct, understandable moisture coverage; explicit hourly totals distinguish illustrative rain heaviness without implying measured intensity beyond the DEMO DATA fixture.
+**Evidence:** `035-atm4-bounded-precipitation`; `.codex/test-artifacts/035-atm4-bounded-precipitation/README.md`; `.codex/history/035-atm4-bounded-precipitation.md`; `.codex/history/plans/035-atm4-bounded-precipitation.md`; `.codex/history/033-atm4-bounded-precipitation.md`; `.codex/test-artifacts/033-atm4-bounded-precipitation/README.md`.
 
 ### ATM.5 — Fog and wind effect primitives — DONE
 
-**Objective/scope:** Add reusable haze/turbulence primitives only as clearly labeled preview effects until supported typed visibility and wind-direction inputs exist. No fabricated live fog, wind direction, or visibility claims.
+**Objective/scope:** Add reusable haze/turbulence primitives only as clearly labeled preview effects until supported typed visibility and wind-direction inputs exist.
 **Depends on:** ATM.3.
-**Exit:** Missing inputs produce no claimed weather effect; preview states are clearly identified as illustrative; effects do not obscure forecast text or timeline and have static fallbacks. Time-varying illustrative effects follow selected time continuously without wall-clock-driven intensity or timestamp changes. Focused presentation tests cover explicit preview gating and preservation of forecast values; installed Pixel 3 XL review covers preview-present and absent-input states plus representative scrub transitions. Application-wide RTL, TalkBack, font-scale, and unrelated layout checks are outside this slice.
+**Exit:** Missing inputs produce no claimed weather effect; preview states are clearly identified as illustrative; effects do not obscure forecast text or timeline and have static fallbacks.
 **Concept artwork:** Owner approved 2026-10-25 at `.codex/concepts/ATM.5-fog-wind-preview.png`. The approved direction has a richer background and midground, no data box around forecast facts, clouds within scene bounds, and an increasingly perceptible haze effect as the distant ridge softens and loses contrast. Scrubbing should transition deterministically and smoothly with selected time; do not use wall-clock intensity changes or imply wind direction. Rain/snow intensity panels are reference material only and do not expand ATM.5 scope.
-**Evidence:** Incomplete cycle 036 (`036-atm5-fog-wind-primitives`): `.codex/test-artifacts/036-atm5-fog-wind-primitives/`; closeout: `.codex/history/036-atm5-fog-wind-primitives.md`; archived plan: `.codex/history/plans/036-atm5-fog-wind-primitives.md`. ATM.5 completed in cycle 037 (`037-atm5-selected-time-profile`): `.codex/test-artifacts/037-atm5-selected-time-profile/README.md`; closeout: `.codex/history/037-atm5-selected-time-profile.md`; archived plan: `.codex/history/plans/037-atm5-selected-time-profile.md`.
+**Evidence:** `036-atm5-fog-wind-primitives`; `.codex/test-artifacts/036-atm5-fog-wind-primitives/`; `.codex/history/036-atm5-fog-wind-primitives.md`; `.codex/history/plans/036-atm5-fog-wind-primitives.md`; `037-atm5-selected-time-profile`; `.codex/test-artifacts/037-atm5-selected-time-profile/README.md`; `.codex/history/037-atm5-selected-time-profile.md`; `.codex/history/plans/037-atm5-selected-time-profile.md`.
 
 ### ATM.6 — Restrained storm and night refinements — DONE
 
-**Objective/scope:** Add muted storm and night artwork using supported condition/time cues, adapted to the existing abstract landscape geometry. Keep that geometry; the approved concept's mountain/forest terrain is reference only for this slice. Add debug-build illustrative storm and clear-night scene previews needed for installed review; they must preserve selected fixture facts and be visibly labeled. No forecast fixture/provider changes, alerts, solar/moon accuracy claims, or flashes behind critical text.
+**Objective/scope:** Add muted storm and night artwork using supported condition/time cues, adapted to the existing abstract landscape geometry.
 **Depends on:** ATM.5.
-**Exit:** Storm/night cues produce the intended restrained scene states, remain understandable in static/reduced-motion presentation, and introduce no strobing or text occlusion. Focused scene-projection tests cover the storm/night cue mappings and static state; debug-only illustrative storm and clear-night previews preserve fixture facts; installed Pixel 3 XL review covers only the affected storm/night states and their text-clearance behavior.
+**Exit:** Storm/night cues produce the intended restrained scene states, remain understandable in static/reduced-motion presentation, and introduce no strobing or text occlusion.
 **Concept artwork:** Owner approved 2026-10-25 at `.codex/concepts/ATM.6-storm-night.png`. The approved board shows clear night, cloudy night, and storm night with restrained blue-gray cloud scenes and protected forecast-text/timeline areas; no celestial objects, lightning, alerts, rain/snow effects, or astronomical-accuracy claims. On 2026-10-25 the owner resolved the depicted mountain/forest terrain mismatch by retaining the installed abstract landscape and adapting storm/night styling to it.
-**Evidence:** Cycle 038 (`038-atm6-storm-night-refinements`): `.codex/test-artifacts/038-atm6-storm-night-refinements/README.md`; closeout: `.codex/history/038-atm6-storm-night-refinements.md`; archived plan: `.codex/history/plans/038-atm6-storm-night-refinements.md`.
+**Evidence:** `038-atm6-storm-night-refinements`; `.codex/test-artifacts/038-atm6-storm-night-refinements/README.md`; `.codex/history/038-atm6-storm-night-refinements.md`; `.codex/history/plans/038-atm6-storm-night-refinements.md`.
 
 ## DFM — Debug forecast matrix
 
@@ -625,27 +633,27 @@ This workstream establishes an explicit, debug-only set of typed forecast scenar
 
 ### DFM.1 — Define and approve the debug forecast matrix — DONE
 
-**Objective/scope:** Document the matrix scenario inventory and typed field contract. Cover clear, partly cloudy, cloudy, rain, snow, and storm; day/night variants where they change scene meaning; dry/wet probability and explicit/missing amount cases; and condition transitions. Define thunderstorm probability as a separate signal from generic precipitation probability, including a 27% illustrative case and a 90% illustrative case, plus a separate debug-only warning state. Specify expected forecast facts, provenance labels, and which values are intentionally missing. No application code or scene redesign.
+**Objective/scope:** Document the matrix scenario inventory and typed field contract.
 **Depends on:** ATM.6.
-**Exit:** An owner-reviewed matrix specification lists every scenario and variant, defines all typed fields and missingness, distinguishes illustrative warning state from official alerts, and states the expected time/condition transitions. The owner approves this matrix before fixture implementation begins.
+**Exit:** An owner-reviewed matrix specification lists every scenario and variant, defines all typed fields and missingness, distinguishes illustrative warning state from official alerts, and states the expected time/condition transitions.
 **Design artifact:** `.codex/concepts/DFM.1-debug-forecast-matrix.md` — an annotated coverage table and transition map; owner approval is required before DFM.2.
-**Evidence:** Owner-approved matrix and transition contract: `.codex/concepts/DFM.1-debug-forecast-matrix.md`. Cycle 039 (`039-dfm1-debug-forecast-matrix`): `.codex/test-artifacts/039-dfm1-debug-forecast-matrix/README.md`; closeout: `.codex/history/039-dfm1-debug-forecast-matrix.md`; archived plan: `.codex/history/plans/039-dfm1-debug-forecast-matrix.md`.
+**Evidence:** `.codex/concepts/DFM.1-debug-forecast-matrix.md`; `039-dfm1-debug-forecast-matrix`; `.codex/test-artifacts/039-dfm1-debug-forecast-matrix/README.md`; `.codex/history/039-dfm1-debug-forecast-matrix.md`; `.codex/history/plans/039-dfm1-debug-forecast-matrix.md`.
 
 ### DFM.2 — Implement the approved debug forecast catalog — DONE
 
-**Objective/scope:** Implement the approved matrix as deterministic, immutable typed debug forecast scenarios. Keep it separate from the normal forecast fixture and gate access to debuggable builds. Preserve generic precipitation chance, thunderstorm probability, typed precipitation identity/amount, optional debug warning state, and missingness as independent values. No matrix browser or visual mapping yet.
+**Objective/scope:** Implement the approved matrix as deterministic, immutable typed debug forecast scenarios.
 **Depends on:** DFM.1.
-**Exit:** Focused data/projection checks demonstrate every approved matrix row is addressable and stable, every field retains its specified type/missingness, and normal fixture output is unchanged. A rendered inventory report or equivalent review artifact matches the approved matrix, and the owner approves the completed catalog before UI work starts.
+**Exit:** Focused data/projection checks demonstrate every approved matrix row is addressable and stable, every field retains its specified type/missingness, and normal fixture output is unchanged.
 **Concept artifact:** The owner-approved DFM.1 matrix is the implementation contract; no additional scene artwork is in scope.
-**Evidence:** Cycle 040 (`040-dfm2-debug-forecast-catalog`): `.codex/test-artifacts/040-dfm2-debug-forecast-catalog/README.md` and `forecast-catalog-inventory.md`; closeout: `.codex/history/040-dfm2-debug-forecast-catalog.md`; archived plan: `.codex/history/plans/040-dfm2-debug-forecast-catalog.md`. The full debug test task also exposed one unrelated existing time-label assertion failure, recorded in the cycle evidence.
+**Evidence:** `040-dfm2-debug-forecast-catalog`; `.codex/test-artifacts/040-dfm2-debug-forecast-catalog/README.md`; `forecast-catalog-inventory.md`; `.codex/history/040-dfm2-debug-forecast-catalog.md`; `.codex/history/plans/040-dfm2-debug-forecast-catalog.md`.
 
 ### DFM.3 — Build debug forecast scenario sets for timeline review — DONE
 
-**Objective/scope:** Add a debug-only way to load complete synthetic forecast profiles from the debug catalog for visual review of timeline scrubbing and atmospheric transitions. Provide 3-, 7-, and 10-day weather intervals under test, each surrounded by two calm, clear days before and after; the corresponding loaded forecasts are 7, 11, and 14 days. Include a short rain event, a clear-to-partly-cloudy-to-storm progression, and an extended cold/cloud/wind/snow progression. Treat the timeline as a viewer of the selected forecast samples. Keep all scenario data and access debug-only, and use the existing selected-time and timeline presentation path without adding browser controls to the immersive forecast screen.
+**Objective/scope:** Add a debug-only way to load complete synthetic forecast profiles from the debug catalog for visual review of timeline scrubbing and atmospheric transitions.
 **Depends on:** DFM.2.
-**Exit:** Each forecast profile is selectable in a debuggable build and can be scrubbed across its exact loaded bounds on the installed reference device; every weather interval under test has two calm, clear days of forecast context on both sides; selected timestamps and typed synthetic facts match catalog samples; the complete suite covers the approved condition families; no permanent control is added to the forecast screen; release builds expose no scenario browser or scenario data; timeline interaction remains responsive, predictable, and readable.
+**Exit:** Each forecast profile is selectable in a debuggable build and can be scrubbed across its exact loaded bounds on the installed reference device.
 **Concept artwork:** Owner approved 2026-10-26 at `.codex/concepts/DFM.3-debug-forecast-matrix-browser.png`. The Pixel 3 XL-based storyboard shows the same full-screen atmosphere and bottom tape across a clear → partly-cloudy → storm scrub sequence, plus separate rain and extended cold/cloud/wind/snow fixtures. No forecast cards or on-screen debug control are proposed.
-**Evidence:** Cycle 041: `.codex/test-artifacts/041-dfm3-debug-forecast-matrix-browser/README.md`; release inspection: `.codex/test-artifacts/041-dfm3-debug-forecast-matrix-browser/release-isolation.txt`; history: `.codex/history/041-dfm3-debug-forecast-matrix-browser.md`; archived plan: `.codex/history/plans/041-dfm3-debug-forecast-matrix-browser.md`. TalkBack, RTL, large-font, and reduced-motion review remain assigned to applicable follow-up cycles.
+**Evidence:** `.codex/test-artifacts/041-dfm3-debug-forecast-matrix-browser/README.md`; `.codex/test-artifacts/041-dfm3-debug-forecast-matrix-browser/release-isolation.txt`; `.codex/history/041-dfm3-debug-forecast-matrix-browser.md`; `.codex/history/plans/041-dfm3-debug-forecast-matrix-browser.md`.
 
 ### DFM.4 — Concealed on-device debug workbench (split workstream)
 
@@ -660,52 +668,52 @@ This workstream establishes an explicit, debug-only set of typed forecast scenar
 
 ### DFM.4.1 — Coordinator lifecycle and checkpoint — DONE
 
-**Objective/scope:** Implement and independently verify the coordinator-owned startup readiness, debug request completion, opaque in-memory checkpoint and no-I/O restore, plus the existing debug cold-launch handshake. This is an additive foundation; keep ordinary activation, selected-time projection, source and storage semantics intact. Review the in-progress coordinator and debug delegate changes from cycle 084; generic search and pre-action hooks already in the working tree are unaccepted follow-on scaffolding, not evidence of this exit.
+**Objective/scope:** Implement and independently verify the coordinator-owned startup readiness, debug request completion, opaque in-memory checkpoint and no-I/O restore, plus the existing debug cold-launch handshake.
 **Depends on:** DFM.3 and SG.2.
 **Exit:** Coordinator readiness, activation completion, atomic no-I/O checkpoint restoration and alternate-launch lifecycle satisfy the original contract, including focused race/cancellation proof; ordinary activation remains compatible.
 **Slice board(s):** Parent DFM.4 session board is approved for the product-level outcome. Objective-specific `.codex/concepts/DFM.4.1-coordinator-lifecycle-board.md` was owner-approved as written on 2026-11-01; its lifecycle, cancellation, restoration and scope constraints govern this slice. No UI artwork applies to this nonvisual slice.
-**Evidence:** Cycle 085: `.codex/history/085-dfm41-coordinator-lifecycle.md`, archived plan `.codex/history/plans/085-dfm41-coordinator-lifecycle.md`, and focused results `.codex/test-artifacts/085-dfm41-coordinator-lifecycle/README.md`.
+**Evidence:** `.codex/history/085-dfm41-coordinator-lifecycle.md`; `.codex/history/plans/085-dfm41-coordinator-lifecycle.md`; `.codex/test-artifacts/085-dfm41-coordinator-lifecycle/README.md`.
 
 ### DFM.4.2 — Debug command session and ordinary-action boundary — DONE
 
-**Objective/scope:** Implement debug-only command dispatch, the default-off session and menu, and safe exit before ordinary location selection or refresh/retry. Keep the approved normal forecast and existing catalog presentation intact; the catalog library and diagnostic overlay are later slices.
+**Objective/scope:** Implement debug-only command dispatch, the default-off session and menu, and safe exit before ordinary location selection or refresh/retry.
 **Depends on:** DFM.4.1.
 **Exit:** Debug-only command/session gate and restore-before-ordinary-action ordering work with focused tests and installed interaction evidence; release has no command handler.
 **Slice board(s):** The owner-approved DFM.4 session flow and normal/debug artwork above cover this slice's command, menu, exit, and restore-before-ordinary-action states; the approved workbench baseline supplies command/session context. Cycle 086 records their constraints and scope; overlay and new library states remain later work.
-**Evidence:** Cycle 086: `.codex/history/086-dfm42-debug-command-session.md`, archived plan `.codex/history/plans/086-dfm42-debug-command-session.md`, and installed/focused evidence `.codex/test-artifacts/086-dfm42-debug-command-session/`.
+**Evidence:** `.codex/history/086-dfm42-debug-command-session.md`; `.codex/history/plans/086-dfm42-debug-command-session.md`; `.codex/test-artifacts/086-dfm42-debug-command-session/`.
 
 ### DFM.4.3 — Clean forecast view and diagnostic overlays — DONE
 
-**Objective/scope:** Apply the approved clean default forecast composition and add optional debug-only diagnostics and local display presets. Preserve weather scene, tape, navigation, selected-time authority and essential source/freshness details.
+**Objective/scope:** Apply the approved clean default forecast composition and add optional debug-only diagnostics and local display presets.
 **Depends on:** DFM.4.2.
 **Exit:** Approved clean main view and independently default-off overlay/presets preserve forecast facts, truthful details and timeline behavior, established by scoped tests and installed captures.
 **Slice board(s) — Behavior and UI artwork, OWNER APPROVED:** The product owner approved behavior `.codex/concepts/DFM.4.3-clean-view-behavior-board.md` with visual flow `.svg`, and UI artwork `.codex/concepts/DFM.4.3-clean-view-overlay-artwork-board.png` with editable `.svg` and companion notes `.md`, on 2026-11-01 as shown; no additional constraints were stated. These objective-specific boards use the owner-approved DFM.4 session-flow, normal/debug-overlay, and catalog-picker boards above as references. Approval covers retaining the approved summary and location/refresh/tape actions; independent default-off overlay visibility; presets that change only local display groups; labeled diagnostics that do not obscure forecast facts; source/freshness/error detail reachable through the existing forecast browser; and unchanged installed scene art. These boards define DFM.4.3 scope and acceptance, but do not replace implementation verification or installed evidence. The board gate was satisfied for cycle 087, now closed.
-**Pre-slice evidence:** `.codex/test-artifacts/087-dfm43-clean-view-diagnostic-overlays/pre-slice-main.png` and `README.md`.
-**Evidence:** Cycle 087 closed on scoped implementation, focused JVM/instrumented accessibility checks, and installed Pixel captures; `.codex/test-artifacts/087-dfm43-clean-view-diagnostic-overlays/README.md` records commands, results and limits. The connected run's single unrelated `FirstCitySceneRenderingTest.selectedLocalTimeProducesStableRainAndStormCloudPoses` failure was owner-directed out of scope. Closeout: `.codex/history/087-dfm43-clean-view-diagnostic-overlays.md`; archived plan: `.codex/history/plans/087-dfm43-clean-view-diagnostic-overlays.md`.
+**Pre-slice evidence:** `.codex/test-artifacts/087-dfm43-clean-view-diagnostic-overlays/pre-slice-main.png`; `README.md`.
+**Evidence:** `.codex/test-artifacts/087-dfm43-clean-view-diagnostic-overlays/README.md`; `.codex/history/087-dfm43-clean-view-diagnostic-overlays.md`; `.codex/history/plans/087-dfm43-clean-view-diagnostic-overlays.md`.
 
 ### DFM.4.4 — Local synthetic catalog storage and replay snapshots — DONE
 
-**Objective/scope:** Build the debug-local catalog authoring and persistence foundation independently of editor UI. Preserve canonical catalog, codec, storage namespaces, selection path and full D-30..D+13 local-date window; do not mutate LIVE/provider/location state or change shared schema.
+**Objective/scope:** Build the debug-local catalog authoring and persistence foundation independently of editor UI.
 **Depends on:** DFM.4.1.
 **Exit:** Debug-local editable simulations and immutable replay snapshots round-trip with full canonical horizon, truthful typed support and safe validated preview boundary; focused lifecycle and failure tests pass.
 **Slice board(s) — Behavior, OWNER APPROVED:** `.codex/concepts/DFM.4.4-local-catalog-storage-board.md` and visual flow `.codex/concepts/DFM.4.4-local-catalog-storage-board.svg` (PNG preview alongside), approved as written on 2026-11-02. UI artwork is not applicable because this is a nonvisual storage/activation foundation independent of editor UI; DFM.4.5 owns the library/editor presentation and installed UI acceptance. Approval covers canonical SIMULATED materialization, editable SIMULATED round-trip, immutable REPLAY snapshots, explicit-preview revalidation, fail-closed behavior, and LIVE/provider/cache/location isolation. Parent DFM.4 boards remain reference inputs.
-**Evidence:** Cycle 088 complete: `.codex/history/088-dfm44-local-catalog-storage.md`; `.codex/test-artifacts/088-dfm44-local-catalog-storage/README.md`; archived plan `.codex/history/plans/088-dfm44-local-catalog-storage.md`.
+**Evidence:** `.codex/history/088-dfm44-local-catalog-storage.md`; `.codex/test-artifacts/088-dfm44-local-catalog-storage/README.md`; `.codex/history/plans/088-dfm44-local-catalog-storage.md`.
 
 ### DFM.4.5 — Catalog library and period-first editor — DONE
 
-**Objective/scope:** Extend the debug-local authoring metadata/materializer to support event-specific local-time ranges, then implement the debug-only catalog library, period-first event editor, and explicit synthetic preview. Keep the shared catalog schema and normal screen/ordinary location paths intact.
+**Objective/scope:** Extend the debug-local authoring metadata/materializer to support event-specific local-time ranges, then implement the debug-only catalog library, period-first event editor, and explicit synthetic preview.
 **Depends on:** DFM.4.2 and DFM.4.4.
-**Exit:** Saved SIMULATED catalogs support multiple non-overlapping half-open event ranges within a fixed authored envelope and materialize them faithfully over the full canonical horizon; existing DFM.4.4 records still reopen; immutable REPLAY capture and saved-record-only Preview remain valid; and the approved library/editor workflow passes focused checks plus installed state/interaction evidence.
+**Exit:** Saved SIMULATED catalogs support multiple non-overlapping half-open event ranges within a fixed authored envelope and materialize them faithfully over the full canonical horizon.
 **Slice board(s) — behavior and UI artwork:** The product owner approved `.codex/concepts/DFM.4.5-catalog-library-behavior-board.md` with flow `.svg` and PNG preview, UI artwork `.codex/concepts/DFM.4.5-catalog-library-editor-artwork-board.svg` with PNG preview, and authored-range behavior contract `.codex/concepts/DFM.4.5-authored-event-ranges-contract.md` with visual board `.svg` and PNG preview, as shown on 2026-11-02 with no additional constraints. The authored-range board covers half-open event ranges, uncovered baseline periods, overlap rejection, DST, sidecar compatibility, and unchanged schema; the other boards govern `#PICKER` gating, library/editor/SIMULATED/REPLAY transitions, save/cancel without activation, explicit saved-record preview/revalidation, fail-closed preservation, synthetic provenance, and restoration/isolation boundaries. Installed evidence remains required.
-**Evidence:** Cycle 089 complete: `.codex/history/089-dfm45-catalog-library-editor.md`; `.codex/test-artifacts/089-dfm45-catalog-library-editor/README.md`; archived plan `.codex/history/plans/089-dfm45-catalog-library-editor.md`.
+**Evidence:** `.codex/history/089-dfm45-catalog-library-editor.md`; `.codex/test-artifacts/089-dfm45-catalog-library-editor/README.md`; `.codex/history/plans/089-dfm45-catalog-library-editor.md`.
 
 ### DFM.4.6 — Workbench integration and release acceptance — DONE
 
-**Objective/scope:** Verify the combined original DFM.4 outcome on the installed reference device and release variant. This is focused integration acceptance for DFM.4, not a broad app/system TEST matrix; fix only defects within the approved DFM.4 boundary or replan.
+**Objective/scope:** Verify the combined original DFM.4 outcome on the installed reference device and release variant.
 **Depends on:** DFM.4.2, DFM.4.3 and DFM.4.5.
 **Exit:** Final integrated debug and release checks, screenshots, exact restore/no-mutation proof, manual documentation check and original DFM.4 acceptance obligations are recorded and pass.
 **Slice board(s) — OWNER APPROVED 2026-11-02:** Objective-specific behavior board `.codex/concepts/DFM.4.6-integrated-workbench-behavior-board.md` and UI artwork board `.codex/concepts/DFM.4.6-integrated-workbench-ui-artwork-board.svg` (PNG preview alongside). Approval covers the integrated debug journey, exact no-I/O restoration, ordinary-action ordering, release command boundary, and final installed states. Constraint: DFM.4.6 remains integration acceptance only; a draggable/resizable diagnostic panel is deferred to separate follow-up work. Cycle 090 records the boards' relationship to scope and acceptance.
-**Evidence:** Cycle 090 complete: `.codex/history/090-dfm46-workbench-integration-release-acceptance.md`; installed, package, command, ordinary-action, gesture, focused-test, and manual-check evidence `.codex/test-artifacts/090-dfm46-workbench-integration-release-acceptance/README.md`; archived plan `.codex/history/plans/090-dfm46-workbench-integration-release-acceptance.md`.
+**Evidence:** `.codex/history/090-dfm46-workbench-integration-release-acceptance.md`; `.codex/test-artifacts/090-dfm46-workbench-integration-release-acceptance/README.md`; `.codex/history/plans/090-dfm46-workbench-integration-release-acceptance.md`.
 
 ## WA — Weather Assets
 
@@ -713,19 +721,19 @@ The WA workstream implements the full 48-symbol weather-event artwork catalog fr
 
 ### WA.1 — Implement sky symbols — DONE
 
-**Objective/scope:** Implement the first concept-board row: Sunny, Clear night, Mostly sunny, Mostly clear night, Partly sunny/cloudy, Partly cloudy night, Mostly cloudy, and Cloudy/overcast. Establish the reusable static symbol API and asset conventions used by later rows. Add a debug-only symbol selector to simulated authored event ranges for focused preview; do not change canonical weather facts.
+**Objective/scope:** Implement the first concept-board row: Sunny, Clear night, Mostly sunny, Mostly clear night, Partly sunny/cloudy, Partly cloudy night, Mostly cloudy, and Cloudy/overcast.
 **Depends on:** None.
-**Exit:** All eight sky entries resolve to scalable, documented artwork through the reusable size-aware API; day/night and cloud distinctions remain identifiable at intended compact and larger sizes; labels/semantics retain the specific forecast meaning; eight sequential non-overlapping SIMULATED event ranges each select the matching graphic; focused tests cover only WA.1 symbol resolution and debug selector persistence/isolation; one installed Pixel screenshot per symbol records the displayed result. No other symbol row or app-wide test matrix is included.
+**Exit:** All eight sky entries resolve to scalable, documented artwork through the reusable size-aware API.
 **Slice board(s):** Shared behavior/mapping board `.codex/concepts/WA.1-weather-symbol-library-behavior-board.md` and UI artwork board `Oxygen_forecast_weather_symbol_board.png`, both approved by the product owner on 2026-11-03. The behavior board governs the full 48-ID mapping contract; this slice implements only the Sky row.
-**Evidence:** Plan `.codex/plans/094-weather-symbol-library.md`; target artifacts `.codex/test-artifacts/094-weather-symbol-library/`; closeout `.codex/history/094-weather-symbol-library.md`.
+**Evidence:** `.codex/history/plans/094-weather-symbol-library.md`; `.codex/test-artifacts/094-weather-symbol-library/`; `.codex/history/094-weather-symbol-library.md`.
 
 ### WA.2 — Implement rain and ice symbols — DONE
 
-**Objective/scope:** Implement the second concept-board row: Drizzle, Rain, Heavy rain, Rain showers, Freezing drizzle, Freezing rain, Ice pellets/sleet, and Hail. Preserve freezing and precipitation-type distinctions; apply the board footnote's provider-defined “sleet” normalization.
+**Objective/scope:** Implement the second concept-board row: Drizzle, Rain, Heavy rain, Rain showers, Freezing drizzle, Freezing rain, Ice pellets/sleet, and Hail.
 **Depends on:** WA.1.
 **Exit:** All eight entries resolve to scalable, documented artwork through the shared API; rain/freezing distinctions and pellet/hail shapes remain identifiable at intended sizes, with labels retaining precise meaning; scoped installed evidence covers this row and directly affected use.
 **Slice board(s):** Shared behavior/mapping board `.codex/concepts/WA.1-weather-symbol-library-behavior-board.md` and artwork board `Oxygen_forecast_weather_symbol_board.png`, both approved 2026-11-03. The behavior board governs the full 48-ID mapping contract; this slice implements only the Rain + Ice row.
-**Evidence:** Cycle 095 complete: `.codex/history/095-wa2-rain-ice-symbols.md`; installed captures and focused results `.codex/test-artifacts/095-wa2-rain-ice-symbols/README.md`; archived plan `.codex/history/plans/095-wa2-rain-ice-symbols.md`.
+**Evidence:** `.codex/history/095-wa2-rain-ice-symbols.md`; `.codex/test-artifacts/095-wa2-rain-ice-symbols/README.md`; `.codex/history/plans/095-wa2-rain-ice-symbols.md`.
 
 ### WA.3 — Implement snow and mixed-precipitation symbols — DONE
 
@@ -737,27 +745,27 @@ The WA workstream implements the full 48-symbol weather-event artwork catalog fr
 
 ### WA.4 — Implement visibility and wind symbols — DONE
 
-**Objective/scope:** Implement the fourth concept-board row: Mist, Fog, Freezing fog, Haze/smoke, Dust/sand/ash, Windy/gusty, Blowing snow, and Blizzard. Keep visibility-reducing causes and wind/snow combinations distinguishable through artwork plus labels.
+**Objective/scope:** Implement the fourth concept-board row: Mist, Fog, Freezing fog, Haze/smoke, Dust/sand/ash, Windy/gusty, Blowing snow, and Blizzard.
 **Depends on:** WA.3.
 **Exit:** All eight entries resolve to scalable, documented artwork through the shared API; cause and event distinctions remain identifiable at intended sizes, with labels retaining precise meaning; scoped installed evidence covers this row and directly affected use.
 **Slice board(s):** Shared behavior/mapping board `.codex/concepts/WA.1-weather-symbol-library-behavior-board.md` and artwork board `Oxygen_forecast_weather_symbol_board.png`, both approved 2026-11-03. The behavior board governs the full 48-ID mapping contract; this slice implements only the Visibility + Wind row.
-**Evidence:** Cycle 097 archived plan `.codex/history/plans/097-wa4-visibility-wind-symbols.md`; installed artifacts `.codex/test-artifacts/097-wa4-visibility-wind-symbols/`; closeout `.codex/history/097-wa4-visibility-wind-symbols.md`.
+**Evidence:** `.codex/history/plans/097-wa4-visibility-wind-symbols.md`; `.codex/test-artifacts/097-wa4-visibility-wind-symbols/`; `.codex/history/097-wa4-visibility-wind-symbols.md`.
 
 ### WA.5 — Implement storm and fallback symbols — DONE
 
-**Objective/scope:** Implement the fifth concept-board row: Thunderstorm, Thunderstorm with rain, Thunderstorm with hail, Thunderstorm with snow, Squall, Tropical cyclone, Tornado/funnel, and Condition unavailable. Keep unknown/unavailable distinct from clear and keep hazard artwork separate from official warning level or instructions.
+**Objective/scope:** Implement the fifth concept-board row: Thunderstorm, Thunderstorm with rain, Thunderstorm with hail, Thunderstorm with snow, Squall, Tropical cyclone, Tornado/funnel, and Condition unavailable.
 **Depends on:** WA.4.
-**Exit:** All eight entries resolve to scalable, documented artwork through the shared API; compound storm and fallback distinctions remain identifiable at intended sizes, with labels retaining precise meaning; unavailable never resolves to clear; scoped installed evidence covers this row and directly affected use.
+**Exit:** All eight entries resolve to scalable, documented artwork through the shared API.
 **Slice board(s):** Shared behavior/mapping board `.codex/concepts/WA.1-weather-symbol-library-behavior-board.md` and artwork board `Oxygen_forecast_weather_symbol_board.png`, both approved 2026-11-03. The behavior board governs the full 48-ID mapping contract; this slice implements only the Storms + Fallback row.
-**Evidence:** Cycle 098 archived plan `.codex/history/plans/098-wa5-storm-fallback-symbols.md`; installed captures and scoped results `.codex/test-artifacts/098-wa5-storm-fallback-symbols/README.md`; closeout `.codex/history/098-wa5-storm-fallback-symbols.md`.
+**Evidence:** `.codex/history/plans/098-wa5-storm-fallback-symbols.md`; `.codex/test-artifacts/098-wa5-storm-fallback-symbols/README.md`; `.codex/history/098-wa5-storm-fallback-symbols.md`.
 
 ### WA.6 — Implement additional-event symbols — DONE
 
-**Objective/scope:** Implement the sixth concept-board row: Dry thunderstorm, Tropical storm, Waterspout, Frost, Extreme heat, Extreme cold, Dust/sandstorm, and Volcanic ash. Preserve event names and avoid interpreting artwork as an official alert or as unsupported measurements.
+**Objective/scope:** Implement the sixth concept-board row: Dry thunderstorm, Tropical storm, Waterspout, Frost, Extreme heat, Extreme cold, Dust/sandstorm, and Volcanic ash.
 **Depends on:** WA.5.
 **Exit:** All eight entries resolve to scalable, documented artwork through the shared API; event distinctions remain identifiable at intended sizes, with labels retaining precise meaning; scoped installed evidence covers this row and directly affected use.
 **Slice board(s):** Shared behavior/mapping board `.codex/concepts/WA.1-weather-symbol-library-behavior-board.md` and artwork board `Oxygen_forecast_weather_symbol_board.png`, both approved 2026-11-03. The behavior board governs the full 48-ID mapping contract; this slice implements only the Additional Events row.
-**Evidence:** Cycle 099 closeout `.codex/history/099-wa6-additional-event-symbols.md`; installed captures and scoped results `.codex/test-artifacts/099-wa6-additional-event-symbols/README.md`; archived plan `.codex/history/plans/099-wa6-additional-event-symbols.md`.
+**Evidence:** `.codex/history/099-wa6-additional-event-symbols.md`; `.codex/test-artifacts/099-wa6-additional-event-symbols/README.md`; `.codex/history/plans/099-wa6-additional-event-symbols.md`.
 
 ## SG — Scene Generation
 
