@@ -454,6 +454,24 @@ internal fun AuthoredCatalogLibrary(
                             error = null
                         }.onFailure { error = it.message ?: "Set a valid local date before loading the Rain + Ice ranges." }
                     }) { Text("RAIN + ICE RANGES", style = MaterialTheme.typography.labelMedium) }
+                    TextButton(onClick = {
+                        runCatching {
+                            val day = parseLocalDateTime(envelopeStart).toLocalDate()
+                            val start = day.atTime(8, 0)
+                            envelopeStart = start.toString()
+                            envelopeEnd = start.plusHours(8).toString()
+                            events.clear()
+                            events.addAll(DebugSnowMixedSymbolRangeFixture.events(start).map { event ->
+                                EventDraft(
+                                    start = event.startLocal.toString(),
+                                    end = event.endLocalExclusive.toString(),
+                                    conditions = emptySet(),
+                                    symbolId = event.symbolId,
+                                )
+                            })
+                            error = null
+                        }.onFailure { error = it.message ?: "Set a valid local date before loading the Snow + Mixed ranges." }
+                    }) { Text("SNOW + MIXED RANGES", style = MaterialTheme.typography.labelMedium) }
                     }
                 }
                 EventTimeline(envelopeStart, envelopeEnd, events)

@@ -36,6 +36,14 @@ enum class WeatherSymbolId(val label: String) {
     FREEZING_RAIN("Freezing rain"),
     ICE_PELLETS("Ice pellets"),
     HAIL("Hail"),
+    FLURRIES_SNOW_GRAINS("Flurries or snow grains"),
+    SNOW("Snow"),
+    HEAVY_SNOW("Heavy snow"),
+    SNOW_SHOWERS("Snow showers"),
+    RAIN_AND_SNOW("Rain and snow"),
+    WINTRY_MIX("Wintry mix"),
+    GRAUPEL("Graupel"),
+    ICE_CRYSTALS("Ice crystals"),
 }
 
 enum class WeatherSymbolArtwork {
@@ -43,6 +51,8 @@ enum class WeatherSymbolArtwork {
     PARTLY_CLOUDY_NIGHT, MOSTLY_CLOUDY, CLOUDY_OVERCAST,
     DRIZZLE, RAIN, HEAVY_RAIN, RAIN_SHOWERS, FREEZING_DRIZZLE,
     FREEZING_RAIN, ICE_PELLETS, HAIL,
+    FLURRIES_SNOW_GRAINS, SNOW, HEAVY_SNOW, SNOW_SHOWERS,
+    RAIN_AND_SNOW, WINTRY_MIX, GRAUPEL, ICE_CRYSTALS,
 }
 
 data class WeatherSymbolDefinition(val id: WeatherSymbolId, val artwork: WeatherSymbolArtwork)
@@ -66,6 +76,14 @@ object WeatherSymbolCatalog {
         WeatherSymbolDefinition(WeatherSymbolId.FREEZING_RAIN, WeatherSymbolArtwork.FREEZING_RAIN),
         WeatherSymbolDefinition(WeatherSymbolId.ICE_PELLETS, WeatherSymbolArtwork.ICE_PELLETS),
         WeatherSymbolDefinition(WeatherSymbolId.HAIL, WeatherSymbolArtwork.HAIL),
+        WeatherSymbolDefinition(WeatherSymbolId.FLURRIES_SNOW_GRAINS, WeatherSymbolArtwork.FLURRIES_SNOW_GRAINS),
+        WeatherSymbolDefinition(WeatherSymbolId.SNOW, WeatherSymbolArtwork.SNOW),
+        WeatherSymbolDefinition(WeatherSymbolId.HEAVY_SNOW, WeatherSymbolArtwork.HEAVY_SNOW),
+        WeatherSymbolDefinition(WeatherSymbolId.SNOW_SHOWERS, WeatherSymbolArtwork.SNOW_SHOWERS),
+        WeatherSymbolDefinition(WeatherSymbolId.RAIN_AND_SNOW, WeatherSymbolArtwork.RAIN_AND_SNOW),
+        WeatherSymbolDefinition(WeatherSymbolId.WINTRY_MIX, WeatherSymbolArtwork.WINTRY_MIX),
+        WeatherSymbolDefinition(WeatherSymbolId.GRAUPEL, WeatherSymbolArtwork.GRAUPEL),
+        WeatherSymbolDefinition(WeatherSymbolId.ICE_CRYSTALS, WeatherSymbolArtwork.ICE_CRYSTALS),
     )
     private val byId = definitions.associateBy(WeatherSymbolDefinition::id)
     fun resolve(id: WeatherSymbolId): WeatherSymbolDefinition = requireNotNull(byId[id])
@@ -129,6 +147,14 @@ fun WeatherSymbolIcon(
                     WeatherSymbolArtwork.FREEZING_RAIN -> drawPrecipitation(drops = 2, freezing = true)
                     WeatherSymbolArtwork.ICE_PELLETS -> drawPrecipitation(pellets = true)
                     WeatherSymbolArtwork.HAIL -> drawPrecipitation(hail = true)
+                    WeatherSymbolArtwork.FLURRIES_SNOW_GRAINS -> drawFrozenPrecipitation(flurries = true)
+                    WeatherSymbolArtwork.SNOW -> drawFrozenPrecipitation(snowflakes = 2)
+                    WeatherSymbolArtwork.HEAVY_SNOW -> drawFrozenPrecipitation(snowflakes = 3, heavy = true)
+                    WeatherSymbolArtwork.SNOW_SHOWERS -> drawFrozenPrecipitation(snowflakes = 3, sun = true)
+                    WeatherSymbolArtwork.RAIN_AND_SNOW -> drawFrozenPrecipitation(rain = 2, snowflakes = 1)
+                    WeatherSymbolArtwork.WINTRY_MIX -> drawFrozenPrecipitation(rain = 1, snowflakes = 1, pellets = true)
+                    WeatherSymbolArtwork.GRAUPEL -> drawFrozenPrecipitation(graupel = true)
+                    WeatherSymbolArtwork.ICE_CRYSTALS -> drawFrozenPrecipitation(crystalsOnly = true)
                 }
             }
         }
@@ -218,6 +244,59 @@ private fun DrawScope.drawPrecipitation(
             drawCircle(Color(0xFFE5F8FF), 2.5f, Offset(it.x - 1.5f, it.y - 2f))
         }
     }
+}
+
+/** Snow + mixed row: flakes, rain strokes, soft graupel, and bare crystals. */
+private fun DrawScope.drawFrozenPrecipitation(
+    flurries: Boolean = false, snowflakes: Int = 0, heavy: Boolean = false,
+    sun: Boolean = false, rain: Int = 0, pellets: Boolean = false,
+    graupel: Boolean = false, crystalsOnly: Boolean = false,
+) {
+    if (!crystalsOnly) {
+        if (sun) drawSun(28f, 26f, 11f)
+        drawCloud(17f, 22f, 68f, 42f)
+    }
+    val ice = Color(0xFFE6F8FF)
+    if (flurries) {
+        drawSnowflake(65f, 76f, 7f)
+        listOf(Offset(36f, 72f), Offset(48f, 79f)).forEach { drawCircle(ice, 1.8f, it) }
+    }
+    if (snowflakes > 0) {
+        val centers = when (snowflakes) {
+            1 -> listOf(Offset(67f, 76f))
+            2 -> listOf(Offset(38f, 74f), Offset(64f, 77f))
+            else -> listOf(Offset(30f, 72f), Offset(50f, 79f), Offset(71f, 72f))
+        }
+        centers.forEach { drawSnowflake(it.x, it.y, if (heavy) 8.5f else 7f) }
+    }
+    if (rain > 0) {
+        val xs = if (rain == 1) listOf(35f) else listOf(31f, 47f)
+        xs.forEachIndexed { index, x ->
+            val y = if (index == 0) 77f else 81f
+            drawLine(Color(0xFF55D8FF), Offset(x + 2f, y - 11f), Offset(x - 2f, y), 3.2f, StrokeCap.Round)
+        }
+    }
+    if (pellets) listOf(Offset(79f, 79f), Offset(57f, 85f)).forEach {
+        drawCircle(Color(0xFFA5DAEF), 3f, it)
+        drawCircle(ice, 1.4f, Offset(it.x - 1f, it.y - 1f))
+    }
+    if (graupel) listOf(Offset(31f, 70f), Offset(49f, 78f), Offset(67f, 70f), Offset(59f, 87f)).forEach {
+        drawCircle(Color(0xFFDFEDF3), 4.4f, it)
+        drawCircle(Color.White.copy(alpha = .8f), 1.6f, Offset(it.x - 1.3f, it.y - 1.4f))
+    }
+    if (crystalsOnly) listOf(Offset(30f, 34f), Offset(70f, 28f), Offset(52f, 66f)).forEach {
+        drawSnowflake(it.x, it.y, 9f)
+    }
+}
+
+private fun DrawScope.drawSnowflake(cx: Float, cy: Float, radius: Float) {
+    for (index in 0 until 3) {
+        val angle = index * Math.PI / 3.0
+        val dx = cos(angle).toFloat() * radius
+        val dy = sin(angle).toFloat() * radius
+        drawLine(Color(0xFFE8F9FF), Offset(cx - dx, cy - dy), Offset(cx + dx, cy + dy), 1.8f, StrokeCap.Round)
+    }
+    drawCircle(Color.White, 1.7f, Offset(cx, cy))
 }
 
 private fun DrawScope.drawCloud(x: Float, y: Float, width: Float, height: Float, foreground: Boolean = false) {

@@ -719,15 +719,15 @@ The WA workstream implements the full 48-symbol weather-event artwork catalog fr
 **Slice board(s):** Shared behavior/mapping board `.codex/concepts/WA.1-weather-symbol-library-behavior-board.md` and artwork board `Oxygen_forecast_weather_symbol_board.png`, both approved 2026-11-03. The behavior board governs the full 48-ID mapping contract; this slice implements only the Rain + Ice row.
 **Evidence:** Cycle 095 complete: `.codex/history/095-wa2-rain-ice-symbols.md`; installed captures and focused results `.codex/test-artifacts/095-wa2-rain-ice-symbols/README.md`; archived plan `.codex/history/plans/095-wa2-rain-ice-symbols.md`.
 
-### WA.3 — Implement snow and mixed-precipitation symbols — NEXT
+### WA.3 — Implement snow and mixed-precipitation symbols — DONE
 
 **Objective/scope:** Implement the third concept-board row: Flurries/snow grains, Snow, Heavy snow, Snow showers, Rain and snow/sleet, Wintry mix, Graupel, and Ice crystals. Preserve supplied component names where available; do not equate graupel, ice pellets, and ice crystals.
 **Depends on:** WA.2.
 **Exit:** All eight entries resolve to scalable, documented artwork through the shared API; frozen/mixed distinctions remain identifiable at intended sizes, with labels retaining precise meaning; scoped installed evidence covers this row and directly affected use.
 **Slice board(s):** Shared behavior/mapping board `.codex/concepts/WA.1-weather-symbol-library-behavior-board.md` and artwork board `Oxygen_forecast_weather_symbol_board.png`, both approved 2026-11-03. The behavior board governs the full 48-ID mapping contract; this slice implements only the Snow + Mixed Precipitation row.
-**Evidence:** Allocate cycle-specific plan, artifact directory, and history record when planned.
+**Evidence:** Cycle 096 complete: `.codex/history/096-wa3-snow-mixed-symbols.md`; installed captures and scoped results `.codex/test-artifacts/096-wa3-snow-mixed-symbols/README.md`; archived plan `.codex/history/plans/096-wa3-snow-mixed-symbols.md`. Automated tests were not authorized or run; the existing exact-16-ID test assertion needs revision before the next authorized focused run.
 
-### WA.4 — Implement visibility and wind symbols — PLANNED
+### WA.4 — Implement visibility and wind symbols — NEXT
 
 **Objective/scope:** Implement the fourth concept-board row: Mist, Fog, Freezing fog, Haze/smoke, Dust/sand/ash, Windy/gusty, Blowing snow, and Blizzard. Keep visibility-reducing causes and wind/snow combinations distinguishable through artwork plus labels.
 **Depends on:** WA.3.
