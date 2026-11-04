@@ -727,13 +727,13 @@ The WA workstream implements the full 48-symbol weather-event artwork catalog fr
 **Slice board(s):** Shared behavior/mapping board `.codex/concepts/WA.1-weather-symbol-library-behavior-board.md` and artwork board `Oxygen_forecast_weather_symbol_board.png`, both approved 2026-11-03. The behavior board governs the full 48-ID mapping contract; this slice implements only the Snow + Mixed Precipitation row.
 **Evidence:** Cycle 096 complete: `.codex/history/096-wa3-snow-mixed-symbols.md`; installed captures and scoped results `.codex/test-artifacts/096-wa3-snow-mixed-symbols/README.md`; archived plan `.codex/history/plans/096-wa3-snow-mixed-symbols.md`. Automated tests were not authorized or run; the existing exact-16-ID test assertion needs revision before the next authorized focused run.
 
-### WA.4 — Implement visibility and wind symbols — NEXT
+### WA.4 — Implement visibility and wind symbols — DONE
 
 **Objective/scope:** Implement the fourth concept-board row: Mist, Fog, Freezing fog, Haze/smoke, Dust/sand/ash, Windy/gusty, Blowing snow, and Blizzard. Keep visibility-reducing causes and wind/snow combinations distinguishable through artwork plus labels.
 **Depends on:** WA.3.
 **Exit:** All eight entries resolve to scalable, documented artwork through the shared API; cause and event distinctions remain identifiable at intended sizes, with labels retaining precise meaning; scoped installed evidence covers this row and directly affected use.
 **Slice board(s):** Shared behavior/mapping board `.codex/concepts/WA.1-weather-symbol-library-behavior-board.md` and artwork board `Oxygen_forecast_weather_symbol_board.png`, both approved 2026-11-03. The behavior board governs the full 48-ID mapping contract; this slice implements only the Visibility + Wind row.
-**Evidence:** Allocate cycle-specific plan, artifact directory, and history record when planned.
+**Evidence:** Cycle 097 archived plan `.codex/history/plans/097-wa4-visibility-wind-symbols.md`; installed artifacts `.codex/test-artifacts/097-wa4-visibility-wind-symbols/`; closeout `.codex/history/097-wa4-visibility-wind-symbols.md`.
 
 ### WA.5 — Implement storm and fallback symbols — PLANNED
 

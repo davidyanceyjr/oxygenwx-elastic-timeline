@@ -44,6 +44,14 @@ enum class WeatherSymbolId(val label: String) {
     WINTRY_MIX("Wintry mix"),
     GRAUPEL("Graupel"),
     ICE_CRYSTALS("Ice crystals"),
+    MIST("Mist"),
+    FOG("Fog"),
+    FREEZING_FOG("Freezing fog"),
+    HAZE_SMOKE("Haze or smoke"),
+    DUST_SAND_ASH("Dust, sand, or ash"),
+    WINDY_GUSTY("Windy or gusty"),
+    BLOWING_SNOW("Blowing snow"),
+    BLIZZARD("Blizzard"),
 }
 
 enum class WeatherSymbolArtwork {
@@ -53,6 +61,7 @@ enum class WeatherSymbolArtwork {
     FREEZING_RAIN, ICE_PELLETS, HAIL,
     FLURRIES_SNOW_GRAINS, SNOW, HEAVY_SNOW, SNOW_SHOWERS,
     RAIN_AND_SNOW, WINTRY_MIX, GRAUPEL, ICE_CRYSTALS,
+    MIST, FOG, FREEZING_FOG, HAZE_SMOKE, DUST_SAND_ASH, WINDY_GUSTY, BLOWING_SNOW, BLIZZARD,
 }
 
 data class WeatherSymbolDefinition(val id: WeatherSymbolId, val artwork: WeatherSymbolArtwork)
@@ -84,6 +93,14 @@ object WeatherSymbolCatalog {
         WeatherSymbolDefinition(WeatherSymbolId.WINTRY_MIX, WeatherSymbolArtwork.WINTRY_MIX),
         WeatherSymbolDefinition(WeatherSymbolId.GRAUPEL, WeatherSymbolArtwork.GRAUPEL),
         WeatherSymbolDefinition(WeatherSymbolId.ICE_CRYSTALS, WeatherSymbolArtwork.ICE_CRYSTALS),
+        WeatherSymbolDefinition(WeatherSymbolId.MIST, WeatherSymbolArtwork.MIST),
+        WeatherSymbolDefinition(WeatherSymbolId.FOG, WeatherSymbolArtwork.FOG),
+        WeatherSymbolDefinition(WeatherSymbolId.FREEZING_FOG, WeatherSymbolArtwork.FREEZING_FOG),
+        WeatherSymbolDefinition(WeatherSymbolId.HAZE_SMOKE, WeatherSymbolArtwork.HAZE_SMOKE),
+        WeatherSymbolDefinition(WeatherSymbolId.DUST_SAND_ASH, WeatherSymbolArtwork.DUST_SAND_ASH),
+        WeatherSymbolDefinition(WeatherSymbolId.WINDY_GUSTY, WeatherSymbolArtwork.WINDY_GUSTY),
+        WeatherSymbolDefinition(WeatherSymbolId.BLOWING_SNOW, WeatherSymbolArtwork.BLOWING_SNOW),
+        WeatherSymbolDefinition(WeatherSymbolId.BLIZZARD, WeatherSymbolArtwork.BLIZZARD),
     )
     private val byId = definitions.associateBy(WeatherSymbolDefinition::id)
     fun resolve(id: WeatherSymbolId): WeatherSymbolDefinition = requireNotNull(byId[id])
@@ -155,6 +172,14 @@ fun WeatherSymbolIcon(
                     WeatherSymbolArtwork.WINTRY_MIX -> drawFrozenPrecipitation(rain = 1, snowflakes = 1, pellets = true)
                     WeatherSymbolArtwork.GRAUPEL -> drawFrozenPrecipitation(graupel = true)
                     WeatherSymbolArtwork.ICE_CRYSTALS -> drawFrozenPrecipitation(crystalsOnly = true)
+                    WeatherSymbolArtwork.MIST -> drawVisibility(0)
+                    WeatherSymbolArtwork.FOG -> drawVisibility(1)
+                    WeatherSymbolArtwork.FREEZING_FOG -> drawVisibility(2)
+                    WeatherSymbolArtwork.HAZE_SMOKE -> drawVisibility(3)
+                    WeatherSymbolArtwork.DUST_SAND_ASH -> drawVisibility(4)
+                    WeatherSymbolArtwork.WINDY_GUSTY -> drawWind(0)
+                    WeatherSymbolArtwork.BLOWING_SNOW -> drawWind(1)
+                    WeatherSymbolArtwork.BLIZZARD -> drawWind(2)
                 }
             }
         }
@@ -315,4 +340,46 @@ private fun DrawScope.drawCloud(x: Float, y: Float, width: Float, height: Float,
     drawPath(p, Brush.verticalGradient(listOf(top, Color(0xFFD2E1EA), bottom), y, y + height))
     drawPath(p, Color(0xFFF6FCFF).copy(alpha = .58f), style = Stroke(width = 1.4f))
     drawPath(p, Brush.horizontalGradient(listOf(Color.Transparent, Color.White.copy(alpha = .42f), Color.Transparent), x, x + width), style = Stroke(width = 1.8f, cap = StrokeCap.Round))
+}
+
+/** Visibility row: layered bands, ice accent, and warm particulate cues remain separate. */
+private fun DrawScope.drawVisibility(kind: Int) {
+    val cold = Color(0xFFB9E8F4)
+    val warm = Color(0xFFD8A45F)
+    val tint = if (kind >= 3) warm else cold
+    if (kind == 0 || kind == 1 || kind == 2) {
+        drawCloud(21f, 21f, 58f, 35f)
+    } else if (kind == 3) {
+        drawCircle(Color(0xFFFFC765), 9f, Offset(72f, 24f))
+    }
+    val bands = if (kind == 0) listOf(54f, 70f) else listOf(46f, 60f, 74f, 86f)
+    bands.forEachIndexed { index, y ->
+        val start = if (index % 2 == 0) 12f else 23f
+        drawLine(tint.copy(alpha = if (kind == 1) .78f else .9f), Offset(start, y), Offset(89f - start / 4f, y - 3f),
+            strokeWidth = if (kind == 1) 6f else 4f, cap = StrokeCap.Round)
+    }
+    if (kind == 2) drawSnowflake(76f, 70f, 9f)
+    if (kind == 4) listOf(Offset(29f, 32f), Offset(48f, 22f), Offset(72f, 37f), Offset(35f, 78f), Offset(67f, 69f)).forEach {
+        drawCircle(Color(0xFFFFCB70), 2.5f, it)
+    }
+}
+
+/** Wind row: long directional strokes with separate drifting and dense snow. */
+private fun DrawScope.drawWind(kind: Int) {
+    val wind = Color(0xFF8EE6F5)
+    val count = if (kind == 2) 5 else 3
+    repeat(count) { index ->
+        val y = 30f + index * (if (kind == 2) 12f else 18f)
+        val path = Path().apply {
+            moveTo(10f, y + 7f)
+            cubicTo(31f, y - 8f, 49f, y + 10f, 73f, y - 5f)
+            quadraticTo(85f, y - 11f, 91f, y - 9f)
+        }
+        drawPath(path, wind.copy(alpha = if (kind == 2) .9f else .78f), style = Stroke(3f, cap = StrokeCap.Round))
+    }
+    if (kind > 0) {
+        val flakes = if (kind == 1) listOf(Offset(38f, 27f), Offset(73f, 68f))
+            else listOf(Offset(25f, 23f), Offset(67f, 21f), Offset(42f, 57f), Offset(78f, 79f))
+        flakes.forEach { drawSnowflake(it.x, it.y, if (kind == 2) 6f else 7f) }
+    }
 }
