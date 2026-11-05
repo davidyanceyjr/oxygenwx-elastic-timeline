@@ -131,7 +131,8 @@ object OpenMeteoCatalogMapper {
                 val sourceCode = code?.toWmoInt()
                 val mapped = sourceCode?.let(::mapWmo)
                 val event = if (isWindowBoundary) null else sourceCode?.let { code ->
-                    skyEvent(code, time, solarByDate[localDate]) ?: rainIceEvent(code)
+                    skyEvent(code, time, solarByDate[localDate]) ?: rainIceEvent(code) ?: snowMixedEvent(code) ?:
+                        visibilityWindEvent(code) ?: stormFallbackEvent(code)
                 }
                 val interval = AccumulationInterval(time.minusSeconds(3600), time)
                 val fact = try {
@@ -296,6 +297,45 @@ object OpenMeteoCatalogMapper {
             descriptionSource = "open-meteo:forecast-api-weather-code-table")
     }
 
+    private fun snowMixedEvent(code: Int): WeatherEventFact? {
+        val (id, description) = when (code) {
+            71 -> WeatherEventId.SNOW to "Slight snowfall"
+            73 -> WeatherEventId.SNOW to "Moderate snowfall"
+            75 -> WeatherEventId.HEAVY_SNOW to "Heavy snowfall"
+            77 -> WeatherEventId.FLURRIES_SNOW_GRAINS to "Snow grains"
+            85 -> WeatherEventId.SNOW_SHOWERS to "Slight snow showers"
+            86 -> WeatherEventId.SNOW_SHOWERS to "Heavy snow showers"
+            else -> return null
+        }
+        return WeatherEventFact(id, sourceCode = code, provider = SOURCE_ID,
+            documentedCodeDescription = description,
+            descriptionSource = "open-meteo:forecast-api-weather-code-table")
+    }
+
+    private fun visibilityWindEvent(code: Int): WeatherEventFact? {
+        val (id, description) = when (code) {
+            45 -> WeatherEventId.FOG to "Fog"
+            48 -> WeatherEventId.FREEZING_FOG to "Depositing rime fog"
+            else -> return null
+        }
+        return WeatherEventFact(id, sourceCode = code, provider = SOURCE_ID,
+            documentedCodeDescription = description,
+            descriptionSource = "open-meteo:forecast-api-weather-code-table")
+    }
+
+    private fun stormFallbackEvent(code: Int): WeatherEventFact? {
+        val (id, description) = when (code) {
+            95 -> WeatherEventId.THUNDERSTORM to "Thunderstorm"
+            96 -> WeatherEventId.THUNDERSTORM_WITH_HAIL to "Thunderstorm with slight hail"
+            97 -> WeatherEventId.THUNDERSTORM to "Heavy thunderstorm"
+            99 -> WeatherEventId.THUNDERSTORM_WITH_HAIL to "Thunderstorm with heavy hail"
+            else -> return null
+        }
+        return WeatherEventFact(id, sourceCode = code, provider = SOURCE_ID,
+            documentedCodeDescription = description,
+            descriptionSource = "open-meteo:forecast-api-weather-code-table")
+    }
+
     private fun daySymbol(time: Instant, solar: Pair<Instant?, Instant?>?): Boolean? {
         val sunrise = solar?.first ?: return null
         val sunset = solar.second ?: return null
@@ -309,7 +349,7 @@ object OpenMeteoCatalogMapper {
         56, 57, 66, 67 -> Wmo(setOf(WeatherCondition.RAIN), setOf(WeatherPhenomenon.FREEZING_RAIN))
         in 51..67, in 80..82 -> Wmo(setOf(WeatherCondition.RAIN))
         in 71..77, in 85..86 -> Wmo(setOf(WeatherCondition.SNOW))
-        95, 96, 99 -> Wmo(setOf(WeatherCondition.STORM, WeatherCondition.RAIN))
+        95, 96, 97, 99 -> Wmo(setOf(WeatherCondition.STORM))
         else -> null
     }.also { require(code in 0..99) { "Malformed WMO weather code $code" } }
 

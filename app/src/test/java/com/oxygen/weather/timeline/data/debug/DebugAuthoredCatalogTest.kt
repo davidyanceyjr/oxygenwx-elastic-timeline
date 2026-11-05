@@ -90,7 +90,14 @@ class DebugAuthoredCatalogTest {
 
         val recording = repository.save(definition)
         val reopened = requireNotNull(repository.reopen(location, definition.datasetId))
-        assertEquals(WeatherSymbolId.entries.drop(8), reopened.first.events.map { it.symbolId })
+        assertEquals(
+            listOf(
+                WeatherSymbolId.DRIZZLE, WeatherSymbolId.RAIN, WeatherSymbolId.HEAVY_RAIN,
+                WeatherSymbolId.RAIN_SHOWERS, WeatherSymbolId.FREEZING_DRIZZLE,
+                WeatherSymbolId.FREEZING_RAIN, WeatherSymbolId.ICE_PELLETS, WeatherSymbolId.HAIL,
+            ),
+            reopened.first.events.map { it.symbolId },
+        )
         assertEquals(8, reopened.first.events.size)
         reopened.first.events.forEachIndexed { index, event ->
             assertEquals(start.plusHours(index.toLong()), event.startLocal)

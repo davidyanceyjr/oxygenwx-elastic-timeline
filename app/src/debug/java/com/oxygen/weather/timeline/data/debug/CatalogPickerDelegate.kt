@@ -153,6 +153,10 @@ class CatalogPickerDelegate : ActivityVariantDelegate {
         val symbolReview = activeDatasetId in setOf(
             DebugCatalogActivity.SG11_SKY_REPLAY_ID,
             DebugCatalogActivity.SG11_RAIN_ICE_REPLAY_ID,
+            DebugCatalogActivity.SG11_SNOW_MIXED_REPLAY_ID,
+            DebugCatalogActivity.SG11_VISIBILITY_WIND_REPLAY_ID,
+            DebugCatalogActivity.SG11_STORM_FALLBACK_REPLAY_ID,
+            DebugCatalogActivity.SG11_ADDITIONAL_EVENTS_REPLAY_ID,
         )
         if (sourceDetail == null && !overlayVisible && !symbolReview) return
         Column(
@@ -197,6 +201,12 @@ class CatalogPickerDelegate : ActivityVariantDelegate {
             }
             if (symbolReview) {
                 val symbol = diagnostics.symbolId ?: WeatherSymbolId.CONDITION_UNAVAILABLE
+                val selectedFact = host.activationCoordinator.state.value.active?.let { active ->
+                    active.recording.catalog.facts.firstOrNull { it.validTime == active.selectedInstant }
+                }
+                val selectedEvent = selectedFact?.let {
+                    com.oxygen.weather.timeline.data.catalog.WeatherEventPriority.select(it.events, it.primaryEventIndex)
+                }
                 Surface(color = Color(0xED102030), shape = RoundedCornerShape(14.dp)) {
                     Row(Modifier.fillMaxWidth().padding(8.dp).testTag("sg11SymbolReview"),
                         verticalAlignment = Alignment.CenterVertically,
@@ -204,8 +214,14 @@ class CatalogPickerDelegate : ActivityVariantDelegate {
                         WeatherSymbolIcon(symbol, Modifier.size(52.dp), contentDescription = diagnostics.symbolName ?: "Condition unavailable")
                         Column {
                             Text("${symbol.name} · ${diagnostics.symbolName ?: "Condition unavailable"}", color = Color.White)
-                            Text("Source code ${diagnostics.sourceCode?.toString() ?: "none"}",
-                                color = Color(0xFFB8D7DC), style = MaterialTheme.typography.labelSmall)
+                            val assignment = when {
+                                selectedEvent == null -> "No supplied weather event"
+                                diagnostics.sourceCode != null && selectedEvent.documentedCodeDescription != null ->
+                                    "Source code ${diagnostics.sourceCode} · ${selectedEvent.documentedCodeDescription}"
+                                diagnostics.sourceCode != null -> "Source code ${diagnostics.sourceCode}"
+                                else -> "No approved Open-Meteo assignment"
+                            }
+                            Text(assignment, color = Color(0xFFB8D7DC), style = MaterialTheme.typography.labelSmall)
                         }
                     }
                 }
@@ -663,7 +679,9 @@ internal suspend fun processCatalogActivationRequest(
     require(selectedInstant == null ||
         (origin == CatalogOrigin.REPLAY && datasetId.value in setOf(
             DebugCatalogActivity.SG4_GAP_REPLAY_ID, DebugCatalogActivity.SG11_SKY_REPLAY_ID,
-            DebugCatalogActivity.SG11_RAIN_ICE_REPLAY_ID,
+            DebugCatalogActivity.SG11_RAIN_ICE_REPLAY_ID, DebugCatalogActivity.SG11_SNOW_MIXED_REPLAY_ID,
+            DebugCatalogActivity.SG11_VISIBILITY_WIND_REPLAY_ID, DebugCatalogActivity.SG11_STORM_FALLBACK_REPLAY_ID,
+            DebugCatalogActivity.SG11_ADDITIONAL_EVENTS_REPLAY_ID,
         ))) {
         "Exact-time selection is only available for the bounded SG.4 and SG.11 debug replays"
     }

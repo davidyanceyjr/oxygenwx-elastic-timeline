@@ -66,6 +66,14 @@ class DebugCatalogActivity : ComponentActivity() {
     private var skyFixtureLocationId by mutableStateOf<com.oxygen.weather.timeline.data.catalog.LocationId?>(null)
     private var rainIceFixtureReady by mutableStateOf(false)
     private var rainIceFixtureLocationId by mutableStateOf<com.oxygen.weather.timeline.data.catalog.LocationId?>(null)
+    private var snowMixedFixtureReady by mutableStateOf(false)
+    private var snowMixedFixtureLocationId by mutableStateOf<com.oxygen.weather.timeline.data.catalog.LocationId?>(null)
+    private var visibilityWindFixtureReady by mutableStateOf(false)
+    private var visibilityWindFixtureLocationId by mutableStateOf<com.oxygen.weather.timeline.data.catalog.LocationId?>(null)
+    private var stormFallbackFixtureReady by mutableStateOf(false)
+    private var stormFallbackFixtureLocationId by mutableStateOf<com.oxygen.weather.timeline.data.catalog.LocationId?>(null)
+    private var additionalEventsFixtureReady by mutableStateOf(false)
+    private var additionalEventsFixtureLocationId by mutableStateOf<com.oxygen.weather.timeline.data.catalog.LocationId?>(null)
     private var showAuthoredLibrary by mutableStateOf(false)
     private var authoredPreviewError by mutableStateOf<String?>(null)
     private var reloadJob: Job? = null
@@ -184,6 +192,120 @@ class DebugCatalogActivity : ComponentActivity() {
             .map { it.datasetId }.distinct().sorted()
     }
 
+    private suspend fun prepareSg11SnowMixedReplay(location: CatalogLocation) {
+        val id = DatasetId(SG11_SNOW_MIXED_REPLAY_ID)
+        fun matches(recording: CatalogRecording): Boolean {
+            val date = DebugSg11SnowMixedCatalogFixture.asOf.atZone(location.timeZone).toLocalDate()
+            return DebugSg11SnowMixedCatalogFixture.ids.indices.all { index ->
+                val instant = date.atTime(8 + index, 0).atZone(location.timeZone).toInstant()
+                recording.catalog.facts.firstOrNull { it.validTime == instant }?.let { fact ->
+                    fact.events == listOf(DebugSg11SnowMixedCatalogFixture.expectedEvents[index]) &&
+                        fact.primaryEventIndex == 0 && WeatherCondition.SNOW in fact.conditions
+                } == true
+            }
+        }
+        val existing = storage.load(location, CatalogStorageNamespace.REPLAY, id)
+        val current = (existing as? StoredCatalogResult.Found)?.recording
+        if (current == null || current.catalog.asOf != DebugSg11SnowMixedCatalogFixture.asOf || !matches(current)) {
+            storage.save(CatalogStorageNamespace.REPLAY, DebugSg11SnowMixedCatalogFixture.recording(location))
+        }
+        val reloaded = storage.load(location, CatalogStorageNamespace.REPLAY, id)
+        check(reloaded is StoredCatalogResult.Found && matches(reloaded.recording)) {
+            "The Snow and mixed precipitation recording did not preserve its typed facts through version-5 reload"
+        }
+        snowMixedFixtureReady = true
+        snowMixedFixtureLocationId = location.id
+        replayIds = storage.history(location.id, CatalogStorageNamespace.REPLAY)
+            .map { it.datasetId }.distinct().sorted()
+    }
+
+    private suspend fun prepareSg11VisibilityWindReplay(location: CatalogLocation) {
+        val id = DatasetId(SG11_VISIBILITY_WIND_REPLAY_ID)
+        fun matches(recording: CatalogRecording): Boolean {
+            val date = DebugSg11VisibilityWindCatalogFixture.asOf.atZone(location.timeZone).toLocalDate()
+            return DebugSg11VisibilityWindCatalogFixture.ids.indices.all { index ->
+                val instant = date.atTime(8 + index, 0).atZone(location.timeZone).toInstant()
+                recording.catalog.facts.firstOrNull { it.validTime == instant }?.let { fact ->
+                    fact.events == listOf(DebugSg11VisibilityWindCatalogFixture.expectedEvents[index]) &&
+                        fact.primaryEventIndex == 0
+                } == true
+            }
+        }
+        val existing = storage.load(location, CatalogStorageNamespace.REPLAY, id)
+        val current = (existing as? StoredCatalogResult.Found)?.recording
+        if (current == null || current.catalog.asOf != DebugSg11VisibilityWindCatalogFixture.asOf || !matches(current)) {
+            storage.save(CatalogStorageNamespace.REPLAY, DebugSg11VisibilityWindCatalogFixture.recording(location))
+        }
+        val reloaded = storage.load(location, CatalogStorageNamespace.REPLAY, id)
+        check(reloaded is StoredCatalogResult.Found && matches(reloaded.recording)) {
+            "The Visibility and wind recording did not preserve its typed facts through version-5 reload"
+        }
+        visibilityWindFixtureReady = true
+        visibilityWindFixtureLocationId = location.id
+        replayIds = storage.history(location.id, CatalogStorageNamespace.REPLAY)
+            .map { it.datasetId }.distinct().sorted()
+    }
+
+    private suspend fun prepareSg11StormFallbackReplay(location: CatalogLocation) {
+        val id = DatasetId(SG11_STORM_FALLBACK_REPLAY_ID)
+        fun matches(recording: CatalogRecording): Boolean {
+            val date = DebugSg11StormFallbackCatalogFixture.asOf.atZone(location.timeZone).toLocalDate()
+            val stormStatesMatch = DebugSg11StormFallbackCatalogFixture.ids.indices.all { index ->
+                val instant = date.atTime(8 + index, 0).atZone(location.timeZone).toInstant()
+                recording.catalog.facts.firstOrNull { it.validTime == instant }?.let { fact ->
+                    fact.events == listOf(DebugSg11StormFallbackCatalogFixture.expectedEvents[index]) &&
+                        fact.primaryEventIndex == 0 && WeatherCondition.STORM in fact.conditions &&
+                        WeatherCondition.RAIN !in fact.conditions
+                } == true
+            }
+            val unavailableTime = date.atTime(8 + DebugSg11StormFallbackCatalogFixture.unavailableIndex, 0)
+                .atZone(location.timeZone).toInstant()
+            val unavailable = recording.catalog.facts.firstOrNull { it.validTime == unavailableTime }
+            return stormStatesMatch && unavailable?.events?.isEmpty() == true &&
+                unavailable.primaryEventIndex == null && unavailable.conditions.isEmpty()
+        }
+        val existing = storage.load(location, CatalogStorageNamespace.REPLAY, id)
+        val current = (existing as? StoredCatalogResult.Found)?.recording
+        if (current == null || current.catalog.asOf != DebugSg11StormFallbackCatalogFixture.asOf || !matches(current)) {
+            storage.save(CatalogStorageNamespace.REPLAY, DebugSg11StormFallbackCatalogFixture.recording(location))
+        }
+        val reloaded = storage.load(location, CatalogStorageNamespace.REPLAY, id)
+        check(reloaded is StoredCatalogResult.Found && matches(reloaded.recording)) {
+            "The Storm and fallback recording did not preserve its typed facts and empty state through version-5 reload"
+        }
+        stormFallbackFixtureReady = true
+        stormFallbackFixtureLocationId = location.id
+        replayIds = storage.history(location.id, CatalogStorageNamespace.REPLAY)
+            .map { it.datasetId }.distinct().sorted()
+    }
+
+    private suspend fun prepareSg11AdditionalEventsReplay(location: CatalogLocation) {
+        val id = DatasetId(SG11_ADDITIONAL_EVENTS_REPLAY_ID)
+        fun matches(recording: CatalogRecording): Boolean {
+            val date = DebugSg11AdditionalEventsCatalogFixture.asOf.atZone(location.timeZone).toLocalDate()
+            return DebugSg11AdditionalEventsCatalogFixture.ids.indices.all { index ->
+                val instant = date.atTime(8 + index, 0).atZone(location.timeZone).toInstant()
+                recording.catalog.facts.firstOrNull { it.validTime == instant }?.let { fact ->
+                    fact.events == listOf(DebugSg11AdditionalEventsCatalogFixture.expectedEvents[index]) &&
+                        fact.primaryEventIndex == 0 && fact.conditions.isEmpty()
+                } == true
+            }
+        }
+        val existing = storage.load(location, CatalogStorageNamespace.REPLAY, id)
+        val current = (existing as? StoredCatalogResult.Found)?.recording
+        if (current == null || current.catalog.asOf != DebugSg11AdditionalEventsCatalogFixture.asOf || !matches(current)) {
+            storage.save(CatalogStorageNamespace.REPLAY, DebugSg11AdditionalEventsCatalogFixture.recording(location))
+        }
+        val reloaded = storage.load(location, CatalogStorageNamespace.REPLAY, id)
+        check(reloaded is StoredCatalogResult.Found && matches(reloaded.recording)) {
+            "The Additional events recording did not preserve canonical-only typed facts through version-5 reload"
+        }
+        additionalEventsFixtureReady = true
+        additionalEventsFixtureLocationId = location.id
+        replayIds = storage.history(location.id, CatalogStorageNamespace.REPLAY)
+            .map { it.datasetId }.distinct().sorted()
+    }
+
     private fun reloadLocations() {
         reloadJob?.cancel()
         reloadJob = lifecycleScope.launch {
@@ -197,6 +319,10 @@ class DebugCatalogActivity : ComponentActivity() {
                         prepareSg4GapReplay(it.location)
                         prepareSg11SkyReplay(it.location)
                         prepareSg11RainIceReplay(it.location)
+                        prepareSg11SnowMixedReplay(it.location)
+                        prepareSg11VisibilityWindReplay(it.location)
+                        prepareSg11StormFallbackReplay(it.location)
+                        prepareSg11AdditionalEventsReplay(it.location)
                         fixtureReady = true
                         fixtureStatus = "SG.4 canonical gap replay ready"
                     }
@@ -343,6 +469,67 @@ class DebugCatalogActivity : ComponentActivity() {
                                 }
                             }
                         }
+                        if (selectedReplay == SG11_SNOW_MIXED_REPLAY_ID && snowMixedFixtureReady &&
+                            selectedLocation?.location?.id == snowMixedFixtureLocationId) {
+                            val location = selectedLocation?.location
+                            if (location != null) {
+                                val date = DebugSg11SnowMixedCatalogFixture.asOf.atZone(location.timeZone).toLocalDate()
+                                DebugSg11SnowMixedCatalogFixture.ids.forEachIndexed { index, id ->
+                                    val instant = date.atTime(8 + index, 0).atZone(location.timeZone).toInstant()
+                                    OutlinedButton(onClick = {
+                                        routeActivation(location, CatalogOrigin.REPLAY, SG11_SNOW_MIXED_REPLAY_ID, instant)
+                                    }) { Text("Inspect ${id.name} · ${8 + index}:00") }
+                                }
+                            }
+                        }
+                        if (selectedReplay == SG11_VISIBILITY_WIND_REPLAY_ID && visibilityWindFixtureReady &&
+                            selectedLocation?.location?.id == visibilityWindFixtureLocationId) {
+                            val location = selectedLocation?.location
+                            if (location != null) {
+                                val date = DebugSg11VisibilityWindCatalogFixture.asOf.atZone(location.timeZone).toLocalDate()
+                                DebugSg11VisibilityWindCatalogFixture.ids.forEachIndexed { index, id ->
+                                    val instant = date.atTime(8 + index, 0).atZone(location.timeZone).toInstant()
+                                    OutlinedButton(onClick = {
+                                        routeActivation(location, CatalogOrigin.REPLAY, SG11_VISIBILITY_WIND_REPLAY_ID, instant)
+                                    }) { Text("Inspect ${id.name} · ${8 + index}:00") }
+                                }
+                            }
+                        }
+                        if (selectedReplay == SG11_STORM_FALLBACK_REPLAY_ID && stormFallbackFixtureReady &&
+                            selectedLocation?.location?.id == stormFallbackFixtureLocationId) {
+                            val location = selectedLocation?.location
+                            if (location != null) {
+                                val date = DebugSg11StormFallbackCatalogFixture.asOf.atZone(location.timeZone).toLocalDate()
+                                DebugSg11StormFallbackCatalogFixture.ids.forEachIndexed { index, id ->
+                                    val instant = date.atTime(8 + index, 0).atZone(location.timeZone).toInstant()
+                                    OutlinedButton(onClick = {
+                                        routeActivation(location, CatalogOrigin.REPLAY, SG11_STORM_FALLBACK_REPLAY_ID, instant)
+                                    }) { Text("Inspect ${id.name} · ${8 + index}:00") }
+                                }
+                                val unavailableIndex = DebugSg11StormFallbackCatalogFixture.unavailableIndex
+                                val unavailableInstant = date.atTime(8 + unavailableIndex, 0)
+                                    .atZone(location.timeZone).toInstant()
+                                OutlinedButton(onClick = {
+                                    routeActivation(location, CatalogOrigin.REPLAY, SG11_STORM_FALLBACK_REPLAY_ID,
+                                        unavailableInstant)
+                                }) { Text("Inspect CONDITION_UNAVAILABLE · ${8 + unavailableIndex}:00") }
+                            }
+                        }
+                        if (selectedReplay == SG11_ADDITIONAL_EVENTS_REPLAY_ID && additionalEventsFixtureReady &&
+                            selectedLocation?.location?.id == additionalEventsFixtureLocationId) {
+                            val location = selectedLocation?.location
+                            if (location != null) {
+                                val date = DebugSg11AdditionalEventsCatalogFixture.asOf
+                                    .atZone(location.timeZone).toLocalDate()
+                                DebugSg11AdditionalEventsCatalogFixture.ids.forEachIndexed { index, id ->
+                                    val instant = date.atTime(8 + index, 0).atZone(location.timeZone).toInstant()
+                                    OutlinedButton(onClick = {
+                                        routeActivation(location, CatalogOrigin.REPLAY,
+                                            SG11_ADDITIONAL_EVENTS_REPLAY_ID, instant)
+                                    }) { Text("Inspect ${id.name} · ${8 + index}:00") }
+                                }
+                            }
+                        }
                     }
                 }
                 val liveSolarCatalog = relay.activation.active?.takeIf {
@@ -482,6 +669,10 @@ class DebugCatalogActivity : ComponentActivity() {
         const val SG4_GAP_REPLAY_ID = "sg4-canonical-gaps-v8"
         const val SG11_SKY_REPLAY_ID = "sg11-sky-typed-v2"
         const val SG11_RAIN_ICE_REPLAY_ID = "sg11-rain-ice-typed-v2"
+                        const val SG11_SNOW_MIXED_REPLAY_ID = "sg11-snow-mixed-typed-v2"
+                        const val SG11_VISIBILITY_WIND_REPLAY_ID = "sg11-visibility-wind-typed-v2"
+                        const val SG11_STORM_FALLBACK_REPLAY_ID = "sg11-storm-fallback-typed-v2"
+        const val SG11_ADDITIONAL_EVENTS_REPLAY_ID = "sg11-additional-events-typed-v2"
         const val CHICAGO_REPLAY_AS_OF = "2026-10-28T12:00:00Z"
     }
 }

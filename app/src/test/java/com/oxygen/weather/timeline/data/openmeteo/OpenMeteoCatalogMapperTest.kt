@@ -457,6 +457,152 @@ class OpenMeteoCatalogMapperTest {
         assertTrue(mapped.catalog.facts.all { it.events.isEmpty() })
     }
 
+    @Test fun `snow and snow shower codes map exactly and survive version 5 replay`() {
+        val date = LocalDate.parse("2026-07-10")
+        val request = request(date.atTime(12, 0).atZone(chicago.timeZone).toInstant())
+        val codes = listOf(
+            71 to (WeatherEventId.SNOW to "Slight snowfall"),
+            73 to (WeatherEventId.SNOW to "Moderate snowfall"),
+            75 to (WeatherEventId.HEAVY_SNOW to "Heavy snowfall"),
+            77 to (WeatherEventId.FLURRIES_SNOW_GRAINS to "Snow grains"),
+            85 to (WeatherEventId.SNOW_SHOWERS to "Slight snow showers"),
+            86 to (WeatherEventId.SNOW_SHOWERS to "Heavy snow showers"),
+        )
+        val times = codes.indices.map { date.atTime(0, 0).atZone(chicago.timeZone).toInstant().plusSeconds(it * 3600L) }
+        val response = fixture(request, -5 * 3600, times, listOf(date))
+        val weatherCodes = response.path("hourly").path("weather_code") as ArrayNode
+        codes.forEachIndexed { index, (code, _) -> weatherCodes.set(index, mapper.nodeFactory.numberNode(code.toDouble())) }
+
+        val mapped = mapBytes(response, request).success()
+        codes.forEachIndexed { index, (code, expected) ->
+            val fact = mapped.catalog.facts[index]
+            val event = fact.events.single()
+            assertEquals(expected.first, event.id)
+            assertEquals(code, event.sourceCode)
+            assertEquals(expected.second, event.documentedCodeDescription)
+            assertEquals("open-meteo:forecast-api-weather-code-table", event.descriptionSource)
+            assertEquals("open-meteo-forecast-api", event.provider)
+            assertEquals(code, fact.sourceWeatherCode)
+        }
+
+        val recording = CatalogRecording(mapped.catalog, mapped.expectedSupport, mapped.dailyExpectedSupport)
+        val encoded = RecordedCatalogCodec.encode(recording)
+        assertEquals(5, mapper.readTree(encoded).path("schemaVersion").intValue())
+        val decoded = (RecordedCatalogCodec.decode(encoded) as RecordingDecodeResult.Success).recording
+        assertEquals(recording.catalog, decoded.catalog)
+        assertArrayEquals(encoded, RecordedCatalogCodec.encode(decoded))
+        val replay = kotlinx.coroutines.runBlocking {
+            CatalogSourceRegistry(listOf(RecordedCatalogSource(encoded))).load(CatalogOrigin.REPLAY, request)
+        }
+        val replayFacts = when (replay) {
+            is CatalogLoadResult.Success -> replay.catalog.facts
+            is CatalogLoadResult.Partial -> replay.catalog.facts
+            else -> emptyList()
+        }
+        assertEquals(mapped.catalog.facts.map { it.events }, replayFacts.map { it.events })
+    }
+
+    @Test fun `unsupported intermediate snow codes do not create typed events`() {
+        val date = LocalDate.parse("2026-07-10")
+        val request = request(date.atTime(12, 0).atZone(chicago.timeZone).toInstant())
+        val unsupportedCodes = listOf(72, 74, 76, 78, 79, 84)
+        val times = unsupportedCodes.indices.map { date.atTime(0, 0).atZone(chicago.timeZone).toInstant().plusSeconds(it * 3600L) }
+        val response = fixture(request, -5 * 3600, times, listOf(date))
+        val weatherCodes = response.path("hourly").path("weather_code") as ArrayNode
+        unsupportedCodes.forEachIndexed { index, code -> weatherCodes.set(index, mapper.nodeFactory.numberNode(code.toDouble())) }
+
+        val mapped = mapBytes(response, request).success()
+        assertEquals(unsupportedCodes, mapped.catalog.facts.map { it.sourceWeatherCode })
+        assertTrue(mapped.catalog.facts.all { it.events.isEmpty() })
+    }
+
+    @Test fun `visibility and wind row maps only documented fog codes`() {
+        val date = LocalDate.parse("2026-07-10")
+        val request = request(date.atTime(12, 0).atZone(chicago.timeZone).toInstant())
+        val codes = listOf(45, 46, 47, 48)
+        val times = codes.indices.map { date.atTime(0, 0).atZone(chicago.timeZone).toInstant().plusSeconds(it * 3600L) }
+        val response = fixture(request, -5 * 3600, times, listOf(date))
+        val weatherCodes = response.path("hourly").path("weather_code") as ArrayNode
+        codes.forEachIndexed { index, code -> weatherCodes.set(index, mapper.nodeFactory.numberNode(code.toDouble())) }
+
+        val mapped = mapBytes(response, request).success()
+        assertEquals(WeatherEventId.FOG, mapped.catalog.facts[0].events.single().id)
+        assertEquals("Fog", mapped.catalog.facts[0].events.single().documentedCodeDescription)
+        assertEquals(WeatherEventId.FREEZING_FOG, mapped.catalog.facts[3].events.single().id)
+        assertEquals("Depositing rime fog", mapped.catalog.facts[3].events.single().documentedCodeDescription)
+        assertEquals(listOf(45, 48), listOf(mapped.catalog.facts[0].events.single().sourceCode,
+            mapped.catalog.facts[3].events.single().sourceCode))
+        assertTrue(mapped.catalog.facts.subList(1, 3).all { it.events.isEmpty() })
+        assertEquals(codes, mapped.catalog.facts.map { it.sourceWeatherCode })
+    }
+
+    @Test fun `storm codes preserve exact identities without broad rain and round trip in version 5`() {
+        val date = LocalDate.parse("2026-07-10")
+        val request = request(date.atTime(12, 0).atZone(chicago.timeZone).toInstant())
+        val assignments = listOf(
+            95 to (WeatherEventId.THUNDERSTORM to "Thunderstorm"),
+            96 to (WeatherEventId.THUNDERSTORM_WITH_HAIL to "Thunderstorm with slight hail"),
+            97 to (WeatherEventId.THUNDERSTORM to "Heavy thunderstorm"),
+            99 to (WeatherEventId.THUNDERSTORM_WITH_HAIL to "Thunderstorm with heavy hail"),
+        )
+        val times = assignments.indices.map {
+            date.atTime(0, 0).atZone(chicago.timeZone).toInstant().plusSeconds(it * 3600L)
+        }
+        val response = fixture(request, -5 * 3600, times, listOf(date))
+        val weatherCodes = response.path("hourly").path("weather_code") as ArrayNode
+        assignments.forEachIndexed { index, (code, _) ->
+            weatherCodes.set(index, mapper.nodeFactory.numberNode(code.toDouble()))
+        }
+
+        val mapped = mapBytes(response, request).success()
+        assignments.forEachIndexed { index, (code, expected) ->
+            val fact = mapped.catalog.facts[index]
+            val event = fact.events.single()
+            assertEquals(expected.first, event.id)
+            assertEquals(code, event.sourceCode)
+            assertEquals(expected.second, event.documentedCodeDescription)
+            assertEquals("open-meteo:forecast-api-weather-code-table", event.descriptionSource)
+            assertEquals("open-meteo-forecast-api", event.provider)
+            assertEquals(code, fact.sourceWeatherCode)
+            assertEquals(setOf(WeatherCondition.STORM), fact.conditions)
+            assertFalse(WeatherCondition.RAIN in fact.conditions)
+        }
+
+        val recording = CatalogRecording(mapped.catalog, mapped.expectedSupport, mapped.dailyExpectedSupport)
+        val encoded = RecordedCatalogCodec.encode(recording)
+        assertEquals(5, mapper.readTree(encoded).path("schemaVersion").intValue())
+        val decoded = (RecordedCatalogCodec.decode(encoded) as RecordingDecodeResult.Success).recording
+        assertEquals(recording.catalog, decoded.catalog)
+        assertArrayEquals(encoded, RecordedCatalogCodec.encode(decoded))
+        val replay = kotlinx.coroutines.runBlocking {
+            CatalogSourceRegistry(listOf(RecordedCatalogSource(encoded))).load(CatalogOrigin.REPLAY, request)
+        }
+        val replayFacts = when (replay) {
+            is CatalogLoadResult.Success -> replay.catalog.facts
+            is CatalogLoadResult.Partial -> replay.catalog.facts
+            else -> emptyList()
+        }
+        assertEquals(mapped.catalog.facts.map { it.events }, replayFacts.map { it.events })
+    }
+
+    @Test fun `unsupported storm codes do not create typed supplied events`() {
+        val date = LocalDate.parse("2026-07-10")
+        val request = request(date.atTime(12, 0).atZone(chicago.timeZone).toInstant())
+        val unsupportedCodes = listOf(94, 98)
+        val times = unsupportedCodes.indices.map {
+            date.atTime(0, 0).atZone(chicago.timeZone).toInstant().plusSeconds(it * 3600L)
+        }
+        val response = fixture(request, -5 * 3600, times, listOf(date))
+        val weatherCodes = response.path("hourly").path("weather_code") as ArrayNode
+        unsupportedCodes.forEachIndexed { index, code ->
+            weatherCodes.set(index, mapper.nodeFactory.numberNode(code.toDouble()))
+        }
+
+        val mapped = mapBytes(response, request).success()
+        assertEquals(unsupportedCodes, mapped.catalog.facts.map { it.sourceWeatherCode })
+        assertTrue(mapped.catalog.facts.all { it.events.isEmpty() })
+    }
+
     @Test fun `provider north bearing 360 normalizes to canonical zero`() {
         val date = LocalDate.parse("2026-07-10")
         val request = request(date.atTime(12, 0).atZone(chicago.timeZone).toInstant())
