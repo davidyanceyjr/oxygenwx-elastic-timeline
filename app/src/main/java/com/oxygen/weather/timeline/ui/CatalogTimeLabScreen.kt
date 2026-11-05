@@ -190,7 +190,7 @@ private fun CatalogTimeLabScreenContent(
             }
         }
         Column(
-            Modifier.fillMaxWidth().align(Alignment.Center).offset(y = (-20).dp)
+            Modifier.fillMaxWidth().align(Alignment.Center).offset(y = (-48).dp)
                 .padding(horizontal = 25.dp * responsiveScale),
             horizontalAlignment = Alignment.CenterHorizontally,
         ) {
@@ -274,6 +274,11 @@ private fun CatalogTimeLabScreenContent(
                         contentDescription = symbolName,
                     )
                 }
+                Text(view.condition ?: "Condition unavailable", color = Color(0xFFECF3F8),
+                    fontSize = 18.sp * responsiveScale, fontWeight = FontWeight.SemiBold,
+                    textAlign = TextAlign.Center,
+                    style = TextStyle(shadow = readoutShadow),
+                    modifier = Modifier.testTag("catalogSelectedCondition"))
                 view.conditionSourceDisclosure?.let { disclosure ->
                     Text(disclosure, color = Color(0xFFECF3F8),
                         fontSize = 12.sp * responsiveScale, textAlign = TextAlign.Center,
@@ -296,7 +301,8 @@ private fun CatalogTimeLabScreenContent(
         Column(Modifier.fillMaxWidth().align(Alignment.BottomCenter).navigationBarsPadding()) {
             CompositionLocalProvider(LocalLayoutDirection provides LayoutDirection.Ltr) {
                 Row(
-                    Modifier.fillMaxWidth().padding(horizontal = 27.dp * responsiveScale),
+                    Modifier.fillMaxWidth().offset(y = (-23).dp)
+                        .padding(horizontal = 27.dp * responsiveScale),
                     horizontalArrangement = Arrangement.Center,
                     verticalAlignment = Alignment.CenterVertically,
                 ) {
