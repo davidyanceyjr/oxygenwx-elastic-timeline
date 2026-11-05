@@ -1,0 +1,98 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1600" height="1120" viewBox="0 0 1600 1120" role="img" aria-labelledby="title desc">
+<title id="title">SG.12 What the Center Readout Shows</title>
+<desc id="desc">A Pixel 3 XL screenshot records the current main screen as a reference. The board defines how the center readout presents the selected location, temperature, matching typed weather symbol, supported sun and moon times, daily high and low, precipitation chance, and wind. It describes selected-hour, eligible carried-condition, and unavailable states while preserving selected-time authority and accessible condition text.</desc>
+<defs>
+ <linearGradient id="bg" x2="0" y2="1"><stop stop-color="#102238"/><stop offset="1" stop-color="#091522"/></linearGradient>
+ <linearGradient id="card" x2="0" y2="1"><stop stop-color="#1d354b"/><stop offset="1" stop-color="#14283b"/></linearGradient>
+ <marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto"><path d="M0 0L10 5L0 10z" fill="#79ddca"/></marker>
+ <style>
+  .title{font:700 32px Arial;fill:#f3f7fa}.subtitle{font:17px Arial;fill:#b4c5d0}.head{font:700 20px Arial;fill:#f3f7fa}.body{font:17px Arial;fill:#d9e5eb}.small{font:15px Arial;fill:#b4c5d0}.tiny{font:13px Arial;fill:#a9bdc9}.accent{font:700 16px Arial;fill:#8ce5d2}.refhead{font:700 20px Arial;fill:#18324a}.refsmall{font:15px Arial;fill:#29475f}.reftiny{font:13px Arial;fill:#29475f}.screen{font-family:Arial;fill:#fff}.line{stroke:#79ddca;stroke-width:2.5;fill:none;marker-end:url(#arrow)}
+ </style>
+</defs>
+<rect width="1600" height="1120" fill="url(#bg)"/>
+<text x="42" y="52" class="title">SG.12  /  WHAT THE CENTER READOUT SHOWS</text>
+<text x="44" y="82" class="subtitle">Behavior board · owner approved 2026-11-05 · Pixel 3 XL main-screen reference captured 2026-11-05</text>
+
+<!-- Installed current-state reference -->
+<rect x="40" y="112" width="345" height="713" rx="22" fill="#f2f5f7"/>
+<text x="55" y="140" class="refhead">CURRENT MAIN SCREEN</text>
+<image href="SG.12-pixel-main-screen-reference.png" x="78" y="154" width="269" height="550" preserveAspectRatio="xMidYMid meet"/>
+<text x="57" y="735" class="refsmall">Installed baseline: DEMO DATA / REPLAY.</text>
+<text x="57" y="760" class="refsmall">The screenshot records current UI; it is not</text>
+<text x="57" y="783" class="refsmall">the approved SG.12 target composition.</text>
+<text x="57" y="808" class="reftiny">Pixel 3 XL · 8AKY0M32X · 9:15 AM selected</text>
+
+<!-- What the readout communicates -->
+<rect x="410" y="112" width="742" height="713" rx="22" fill="url(#card)" stroke="#35556a" stroke-width="2"/>
+<text x="438" y="153" class="head">READOUT CONTENT AND RESPONSIBILITY</text>
+<text x="438" y="187" class="small">The selected Instant controls every time-specific forecast fact and symbol.</text>
+
+<rect x="438" y="215" width="686" height="80" rx="14" fill="#203e52"/>
+<circle cx="471" cy="255" r="20" fill="#245646"/><text x="465" y="262" class="accent">1</text>
+<text x="507" y="250" class="body">Loaded location label + adjacent picker trigger</text>
+<text x="507" y="275" class="small">Label stays noninteractive; trigger opens the existing picker.</text>
+
+<rect x="438" y="307" width="686" height="92" rx="14" fill="#203e52"/>
+<circle cx="471" cy="353" r="20" fill="#245646"/><text x="465" y="360" class="accent">2</text>
+<text x="507" y="347" class="body">Temperature paired closely with the matching WA symbol</text>
+<text x="507" y="375" class="small">Identity comes from SG.11a–f's typed selected-time event.</text>
+
+<rect x="438" y="411" width="686" height="92" rx="14" fill="#203e52"/>
+<circle cx="471" cy="457" r="20" fill="#245646"/><text x="465" y="464" class="accent">3</text>
+<text x="507" y="451" class="body">Supported Sun/Moon rise and set times; daily high and low</text>
+<text x="507" y="479" class="small">Each supplied fact keeps its own unavailable behavior.</text>
+
+<rect x="438" y="515" width="686" height="92" rx="14" fill="#203e52"/>
+<circle cx="471" cy="561" r="20" fill="#245646"/><text x="465" y="568" class="accent">4</text>
+<text x="507" y="555" class="body">Precipitation chance and wind speed as prominent numbers</text>
+<text x="507" y="583" class="small">Compact cues flank the empty indicator-sized middle slot.</text>
+
+<rect x="438" y="619" width="686" height="80" rx="14" fill="#203e52"/>
+<circle cx="471" cy="659" r="20" fill="#245646"/><text x="465" y="666" class="accent">5</text>
+<text x="507" y="654" class="body">Selected day and time remain visible on the timeline.</text>
+<text x="507" y="680" class="small">No duplicate weekday/time line in the central readout.</text>
+
+<rect x="438" y="711" width="686" height="82" rx="14" fill="#263746" stroke="#426176"/>
+<text x="458" y="743" class="small">Condition words remain available to accessible semantics and the forecast browser.</text>
+<text x="458" y="770" class="small">Visible center condition word is omitted; DEMO DATA and provenance remain.</text>
+
+<!-- Selected event states -->
+<rect x="1177" y="112" width="383" height="713" rx="22" fill="url(#card)" stroke="#35556a" stroke-width="2"/>
+<text x="1204" y="153" class="head">SELECTED EVENT STATES</text>
+<text x="1204" y="183" class="small">One selected time resolves to one state:</text>
+
+<rect x="1204" y="211" width="329" height="143" rx="14" fill="#173f37"/>
+<text x="1224" y="242" class="accent">SUPPORTED SELECTED HOUR</text>
+<text x="1224" y="276" class="body">Typed event → matching WA symbol</text>
+<text x="1224" y="304" class="small">No visible condition word. Accessible</text>
+<text x="1224" y="327" class="small">name agrees with the same event.</text>
+
+<rect x="1204" y="371" width="329" height="178" rx="14" fill="#554326"/>
+<text x="1224" y="402" class="accent">ELIGIBLE CARRIED CONDITION</text>
+<text x="1224" y="436" class="body">Prior supplied symbol + source time</text>
+<text x="1224" y="466" class="small">Disclose that selected-hour weather</text>
+<text x="1224" y="489" class="small">is unavailable. Do not imply a new</text>
+<text x="1224" y="512" class="small">condition was supplied for this hour.</text>
+
+<rect x="1204" y="566" width="329" height="143" rx="14" fill="#443a50"/>
+<text x="1224" y="597" class="accent">NO SUPPORTED EVENT</text>
+<text x="1224" y="631" class="body">Unavailable WA symbol/state</text>
+<text x="1224" y="659" class="small">No clear-weather or other condition</text>
+<text x="1224" y="682" class="small">claim is inferred.</text>
+
+<rect x="1204" y="726" width="329" height="67" rx="14" fill="#203e52"/>
+<text x="1224" y="755" class="small">Selected time, picker, and scale changes</text>
+<text x="1224" y="778" class="small">cannot retarget the forecast instant.</text>
+
+<!-- scope strip -->
+<rect x="40" y="850" width="1520" height="224" rx="22" fill="#12283b" stroke="#35556a" stroke-width="2"/>
+<text x="68" y="890" class="head">SG.12 BOUNDARY</text>
+<path d="M68 912H1530" stroke="#35556a" stroke-width="2"/>
+<text x="68" y="949" class="accent">KEEP</text>
+<text x="149" y="949" class="body">Scene, source/provenance labels, timeline selection, selected-time authority, and readable accessible forecast meaning.</text>
+<text x="68" y="990" class="accent">REMOVE</text>
+<text x="149" y="990" class="body">Visible center condition word and duplicate weekday/time line; lower magnifier and gear controls.</text>
+<text x="68" y="1031" class="accent">NO NEW</text>
+<text x="149" y="1031" class="body">Event mapping, symbol artwork, provider endpoint, unit policy, or navigation behavior.</text>
+<text x="1050" y="1098" text-anchor="middle" class="tiny">Companion visual target: SG.12-center-readout-ui-artwork-board.svg · boards guide scope; installed evidence establishes acceptance.</text>
+</svg>

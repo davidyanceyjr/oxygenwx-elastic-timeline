@@ -50,6 +50,7 @@ data class CatalogTimelineView(
     val heading: String,
     val selectedTimeLabel: String,
     val factTimeLabel: String?,
+    val conditionSourceDisclosure: String? = null,
     val temperature: String?,
     val condition: String?,
     val weatherSymbolId: WeatherSymbolId? = null,
@@ -290,6 +291,9 @@ class CatalogTimelinePresenter(private val active: ActiveCatalogSelection) {
                 com.oxygen.weather.timeline.data.catalog.CatalogRefreshStatus.TRANSPORT_FAILURE,
             ) }?.let { append(" · refresh ${it.name.lowercase(Locale.US).replace('_', ' ')}") }
         }
+        val conditionSourceDisclosure = carried?.let {
+            "Condition from ${formatTime(requireNotNull(it.sourceValidTime))}; selected hour unavailable"
+        }
         return CatalogTimelineView(
             generation = active.viewGeneration,
             selectedInstant = selected,
@@ -298,8 +302,8 @@ class CatalogTimelinePresenter(private val active: ActiveCatalogSelection) {
             days = days,
             heading = projected.selectedDate.format(dateFormat).uppercase(Locale.US),
             selectedTimeLabel = selected.atZone(zone).format(selectedTimeFormat),
-            factTimeLabel = carried?.let { "Condition from ${formatTime(requireNotNull(it.sourceValidTime))}; selected hour unavailable" }
-                ?: displayFact?.let { formatTime(it.validTime) },
+            factTimeLabel = conditionSourceDisclosure ?: displayFact?.let { formatTime(it.validTime) },
+            conditionSourceDisclosure = conditionSourceDisclosure,
             temperature = displayFact?.temperature?.let { "${it.displayValue.rounded()}°" },
             condition = projected.selectedEvent?.accessibleName
                 ?: if (sourceFact?.sourceWeatherCode != null) null else

@@ -1,13 +1,13 @@
 <svg xmlns="http://www.w3.org/2000/svg" width="1400" height="950" viewBox="0 0 1400 950" role="img" aria-labelledby="title desc">
-  <title id="title">SG.11 central readout artwork board draft</title>
-  <desc id="desc">Regular and compact phone compositions show a location label with a small picker trigger, a tightly paired temperature and weather symbol, sun and moon rise/set times, high and low, and numeric precipitation and wind indicators. Day and time remain on the timeline. Lower magnifier and gear are removed. Small state panels show rain, unavailable, and a prior-hour source-time disclosure.</desc>
+  <title id="title">SG.12 central selected forecast readout artwork board — visual acceptance target</title>
+  <desc id="desc">This board is the visual acceptance target for successful completion of SG.12. Regular and compact phone compositions show a location label with a small picker trigger, a tightly paired temperature and weather symbol, sun and moon rise/set times, high and low, and numeric precipitation and wind indicators. Day and time remain on the timeline. Lower magnifier and gear are removed. Small state panels show rain, unavailable, and a prior-hour source-time disclosure.</desc>
   <defs>
     <linearGradient id="sky" x2="0" y2="1"><stop stop-color="#6886a5"/><stop offset=".52" stop-color="#3c607e"/><stop offset="1" stop-color="#102b46"/></linearGradient>
     <style>.h{font:700 24px Arial;fill:#18324a}.sub{font:16px Arial;fill:#456179}.screen{font-family:Arial;fill:#fff}.note{font:16px Arial;fill:#1c3f5c}.tiny{font:14px Arial;fill:#456179}</style>
   </defs>
   <rect width="1400" height="950" fill="#eaf0f5"/>
-  <text x="45" y="47" class="h">SG.11 · CENTRAL SELECTED FORECAST READOUT</text>
-  <text x="45" y="75" class="sub">Owner approved 2026-11-04 · schematic scene and symbol silhouettes · installed acceptance follows implementation</text>
+  <text x="45" y="47" class="h">SG.12 · CENTRAL SELECTED FORECAST READOUT</text>
+  <text x="45" y="75" class="sub">Owner approved 2026-11-04 · SG.12 VISUAL ACCEPTANCE TARGET · installed review checks this composition</text>
   <text x="53" y="115" class="h">REGULAR PORTRAIT</text><text x="478" y="115" class="h">COMPACT PORTRAIT</text>
   <g>
     <rect x="45" y="135" width="390" height="690" rx="30" fill="url(#sky)"/>

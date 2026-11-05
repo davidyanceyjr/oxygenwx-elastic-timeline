@@ -26,6 +26,7 @@ import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.statusBarsPadding
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
@@ -67,11 +68,9 @@ import androidx.compose.ui.semantics.role
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.semantics.stateDescription
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.TextStyle
-import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.text.withStyle
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.LayoutDirection
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -79,16 +78,15 @@ import com.oxygen.weather.timeline.presentation.CatalogTimelineView
 import com.oxygen.weather.timeline.presentation.CatalogTimelineScenePresentation
 import com.oxygen.weather.timeline.presentation.CompassDirection
 import com.oxygen.weather.timeline.presentation.InstantTimeAxis
+import com.oxygen.weather.timeline.presentation.symbol.WeatherSymbolId
+import com.oxygen.weather.timeline.presentation.symbol.WeatherSymbolIcon
 import com.oxygen.weather.timeline.presentation.scene.FirstCityComposition
-import com.oxygen.weather.timeline.presentation.scene.FirstCityTheme
 import com.oxygen.weather.timeline.presentation.scene.SceneReading
 import java.time.Instant
 import java.time.format.DateTimeFormatter
 import java.util.Locale
 import kotlinx.coroutines.withTimeoutOrNull
 import kotlin.math.abs
-import kotlin.math.cos
-import kotlin.math.sin
 
 @Composable
 fun CatalogTimeLabScreen(
@@ -140,31 +138,19 @@ private fun CatalogTimeLabScreenContent(
     val latestSelected by rememberUpdatedState(view.selectedInstant)
     val isRtl = LocalLayoutDirection.current == LayoutDirection.Rtl
     val locale = Locale.getDefault()
-    val selectedDateLabels = remember(view.selectedInstant, view.zone, locale) {
-        val date = view.selectedInstant.atZone(view.zone)
-        DateTimeFormatter.ofPattern("EEE", locale).format(date).uppercase(locale) to
-            DateTimeFormatter.ofPattern("MMM d", locale).format(date)
+    val eventTimeFormat = remember(locale) { DateTimeFormatter.ofPattern("h:mm a", locale) }
+    val eventDateFormat = remember(locale) { DateTimeFormatter.ofPattern("MMM d", locale) }
+    fun eventTimeLabel(instant: Instant?): String {
+        if (instant == null) return "—"
+        val localEvent = instant.atZone(view.zone)
+        val time = eventTimeFormat.format(localEvent)
+        return if (localEvent.toLocalDate() == view.selectedInstant.atZone(view.zone).toLocalDate()) time
+        else "${eventDateFormat.format(localEvent)} $time"
     }
-    val lunarFactsLines = remember(sceneReading?.lunarDay, view.zone, locale) {
-        sceneReading?.lunarDay?.let { lunar ->
-            val stage = FirstCityTheme.phaseLabel(lunar.phase)
-            val timeFormat = DateTimeFormatter.ofPattern("h:mm a", locale)
-            fun eventTime(instant: Instant): String {
-                val localEvent = instant.atZone(view.zone)
-                val time = timeFormat.format(localEvent)
-                return if (localEvent.toLocalDate() == lunar.date) time
-                else "${DateTimeFormatter.ofPattern("MMM d", locale).format(localEvent)} $time"
-            }
-            val events = listOfNotNull(
-                lunar.rise?.let { "Rise ${eventTime(it)}" },
-                lunar.set?.let { "Set ${eventTime(it)}" },
-            )
-            buildList {
-                add("Moon: ${stage ?: "phase unavailable"}")
-                addAll(events)
-            }
-        }
-    }
+    val solarFacts = sceneReading?.solarEvents
+    val lunarFacts = sceneReading?.lunarDay
+    val solarFactsLine = "SUN ↑ ${eventTimeLabel(solarFacts?.sunriseInstant)}   ↓ ${eventTimeLabel(solarFacts?.sunsetInstant)}"
+    val lunarFactsLine = "MOON ↑ ${eventTimeLabel(lunarFacts?.rise)}   ↓ ${eventTimeLabel(lunarFacts?.set)}"
     val readoutShadow = with(LocalDensity.current) {
         Shadow(
             color = Color.Black.copy(alpha = 0.32f),
@@ -205,97 +191,107 @@ private fun CatalogTimeLabScreenContent(
         }
         Column(
             Modifier.fillMaxWidth().align(Alignment.Center).offset(y = (-20).dp)
-                .padding(horizontal = 25.dp * responsiveScale)
-                .pointerInput(view.generation, view.zone, view.interval) {
-                    var totalDrag = 0f
-                    detectHorizontalDragGestures(
-                        onHorizontalDrag = { change, distance ->
-                            totalDrag += distance
-                            change.consume()
-                        },
-                        onDragEnd = {
-                            if (abs(totalDrag) > 48.dp.toPx()) {
-                                val dayDelta = if ((totalDrag < 0f) != isRtl) 1L else -1L
-                                onSelectInstant(
-                                    InstantTimeAxis.shiftLocalDay(
-                                        latestSelected, dayDelta, view.zone, view.interval,
-                                    ), view.generation,
-                                )
-                            }
-                            totalDrag = 0f
-                        },
-                        onDragCancel = { totalDrag = 0f },
-                    )
-                }
-                .pointerInput(view.generation) {
-                    detectTapGestures(
-                        onTap = { precision = false },
-                        onDoubleTap = { onReturnToNow() },
-                    )
-                },
+                .padding(horizontal = 25.dp * responsiveScale),
             horizontalAlignment = Alignment.CenterHorizontally,
         ) {
-            Text(
-                view.selectedLocationName ?: "Selected location",
-                color = Color.White,
-                fontSize = (if (compactLayout) 21.sp else 24.sp) * responsiveScale,
-                fontWeight = FontWeight.SemiBold,
-                textAlign = TextAlign.Center,
-                style = TextStyle(shadow = readoutShadow),
-                modifier = Modifier.testTag("catalogSelectedLocation"),
-            )
-            Text(view.temperature ?: "—", color = Color.White,
-                fontSize = (if (compactLayout) 78.sp else 102.sp) * responsiveScale,
-                fontWeight = FontWeight.Light,
-                style = TextStyle(shadow = readoutShadow),
-                modifier = Modifier.testTag("forecastTemperature"))
-            Text(view.condition ?: "Condition unavailable", color = Color.White,
-                fontSize = 22.sp * responsiveScale, fontWeight = FontWeight.Medium, textAlign = TextAlign.Center,
-                style = TextStyle(shadow = readoutShadow))
-            Text(
-                buildAnnotatedString {
-                    withStyle(SpanStyle(fontSize = 14.sp * responsiveScale, fontWeight = FontWeight.SemiBold)) {
-                        append("${selectedDateLabels.first} ")
-                    }
-                    withStyle(SpanStyle(fontSize = 12.sp * responsiveScale, fontWeight = FontWeight.Normal)) {
-                        append("${selectedDateLabels.second} · ${view.selectedTimeLabel}")
-                    }
-                },
-                color = Color.White,
-                textAlign = TextAlign.Center,
-                style = TextStyle(shadow = readoutShadow),
-                modifier = Modifier.testTag("catalogSelectedTime"),
-            )
-            lunarFactsLines?.let { lines ->
-                val phase = sceneReading?.lunarDay?.phase
-                if (responsiveScale < .95f && lines.size > 1) {
-                    Column(horizontalAlignment = Alignment.CenterHorizontally,
-                        modifier = Modifier.testTag("catalogLunarFacts")) {
-                        Row(verticalAlignment = Alignment.CenterVertically,
-                            horizontalArrangement = Arrangement.Center) {
-                            LunarPhaseMarker(phase, responsiveScale)
-                            Text(lines.first(), color = Color(0xFFECF3F8),
-                                fontSize = 12.sp * responsiveScale, textAlign = TextAlign.Center,
-                                style = TextStyle(shadow = readoutShadow))
-                        }
-                        Text(lines.drop(1).joinToString(" · "), color = Color(0xFFECF3F8),
-                            fontSize = 12.sp * responsiveScale, textAlign = TextAlign.Center,
-                            style = TextStyle(shadow = readoutShadow))
-                    }
-                } else {
-                    Row(verticalAlignment = Alignment.CenterVertically,
-                        horizontalArrangement = Arrangement.Center,
-                        modifier = Modifier.testTag("catalogLunarFacts")) {
-                        LunarPhaseMarker(phase, responsiveScale)
-                        Text(lines.joinToString(" · "), color = Color(0xFFECF3F8),
-                            fontSize = 12.sp * responsiveScale, textAlign = TextAlign.Center,
-                            style = TextStyle(shadow = readoutShadow))
+            Row(
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.Center,
+                modifier = Modifier.fillMaxWidth(),
+            ) {
+                Text(
+                    view.selectedLocationName ?: "Selected location",
+                    color = Color.White,
+                    fontSize = (if (compactLayout) 21.sp else 24.sp) * responsiveScale,
+                    fontWeight = FontWeight.SemiBold,
+                    textAlign = TextAlign.Center,
+                    maxLines = 1,
+                    overflow = TextOverflow.Ellipsis,
+                    style = TextStyle(shadow = readoutShadow),
+                    modifier = Modifier.testTag("catalogSelectedLocation"),
+                )
+                if (onChooseLocation != null) {
+                    Box(
+                        modifier = Modifier.size(48.dp)
+                            .semantics(mergeDescendants = true) {
+                                contentDescription = "Choose location"
+                            }
+                            .clickable(role = Role.Button) { onChooseLocation() },
+                        contentAlignment = Alignment.Center,
+                    ) {
+                        CatalogLocationPickerIcon(responsiveScale)
                     }
                 }
             }
-            Text("HIGH ${view.high ?: "—"}    /    LOW ${view.low ?: "—"}",
-                color = Color(0xFFECF3F8), fontSize = 12.sp * responsiveScale,
-                style = TextStyle(shadow = readoutShadow))
+            Column(
+                Modifier.fillMaxWidth()
+                    .pointerInput(view.generation, view.zone, view.interval) {
+                        var totalDrag = 0f
+                        detectHorizontalDragGestures(
+                            onHorizontalDrag = { change, distance ->
+                                totalDrag += distance
+                                change.consume()
+                            },
+                            onDragEnd = {
+                                if (abs(totalDrag) > 48.dp.toPx()) {
+                                    val dayDelta = if ((totalDrag < 0f) != isRtl) 1L else -1L
+                                    onSelectInstant(
+                                        InstantTimeAxis.shiftLocalDay(
+                                            latestSelected, dayDelta, view.zone, view.interval,
+                                        ), view.generation,
+                                    )
+                                }
+                                totalDrag = 0f
+                            },
+                            onDragCancel = { totalDrag = 0f },
+                        )
+                    }
+                    .pointerInput(view.generation) {
+                        detectTapGestures(
+                            onTap = { precision = false },
+                            onDoubleTap = { onReturnToNow() },
+                        )
+                    },
+                horizontalAlignment = Alignment.CenterHorizontally,
+            ) {
+                val symbol = view.weatherSymbolId ?: WeatherSymbolId.CONDITION_UNAVAILABLE
+                val symbolName = if (view.weatherSymbolId == null) symbol.label
+                    else view.weatherSymbolName ?: symbol.label
+                Row(
+                    verticalAlignment = Alignment.CenterVertically,
+                    horizontalArrangement = Arrangement.Center,
+                    modifier = Modifier.semantics(mergeDescendants = true) {},
+                ) {
+                    Text(view.temperature ?: "—", color = Color.White,
+                        fontSize = (if (compactLayout) 78.sp else 102.sp) * responsiveScale,
+                        fontWeight = FontWeight.Light,
+                        style = TextStyle(shadow = readoutShadow),
+                        modifier = Modifier.testTag("forecastTemperature"))
+                    Spacer(Modifier.size(7.dp * responsiveScale))
+                    WeatherSymbolIcon(
+                        symbol = symbol,
+                        modifier = Modifier.size((if (compactLayout) 64.dp else 82.dp) * responsiveScale),
+                        contentDescription = symbolName,
+                    )
+                }
+                view.conditionSourceDisclosure?.let { disclosure ->
+                    Text(disclosure, color = Color(0xFFECF3F8),
+                        fontSize = 12.sp * responsiveScale, textAlign = TextAlign.Center,
+                        style = TextStyle(shadow = readoutShadow),
+                        modifier = Modifier.testTag("catalogConditionSourceDisclosure"))
+                }
+                Text(solarFactsLine, color = Color(0xFFECF3F8),
+                    fontSize = 12.sp * responsiveScale, textAlign = TextAlign.Center,
+                    style = TextStyle(shadow = readoutShadow),
+                    modifier = Modifier.testTag("catalogSolarFacts"))
+                Text(lunarFactsLine, color = Color(0xFFECF3F8),
+                    fontSize = 12.sp * responsiveScale, textAlign = TextAlign.Center,
+                    style = TextStyle(shadow = readoutShadow),
+                    modifier = Modifier.testTag("catalogLunarFacts"))
+                Text("HIGH ${view.high ?: "—"}    /    LOW ${view.low ?: "—"}",
+                    color = Color(0xFFECF3F8), fontSize = 12.sp * responsiveScale,
+                    style = TextStyle(shadow = readoutShadow))
+            }
         }
         Column(Modifier.fillMaxWidth().align(Alignment.BottomCenter).navigationBarsPadding()) {
             CompositionLocalProvider(LocalLayoutDirection provides LayoutDirection.Ltr) {
@@ -310,38 +306,17 @@ private fun CatalogTimeLabScreenContent(
                             contentDescription = "Precipitation chance ${view.precipitationChance ?: "unavailable"}"
                         },
                     ) {
-                        CatalogPrecipitationIcon(responsiveScale)
-                        Text(view.precipitationChance ?: "Unknown", color = Color.White,
-                            fontSize = 19.sp * responsiveScale, fontWeight = FontWeight.Medium,
-                            modifier = Modifier.testTag("catalogPrecipitationChance"))
-                    }
-                    Row(
-                        modifier = Modifier.weight(1.2f).heightIn(min = 56.dp),
-                        verticalAlignment = Alignment.CenterVertically,
-                    ) {
-                        Box(
-                            modifier = Modifier.weight(1f).heightIn(min = 56.dp)
-                                .semantics(mergeDescendants = true) {
-                                    contentDescription = "Choose location"
-                                }
-                                .clickable(
-                                    enabled = onChooseLocation != null,
-                                    role = Role.Button,
-                                ) { onChooseLocation?.invoke() },
-                            contentAlignment = Alignment.Center,
-                        ) {
-                            CatalogMagnifierIcon(responsiveScale)
-                        }
-                        Box(
-                            modifier = Modifier.weight(1f).heightIn(min = 56.dp)
-                                .semantics(mergeDescendants = true) {
-                                    contentDescription = "Settings"
-                                },
-                            contentAlignment = Alignment.Center,
-                        ) {
-                            CatalogSettingsIcon(responsiveScale)
+                        Row(verticalAlignment = Alignment.CenterVertically) {
+                            Text("☂", color = Color.White.copy(alpha = 0.78f),
+                                fontSize = (if (compactLayout) 15 else 18).sp * responsiveScale)
+                            Spacer(Modifier.width(4.dp * responsiveScale))
+                            Text(view.precipitationChance ?: "Unknown", color = Color.White,
+                                fontSize = (if (compactLayout) 15 else 18).sp * responsiveScale,
+                                fontWeight = FontWeight.Medium,
+                                modifier = Modifier.testTag("catalogPrecipitationChance"))
                         }
                     }
+                    Box(Modifier.weight(1.2f).heightIn(min = 56.dp))
                     Column(
                         horizontalAlignment = Alignment.CenterHorizontally,
                         modifier = Modifier.weight(1f).semantics(mergeDescendants = true) {
@@ -352,10 +327,14 @@ private fun CatalogTimeLabScreenContent(
                             }
                         },
                     ) {
-                        CatalogWindIndicator(view.windDirectionDegrees, responsiveScale)
-                        Text(view.wind ?: "Unknown", color = Color.White,
-                            fontSize = 19.sp * responsiveScale, fontWeight = FontWeight.Medium,
-                            modifier = Modifier.testTag("catalogWind"))
+                        Row(verticalAlignment = Alignment.CenterVertically) {
+                            CatalogWindIndicator(view.windDirectionDegrees, responsiveScale)
+                            Spacer(Modifier.width(4.dp * responsiveScale))
+                            Text(view.wind ?: "Unknown", color = Color.White,
+                                fontSize = (if (compactLayout) 15 else 18).sp * responsiveScale,
+                                fontWeight = FontWeight.Medium,
+                                modifier = Modifier.testTag("catalogWind"))
+                        }
                     }
                 }
             }
@@ -381,133 +360,39 @@ private fun CatalogTimeLabScreenContent(
 }
 
 @Composable
-private fun LunarPhaseMarker(phase: Double?, scale: Float) {
-    phase?.let {
-        Canvas(Modifier.size(14.dp * scale)) {
-            val center = Offset(size.width / 2f, size.height / 2f)
-            val orbit = size.minDimension * .38f
-            drawCircle(Color(0xFF526875), radius = size.minDimension * .40f, center = center)
-            val angle = it * (2.0 * Math.PI) - Math.PI / 2.0
-            val marker = Offset(
-                center.x + (kotlin.math.cos(angle) * orbit).toFloat(),
-                center.y + (kotlin.math.sin(angle) * orbit).toFloat(),
-            )
-            drawCircle(Color(0xFFFFD98B), radius = size.minDimension * .11f, center = marker)
+private fun CatalogLocationPickerIcon(scale: Float) {
+    Canvas(Modifier.size(22.dp * scale)) {
+        val color = Color.White.copy(alpha = 0.9f)
+        val stroke = Stroke(width = 1.8.dp.toPx(), cap = StrokeCap.Round, join = StrokeJoin.Round)
+        val pin = Path().apply {
+            moveTo(size.width * .5f, size.height * .92f)
+            cubicTo(size.width * .4f, size.height * .74f,
+                size.width * .12f, size.height * .48f, size.width * .12f, size.height * .33f)
+            cubicTo(size.width * .12f, size.height * .08f,
+                size.width * .88f, size.height * .08f, size.width * .88f, size.height * .33f)
+            cubicTo(size.width * .88f, size.height * .48f,
+                size.width * .6f, size.height * .74f, size.width * .5f, size.height * .92f)
         }
-        Spacer(Modifier.size(5.dp * scale))
-    }
-}
-
-@Composable
-private fun CatalogPrecipitationIcon(scale: Float) {
-    Canvas(Modifier.size(36.dp * scale)) {
-        val color = Color.White.copy(alpha = 0.67f)
-        val stroke = Stroke(
-            width = 1.6.dp.toPx(),
-            cap = StrokeCap.Round,
-            join = StrokeJoin.Round,
-        )
-        fun drop(centerX: Float, top: Float, diameter: Float) = Path().apply {
-            moveTo(centerX, top)
-            cubicTo(centerX - diameter * .15f, top + diameter * .20f,
-                centerX - diameter * .52f, top + diameter * .56f,
-                centerX - diameter * .46f, top + diameter * .72f)
-            cubicTo(centerX - diameter * .39f, top + diameter * 1.05f,
-                centerX + diameter * .39f, top + diameter * 1.05f,
-                centerX + diameter * .46f, top + diameter * .72f)
-            cubicTo(centerX + diameter * .52f, top + diameter * .56f,
-                centerX + diameter * .15f, top + diameter * .20f,
-                centerX, top)
-            close()
-        }
-        drawPath(drop(size.width * .50f, size.height * .02f, size.width * .30f), color, style = stroke)
-        drawPath(drop(size.width * .26f, size.height * .46f, size.width * .27f), color, style = stroke)
-        drawPath(drop(size.width * .74f, size.height * .46f, size.width * .27f), color, style = stroke)
-    }
-}
-
-@Composable
-private fun CatalogMagnifierIcon(scale: Float) {
-    Canvas(Modifier.size(32.dp * scale)) {
-        val color = Color.White.copy(alpha = 0.67f)
-        val stroke = 2.dp.toPx()
-        val center = Offset(size.width * .42f, size.height * .42f)
-        drawCircle(color, size.minDimension * .27f, center, style = Stroke(stroke))
-        drawLine(
-            color,
-            start = Offset(size.width * .62f, size.height * .62f),
-            end = Offset(size.width * .88f, size.height * .88f),
-            strokeWidth = stroke,
-            cap = StrokeCap.Round,
-        )
-    }
-}
-
-@Composable
-private fun CatalogSettingsIcon(scale: Float) {
-    Canvas(Modifier.size(32.dp * scale)) {
-        val color = Color.White.copy(alpha = 0.67f)
-        val center = Offset(size.width / 2f, size.height / 2f)
-        val radius = size.minDimension * .46f
-        val gear = Path()
-        for (tooth in 0 until 8) {
-            val base = tooth * 45f
-            val points = listOf(
-                (base - 22.5f) to .70f,
-                (base - 13f) to .70f,
-                (base - 13f) to .94f,
-                (base + 13f) to .94f,
-                (base + 13f) to .70f,
-                (base + 22.5f) to .70f,
-            )
-            points.forEach { (degrees, scale) ->
-                val radians = Math.toRadians(degrees.toDouble())
-                val point = Offset(
-                    center.x + cos(radians).toFloat() * radius * scale,
-                    center.y + sin(radians).toFloat() * radius * scale,
-                )
-                if (gear.isEmpty) gear.moveTo(point.x, point.y) else gear.lineTo(point.x, point.y)
-            }
-        }
-        gear.close()
-        drawPath(
-            gear,
-            color,
-            style = Stroke(width = 1.8.dp.toPx(), join = StrokeJoin.Round),
-        )
-        drawCircle(color, radius * .27f, center, style = Stroke(width = 1.8.dp.toPx()))
+        drawPath(pin, color, style = stroke)
+        drawCircle(color, radius = size.minDimension * .12f, center = Offset(size.width / 2f, size.height * .33f), style = stroke)
     }
 }
 
 @Composable
 private fun CatalogWindIndicator(bearingDegrees: Double?, scale: Float) {
-    Canvas(Modifier.size(32.dp * scale)) {
+    Canvas(Modifier.size(16.dp * scale)) {
         val color = Color.White.copy(alpha = 0.67f)
         val center = Offset(size.width / 2f, size.height / 2f)
-        val radius = size.minDimension * .43f
-        val stroke = 1.4.dp.toPx()
-        drawCircle(color, radius, center, style = Stroke(width = stroke))
-        repeat(8) { tick ->
-            rotate(tick * 45f, center) {
-                drawLine(
-                    color,
-                    start = Offset(center.x, center.y - radius + 1.dp.toPx()),
-                    end = Offset(
-                        center.x,
-                        center.y - radius + if (tick % 2 == 0) 5.dp.toPx() else 3.dp.toPx(),
-                    ),
-                    strokeWidth = stroke,
-                )
-            }
-        }
         bearingDegrees?.let { bearing ->
+            val radius = size.minDimension * .46f
+            val stroke = 1.7.dp.toPx()
             rotate(bearing.toFloat(), center) {
                 val needle = Path().apply {
-                    moveTo(center.x, center.y + radius * .42f)
-                    lineTo(center.x, center.y - radius * .72f)
-                    moveTo(center.x - radius * .22f, center.y - radius * .38f)
-                    lineTo(center.x, center.y - radius * .72f)
-                    lineTo(center.x + radius * .22f, center.y - radius * .38f)
+                    moveTo(center.x, center.y + radius * .55f)
+                    lineTo(center.x, center.y - radius * .55f)
+                    moveTo(center.x - radius * .34f, center.y - radius * .12f)
+                    lineTo(center.x, center.y - radius * .55f)
+                    lineTo(center.x + radius * .34f, center.y - radius * .12f)
                 }
                 drawPath(
                     needle,

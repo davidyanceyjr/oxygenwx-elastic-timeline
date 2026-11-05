@@ -1,0 +1,80 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1400" height="1120" viewBox="0 0 1400 1120" role="img" aria-labelledby="title desc">
+  <title id="title">SG.13 skyline-anchored center readout — draft for owner review</title>
+  <desc id="desc">Combined behavior and artwork board. The complete central forecast readout moves upward as one group until the baseline of Chicago aligns with the top of the tallest tower. Forecast content and spacing remain together. Lower precipitation and wind values, atmospheric scene, and timeline stay in place.</desc>
+  <defs>
+    <linearGradient id="paper" x2="0" y2="1"><stop stop-color="#f5f8fa"/><stop offset="1" stop-color="#dce7ed"/></linearGradient>
+    <linearGradient id="sky" x2="0" y2="1"><stop stop-color="#9fc3d5"/><stop offset=".58" stop-color="#567992"/><stop offset="1" stop-color="#173b5c"/></linearGradient>
+    <style>
+      .title{font:700 30px Arial,sans-serif;fill:#14354f}.sub{font:17px Arial,sans-serif;fill:#3e6078}
+      .head{font:700 20px Arial,sans-serif;fill:#173b56}.note{font:16px Arial,sans-serif;fill:#244963}
+      .tiny{font:14px Arial,sans-serif;fill:#4a687d}.white{font-family:Arial,sans-serif;fill:#fff}
+      .guide{stroke:#ffd36d;stroke-width:3}.old{stroke:#ff6e69;stroke-width:2;stroke-dasharray:8 6}
+    </style>
+  </defs>
+  <rect width="1400" height="1120" fill="url(#paper)"/>
+  <text x="42" y="47" class="title">SG.13 · SKYLINE-ANCHORED CENTER READOUT</text>
+  <text x="42" y="76" class="sub">DRAFT FOR OWNER REVIEW · regular Pixel 3 XL reference · preserve SG.12 facts and hierarchy</text>
+  <text x="48" y="119" class="head">CURRENT INSTALLED SCREEN</text>
+  <text x="526" y="119" class="head">PROPOSED PLACEMENT</text>
+  <text x="990" y="119" class="head">LAYOUT CONTRACT</text>
+
+  <!-- Current release screenshot, scaled without cropping. -->
+  <rect x="42" y="137" width="430" height="884" rx="24" fill="#12283d"/>
+  <image href="SG.13-current-main-screen-reference.png" x="42" y="137" width="430" height="884" preserveAspectRatio="none"/>
+  <!-- Tower cap at about 25.5% of the portrait screenshot; current Chicago baseline is about 28.4%. -->
+  <line x1="42" y1="362" x2="472" y2="362" class="guide" opacity=".96"/>
+  <line x1="42" y1="388" x2="472" y2="388" class="old"/>
+  <circle cx="427" cy="362" r="6" fill="#ffd36d" stroke="#233c4c" stroke-width="2"/>
+  <text x="51" y="352" font-family="Arial,sans-serif" font-size="13" font-weight="700" fill="#60460d">TALLEST TOWER CAP</text>
+  <text x="51" y="409" font-family="Arial,sans-serif" font-size="13" font-weight="700" fill="#8a2e2a">CURRENT CHICAGO BASELINE</text>
+  <path d="M458 386v-17m-6 7 6-7 6 7" fill="none" stroke="#163e5a" stroke-width="3"/>
+  <text x="260" y="1043" text-anchor="middle" class="tiny">Reference: clean release capture; current view</text>
+
+  <!-- Proposed screen schematic. The group is moved as one; all inner gaps remain. -->
+  <rect x="520" y="137" width="420" height="884" rx="24" fill="url(#sky)" stroke="#244963" stroke-width="2"/>
+  <circle cx="730" cy="310" r="25" fill="#ffe2a6" opacity=".85"/>
+  <path d="M520 575h44v-115h37v115h34V430h48v145h41v-88h47v88h34V393h47v182h38v-75h46v75h24v446H520z" fill="#173e61" opacity=".82"/>
+  <path d="M812 393v-44h47v226h-47z" fill="#1b4c71" stroke="#7eb1d1" stroke-width="2"/>
+  <line x1="520" y1="349" x2="940" y2="349" class="guide"/>
+  <circle cx="812" cy="349" r="6" fill="#ffd36d" stroke="#233c4c" stroke-width="2"/>
+  <text x="670" y="349" text-anchor="middle" class="white" font-size="26" font-weight="700">Chicago</text>
+  <g transform="translate(738 327)" fill="none" stroke="#fff" stroke-width="2.4"><path d="M11 1c-6 0-10 4-10 10 0 7 10 17 10 17s10-10 10-17c0-6-4-10-10-10z"/><circle cx="11" cy="11" r="3"/></g>
+  <text x="676" y="480" text-anchor="middle" class="white" font-size="78" font-weight="300">61°</text>
+  <g transform="translate(752 406)" fill="#ffd66f" stroke="#ffbc42" stroke-width="3"><circle cx="28" cy="30" r="25"/><path d="M28 0v-12M28 72v-12M-2 30h-12M70 30h-12M7 9l-9-9M59 61l-9-9M49 9l9-9M-2 61l9-9"/></g>
+  <text x="730" y="526" text-anchor="middle" class="white" font-size="15">SUN ↑ 6:33 AM   ↓ 4:35 PM</text>
+  <text x="730" y="550" text-anchor="middle" class="white" font-size="15">MOON ↑ 7:08 AM   ↓ 4:24 PM</text>
+  <text x="730" y="579" text-anchor="middle" class="white" font-size="17">HIGH 64°   /   LOW 49°</text>
+  <text x="612" y="766" text-anchor="middle" class="white" font-size="19">☂ 0%</text>
+  <text x="849" y="766" text-anchor="middle" class="white" font-size="19">↙ 8 mph</text>
+  <line x1="546" y1="850" x2="914" y2="850" stroke="#d9edff" opacity=".55"/>
+  <line x1="730" y1="836" x2="730" y2="866" stroke="#ffe4a7" stroke-width="3"/>
+  <text x="730" y="907" text-anchor="middle" class="white" font-size="17">12:00 PM</text>
+  <text x="730" y="1043" text-anchor="middle" class="tiny">Schematic target · lower row and tape stay fixed</text>
+
+  <text x="990" y="165" class="note">1  Move the whole readout block upward</text>
+  <text x="1012" y="192" class="tiny">Location + picker, temperature + symbol,</text>
+  <text x="1012" y="214" class="tiny">source disclosure, Sun/Moon, and high/low.</text>
+  <text x="990" y="259" class="note">2  Align Chicago’s text baseline with</text>
+  <text x="1012" y="286" class="note">the tallest tower’s top edge.</text>
+  <text x="1012" y="312" class="tiny">At this reference size, about 24 dp upward.</text>
+  <text x="990" y="357" class="note">3  Keep internal spacing unchanged</text>
+  <text x="1012" y="384" class="tiny">No changes to forecast values, semantics,</text>
+  <text x="1012" y="406" class="tiny">symbol, picker, or gesture ownership.</text>
+  <text x="990" y="451" class="note">4  Keep the lower indicators and</text>
+  <text x="1012" y="478" class="note">timeline at their current positions.</text>
+  <text x="1012" y="504" class="tiny">Retain the blank lower center slot.</text>
+  <text x="990" y="552" class="head">AFFECTED VIEWPORTS</text>
+  <rect x="990" y="572" width="365" height="104" rx="14" fill="#fff" opacity=".72"/>
+  <text x="1012" y="603" class="note">REGULAR · 411 × 846 dp</text>
+  <text x="1012" y="630" class="tiny">Anchor baseline exactly to tower cap.</text>
+  <text x="1012" y="653" class="tiny">Use installed screenshot for acceptance.</text>
+  <rect x="990" y="693" width="365" height="116" rx="14" fill="#fff" opacity=".72"/>
+  <text x="1012" y="724" class="note">COMPACT · 360 × 800 dp</text>
+  <text x="1012" y="751" class="tiny">Keep the same block relationship where</text>
+  <text x="1012" y="774" class="tiny">the skyline remains visible; prevent overlap.</text>
+  <text x="990" y="855" class="head">BEHAVIOR INVARIANTS</text>
+  <text x="1012" y="884" class="tiny">Selected time, values, source facts, and</text>
+  <text x="1012" y="906" class="tiny">all lower/timeline interactions stay fixed.</text>
+  <text x="990" y="963" class="tiny" font-weight="700">Approval pending · this board gates implementation</text>
+  <text x="42" y="1090" class="sub">Draft asks for one vertical translation only; the SG.12 hierarchy and approved lower-indicator layout remain intact.</text>
+</svg>
