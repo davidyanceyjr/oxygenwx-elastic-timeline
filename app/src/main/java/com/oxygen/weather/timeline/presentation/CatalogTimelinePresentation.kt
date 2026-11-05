@@ -162,7 +162,9 @@ class CatalogTimelinePresenter(private val active: ActiveCatalogSelection) {
     }
 
     private fun diagnostics(state: CatalogActivationState, selected: Instant, timeline: CatalogTimelineView): CatalogDiagnosticPresentation {
-        val projected = CanonicalForecastProjection.project(catalog, window, selected, ForecastDisplayUnits.IMPERIAL)
+        val eventSource = window.typedEventFactAt(selected)
+        val projected = CanonicalForecastProjection.project(catalog, window, selected, ForecastDisplayUnits.IMPERIAL,
+            SelectedEventEvidence(eventSource, eventSource?.validTime, carried = false))
         val sample = projected.factSample
         val product = projected.productSegment
         val provenance = projected.provenance
@@ -202,7 +204,7 @@ class CatalogTimelinePresenter(private val active: ActiveCatalogSelection) {
         }.let { fields -> when { sample == null -> listOf("unavailable"); fields.isEmpty() -> listOf("none"); else -> fields } }
         return CatalogDiagnosticPresentation(catalogLines, selectionLines, missing,
             timeline.weatherSymbolId, timeline.weatherSymbolName,
-            window.typedEventFactAt(selected)?.sourceWeatherCode ?: sample?.facts?.sourceWeatherCode)
+            projected.selectedEvent?.sourceCode ?: window.typedEventFactAt(selected)?.sourceWeatherCode ?: sample?.facts?.sourceWeatherCode)
     }
 
     private fun sampleInterval(facts: com.oxygen.weather.timeline.data.catalog.CanonicalWeatherFacts, field: CatalogField) = when (field) {

@@ -34,9 +34,11 @@ import com.oxygen.weather.timeline.data.catalog.CatalogDatasetStorage
 import com.oxygen.weather.timeline.data.catalog.CatalogLoadRequest
 import com.oxygen.weather.timeline.data.catalog.CatalogLoadResult
 import com.oxygen.weather.timeline.data.catalog.CatalogOrigin
+import com.oxygen.weather.timeline.data.catalog.CatalogRecording
 import com.oxygen.weather.timeline.data.catalog.CatalogStorageDatabase
 import com.oxygen.weather.timeline.data.catalog.CatalogStorageNamespace
 import com.oxygen.weather.timeline.data.catalog.CatalogLocation
+import com.oxygen.weather.timeline.data.catalog.WeatherCondition
 import com.oxygen.weather.timeline.data.catalog.DatasetId
 import com.oxygen.weather.timeline.data.catalog.SavedLocation
 import com.oxygen.weather.timeline.data.catalog.SavedLocationListResult
@@ -62,6 +64,8 @@ class DebugCatalogActivity : ComponentActivity() {
     private var fixtureReady by mutableStateOf(false)
     private var skyFixtureReady by mutableStateOf(false)
     private var skyFixtureLocationId by mutableStateOf<com.oxygen.weather.timeline.data.catalog.LocationId?>(null)
+    private var rainIceFixtureReady by mutableStateOf(false)
+    private var rainIceFixtureLocationId by mutableStateOf<com.oxygen.weather.timeline.data.catalog.LocationId?>(null)
     private var showAuthoredLibrary by mutableStateOf(false)
     private var authoredPreviewError by mutableStateOf<String?>(null)
     private var reloadJob: Job? = null
@@ -74,10 +78,7 @@ class DebugCatalogActivity : ComponentActivity() {
         }
         showAuthoredLibrary = intent.getBooleanExtra(EXTRA_OPEN_AUTHORED_LIBRARY, false)
         authoredPreviewError = intent.getStringExtra(EXTRA_AUTHORED_PREVIEW_ERROR)
-        database = Room.databaseBuilder(applicationContext, CatalogStorageDatabase::class.java,
-            "oxygen-time-lab-catalog.db")
-            .addMigrations(CatalogStorageDatabase.MIGRATION_1_2, CatalogStorageDatabase.MIGRATION_2_3)
-            .build()
+        database = sharedStorageDatabase(applicationContext)
         locations = SavedLocationRepository(database)
         storage = CatalogDatasetStorage(database.datasets())
         reloadLocations()
@@ -90,7 +91,7 @@ class DebugCatalogActivity : ComponentActivity() {
     }
 
     override fun onDestroy() {
-        if (::database.isInitialized) database.close()
+        reloadJob?.cancel()
         super.onDestroy()
     }
 
@@ -156,6 +157,33 @@ class DebugCatalogActivity : ComponentActivity() {
             .map { it.datasetId }.distinct().sorted()
     }
 
+    private suspend fun prepareSg11RainIceReplay(location: CatalogLocation) {
+        val id = DatasetId(SG11_RAIN_ICE_REPLAY_ID)
+        fun matches(recording: CatalogRecording): Boolean {
+            val date = DebugSg11RainIceCatalogFixture.asOf.atZone(location.timeZone).toLocalDate()
+            return DebugSg11RainIceCatalogFixture.ids.indices.all { index ->
+                val instant = date.atTime(8 + index, 0).atZone(location.timeZone).toInstant()
+                recording.catalog.facts.firstOrNull { it.validTime == instant }?.let { fact ->
+                    fact.events == listOf(DebugSg11RainIceCatalogFixture.expectedEvents[index]) &&
+                        fact.primaryEventIndex == 0 && WeatherCondition.RAIN in fact.conditions
+                } == true
+            }
+        }
+        val existing = storage.load(location, CatalogStorageNamespace.REPLAY, id)
+        val current = (existing as? StoredCatalogResult.Found)?.recording
+        if (current == null || current.catalog.asOf != DebugSg11RainIceCatalogFixture.asOf || !matches(current)) {
+            storage.save(CatalogStorageNamespace.REPLAY, DebugSg11RainIceCatalogFixture.recording(location))
+        }
+        val reloaded = storage.load(location, CatalogStorageNamespace.REPLAY, id)
+        check(reloaded is StoredCatalogResult.Found && matches(reloaded.recording)) {
+            "The Rain and ice recording did not preserve its typed facts through version-5 reload"
+        }
+        rainIceFixtureReady = true
+        rainIceFixtureLocationId = location.id
+        replayIds = storage.history(location.id, CatalogStorageNamespace.REPLAY)
+            .map { it.datasetId }.distinct().sorted()
+    }
+
     private fun reloadLocations() {
         reloadJob?.cancel()
         reloadJob = lifecycleScope.launch {
@@ -168,6 +196,7 @@ class DebugCatalogActivity : ComponentActivity() {
                     result.values.firstOrNull()?.let {
                         prepareSg4GapReplay(it.location)
                         prepareSg11SkyReplay(it.location)
+                        prepareSg11RainIceReplay(it.location)
                         fixtureReady = true
                         fixtureStatus = "SG.4 canonical gap replay ready"
                     }
@@ -301,6 +330,19 @@ class DebugCatalogActivity : ComponentActivity() {
                                 }
                             }
                         }
+                        if (selectedReplay == SG11_RAIN_ICE_REPLAY_ID && rainIceFixtureReady &&
+                            selectedLocation?.location?.id == rainIceFixtureLocationId) {
+                            val location = selectedLocation?.location
+                            if (location != null) {
+                                val date = DebugSg11RainIceCatalogFixture.asOf.atZone(location.timeZone).toLocalDate()
+                                DebugSg11RainIceCatalogFixture.ids.forEachIndexed { index, id ->
+                                    val instant = date.atTime(8 + index, 0).atZone(location.timeZone).toInstant()
+                                    OutlinedButton(onClick = {
+                                        routeActivation(location, CatalogOrigin.REPLAY, SG11_RAIN_ICE_REPLAY_ID, instant)
+                                    }) { Text("Inspect ${id.name} · ${8 + index}:00") }
+                                }
+                            }
+                        }
                     }
                 }
                 val liveSolarCatalog = relay.activation.active?.takeIf {
@@ -412,6 +454,15 @@ class DebugCatalogActivity : ComponentActivity() {
     private fun openLegacyProfiles() = startActivity(Intent(this, DebugForecastActivity::class.java))
 
     companion object {
+        @Volatile private var sharedDatabase: CatalogStorageDatabase? = null
+
+        @Synchronized
+        private fun sharedStorageDatabase(context: android.content.Context): CatalogStorageDatabase =
+            sharedDatabase ?: Room.databaseBuilder(context.applicationContext,
+                CatalogStorageDatabase::class.java, "oxygen-time-lab-catalog.db")
+                .addMigrations(CatalogStorageDatabase.MIGRATION_1_2, CatalogStorageDatabase.MIGRATION_2_3)
+                .build().also { sharedDatabase = it }
+
         const val ACTION_ACTIVATE_CATALOG = CatalogPickerDelegate.ACTION_ACTIVATE_CATALOG
         const val ACTION_SELECT_CATALOG_INSTANT = CatalogPickerDelegate.ACTION_SELECT_CATALOG_INSTANT
         const val CONTRACT_VERSION = CatalogPickerDelegate.CONTRACT_VERSION
@@ -430,6 +481,7 @@ class DebugCatalogActivity : ComponentActivity() {
         const val CHICAGO_REPLAY_ID = "wx22-chicago-replay-v3"
         const val SG4_GAP_REPLAY_ID = "sg4-canonical-gaps-v8"
         const val SG11_SKY_REPLAY_ID = "sg11-sky-typed-v2"
+        const val SG11_RAIN_ICE_REPLAY_ID = "sg11-rain-ice-typed-v2"
         const val CHICAGO_REPLAY_AS_OF = "2026-10-28T12:00:00Z"
     }
 }

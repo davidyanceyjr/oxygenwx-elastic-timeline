@@ -149,7 +149,11 @@ class CatalogPickerDelegate : ActivityVariantDelegate {
             CatalogOrigin.REPLAY -> "REPLAY · captured from SIMULATED"
             else -> null
         }
-        val symbolReview = host.activationCoordinator.state.value.active?.datasetId?.value == DebugCatalogActivity.SG11_SKY_REPLAY_ID
+        val activeDatasetId = host.activationCoordinator.state.value.active?.datasetId?.value
+        val symbolReview = activeDatasetId in setOf(
+            DebugCatalogActivity.SG11_SKY_REPLAY_ID,
+            DebugCatalogActivity.SG11_RAIN_ICE_REPLAY_ID,
+        )
         if (sourceDetail == null && !overlayVisible && !symbolReview) return
         Column(
             modifier = Modifier.fillMaxWidth().padding(horizontal = 18.dp),
@@ -659,6 +663,7 @@ internal suspend fun processCatalogActivationRequest(
     require(selectedInstant == null ||
         (origin == CatalogOrigin.REPLAY && datasetId.value in setOf(
             DebugCatalogActivity.SG4_GAP_REPLAY_ID, DebugCatalogActivity.SG11_SKY_REPLAY_ID,
+            DebugCatalogActivity.SG11_RAIN_ICE_REPLAY_ID,
         ))) {
         "Exact-time selection is only available for the bounded SG.4 and SG.11 debug replays"
     }

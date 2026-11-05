@@ -17,7 +17,7 @@ Design and implementation slices do not run RTL, TalkBack, or broad system/envir
 
 WX.1, WX.2, WX.3, WX.5, WX.6, WX.9–WX.13, WX.13R, WX.15–WX.20, WX.22, WX.23, WX.24, WX.10R, WX.25, and WX.26 are `DONE`. WX.27 and WX.28 are `DEFERRED` until the product is finished and polished and release-readiness work is appropriate. WX.30 was cancelled by the owner on 2026-11-03 because no defect in the app's actual source path had been demonstrated; any future need must be planned as a new slice through the workflow. WX.31 remains `DEFERRED` pending a separately established need and workflow review. G.5, SG.0, SG.1, SG.2, SG.3, SG.4, SG.4a, SG.9, and BT.1 are `DONE`; cycle 079 was owner-accepted with unverified rain/unavailable-weather assigned to SG.4 and later SG slices, cycle 080 closed SG.3, cycle 081 closed SG.4 with focused installed evidence and owner-directed test limits, cycle 082 closed SG.4a with installed cloud-height evidence, and cycle 083 closed SG.9 with the typed catalog scene path and installed state comparisons. DFM.4.1–DFM.4.6 are `DONE` in cycles 085–090. **SG.5 is `DONE` in cycle 091;** SG.10 is `DONE` in cycle 092 with approved boards and installed evidence; SG.6 is `DEFERRED`, SG.7 remains `PLANNED` and depends on SG.6, and SG.8 is `DONE` in cycle 093 with approved boards, provider-boundary resolution, responsive compact layout, focused tests, and installed evidence. DFM.4's revised behavior/workbench and clean-main/readout artwork boards were approved on 2026-11-01, as recorded in the DFM.4 slice below; DFM.4.6 closed the split DFM.4 workstream in cycle 090 on 2026-11-02. The SG.5 behavior and UI artwork boards were approved on 2026-11-02; cycle 091 closed with installed evidence and scoped NOT RUN states recorded in its closeout and evidence README. SG.8 lunar work remains separate from SG.4; its approved board constraints and cycle plan are recorded below. Every unfinished slice requires its objective-specific behavior board and, for UI/visual work, UI artwork board(s) before its cycle plan can be finalized. The owner-directed P.2.16 correction is DONE in cycle 048. SG work does not depend on deferred release-readiness slices.
 
-WA.1–WA.6 are `DONE`; the six-row Weather Artwork sequence is complete. SG.11a Sky mapping is `DONE` in cycle 102; SG.11b Rain and ice mapping is the sole `NEXT` slice, followed by SG.11c–f by artwork row and SG.12 center-readout work.
+WA.1–WA.6 are `DONE`; the six-row Weather Artwork sequence is complete. SG.11a Sky mapping is `DONE` in cycle 102 and SG.11b Rain and ice mapping is `DONE` in cycle 103; SG.11c is the sole `NEXT` slice, followed by SG.11d–f by artwork row and SG.12 center-readout work.
 
 ### Owner-directed reprioritization — 2026-11-01
 
@@ -38,6 +38,8 @@ DFM.4 was promoted from `PLANNED` to `NEXT` so the debug workbench and location-
 **Cycle execution update — 2026-11-03:** WA.6 completed in cycle 099 with installed Pixel 3 XL evidence for all eight Additional Events symbols and a saved/reopened authored simulation. Scoped results and unrun checks are recorded in the cycle closeout and evidence README. The six-row Weather Artwork sequence is complete; WA.6 is no longer NEXT.
 
 **Owner-directed splits — 2026-11-04:** The owner moved full 48-event mapping out of the center-readout draft into SG.11, then divided mapping into SG.11a–f by the six approved artwork rows. SG.11a is NEXT; SG.11b–f and SG.12 are PLANNED. The approved SG.11 behavior and artwork boards and complete fallback hierarchy remain shared authority for the six row slices. The existing cycle 101 center-readout draft remains SG.12; cycle 102 now plans SG.11a.
+
+**Cycle execution update — 2026-11-05:** SG.11b completed in cycle 103 with installed Pixel 3 XL evidence for all eight Rain and ice states, exact-code mapper checks, and version 1–4 replay compatibility checks. SG.11c is now the sole NEXT slice.
 
 ## Build tooling
 
@@ -860,15 +862,15 @@ The SG workstream follows the owner-directed pivot recorded above and is grounde
 **Owner acceptance clarification, 2026-11-04:** One valid installed screenshot showing a slice-specific icon is the visual acceptance criterion for this slice. Cycle 102's `sky-sunny.png` and paired hierarchy dump satisfy it; the seven other Sky captures are supplementary coverage.
 **Evidence:** Cycle 102 closeout `.codex/history/102-sg11-weather-event-mapping.md`; archived plan `.codex/history/plans/102-sg11-weather-event-mapping.md`; installed captures, live response, commands, and limitations `.codex/test-artifacts/102-sg11-weather-event-mapping/README.md`.
 
-### SG.11b — Map rain and ice events — PLANNED
+### SG.11b — Map rain and ice events — DONE
 
 **Objective/scope:** Extend the established SG.11a typed mapping and bounded debug route for the Rain and ice row: DRIZZLE, RAIN, HEAVY_RAIN, RAIN_SHOWERS, FREEZING_DRIZZLE, FREEZING_RAIN, ICE_PELLETS, HAIL. Add only documented provider-code assignments that support this row; preserve prior rows, recorded compatibility, and the shared selection contract.
 **Depends on:** SG.11a.
-**Exit:** Each supplyable row ID survives canonical input, version-5 recording/replay, projection, and matching symbol/accessibility wording. Every row state is inspected in an installed capture with exact fact, symbol ID, name, command, and limitation; directly affected selection is checked. Existing rows and legacy replay remain valid.
+**Exit:** The eight Rain and ice IDs survive canonical input, version-5 recording/replay, selected-time projection, and matching symbol/accessibility wording. All eight installed Pixel 3 XL states and direct timeline selection were checked. Focused runtime checks cover all 13 documented Open-Meteo codes, unsupported intermediate values, version-5 replay, and legacy versions 1–4 without typed-field backfill.
 **Slice board(s):** The owner-approved SG.11 behavior board `.codex/concepts/SG.11-weather-event-mapping-behavior-board.svg`, supporting contract `.codex/concepts/SG.11-weather-event-mapping-behavior-board.md`, and UI artwork board `.codex/concepts/SG.11-weather-event-mapping-ui-artwork-board.svg` govern this row and the shared rules it uses. Approval was recorded on 2026-11-04; the owner approved the six-row execution split on 2026-11-04. The retained boards cover all rows; each slice accepts only its named row and directly affected shared behavior.
-**Evidence:** Assign a new chronological cycle ID when this slice becomes NEXT; retain captures under that cycle’s `.codex/test-artifacts/` directory and closeout under `.codex/history/`.
+**Evidence:** Cycle 103 closeout `.codex/history/103-sg11b-rain-ice-events.md`; archived plan `.codex/history/plans/103-sg11b-rain-ice-events.md`; installed captures, hierarchy dumps, focused mapper and legacy replay checks, commands, observations, and limits `.codex/test-artifacts/103-sg11b-rain-ice-events/README.md`.
 
-### SG.11c — Map snow and mixed precipitation events — PLANNED
+### SG.11c — Map snow and mixed precipitation events — NEXT
 
 **Objective/scope:** Extend the established SG.11a typed mapping and bounded debug route for the Snow and mixed precipitation row: FLURRIES_SNOW_GRAINS, SNOW, HEAVY_SNOW, SNOW_SHOWERS, RAIN_AND_SNOW, WINTRY_MIX, GRAUPEL, ICE_CRYSTALS. Add only documented provider-code assignments that support this row; preserve prior rows, recorded compatibility, and the shared selection contract.
 **Depends on:** SG.11b.

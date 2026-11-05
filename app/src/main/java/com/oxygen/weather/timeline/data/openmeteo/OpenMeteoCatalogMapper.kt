@@ -130,7 +130,9 @@ object OpenMeteoCatalogMapper {
                 val code = values["weather_code"]
                 val sourceCode = code?.toWmoInt()
                 val mapped = sourceCode?.let(::mapWmo)
-                val event = if (isWindowBoundary) null else sourceCode?.let { skyEvent(it, time, solarByDate[localDate]) }
+                val event = if (isWindowBoundary) null else sourceCode?.let { code ->
+                    skyEvent(code, time, solarByDate[localDate]) ?: rainIceEvent(code)
+                }
                 val interval = AccumulationInterval(time.minusSeconds(3600), time)
                 val fact = try {
                     CanonicalWeatherFacts(
@@ -270,6 +272,28 @@ object OpenMeteoCatalogMapper {
         }
         return WeatherEventFact(id, code, provider = SOURCE_ID,
             documentedCodeDescription = description, descriptionSource = "open-meteo:forecast-api-weather-code-table")
+    }
+
+    private fun rainIceEvent(code: Int): WeatherEventFact? {
+        val (id, description) = when (code) {
+            51 -> WeatherEventId.DRIZZLE to "Light drizzle"
+            53 -> WeatherEventId.DRIZZLE to "Moderate drizzle"
+            55 -> WeatherEventId.DRIZZLE to "Dense drizzle"
+            56 -> WeatherEventId.FREEZING_DRIZZLE to "Light freezing drizzle"
+            57 -> WeatherEventId.FREEZING_DRIZZLE to "Dense freezing drizzle"
+            61 -> WeatherEventId.RAIN to "Slight rain"
+            63 -> WeatherEventId.RAIN to "Moderate rain"
+            65 -> WeatherEventId.HEAVY_RAIN to "Heavy rain"
+            66 -> WeatherEventId.FREEZING_RAIN to "Light freezing rain"
+            67 -> WeatherEventId.FREEZING_RAIN to "Heavy freezing rain"
+            80 -> WeatherEventId.RAIN_SHOWERS to "Slight rain showers"
+            81 -> WeatherEventId.RAIN_SHOWERS to "Moderate rain showers"
+            82 -> WeatherEventId.RAIN_SHOWERS to "Violent rain showers"
+            else -> return null
+        }
+        return WeatherEventFact(id, sourceCode = code, provider = SOURCE_ID,
+            documentedCodeDescription = description,
+            descriptionSource = "open-meteo:forecast-api-weather-code-table")
     }
 
     private fun daySymbol(time: Instant, solar: Pair<Instant?, Instant?>?): Boolean? {

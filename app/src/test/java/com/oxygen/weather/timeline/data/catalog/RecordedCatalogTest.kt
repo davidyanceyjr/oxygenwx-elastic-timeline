@@ -27,7 +27,11 @@ class RecordedCatalogTest {
         assertEquals(encoded.toList(), RecordedCatalogCodec.encode(decodedCurrent.recording).toList())
         val legacyBytes = fixture()
         val decoded = RecordedCatalogCodec.decode(legacyBytes) as RecordingDecodeResult.Success
-        assertArrayEquals(legacyBytes, RecordedCatalogCodec.encode(decoded.recording))
+        val upgradedBytes = RecordedCatalogCodec.encode(decoded.recording)
+        assertEquals(5, com.fasterxml.jackson.databind.ObjectMapper().readTree(upgradedBytes).path("schemaVersion").intValue())
+        assertTrue(decoded.recording.catalog.facts.all {
+            it.events.isEmpty() && it.primaryEventIndex == null && it.sourceWeatherCode == null
+        })
         val replay = CatalogSourceRegistry(listOf(RecordedCatalogSource(legacyBytes))).load(CatalogOrigin.REPLAY, request)
         assertTrue(replay is CatalogLoadResult.Success)
         replay as CatalogLoadResult.Success

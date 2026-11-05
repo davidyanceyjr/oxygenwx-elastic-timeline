@@ -79,13 +79,13 @@ class OpenMeteoCatalogMapperTest {
         assertFalse(mapped.expectedSupport.containsKey(date.plusDays(14)))
     }
 
-    @Test fun `legacy captured provider catalog preserves missing lunar values in v4 support metadata`() {
+    @Test fun `captured provider catalog preserves missing lunar values in version 5`() {
         val request = request(Instant.parse("2026-10-28T14:57:55.714828Z"))
         val input = javaClass.getResourceAsStream("/openmeteo/provider-response-public-chicago.json")!!.use { it.readBytes() }
         val mapped = OpenMeteoCatalogMapper.decode(input, request).success()
         val original = CatalogRecording(mapped.catalog, mapped.expectedSupport, mapped.dailyExpectedSupport)
         val encoded = RecordedCatalogCodec.encode(original)
-        assertEquals(4, mapper.readTree(encoded).path("schemaVersion").intValue())
+        assertEquals(5, mapper.readTree(encoded).path("schemaVersion").intValue())
         assertNull(mapped.catalog.dailySummaries.first().sunriseInstant)
         assertNull(mapped.catalog.dailySummaries.first().sunsetInstant)
         assertNull(mapped.catalog.dailySummaries.first().moonPhase)
@@ -109,7 +109,7 @@ class OpenMeteoCatalogMapperTest {
         assertTrue(hash.matches(Regex("[a-f0-9]{64}")))
     }
 
-    @Test fun `solar events map as absolute instants, remain nullable, and round trip through v4 when lunar fields are present`() {
+    @Test fun `solar events map as absolute instants, remain nullable, and round trip through version 5`() {
         val date = LocalDate.parse("2026-07-10")
         val request = request(date.atTime(12, 0).atZone(chicago.timeZone).toInstant())
         val response = fixture(request, -5 * 3600, listOf(date.atTime(12, 0).atZone(chicago.timeZone).toInstant()), listOf(date))
@@ -125,7 +125,7 @@ class OpenMeteoCatalogMapperTest {
         val encoded = RecordedCatalogCodec.encode(CatalogRecording(
             mapped.catalog, mapped.expectedSupport, mapped.dailyExpectedSupport,
         ))
-        assertEquals(4, mapper.readTree(encoded).path("schemaVersion").intValue())
+        assertEquals(5, mapper.readTree(encoded).path("schemaVersion").intValue())
         val decoded = (RecordedCatalogCodec.decode(encoded) as RecordingDecodeResult.Success).recording
         assertEquals(mapped.catalog.dailySummaries, decoded.catalog.dailySummaries)
         assertArrayEquals(encoded, RecordedCatalogCodec.encode(decoded))
@@ -140,7 +140,7 @@ class OpenMeteoCatalogMapperTest {
         assertFalse(missing.has(DailyCatalogField.SUNSET))
     }
 
-    @Test fun `lunar events and daily phase map independently and round trip through v4`() {
+    @Test fun `lunar events and daily phase map independently and legacy versions 2 to 4 do not backfill typed events`() {
         val date = LocalDate.parse("2026-07-10")
         val request = request(date.atTime(12, 0).atZone(chicago.timeZone).toInstant())
         val response = fixture(request, -5 * 3600, listOf(date.atTime(12, 0).atZone(chicago.timeZone).toInstant()), listOf(date))
@@ -154,33 +154,34 @@ class OpenMeteoCatalogMapperTest {
 
         val mapped = mapBytes(response, request).success()
         val encoded = RecordedCatalogCodec.encode(CatalogRecording(mapped.catalog, mapped.expectedSupport, mapped.dailyExpectedSupport))
-        assertEquals(4, mapper.readTree(encoded).path("schemaVersion").intValue())
+        assertEquals(5, mapper.readTree(encoded).path("schemaVersion").intValue())
         val decoded = (RecordedCatalogCodec.decode(encoded) as RecordingDecodeResult.Success).recording
         assertEquals(mapped.catalog, decoded.catalog)
         assertEquals(mapped.dailyExpectedSupport, decoded.dailyExpectedSupport)
         assertArrayEquals(encoded, RecordedCatalogCodec.encode(decoded))
 
-        val lunarFields = setOf(DailyCatalogField.MOONRISE, DailyCatalogField.MOONSET, DailyCatalogField.MOON_PHASE)
-        val legacySupport = mapped.dailyExpectedSupport.mapValues { (_, fields) -> fields - lunarFields }
-        fun catalogWithSummaries(summaries: List<ProviderDailySummary>) = CanonicalCatalog(
-            mapped.catalog.location, mapped.catalog.datasetId, mapped.catalog.provenance,
-            mapped.catalog.asOf, mapped.catalog.facts, mapped.catalog.productSegments, summaries,
-        )
-        val withoutMoon = catalogWithSummaries(mapped.catalog.dailySummaries.map {
-            it.copy(moonriseInstant = null, moonsetInstant = null, moonPhase = null)
-        })
-        val v3Bytes = RecordedCatalogCodec.encode(CatalogRecording(withoutMoon, mapped.expectedSupport, legacySupport))
-        assertEquals(3, mapper.readTree(v3Bytes).path("schemaVersion").intValue())
-        val v3Decoded = (RecordedCatalogCodec.decode(v3Bytes) as RecordingDecodeResult.Success).recording
-        assertEquals(withoutMoon, v3Decoded.catalog)
-        assertTrue(v3Decoded.catalog.dailySummaries.all { it.moonriseInstant == null && it.moonsetInstant == null && it.moonPhase == null })
-
-        val withoutSolarOrMoon = catalogWithSummaries(withoutMoon.dailySummaries.map {
-            it.copy(sunriseInstant = null, sunsetInstant = null)
-        })
-        val v2Bytes = RecordedCatalogCodec.encode(CatalogRecording(withoutSolarOrMoon, mapped.expectedSupport, legacySupport))
-        assertEquals(2, mapper.readTree(v2Bytes).path("schemaVersion").intValue())
-        assertEquals(withoutSolarOrMoon, (RecordedCatalogCodec.decode(v2Bytes) as RecordingDecodeResult.Success).recording.catalog)
+        val version5FactsWithoutEvents = mapped.catalog.facts.map(::withoutTypedEventMetadata)
+        for (version in 2..4) {
+            val legacyBytes = legacyPayload(encoded, version)
+            assertEquals(version, mapper.readTree(legacyBytes).path("schemaVersion").intValue())
+            val decoded = (RecordedCatalogCodec.decode(legacyBytes) as RecordingDecodeResult.Success).recording
+            assertEquals(version5FactsWithoutEvents, decoded.catalog.facts)
+            assertTrue(decoded.catalog.facts.all { it.events.isEmpty() && it.primaryEventIndex == null && it.sourceWeatherCode == null })
+            val expectedSunrise = if (version >= 3) summary.sunriseInstant else null
+            val expectedMoonPhase = if (version >= 4) summary.moonPhase else null
+            assertEquals(expectedSunrise, decoded.catalog.dailySummaries.single().sunriseInstant)
+            assertEquals(expectedMoonPhase, decoded.catalog.dailySummaries.single().moonPhase)
+            val replay = kotlinx.coroutines.runBlocking {
+                CatalogSourceRegistry(listOf(RecordedCatalogSource(legacyBytes))).load(CatalogOrigin.REPLAY, request)
+            }
+            assertTrue("Version $version did not replay: $replay", replay is CatalogLoadResult.Success || replay is CatalogLoadResult.Partial)
+            val replayFacts = when (replay) {
+                is CatalogLoadResult.Success -> replay.catalog.facts
+                is CatalogLoadResult.Partial -> replay.catalog.facts
+                else -> emptyList()
+            }
+            assertEquals(version5FactsWithoutEvents, replayFacts)
+        }
 
         val daily = response.path("daily")
         (daily.path("moonrise") as ArrayNode).set(0, mapper.nodeFactory.nullNode())
@@ -388,6 +389,74 @@ class OpenMeteoCatalogMapperTest {
         assertTrue(mapBytes(wrongUnit, request) is OpenMeteoMappingResult.Invalid)
     }
 
+    @Test fun `rain and ice WMO codes map exactly and survive version 5 replay`() {
+        val date = LocalDate.parse("2026-07-10")
+        val request = request(date.atTime(12, 0).atZone(chicago.timeZone).toInstant())
+        val codes = listOf(
+            51 to (WeatherEventId.DRIZZLE to "Light drizzle"),
+            53 to (WeatherEventId.DRIZZLE to "Moderate drizzle"),
+            55 to (WeatherEventId.DRIZZLE to "Dense drizzle"),
+            56 to (WeatherEventId.FREEZING_DRIZZLE to "Light freezing drizzle"),
+            57 to (WeatherEventId.FREEZING_DRIZZLE to "Dense freezing drizzle"),
+            61 to (WeatherEventId.RAIN to "Slight rain"),
+            63 to (WeatherEventId.RAIN to "Moderate rain"),
+            65 to (WeatherEventId.HEAVY_RAIN to "Heavy rain"),
+            66 to (WeatherEventId.FREEZING_RAIN to "Light freezing rain"),
+            67 to (WeatherEventId.FREEZING_RAIN to "Heavy freezing rain"),
+            80 to (WeatherEventId.RAIN_SHOWERS to "Slight rain showers"),
+            81 to (WeatherEventId.RAIN_SHOWERS to "Moderate rain showers"),
+            82 to (WeatherEventId.RAIN_SHOWERS to "Violent rain showers"),
+        )
+        val times = codes.indices.map { date.atTime(0, 0).atZone(chicago.timeZone).toInstant().plusSeconds(it * 3600L) }
+        val response = fixture(request, -5 * 3600, times, listOf(date))
+        val weatherCodes = response.path("hourly").path("weather_code") as ArrayNode
+        codes.forEachIndexed { index, (code, _) -> weatherCodes.set(index, mapper.nodeFactory.numberNode(code.toDouble())) }
+
+        val mapped = mapBytes(response, request).success()
+        val events = mapped.catalog.facts.flatMap { fact -> fact.events.map { fact.validTime to it } }
+        assertEquals(codes.size, events.size)
+        codes.forEachIndexed { index, (code, expected) ->
+            val event = events[index].second
+            assertEquals(expected.first, event.id)
+            assertEquals(code, event.sourceCode)
+            assertEquals(expected.second, event.documentedCodeDescription)
+            assertEquals("open-meteo:forecast-api-weather-code-table", event.descriptionSource)
+            assertEquals("open-meteo-forecast-api", event.provider)
+            assertEquals(code, mapped.catalog.facts[index].sourceWeatherCode)
+        }
+
+        val recording = CatalogRecording(mapped.catalog, mapped.expectedSupport, mapped.dailyExpectedSupport)
+        val encoded = RecordedCatalogCodec.encode(recording)
+        assertEquals(5, mapper.readTree(encoded).path("schemaVersion").intValue())
+        val decoded = (RecordedCatalogCodec.decode(encoded) as RecordingDecodeResult.Success).recording
+        assertEquals(recording.catalog, decoded.catalog)
+        assertArrayEquals(encoded, RecordedCatalogCodec.encode(decoded))
+        val replay = kotlinx.coroutines.runBlocking {
+            CatalogSourceRegistry(listOf(RecordedCatalogSource(encoded))).load(CatalogOrigin.REPLAY, request)
+        }
+        assertTrue(replay is CatalogLoadResult.Success || replay is CatalogLoadResult.Partial)
+        val replayFacts = when (replay) {
+            is CatalogLoadResult.Success -> replay.catalog.facts
+            is CatalogLoadResult.Partial -> replay.catalog.facts
+            else -> emptyList()
+        }
+        assertEquals(mapped.catalog.facts.map { it.events }, replayFacts.map { it.events })
+    }
+
+    @Test fun `unsupported intermediate rain and ice codes do not create typed events`() {
+        val date = LocalDate.parse("2026-07-10")
+        val request = request(date.atTime(12, 0).atZone(chicago.timeZone).toInstant())
+        val unsupportedCodes = listOf(52, 54, 58, 59, 60, 62, 64, 68, 69, 78, 79, 83, 84)
+        val times = unsupportedCodes.indices.map { date.atTime(0, 0).atZone(chicago.timeZone).toInstant().plusSeconds(it * 3600L) }
+        val response = fixture(request, -5 * 3600, times, listOf(date))
+        val weatherCodes = response.path("hourly").path("weather_code") as ArrayNode
+        unsupportedCodes.forEachIndexed { index, code -> weatherCodes.set(index, mapper.nodeFactory.numberNode(code.toDouble())) }
+
+        val mapped = mapBytes(response, request).success()
+        assertEquals(unsupportedCodes, mapped.catalog.facts.map { it.sourceWeatherCode })
+        assertTrue(mapped.catalog.facts.all { it.events.isEmpty() })
+    }
+
     @Test fun `provider north bearing 360 normalizes to canonical zero`() {
         val date = LocalDate.parse("2026-07-10")
         val request = request(date.atTime(12, 0).atZone(chicago.timeZone).toInstant())
@@ -407,6 +476,58 @@ class OpenMeteoCatalogMapperTest {
         OpenMeteoTransport.HOURLY.filter { it != "time" }.forEach { name -> (empty.path("hourly").path(name) as ArrayNode).set(0, mapper.nodeFactory.nullNode()) }
         assertEquals(OpenMeteoMappingResult.NoData, mapBytes(empty, request))
     }
+
+    private fun legacyPayload(version5Bytes: ByteArray, version: Int): ByteArray {
+        require(version in 2..4)
+        val root = mapper.readTree(version5Bytes) as ObjectNode
+        root.put("schemaVersion", version)
+        root.remove("rawCapture")
+        (root.path("facts") as ArrayNode).forEach { fact ->
+            (fact as ObjectNode).remove(listOf("sourceWeatherCode", "events", "primaryEventIndex"))
+        }
+        val removedDailyFields = when (version) {
+            2 -> listOf("sunriseInstant", "sunsetInstant", "moonriseInstant", "moonsetInstant", "moonPhase")
+            3 -> listOf("moonriseInstant", "moonsetInstant", "moonPhase")
+            else -> emptyList()
+        }
+        (root.path("dailySummaries") as ArrayNode).forEach { summary ->
+            (summary as ObjectNode).remove(removedDailyFields)
+        }
+        val unsupportedDailyFields = when (version) {
+            2 -> setOf(DailyCatalogField.SUNRISE, DailyCatalogField.SUNSET, DailyCatalogField.MOONRISE,
+                DailyCatalogField.MOONSET, DailyCatalogField.MOON_PHASE)
+            3 -> setOf(DailyCatalogField.MOONRISE, DailyCatalogField.MOONSET, DailyCatalogField.MOON_PHASE)
+            else -> emptySet()
+        }
+        val support = root.path("dailyExpectedSupport") as ArrayNode
+        val retainedSupport = mapper.createArrayNode()
+        support.filterNot { it.path("field").asText() in unsupportedDailyFields.map(DailyCatalogField::name) }
+            .forEach(retainedSupport::add)
+        root.set<ArrayNode>("dailyExpectedSupport", retainedSupport)
+        return mapper.writeValueAsBytes(root)
+    }
+
+    private fun withoutTypedEventMetadata(fact: CanonicalWeatherFacts) = CanonicalWeatherFacts(
+        validTime = fact.validTime,
+        conditions = fact.conditions,
+        phenomena = fact.phenomena,
+        temperatureC = fact.temperatureC,
+        precipitationProbabilityPercent = fact.precipitationProbabilityPercent,
+        thunderstormProbabilityPercent = fact.thunderstormProbabilityPercent,
+        relativeHumidityPercent = fact.relativeHumidityPercent,
+        cloudCoverPercent = fact.cloudCoverPercent,
+        windSpeedKph = fact.windSpeedKph,
+        windGustKph = fact.windGustKph,
+        windDirectionDegrees = fact.windDirectionDegrees,
+        rainAmountMillimeters = fact.rainAmountMillimeters,
+        totalPrecipitationMillimeters = fact.totalPrecipitationMillimeters,
+        precipitationRate = fact.precipitationRate,
+        snowfallCentimeters = fact.snowfallCentimeters,
+        snowDepthCentimeters = fact.snowDepthCentimeters,
+        surfacePressureHpa = fact.surfacePressureHpa,
+        meanSeaLevelPressureHpa = fact.meanSeaLevelPressureHpa,
+        visibilityKm = fact.visibilityKm,
+    )
 
     private fun fixture(
         request: CatalogLoadRequest,

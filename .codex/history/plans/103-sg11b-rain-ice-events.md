@@ -1,6 +1,6 @@
 # Cycle plan — 103-sg11b-rain-ice-events
 
-State: PLANNED
+State: CLOSED
 Roadmap: SG.11b
 Objective: Extend the typed weather-event path and complete Rain and ice row mapping and installed review
 
@@ -39,17 +39,18 @@ Rain and ice identities and documented Open-Meteo assignments in this slice:
 
 ## Steps
 
-- [ ] Inspect cycle 102's code, exact-code ledger, artifact README, and the working tree; identify the Rain and ice routes and record the existing supported/unsupported code behavior.
-- [ ] Expand/confirm exact Rain and ice ledger rows before adapter changes. Implement only codes 51, 53, 55, 56, 57, 61, 63, 65, 66, 67, 80, 81, and 82; keep unsupported intermediate values explicit. Preserve canonical event, source-description, provenance, and primary-selection contracts.
-- [ ] Complete the bounded debug/catalog route for the eight Rain and ice IDs: `DRIZZLE`, `RAIN`, `HEAVY_RAIN`, `RAIN_SHOWERS`, `FREEZING_DRIZZLE`, `FREEZING_RAIN`, `ICE_PELLETS`, and `HAIL`. Verify all eight through canonical input, version-5 recording/replay, selected-time projection, matching WA symbol and accessible wording. Retain cycle 102 Sky checks and legacy replay behavior.
-- [ ] Build/install on the Pixel 3 XL portrait reference at default font scale. Capture each of the eight row states with selected fact, exact code where applicable, symbol ID, accessible name, device, command, and capture index. Check selected-time changes and directly affected timeline selection/gesture ownership. The row exit requires each state in an installed capture; do not infer installed acceptance from a build or preview.
-- [ ] Record pass/fail/not-run against every scoped exit item and exact commands/results in the evidence README. Inspect `git diff --check` and the final diff, then close only when SG.11b's exit is met.
+- [x] Inspect cycle 102's code, exact-code ledger, artifact README, and the working tree; identify the Rain and ice routes and record the existing supported/unsupported code behavior.
+- [x] Confirm the approved exact Rain and ice ledger rows before adapter changes. Implement only codes 51, 53, 55, 56, 57, 61, 63, 65, 66, 67, 80, 81, and 82; unsupported intermediate values return no typed event. Preserve canonical event, source-description, provenance, and primary-selection contracts. Owner separately authorized focused tests and runtime verification on 2026-11-05.
+- [x] Complete the bounded debug/catalog route for the eight Rain and ice IDs: `DRIZZLE`, `RAIN`, `HEAVY_RAIN`, `RAIN_SHOWERS`, `FREEZING_DRIZZLE`, `FREEZING_RAIN`, `ICE_PELLETS`, and `HAIL`. Verify all eight through canonical input, version-5 recording/replay, selected-time projection, matching WA symbol and accessible wording. Retain cycle 102 Sky checks and legacy replay behavior.
+- [x] Build/install on the Pixel 3 XL portrait reference at default font scale. Capture each of the eight row states with selected fact, exact code where applicable, symbol ID, accessible name, device, command, and capture index. Check selected-time changes and directly affected timeline selection/gesture ownership. The row exit requires each state in an installed capture; do not infer installed acceptance from a build or preview.
+- [x] Record pass/fail/not-run against every scoped exit item and exact commands/results in the evidence README. `git diff --check` passed and the final diff was inspected.
+- [x] Verify the Open-Meteo mapper at runtime for all 13 assigned codes and unsupported intermediate values. Verify version-5 save/replay and legacy versions 1–4 decoding/replay without typed-field backfill. Focused results and the precise commands are in the evidence README.
 
 ## Acceptance and evidence
 
 Exit only when all eight row identities survive canonical input, version-5 recording/replay, selected-time projection, and matching symbol/accessibility wording. The 13 documented Open-Meteo codes map only to the ledger assignments above with exact raw code and fixed code description preserved. Unsupported intermediate values produce no typed event. Installed Pixel 3 XL captures inspect all eight row states with the selected fact, symbol ID, accessible name, exact code or “no Open-Meteo assignment,” command, and limitation recorded. Directly affected selection is checked. Existing Sky states, older replay versions, and shared primary/precedence behavior remain valid.
 
-After activation, use `python scripts/dev.py workflow`, `python scripts/dev.py contract`, `python scripts/dev.py build`, `python scripts/dev.py run --serial <device>`, and `python scripts/dev.py screenshot --serial <device> --output .codex/test-artifacts/103-sg11b-rain-ice-events/<state>.png` as applicable. Tests are not authorized by this plan and must not be added or run without separate user authorization. No RTL, TalkBack, reduced-motion matrix, or broad system acceptance is claimed; those belong to TEST slices.
+After activation, use `python scripts/dev.py workflow`, `python scripts/dev.py contract`, `python scripts/dev.py build`, `python scripts/dev.py run --serial <device>`, and `python scripts/dev.py screenshot --serial <device> --output .codex/test-artifacts/103-sg11b-rain-ice-events/<state>.png` as applicable. The owner separately authorized focused mapper and recording/replay tests on 2026-11-05. No RTL, TalkBack, reduced-motion matrix, or broad system acceptance is claimed; those belong to TEST slices.
 
 Preserve commands, device/viewport, eight captures and hierarchy dumps, row observations, code-ledger updates, exact pass/fail/not-run results, limitations, and diff review in `.codex/test-artifacts/103-sg11b-rain-ice-events/README.md`. Closeout target: `.codex/history/103-sg11b-rain-ice-events.md`; archived plan: `.codex/history/plans/103-sg11b-rain-ice-events.md`.
 
@@ -59,4 +60,4 @@ The bounded debug route must make `ICE_PELLETS` and `HAIL` reviewable without in
 
 ## Out of scope
 
-No non-Rain-and-ice Open-Meteo assignments or installed row claims; no new WA artwork; no changes to Sky mappings, unavailable-state semantics, center-readout composition, scene composition/light timing, provider endpoint/variables, unit policy, location/timeline navigation, official alerts, live-network redesign, deprecated oxygenWX files, tests, or cross-cutting accessibility/system matrices.
+No non-Rain-and-ice Open-Meteo assignments or installed row claims; no new WA artwork; no changes to Sky mappings, unavailable-state semantics, center-readout composition, scene composition/light timing, provider endpoint/variables, unit policy, location/timeline navigation, official alerts, live-network redesign, deprecated oxygenWX files, or cross-cutting accessibility/system matrices.
