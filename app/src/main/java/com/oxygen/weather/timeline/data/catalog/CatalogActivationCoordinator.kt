@@ -491,8 +491,8 @@ class CatalogActivationCoordinator(
         val sourceRequest = CatalogLoadRequest(request.location, request.datasetId, clock.instant())
         val result = sources.load(request.origin, sourceRequest)
         val capturedRecording = when (result) {
-            is CatalogLoadResult.Success -> CatalogRecording(result.catalog, result.expectedSupport, result.dailyExpectedSupport)
-            is CatalogLoadResult.Partial -> CatalogRecording(result.catalog, result.expectedSupport, result.dailyExpectedSupport)
+            is CatalogLoadResult.Success -> CatalogRecording(result.catalog, result.expectedSupport, result.dailyExpectedSupport, result.metadata.rawCapture)
+            is CatalogLoadResult.Partial -> CatalogRecording(result.catalog, result.expectedSupport, result.dailyExpectedSupport, result.metadata.rawCapture)
             else -> throw IllegalStateException("${request.origin} source did not return a usable catalog")
         }
         require(capturedRecording.catalog.location == request.location &&

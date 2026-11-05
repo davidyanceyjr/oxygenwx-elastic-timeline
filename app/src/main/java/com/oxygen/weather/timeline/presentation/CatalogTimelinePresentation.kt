@@ -9,6 +9,7 @@ import com.oxygen.weather.timeline.data.catalog.CatalogWindow
 import com.oxygen.weather.timeline.data.catalog.CatalogWindowResult
 import com.oxygen.weather.timeline.data.catalog.ExpectedFieldSupport
 import com.oxygen.weather.timeline.data.catalog.WeatherCondition
+import com.oxygen.weather.timeline.presentation.symbol.WeatherSymbolId
 import com.oxygen.weather.timeline.presentation.atmosphere.AtmospherePreview
 import com.oxygen.weather.timeline.presentation.atmosphere.DepictionKind
 import com.oxygen.weather.timeline.presentation.atmosphere.EffectsLevel
@@ -51,6 +52,8 @@ data class CatalogTimelineView(
     val factTimeLabel: String?,
     val temperature: String?,
     val condition: String?,
+    val weatherSymbolId: WeatherSymbolId? = null,
+    val weatherSymbolName: String? = null,
     val high: String?,
     val low: String?,
     val precipitationChance: String?,
@@ -81,6 +84,9 @@ data class CatalogDiagnosticPresentation(
     val catalog: List<String>,
     val selection: List<String>,
     val missingFields: List<String>,
+    val symbolId: WeatherSymbolId? = null,
+    val symbolName: String? = null,
+    val sourceCode: Int? = null,
 )
 
 /** Construct once per published dataset; selected projections remain cheap during scrubbing. */
@@ -146,15 +152,16 @@ class CatalogTimelinePresenter(private val active: ActiveCatalogSelection) {
         val selected = selectedInstant(state)
         val reading = scenePlan.evaluate(selected)
         val composition = FirstCityTheme.compose(reading, zone)
+        val timeline = view(state, selected, reading, composition)
         return CatalogTimelineScenePresentation(
-            timeline = view(state, selected, reading, composition),
+            timeline = timeline,
             reading = reading,
             composition = composition,
-            diagnostics = diagnostics(state, selected),
+            diagnostics = diagnostics(state, selected, timeline),
         )
     }
 
-    private fun diagnostics(state: CatalogActivationState, selected: Instant): CatalogDiagnosticPresentation {
+    private fun diagnostics(state: CatalogActivationState, selected: Instant, timeline: CatalogTimelineView): CatalogDiagnosticPresentation {
         val projected = CanonicalForecastProjection.project(catalog, window, selected, ForecastDisplayUnits.IMPERIAL)
         val sample = projected.factSample
         val product = projected.productSegment
@@ -193,7 +200,9 @@ class CatalogTimelinePresenter(private val active: ActiveCatalogSelection) {
         val missing = matched.mapNotNull { (field, _) ->
             if (sample?.facts?.hasValue(field) == false) field.diagnosticLabel() else null
         }.let { fields -> when { sample == null -> listOf("unavailable"); fields.isEmpty() -> listOf("none"); else -> fields } }
-        return CatalogDiagnosticPresentation(catalogLines, selectionLines, missing)
+        return CatalogDiagnosticPresentation(catalogLines, selectionLines, missing,
+            timeline.weatherSymbolId, timeline.weatherSymbolName,
+            window.typedEventFactAt(selected)?.sourceWeatherCode ?: sample?.facts?.sourceWeatherCode)
     }
 
     private fun sampleInterval(facts: com.oxygen.weather.timeline.data.catalog.CanonicalWeatherFacts, field: CatalogField) = when (field) {
@@ -233,7 +242,18 @@ class CatalogTimelinePresenter(private val active: ActiveCatalogSelection) {
         reading: SceneReading,
         composition: FirstCityComposition,
     ): CatalogTimelineView {
-        val projected = CanonicalForecastProjection.project(catalog, window, selected, ForecastDisplayUnits.IMPERIAL)
+        val conditionEvidence = reading.conditions
+        val eventSourceTime = conditionEvidence?.takeIf {
+            it.evidence == SceneEvidence.SUPPLIED || it.evidence == SceneEvidence.EXPECTED_MISSING
+        }?.sourceValidTime
+        val conditionSourceFact = eventSourceTime?.let { time ->
+            window.days.firstOrNull { selected.atZone(zone).toLocalDate() == it.date }
+                ?.facts?.firstOrNull { it.validTime == time }
+        }
+        val sourceFact = window.typedEventFactAt(selected) ?: conditionSourceFact
+        val projected = CanonicalForecastProjection.project(catalog, window, selected, ForecastDisplayUnits.IMPERIAL,
+            SelectedEventEvidence(sourceFact, sourceFact?.validTime,
+                sourceFact === conditionSourceFact && conditionEvidence?.evidence == SceneEvidence.EXPECTED_MISSING))
         val fact = projected.factSample
         val conditionPoint = reading.conditions
         // Preserve the catalog text label selection exactly; scene category priorities are separate.
@@ -279,8 +299,12 @@ class CatalogTimelinePresenter(private val active: ActiveCatalogSelection) {
             factTimeLabel = carried?.let { "Condition from ${formatTime(requireNotNull(it.sourceValidTime))}; selected hour unavailable" }
                 ?: displayFact?.let { formatTime(it.validTime) },
             temperature = displayFact?.temperature?.let { "${it.displayValue.rounded()}°" },
-            condition = supportedCondition?.name?.lowercase(Locale.US)?.replace('_', ' ')
-                ?: conditionLabel(displayFact?.facts?.conditions).takeIf { conditionPoint?.evidence == SceneEvidence.SUPPLIED },
+            condition = projected.selectedEvent?.accessibleName
+                ?: if (sourceFact?.sourceWeatherCode != null) null else
+                    supportedCondition?.name?.lowercase(Locale.US)?.replace('_', ' ')
+                        ?: conditionLabel(displayFact?.facts?.conditions).takeIf { conditionPoint?.evidence == SceneEvidence.SUPPLIED },
+            weatherSymbolId = projected.selectedEvent?.symbolId,
+            weatherSymbolName = projected.selectedEvent?.accessibleName,
             high = projected.dailyHigh.displayTemperature?.let { "${it.displayValue.rounded()}°" },
             low = projected.dailyLow.displayTemperature?.let { "${it.displayValue.rounded()}°" },
             precipitationChance = reading.precipitationChancePercent

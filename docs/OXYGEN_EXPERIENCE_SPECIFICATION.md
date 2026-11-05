@@ -131,7 +131,7 @@ The prototype's fixed 24-hour fixture days permit ±24-hour navigation. Successo
 Priority order:
 
 1. **Atmospheric visual field** — full-bleed, dynamic, and subordinate to readable facts.
-2. **Current selected forecast** — large temperature, clear condition text, and date/time label.
+2. **Current selected forecast** — large temperature paired with a matching weather symbol, with the selected day/time visible on the timeline. Under the owner-approved SG.12 readout direction, the central supported-condition word is omitted; the condition name remains available through accessible semantics and the textual forecast browser. A carried prior-hour condition keeps visible source-time disclosure, and an unavailable condition may show an explicit status.
 3. **Secondary facts** — a small, stable set such as precipitation chance, wind, and daily high/low; accessible in text.
 4. **Timeline shuttle** — minimalist time-navigation instrument near the bottom, with a forgiving invisible touch region.
 5. **Additional forecast facts** — reachable without permanently covering the scene when real data becomes available.

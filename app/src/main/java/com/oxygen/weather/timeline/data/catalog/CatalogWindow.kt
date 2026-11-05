@@ -85,6 +85,14 @@ class CatalogWindow private constructor(
 ) {
     val days: List<CatalogDay> = Collections.unmodifiableList(days.toList())
 
+    /** Exact supplied hour cell for typed events; a gap never borrows another hour. */
+    fun typedEventFactAt(selected: Instant): CanonicalWeatherFacts? {
+        val day = days.firstOrNull { selected >= it.localStart && selected < it.localEnd } ?: return null
+        return day.facts.firstOrNull { fact ->
+            fact.events.isNotEmpty() && selected >= fact.validTime && selected < fact.validTime.plusSeconds(3600)
+        }
+    }
+
     companion object {
         /**
          * Builds the fixed 44-local-date window. Expected support is supplied by the caller per

@@ -3,10 +3,12 @@ package com.oxygen.weather.timeline.data.openmeteo
 import com.fasterxml.jackson.databind.JsonNode
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.oxygen.weather.timeline.data.catalog.CatalogLocation
+import com.oxygen.weather.timeline.data.catalog.RawResponseCapture
 import java.io.ByteArrayOutputStream
 import java.io.IOException
 import java.io.InterruptedIOException
 import java.net.SocketTimeoutException
+import java.time.Clock
 import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.NonCancellable
@@ -25,6 +27,7 @@ class OpenMeteoTransport(
     client: OkHttpClient,
     private val limits: Limits = Limits(),
     private val mapper: ObjectMapper = ObjectMapper(),
+    private val clock: Clock = Clock.systemUTC(),
 ) {
     data class Limits(
         val connectTimeoutMillis: Long = 5_000,
@@ -39,7 +42,7 @@ class OpenMeteoTransport(
     }
 
     sealed interface Result {
-        data class Success(val payload: JsonNode) : Result
+        data class Success(val payload: JsonNode, val capture: RawResponseCapture) : Result
         data class HttpError(val status: Int, val reason: String?) : Result
         data object Timeout : Result
         data object Connectivity : Result
@@ -92,7 +95,7 @@ class OpenMeteoTransport(
             return if (e is SocketTimeoutException || e is InterruptedIOException) Result.Timeout else Result.Connectivity
         }
         return try {
-            withContext(Dispatchers.IO) { readResponse(response) }
+            withContext(Dispatchers.IO) { readResponse(response, call.request().url.toString()) }
         } catch (e: CancellationException) {
             withContext(NonCancellable + Dispatchers.IO) { response.close() }
             throw e
@@ -102,7 +105,7 @@ class OpenMeteoTransport(
     }
 
     /** Response body I/O and JSON parsing must not resume on the caller's (often Main) thread. */
-    private fun readResponse(response: Response): Result {
+    private fun readResponse(response: Response, requestIdentity: String): Result {
         return response.use {
             val body = it.body ?: return Result.InvalidResponse
             val bytes = body.byteStream().use { input ->
@@ -126,7 +129,7 @@ class OpenMeteoTransport(
                 !root.path("hourly").isObject || !root.path("hourly").path("time").isArray ||
                 !root.path("daily").isObject || !root.path("daily").path("time").isArray ||
                 !root.path("timezone").isTextual) return Result.InvalidResponse
-            return Result.Success(root)
+            return Result.Success(root, RawResponseCapture(bytes, requestIdentity, "open-meteo", clock.instant()))
         }
     }
 

@@ -71,11 +71,17 @@ class CanonicalWeatherFacts(
     val surfacePressureHpa: Double? = null,
     val meanSeaLevelPressureHpa: Double? = null,
     val visibilityKm: Double? = null,
+    events: List<WeatherEventFact> = emptyList(),
+    val primaryEventIndex: Int? = null,
+    val sourceWeatherCode: Int? = null,
 ) {
     val conditions: Set<WeatherCondition> = Collections.unmodifiableSet(conditions.toSet())
     val phenomena: Set<WeatherPhenomenon> = Collections.unmodifiableSet(phenomena.toSet())
+    val events: List<WeatherEventFact> = Collections.unmodifiableList(events.toList())
 
     init {
+        require(primaryEventIndex == null || primaryEventIndex in this.events.indices) { "Primary event must reference a supplied member" }
+        require(sourceWeatherCode == null || sourceWeatherCode in 0..99)
         temperatureC?.requireRange(-100.0..70.0, "Temperature must be in -100..70 °C")
         precipitationProbabilityPercent?.requireRange(0.0..100.0, "Precipitation probability must be in 0..100%")
         thunderstormProbabilityPercent?.requireRange(0.0..100.0, "Thunderstorm probability must be in 0..100%")
@@ -122,7 +128,8 @@ class CanonicalWeatherFacts(
         snowDepthCentimeters == other.snowDepthCentimeters &&
         surfacePressureHpa == other.surfacePressureHpa &&
         meanSeaLevelPressureHpa == other.meanSeaLevelPressureHpa &&
-        visibilityKm == other.visibilityKm
+        visibilityKm == other.visibilityKm && events == other.events &&
+        primaryEventIndex == other.primaryEventIndex && sourceWeatherCode == other.sourceWeatherCode
 
     override fun hashCode(): Int = listOf(
         validTime,
@@ -144,6 +151,9 @@ class CanonicalWeatherFacts(
         surfacePressureHpa,
         meanSeaLevelPressureHpa,
         visibilityKm,
+        events,
+        primaryEventIndex,
+        sourceWeatherCode,
     ).hashCode()
 
     override fun toString(): String = "CanonicalWeatherFacts(validTime=$validTime, conditions=$conditions, " +
@@ -155,7 +165,24 @@ class CanonicalWeatherFacts(
         "totalPrecipitationMillimeters=$totalPrecipitationMillimeters, precipitationRate=$precipitationRate, " +
         "snowfallCentimeters=$snowfallCentimeters, snowDepthCentimeters=$snowDepthCentimeters, " +
         "surfacePressureHpa=$surfacePressureHpa, meanSeaLevelPressureHpa=$meanSeaLevelPressureHpa, " +
-        "visibilityKm=$visibilityKm)"
+        "visibilityKm=$visibilityKm, events=$events, primaryEventIndex=$primaryEventIndex, sourceWeatherCode=$sourceWeatherCode)"
+
+    fun withEvents(
+        suppliedEvents: List<WeatherEventFact>,
+        primaryIndex: Int? = null,
+        broadConditions: Set<WeatherCondition> = conditions,
+    ): CanonicalWeatherFacts = CanonicalWeatherFacts(
+        validTime = validTime, conditions = broadConditions, phenomena = phenomena,
+        temperatureC = temperatureC, precipitationProbabilityPercent = precipitationProbabilityPercent,
+        thunderstormProbabilityPercent = thunderstormProbabilityPercent,
+        relativeHumidityPercent = relativeHumidityPercent, cloudCoverPercent = cloudCoverPercent,
+        windSpeedKph = windSpeedKph, windGustKph = windGustKph, windDirectionDegrees = windDirectionDegrees,
+        rainAmountMillimeters = rainAmountMillimeters, totalPrecipitationMillimeters = totalPrecipitationMillimeters,
+        precipitationRate = precipitationRate, snowfallCentimeters = snowfallCentimeters,
+        snowDepthCentimeters = snowDepthCentimeters, surfacePressureHpa = surfacePressureHpa,
+        meanSeaLevelPressureHpa = meanSeaLevelPressureHpa, visibilityKm = visibilityKm,
+        events = suppliedEvents, primaryEventIndex = primaryIndex, sourceWeatherCode = sourceWeatherCode,
+    )
 }
 
 /** Composable sky/weather labels; this is deliberately not a Cartesian product with measurements. */

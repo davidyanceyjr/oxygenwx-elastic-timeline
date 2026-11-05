@@ -12,6 +12,9 @@ import com.oxygen.weather.timeline.data.catalog.CoverageStatus
 import com.oxygen.weather.timeline.data.catalog.DailyAmountField
 import com.oxygen.weather.timeline.data.catalog.DailyValueOrigin
 import com.oxygen.weather.timeline.data.catalog.WeatherCondition
+import com.oxygen.weather.timeline.data.catalog.WeatherEventId
+import com.oxygen.weather.timeline.data.catalog.WeatherEventPriority
+import com.oxygen.weather.timeline.presentation.symbol.WeatherSymbolId
 import java.time.Duration
 import java.time.Instant
 import java.time.LocalDate
@@ -59,6 +62,23 @@ data class CanonicalHourlyPresentation(
     val snow: SnowVisualIdentity,
 )
 
+/** Support and carry decisions are made by the catalog timeline before event projection. */
+data class SelectedEventEvidence(
+    val sourceFact: CanonicalWeatherFacts?,
+    val sourceTime: Instant?,
+    val carried: Boolean,
+) {
+    init { require((sourceFact == null) == (sourceTime == null)); require(sourceFact == null || sourceFact.validTime == sourceTime) }
+}
+
+data class PresentedWeatherEvent(
+    val symbolId: WeatherSymbolId,
+    val accessibleName: String,
+    val sourceTime: Instant,
+    val carried: Boolean,
+    val sourceCode: Int?,
+)
+
 data class CanonicalForecastPresentation(
     val selectedInstant: Instant,
     val selectedDate: LocalDate,
@@ -74,6 +94,7 @@ data class CanonicalForecastPresentation(
     val meaning: ForecastMeaning,
     val displayUnits: ForecastDisplayUnits,
     val scene: DecorativeSceneTransition?,
+    val selectedEvent: PresentedWeatherEvent? = null,
 )
 
 /** Pure canonical-to-presentation projection. The caller pairs a window with its source catalog. */
@@ -83,6 +104,7 @@ object CanonicalForecastProjection {
         window: CatalogWindow,
         selectedInstant: Instant,
         displayUnits: ForecastDisplayUnits,
+        eventEvidence: SelectedEventEvidence? = null,
     ): CanonicalForecastPresentation {
         require(window.zoneId == catalog.location.timeZone) {
             "Catalog and window timezones must match"
@@ -122,7 +144,34 @@ object CanonicalForecastProjection {
             meaning = meaning,
             displayUnits = displayUnits,
             scene = day?.let { sceneTransition(eligibleFacts, selectedInstant) },
+            selectedEvent = eventEvidence?.let { evidence ->
+                val source = evidence.sourceFact ?: return@let null
+                val selected = WeatherEventPriority.select(source.events, source.primaryEventIndex)
+                val id = selected?.id ?: legacyEventId(source, day, selectedInstant)
+                id?.let { stableId ->
+                    val symbol = WeatherSymbolId.valueOf(stableId.name)
+                    PresentedWeatherEvent(symbol, symbol.label, requireNotNull(evidence.sourceTime),
+                        evidence.carried, selected?.sourceCode ?: source.sourceWeatherCode)
+                }
+            },
         )
+    }
+
+    private fun legacyEventId(source: CanonicalWeatherFacts, day: CatalogDay?, selectedInstant: Instant): WeatherEventId? {
+        // A supplied but unsupported numeric code must never be inferred from broad scene input.
+        if (source.sourceWeatherCode != null) return null
+        return when {
+            WeatherCondition.CLOUDY in source.conditions -> WeatherEventId.CLOUDY_OVERCAST
+            WeatherCondition.CLEAR in source.conditions || WeatherCondition.PARTLY_CLOUDY in source.conditions -> {
+                val sunrise = day?.dailySummary?.sunriseInstant ?: return null
+                val sunset = day.dailySummary.sunsetInstant ?: return null
+                val daylight = selectedInstant >= sunrise.minusSeconds(3600) && selectedInstant < sunset.minusSeconds(3600)
+                if (WeatherCondition.CLEAR in source.conditions) {
+                    if (daylight) WeatherEventId.SUNNY else WeatherEventId.CLEAR_NIGHT
+                } else if (daylight) WeatherEventId.PARTLY_SUNNY_CLOUDY else WeatherEventId.PARTLY_CLOUDY_NIGHT
+            }
+            else -> null
+        }
     }
 
     private fun dailyTemperature(

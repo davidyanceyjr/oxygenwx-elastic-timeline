@@ -8,6 +8,7 @@ import com.oxygen.weather.timeline.data.catalog.*
 import java.time.Instant
 import java.time.LocalDate
 import java.time.ZoneOffset
+import java.time.Duration
 
 data class OpenMeteoMappedCatalog(
     val catalog: CanonicalCatalog,
@@ -94,6 +95,11 @@ object OpenMeteoCatalogMapper {
             val dailyValues = readSeries(daily, root.required("daily_units"), OpenMeteoTransport.DAILY, dailyTimes.size, ::dailyUnit)
             require(dailyValues.values.all { it.size == dailyTimes.size }) { "Daily variable array length does not match daily.time" }
             val targetDailyRows = dailyOffsetDates.indices.filter { dailyOffsetDates[it] in dateSet }
+            val solarByDate = targetDailyRows.associate { index ->
+                val date = dailyOffsetDates[index]
+                date to (dailyValues["sunrise"]?.get(index)?.let { it.toEventInstant("sunrise", date) } to
+                    dailyValues["sunset"]?.get(index)?.let { it.toEventInstant("sunset", date) })
+            }
 
             val hasAnchor = hDates.any { it == anchor } || targetDailyRows.any { dailyOffsetDates[it] == anchor }
             require(hasAnchor) { "Response does not contain the request asOf local date" }
@@ -122,7 +128,9 @@ object OpenMeteoCatalogMapper {
                 if (isWindowBoundary && listOf("rain", "precipitation", "snowfall").all { values[it] == null }) continue
                 val localDate = if (isWindowBoundary) anchor.plusDays(13) else time.atZone(zone).toLocalDate()
                 val code = values["weather_code"]
-                val mapped = code?.let { mapWmo(it.toWmoInt()) }
+                val sourceCode = code?.toWmoInt()
+                val mapped = sourceCode?.let(::mapWmo)
+                val event = if (isWindowBoundary) null else sourceCode?.let { skyEvent(it, time, solarByDate[localDate]) }
                 val interval = AccumulationInterval(time.minusSeconds(3600), time)
                 val fact = try {
                     CanonicalWeatherFacts(
@@ -145,6 +153,9 @@ object OpenMeteoCatalogMapper {
                         totalPrecipitationMillimeters = values["precipitation"]?.let { AccumulatedMillimeters(it, interval) },
                         snowfallCentimeters = values["snowfall"]?.let { AccumulatedSnowfallCentimeters(it, interval) },
                         snowDepthCentimeters = if (isWindowBoundary) null else values["snow_depth"]?.times(100.0),
+                        events = listOfNotNull(event),
+                        primaryEventIndex = if (event == null) null else 0,
+                        sourceWeatherCode = if (isWindowBoundary) null else sourceCode,
                     )
                 } catch (e: Exception) { throw IllegalArgumentException("Invalid hourly value at $time: ${e.message}") }
                 factsByTime[time] = fact
@@ -248,6 +259,24 @@ object OpenMeteoCatalogMapper {
     }
 
     private data class Wmo(val conditions: Set<WeatherCondition>, val phenomena: Set<WeatherPhenomenon> = emptySet())
+
+    private fun skyEvent(code: Int, time: Instant, solar: Pair<Instant?, Instant?>?): WeatherEventFact? {
+        val (id, description) = when (code) {
+            0 -> (daySymbol(time, solar)?.let { if (it) WeatherEventId.SUNNY else WeatherEventId.CLEAR_NIGHT } ?: return null) to "Clear sky"
+            1 -> (daySymbol(time, solar)?.let { if (it) WeatherEventId.MOSTLY_SUNNY else WeatherEventId.MOSTLY_CLEAR_NIGHT } ?: return null) to "Mainly clear"
+            2 -> (daySymbol(time, solar)?.let { if (it) WeatherEventId.PARTLY_SUNNY_CLOUDY else WeatherEventId.PARTLY_CLOUDY_NIGHT } ?: return null) to "Partly cloudy"
+            3 -> WeatherEventId.CLOUDY_OVERCAST to "Overcast"
+            else -> return null
+        }
+        return WeatherEventFact(id, code, provider = SOURCE_ID,
+            documentedCodeDescription = description, descriptionSource = "open-meteo:forecast-api-weather-code-table")
+    }
+
+    private fun daySymbol(time: Instant, solar: Pair<Instant?, Instant?>?): Boolean? {
+        val sunrise = solar?.first ?: return null
+        val sunset = solar.second ?: return null
+        return time >= sunrise.minus(Duration.ofHours(1)) && time < sunset.minus(Duration.ofHours(1))
+    }
     private fun mapWmo(code: Int): Wmo? = when (code) {
         0 -> Wmo(setOf(WeatherCondition.CLEAR))
         1, 2 -> Wmo(setOf(WeatherCondition.PARTLY_CLOUDY))

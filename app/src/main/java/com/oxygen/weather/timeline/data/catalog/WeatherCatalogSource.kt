@@ -27,6 +27,7 @@ data class CatalogLoadMetadata(
     val detail: String? = null,
     /** Original captured delivery origin when this result is delivered through replay. */
     val replayOriginalOrigin: CatalogOrigin? = null,
+    val rawCapture: RawResponseCapture? = null,
 ) {
     init { require(detail == null || detail.isNotBlank()) }
 }

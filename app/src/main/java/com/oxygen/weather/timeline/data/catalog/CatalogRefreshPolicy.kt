@@ -86,7 +86,8 @@ class LiveCatalogRepository(
 
         val recording = CatalogRecording(usable.first, usable.second,
             (sourceOutcome as? CatalogLoadResult.Success)?.dailyExpectedSupport
-                ?: (sourceOutcome as CatalogLoadResult.Partial).dailyExpectedSupport)
+                ?: (sourceOutcome as CatalogLoadResult.Partial).dailyExpectedSupport,
+            sourceOutcome.metadata.rawCapture)
         // Retrieval time is captured when a usable whole-catalog result arrives, independently of asOf.
         val retrievedAt = clock.instant()
         val persistence = try {

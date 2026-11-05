@@ -25,8 +25,9 @@ class OpenMeteoCatalogSource(
                             day.fieldCoverage.values.all { it == CoverageStatus.COMPLETE } &&
                                 day.dailyCoverage.values.all { it == CoverageStatus.COMPLETE }
                         }
-                        if (complete) CatalogLoadResult.Success(value.catalog, value.expectedSupport, dailyExpectedSupport = value.dailyExpectedSupport)
-                        else CatalogLoadResult.Partial(value.catalog, value.expectedSupport, dailyExpectedSupport = value.dailyExpectedSupport)
+                        val metadata = CatalogLoadMetadata(rawCapture = response.capture)
+                        if (complete) CatalogLoadResult.Success(value.catalog, value.expectedSupport, metadata, value.dailyExpectedSupport)
+                        else CatalogLoadResult.Partial(value.catalog, value.expectedSupport, metadata, value.dailyExpectedSupport)
                     }
                 }
                 OpenMeteoMappingResult.NoData -> CatalogLoadResult.NoData(NoDataReason.EMPTY_SOURCE)

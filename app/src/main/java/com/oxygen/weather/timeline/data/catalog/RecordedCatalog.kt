@@ -10,6 +10,7 @@ import java.time.Instant
 import java.time.LocalDate
 import java.time.ZoneId
 import java.util.Collections
+import java.util.Base64
 import kotlinx.coroutines.ensureActive
 
 /** A captured original product and its declared support. The codec has no I/O or clock. */
@@ -17,6 +18,7 @@ data class CatalogRecording(
     val catalog: CanonicalCatalog,
     val expectedSupport: CatalogExpectedSupport,
     val dailyExpectedSupport: DailyExpectedSupport = emptyMap(),
+    val rawCapture: RawResponseCapture? = null,
 )
 
 sealed interface RecordingDecodeResult {
@@ -43,15 +45,7 @@ object RecordedCatalogCodec {
         require(CatalogWindow.create(recording.catalog, recording.expectedSupport, dailyExpectedSupport = recording.dailyExpectedSupport) is CatalogWindowResult.Success)
         val catalog = recording.catalog
         val root = mapper.createObjectNode()
-        val hasSolarEvents = catalog.dailySummaries.any { it.sunriseInstant != null || it.sunsetInstant != null }
-        val hasLunarData = catalog.dailySummaries.any { it.moonriseInstant != null || it.moonsetInstant != null || it.moonPhase != null } ||
-            recording.dailyExpectedSupport.values.any { fields -> fields.any { it in setOf(DailyCatalogField.MOONRISE, DailyCatalogField.MOONSET, DailyCatalogField.MOON_PHASE) } }
-        val version = when {
-            hasLunarData -> 4
-            catalog.productSegments.isEmpty() && catalog.dailySummaries.isEmpty() && recording.dailyExpectedSupport.isEmpty() -> 1
-            hasSolarEvents -> 3
-            else -> 2
-        }
+        val version = 5
         root.put("schemaVersion", version)
         root.set<JsonNode>("location", mapper.createObjectNode().apply {
             put("id", catalog.location.id.value)
@@ -70,6 +64,13 @@ object RecordedCatalogCodec {
             putNullable("issuedAt", catalog.provenance.issuedAt?.toString())
         })
         root.put("asOf", catalog.asOf.toString())
+        root.set<JsonNode>("rawCapture", recording.rawCapture?.let { capture -> mapper.createObjectNode().apply {
+            put("captureContractVersion", capture.captureContractVersion)
+            put("provider", capture.provider)
+            put("requestIdentity", capture.requestIdentity)
+            put("retrievedAt", capture.retrievedAt.toString())
+            put("responseBase64", Base64.getEncoder().encodeToString(capture.bytes))
+        } } ?: mapper.nullNode())
         root.set<JsonNode>("facts", mapper.createArrayNode().apply {
             catalog.facts.sortedBy { it.validTime }.forEach { add(writeFact(it)) }
         })
@@ -155,11 +156,15 @@ object RecordedCatalogCodec {
             return RecordingDecodeResult.Failure(RecordingError.MALFORMED, "schemaVersion must be an integer")
         }
         val version = root["schemaVersion"].takeIf { it.canConvertToInt() }?.intValue() ?: 0
-        if (version !in 1..4) {
+        if (version !in 1..5) {
             return RecordingDecodeResult.Failure(RecordingError.UNSUPPORTED_VERSION, "Unsupported schemaVersion")
         }
         return try {
-            root.fieldsExact(*(if (version == 1) arrayOf("schemaVersion", "location", "datasetId", "provenance", "asOf", "facts", "expectedSupport") else arrayOf("schemaVersion", "location", "datasetId", "provenance", "asOf", "facts", "expectedSupport", "productSegments", "dailySummaries", "dailyExpectedSupport")))
+            root.fieldsExact(*(when (version) {
+                1 -> arrayOf("schemaVersion", "location", "datasetId", "provenance", "asOf", "facts", "expectedSupport")
+                5 -> arrayOf("schemaVersion", "location", "datasetId", "provenance", "asOf", "facts", "expectedSupport", "productSegments", "dailySummaries", "dailyExpectedSupport", "rawCapture")
+                else -> arrayOf("schemaVersion", "location", "datasetId", "provenance", "asOf", "facts", "expectedSupport", "productSegments", "dailySummaries", "dailyExpectedSupport")
+            }))
             val locationNode = root.required("location").fieldsExact("id", "coordinates", "timeZone")
             val coordinates = locationNode.required("coordinates").fieldsExact("latitudeDegrees", "longitudeDegrees")
             val location = CatalogLocation(
@@ -176,7 +181,7 @@ object RecordedCatalogCodec {
                 provenanceNode.required("issuedAt").nullableString()?.let(Instant::parse),
             )
             require(provenance.origin != CatalogOrigin.REPLAY) { "Captured origin cannot be REPLAY" }
-            val facts = root.required("facts").array().map(::readFact)
+            val facts = root.required("facts").array().map { readFact(it, version) }
             require(facts.isNotEmpty() && facts.map { it.validTime }.distinct().size == facts.size) { "Facts must have unique times" }
             val segments = if (version >= 2) root.required("productSegments").array().map { node ->
                 node.fieldsExact("startDateInclusive", "endDateExclusive", "productKind", "sourceId", "productId", "issuedAt")
@@ -245,7 +250,16 @@ object RecordedCatalogCodec {
             }
             require(summaries.all { it.date in dailySupport }) { "Daily summaries require declared daily support" }
             require(CatalogWindow.create(catalog, support, dailyExpectedSupport = dailySupport) is CatalogWindowResult.Success) { "Invalid window or support" }
-            RecordingDecodeResult.Success(CatalogRecording(catalog, Collections.unmodifiableMap(support), dailySupport.mapValues { it.value.toSet() }))
+            val capture = if (version == 5) root.required("rawCapture").takeUnless(JsonNode::isNull)?.let { node ->
+                node.fieldsExact("captureContractVersion", "provider", "requestIdentity", "retrievedAt", "responseBase64")
+                RawResponseCapture(
+                    Base64.getDecoder().decode(node.required("responseBase64").string()),
+                    node.required("requestIdentity").string(), node.required("provider").string(),
+                    Instant.parse(node.required("retrievedAt").string()),
+                    node.required("captureContractVersion").integer(),
+                )
+            } else null
+            RecordingDecodeResult.Success(CatalogRecording(catalog, Collections.unmodifiableMap(support), dailySupport.mapValues { it.value.toSet() }, capture))
         } catch (e: Exception) {
             RecordingDecodeResult.Failure(RecordingError.INVALID_VALUE, e.message ?: "Invalid canonical value")
         }
@@ -274,10 +288,31 @@ object RecordedCatalogCodec {
         putNumber("surfacePressureHpa", f.surfacePressureHpa)
         putNumber("meanSeaLevelPressureHpa", f.meanSeaLevelPressureHpa)
         putNumber("visibilityKm", f.visibilityKm)
+        putInteger("sourceWeatherCode", f.sourceWeatherCode)
+        set<JsonNode>("events", mapper.createArrayNode().apply { f.events.forEach { event ->
+            add(mapper.createObjectNode().apply {
+                put("id", event.id.name)
+                putInteger("sourceCode", event.sourceCode)
+                putNullable("suppliedWording", event.suppliedWording)
+                putNullable("documentedCodeDescription", event.documentedCodeDescription)
+                put("provider", event.provider)
+                putNullable("descriptionSource", event.descriptionSource)
+            })
+        } })
+        putInteger("primaryEventIndex", f.primaryEventIndex)
     }
 
-    private fun readFact(node: JsonNode): CanonicalWeatherFacts {
-        node.fieldsExact(*factFields.toTypedArray())
+    private fun readFact(node: JsonNode, version: Int): CanonicalWeatherFacts {
+        node.fieldsExact(*(if (version >= 5) factFields + setOf("sourceWeatherCode", "events", "primaryEventIndex") else factFields).toTypedArray())
+        val events = if (version >= 5) node.required("events").array().map { event ->
+            event.fieldsExact("id", "sourceCode", "suppliedWording", "documentedCodeDescription", "provider", "descriptionSource")
+            WeatherEventFact(
+                enum(event.required("id")), event.required("sourceCode").nullableInteger(),
+                event.required("suppliedWording").nullableString(),
+                event.required("documentedCodeDescription").nullableString(),
+                event.required("provider").string(), event.required("descriptionSource").nullableString(),
+            )
+        } else emptyList()
         val conditions = node.required("conditions").array().map { enum<WeatherCondition>(it) }
         val phenomena = node.required("phenomena").array().map { enum<WeatherPhenomenon>(it) }
         require(conditions.size == conditions.distinct().size && phenomena.size == phenomena.distinct().size)
@@ -302,6 +337,8 @@ object RecordedCatalogCodec {
             rate, snow?.let { AccumulatedSnowfallCentimeters(it.first, it.second) },
             node.required("snowDepthCentimeters").nullableNumber(), node.required("surfacePressureHpa").nullableNumber(),
             node.required("meanSeaLevelPressureHpa").nullableNumber(), node.required("visibilityKm").nullableNumber(),
+            events, if (version >= 5) node.required("primaryEventIndex").nullableInteger() else null,
+            if (version >= 5) node.required("sourceWeatherCode").nullableInteger() else null,
         )
     }
 
@@ -318,6 +355,7 @@ object RecordedCatalogCodec {
         return AccumulationInterval(Instant.parse(node.required("start").string()), Instant.parse(node.required("end").string()))
     }
     private fun ObjectNode.putNullable(name: String, value: String?) { if (value == null) putNull(name) else put(name, value) }
+    private fun ObjectNode.putInteger(name: String, value: Int?) { if (value == null) putNull(name) else put(name, value) }
     private fun ObjectNode.putNumber(name: String, value: Double?) { if (value == null) putNull(name) else put(name, value) }
     private fun JsonNode.required(name: String): JsonNode = get(name) ?: error("Missing $name")
     private fun JsonNode.fieldsExact(vararg names: String): JsonNode {
@@ -327,6 +365,8 @@ object RecordedCatalogCodec {
     private fun JsonNode.array(): List<JsonNode> { require(isArray); return toList() }
     private fun JsonNode.string(): String { require(isTextual); return textValue() }
     private fun JsonNode.nullableString(): String? = if (isNull) null else string()
+    private fun JsonNode.integer(): Int { require(isIntegralNumber && canConvertToInt()); return intValue() }
+    private fun JsonNode.nullableInteger(): Int? = if (isNull) null else integer()
     private fun JsonNode.number(): Double { require(isNumber); return doubleValue().also { require(it.isFinite()) } }
     private fun JsonNode.nullableNumber(): Double? = if (isNull) null else number()
     private inline fun <reified T : Enum<T>> enum(node: JsonNode): T = enumValueOf<T>(node.string())

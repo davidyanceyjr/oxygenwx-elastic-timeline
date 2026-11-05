@@ -60,6 +60,8 @@ class DebugCatalogActivity : ComponentActivity() {
     private var replayIds by mutableStateOf<List<String>>(emptyList())
     private var fixtureStatus by mutableStateOf("Preparing Chicago replay fixture…")
     private var fixtureReady by mutableStateOf(false)
+    private var skyFixtureReady by mutableStateOf(false)
+    private var skyFixtureLocationId by mutableStateOf<com.oxygen.weather.timeline.data.catalog.LocationId?>(null)
     private var showAuthoredLibrary by mutableStateOf(false)
     private var authoredPreviewError by mutableStateOf<String?>(null)
     private var reloadJob: Job? = null
@@ -137,6 +139,23 @@ class DebugCatalogActivity : ComponentActivity() {
             .map { it.datasetId }.distinct().sorted()
     }
 
+    private suspend fun prepareSg11SkyReplay(location: CatalogLocation) {
+        val id = DatasetId(SG11_SKY_REPLAY_ID)
+        val existing = storage.load(location, CatalogStorageNamespace.REPLAY, id)
+        val current = (existing as? StoredCatalogResult.Found)?.recording
+        if (current == null || current.catalog.asOf != DebugSg11SkyCatalogFixture.asOf ||
+            current.catalog.facts.count { it.events.isNotEmpty() } != DebugSg11SkyCatalogFixture.ids.size) {
+            storage.save(CatalogStorageNamespace.REPLAY, DebugSg11SkyCatalogFixture.recording(location))
+        }
+        val reloaded = storage.load(location, CatalogStorageNamespace.REPLAY, id)
+        check(reloaded is StoredCatalogResult.Found &&
+            reloaded.recording.catalog.facts.count { it.events.isNotEmpty() } == DebugSg11SkyCatalogFixture.ids.size)
+        skyFixtureReady = true
+        skyFixtureLocationId = location.id
+        replayIds = storage.history(location.id, CatalogStorageNamespace.REPLAY)
+            .map { it.datasetId }.distinct().sorted()
+    }
+
     private fun reloadLocations() {
         reloadJob?.cancel()
         reloadJob = lifecycleScope.launch {
@@ -148,6 +167,7 @@ class DebugCatalogActivity : ComponentActivity() {
                     result.values.firstOrNull(::isChicago)?.let { prepareChicagoReplay(it.location) }
                     result.values.firstOrNull()?.let {
                         prepareSg4GapReplay(it.location)
+                        prepareSg11SkyReplay(it.location)
                         fixtureReady = true
                         fixtureStatus = "SG.4 canonical gap replay ready"
                     }
@@ -265,6 +285,19 @@ class DebugCatalogActivity : ComponentActivity() {
                                             }
                                         },
                                     ) { Text("Inspect $label") }
+                                }
+                            }
+                        }
+                        if (selectedReplay == SG11_SKY_REPLAY_ID && skyFixtureReady &&
+                            selectedLocation?.location?.id == skyFixtureLocationId) {
+                            val location = selectedLocation?.location
+                            if (location != null) {
+                                val date = DebugSg11SkyCatalogFixture.asOf.atZone(location.timeZone).toLocalDate()
+                                DebugSg11SkyCatalogFixture.ids.forEachIndexed { index, id ->
+                                    val instant = date.atTime(8 + index, 0).atZone(location.timeZone).toInstant()
+                                    OutlinedButton(onClick = {
+                                        routeActivation(location, CatalogOrigin.REPLAY, SG11_SKY_REPLAY_ID, instant)
+                                    }) { Text("Inspect ${id.name} · ${8 + index}:00") }
                                 }
                             }
                         }
@@ -396,6 +429,7 @@ class DebugCatalogActivity : ComponentActivity() {
         const val LIVE_DATASET_ID = "forecast-44d"
         const val CHICAGO_REPLAY_ID = "wx22-chicago-replay-v3"
         const val SG4_GAP_REPLAY_ID = "sg4-canonical-gaps-v8"
+        const val SG11_SKY_REPLAY_ID = "sg11-sky-typed-v2"
         const val CHICAGO_REPLAY_AS_OF = "2026-10-28T12:00:00Z"
     }
 }

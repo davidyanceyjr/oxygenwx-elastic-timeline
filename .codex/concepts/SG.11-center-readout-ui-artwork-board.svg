@@ -1,0 +1,63 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1400" height="950" viewBox="0 0 1400 950" role="img" aria-labelledby="title desc">
+  <title id="title">SG.11 central readout artwork board draft</title>
+  <desc id="desc">Regular and compact phone compositions show a location label with a small picker trigger, a tightly paired temperature and weather symbol, sun and moon rise/set times, high and low, and numeric precipitation and wind indicators. Day and time remain on the timeline. Lower magnifier and gear are removed. Small state panels show rain, unavailable, and a prior-hour source-time disclosure.</desc>
+  <defs>
+    <linearGradient id="sky" x2="0" y2="1"><stop stop-color="#6886a5"/><stop offset=".52" stop-color="#3c607e"/><stop offset="1" stop-color="#102b46"/></linearGradient>
+    <style>.h{font:700 24px Arial;fill:#18324a}.sub{font:16px Arial;fill:#456179}.screen{font-family:Arial;fill:#fff}.note{font:16px Arial;fill:#1c3f5c}.tiny{font:14px Arial;fill:#456179}</style>
+  </defs>
+  <rect width="1400" height="950" fill="#eaf0f5"/>
+  <text x="45" y="47" class="h">SG.11 · CENTRAL SELECTED FORECAST READOUT</text>
+  <text x="45" y="75" class="sub">Owner approved 2026-11-04 · schematic scene and symbol silhouettes · installed acceptance follows implementation</text>
+  <text x="53" y="115" class="h">REGULAR PORTRAIT</text><text x="478" y="115" class="h">COMPACT PORTRAIT</text>
+  <g>
+    <rect x="45" y="135" width="390" height="690" rx="30" fill="url(#sky)"/>
+    <rect x="475" y="135" width="305" height="620" rx="26" fill="url(#sky)"/>
+    <path d="M45 570h47v-90h37v90h32V435h47v135h42v-65h47v65h38V465h45v105h55v255H45zM475 530h35v-75h31v75h35v-105h43v105h38v-70h42v70h81v225H475z" fill="#173e61" opacity=".6"/>
+    <text x="228" y="289" text-anchor="middle" class="screen" font-size="30" font-weight="700">Chicago</text>
+    <g transform="translate(301 270)" fill="none" stroke="#fff" stroke-width="2.4"><path d="M11 1c-6 0-10 4-10 10 0 7 10 17 10 17s10-10 10-17c0-6-4-10-10-10z"/><circle cx="11" cy="11" r="3"/></g>
+    <text x="185" y="430" text-anchor="middle" class="screen" font-size="95" font-weight="300">33°</text>
+    <g transform="translate(250 366)" fill="#e8f6ff" stroke="#bde5fb" stroke-width="3"><circle cx="21" cy="38" r="17"/><circle cx="43" cy="30" r="25"/><circle cx="67" cy="42" r="17"/><rect x="16" y="40" width="58" height="20" rx="10"/></g>
+    <text x="240" y="495" text-anchor="middle" class="screen" font-size="16">SUN  ↑ 6:45 AM   ↓ 4:38 PM</text>
+    <text x="240" y="521" text-anchor="middle" class="screen" font-size="16">MOON  ↑ 7:12 AM   ↓ 5:50 PM</text>
+    <text x="240" y="557" text-anchor="middle" class="screen" font-size="18">HIGH 36°    /    LOW 28°</text>
+    <text x="119" y="708" text-anchor="middle" class="screen" font-size="18" opacity=".8">☂ 72%</text>
+    <text x="359" y="708" text-anchor="middle" class="screen" font-size="18" opacity=".8">↗ 12 mph</text>
+    <line x1="75" y1="769" x2="405" y2="769" stroke="#d9edff" opacity=".6"/><line x1="240" y1="755" x2="240" y2="786" stroke="#ffe4a7" stroke-width="3"/>
+    <text x="615" y="269" text-anchor="middle" class="screen" font-size="24" font-weight="700">Chicago</text>
+    <g transform="translate(678 251)" fill="none" stroke="#fff" stroke-width="2"><path d="M10 1c-5 0-9 4-9 9 0 7 9 15 9 15s9-8 9-15c0-5-4-9-9-9z"/><circle cx="10" cy="10" r="3"/></g>
+    <text x="585" y="390" text-anchor="middle" class="screen" font-size="73" font-weight="300">33°</text>
+    <g transform="translate(636 333) scale(.72)" fill="#e8f6ff" stroke="#bde5fb" stroke-width="3"><circle cx="21" cy="38" r="17"/><circle cx="43" cy="30" r="25"/><circle cx="67" cy="42" r="17"/><rect x="16" y="40" width="58" height="20" rx="10"/></g>
+    <text x="628" y="446" text-anchor="middle" class="screen" font-size="12">SUN ↑ 6:45  ↓ 4:38</text>
+    <text x="628" y="466" text-anchor="middle" class="screen" font-size="12">MOON ↑ 7:12  ↓ 5:50</text>
+    <text x="628" y="486" text-anchor="middle" class="screen" font-size="15">HIGH 36°   /   LOW 28°</text>
+    <text x="524" y="648" text-anchor="middle" class="screen" font-size="15" opacity=".8">☂ 72%</text>
+    <text x="726" y="648" text-anchor="middle" class="screen" font-size="15" opacity=".8">↗ 12 mph</text>
+    <line x1="500" y1="704" x2="755" y2="704" stroke="#d9edff" opacity=".6"/><line x1="628" y1="691" x2="628" y2="719" stroke="#ffe4a7" stroke-width="3"/>
+  </g>
+  <g fill="none" stroke="#183e5e" stroke-width="2"><rect x="45" y="135" width="390" height="690" rx="30"/><rect x="475" y="135" width="305" height="620" rx="26"/></g>
+  <text x="825" y="150" class="h">READING ORDER</text>
+  <text x="825" y="185" class="note">1  Location + small picker trigger; time on tape</text>
+  <text x="825" y="217" class="note">2  Temperature + symbol form a tight pair</text>
+  <text x="825" y="249" class="note">3  Sun/Moon rise and set times remain</text>
+  <text x="825" y="281" class="note">4  High / low; lower indicators flank blank slot</text>
+  <text x="825" y="327" class="tiny">Symbol artwork shown schematically; use existing WA renderer.</text>
+  <text x="825" y="355" class="tiny">No lower magnifier or gear; center icon opens picker.</text>
+  <text x="825" y="400" class="h">AFFECTED STATES</text>
+  <rect x="825" y="425" width="525" height="80" rx="12" fill="#dceaf3"/>
+  <text x="847" y="455" class="note">RAIN  ·  41° + WA rain symbol; no word</text>
+  <text x="847" y="482" class="tiny">Numeric chance remains in lower indicator row.</text>
+  <rect x="825" y="520" width="525" height="80" rx="12" fill="#dceaf3"/>
+  <text x="847" y="550" class="note">UNAVAILABLE  ·  33° + WA unknown symbol</text>
+  <text x="847" y="577" class="tiny">Unavailable status may appear; numeric facts independent.</text>
+  <rect x="825" y="615" width="525" height="100" rx="12" fill="#dceaf3"/>
+  <text x="847" y="647" class="note">PRIOR SUPPLIED HOUR  ·  symbol + source cue</text>
+  <text x="847" y="674" class="tiny">“Condition from 1:00 PM; selected hour unavailable”</text>
+  <text x="847" y="696" class="tiny">Source-time disclosure stays adjacent to the symbol.</text>
+  <text x="825" y="757" class="h">LOWER INDICATORS · TYPOGRAPHIC CUE</text>
+  <rect x="825" y="773" width="160" height="68" rx="13" fill="#173d5d"/>
+  <text x="905" y="818" text-anchor="middle" class="screen" font-size="30" font-weight="700">☂ 72%</text>
+  <rect x="1175" y="773" width="175" height="68" rx="13" fill="#173d5d"/>
+  <text x="1262" y="818" text-anchor="middle" class="screen" font-size="30" font-weight="700">↗ 12 mph</text>
+  <text x="45" y="870" class="sub">Review: picker trigger, symbol spacing, event times, two numeric lower indicators, compact and missing states.</text>
+  <text x="45" y="900" class="sub">Owner approved after blank middle-slot revision. Installed screenshots and interaction checks establish acceptance.</text>
+</svg>

@@ -34,10 +34,13 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
 import com.oxygen.weather.timeline.ActivityVariantDelegate
 import com.oxygen.weather.timeline.presentation.CatalogDiagnosticPresentation
+import com.oxygen.weather.timeline.presentation.symbol.WeatherSymbolIcon
+import com.oxygen.weather.timeline.presentation.symbol.WeatherSymbolId
 import com.oxygen.weather.timeline.data.catalog.CatalogActivationCoordinator
 import com.oxygen.weather.timeline.data.catalog.CatalogActivationRequest
 import com.oxygen.weather.timeline.data.catalog.CatalogActivationState
@@ -146,7 +149,8 @@ class CatalogPickerDelegate : ActivityVariantDelegate {
             CatalogOrigin.REPLAY -> "REPLAY · captured from SIMULATED"
             else -> null
         }
-        if (sourceDetail == null && !overlayVisible) return
+        val symbolReview = host.activationCoordinator.state.value.active?.datasetId?.value == DebugCatalogActivity.SG11_SKY_REPLAY_ID
+        if (sourceDetail == null && !overlayVisible && !symbolReview) return
         Column(
             modifier = Modifier.fillMaxWidth().padding(horizontal = 18.dp),
             verticalArrangement = Arrangement.spacedBy(8.dp),
@@ -184,6 +188,21 @@ class CatalogPickerDelegate : ActivityVariantDelegate {
                             textAlign = TextAlign.End,
                             maxLines = 2,
                         )
+                    }
+                }
+            }
+            if (symbolReview) {
+                val symbol = diagnostics.symbolId ?: WeatherSymbolId.CONDITION_UNAVAILABLE
+                Surface(color = Color(0xED102030), shape = RoundedCornerShape(14.dp)) {
+                    Row(Modifier.fillMaxWidth().padding(8.dp).testTag("sg11SymbolReview"),
+                        verticalAlignment = Alignment.CenterVertically,
+                        horizontalArrangement = Arrangement.spacedBy(10.dp)) {
+                        WeatherSymbolIcon(symbol, Modifier.size(52.dp), contentDescription = diagnostics.symbolName ?: "Condition unavailable")
+                        Column {
+                            Text("${symbol.name} · ${diagnostics.symbolName ?: "Condition unavailable"}", color = Color.White)
+                            Text("Source code ${diagnostics.sourceCode?.toString() ?: "none"}",
+                                color = Color(0xFFB8D7DC), style = MaterialTheme.typography.labelSmall)
+                        }
                     }
                 }
             }
@@ -638,8 +657,10 @@ internal suspend fun processCatalogActivationRequest(
     require(saved is SavedLocationResult.Selected && saved.location != null) { "Saved location is missing or malformed" }
     val selectedInstant = values.selectedInstant?.let(Instant::parse)
     require(selectedInstant == null ||
-        (origin == CatalogOrigin.REPLAY && datasetId.value == DebugCatalogActivity.SG4_GAP_REPLAY_ID)) {
-        "Exact-time selection is only available for the SG.4 debug replay"
+        (origin == CatalogOrigin.REPLAY && datasetId.value in setOf(
+            DebugCatalogActivity.SG4_GAP_REPLAY_ID, DebugCatalogActivity.SG11_SKY_REPLAY_ID,
+        ))) {
+        "Exact-time selection is only available for the bounded SG.4 and SG.11 debug replays"
     }
     val activationRequest = CatalogActivationRequest(saved.location.location, origin, datasetId, replayId, values.forceRefresh)
     if (values.savedPreview) {
