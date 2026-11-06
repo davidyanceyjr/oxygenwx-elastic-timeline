@@ -1,0 +1,73 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1500" height="1060" viewBox="0 0 1500 1060">
+  <defs>
+    <linearGradient id="sky" x2="0" y2="1"><stop stop-color="#365472"/><stop offset="1" stop-color="#15283e"/></linearGradient>
+    <linearGradient id="ground" x2="0" y2="1"><stop stop-color="#1b3149" stop-opacity=".3"/><stop offset="1" stop-color="#071729"/></linearGradient>
+    <style>
+      text{font-family:DejaVu Sans,Arial,sans-serif;fill:#f4f7fb} .title{font-size:33px;font-weight:700}.sub{font-size:17px;fill:#cbd8e6}.head{font-size:21px;font-weight:700}.big{font-size:61px;font-weight:300}.body{font-size:21px}.small{font-size:15px;fill:#d6e0ea}.tiny{font-size:13px;fill:#c1d0df}.accent{fill:#ffd27e}.muted{fill:#a9bac9}.line{stroke:#a9c0d1;stroke-width:1;opacity:.55}
+    </style>
+    <g id="city"><path d="M0 488h36v-42h24v20h32v-67h34v32h25v-54h36v82h30v-34h27v-54h31v65h38v-86h34v93h35v-52h30v97H0Z" fill="#183650" opacity=".75"/><path d="M0 515h32v-29h27v-58h35v67h28v-37h30v-72h25v82h43v-44h35v69h31v-27h24v-67h34v63h31v-51h27v104H0Z" fill="#10273d"/></g>
+  </defs>
+  <rect width="1500" height="1060" fill="#0a1828"/>
+  <text x="54" y="56" class="title">SG · Late-day hourly display gap</text>
+  <text x="54" y="87" class="sub">Draft UI artwork board · proposed appearance and affected states · not installed evidence</text>
+  <text x="54" y="118" class="sub">Same selected time remains at the playhead. Source-valid time is disclosed whenever the last supplied hour represents a later minute.</text>
+
+  <g transform="translate(54 155)">
+    <text x="0" y="0" class="head">A · SUPPLIED FINAL HOUR</text>
+    <text x="0" y="27" class="small">Sunday 11:36 PM · selected time</text>
+    <rect x="0" y="46" width="418" height="650" rx="18" fill="url(#sky)" stroke="#6383a0"/>
+    <use href="#city" x="0" y="46" width="418" height="650"/>
+    <rect x="0" y="534" width="418" height="162" fill="url(#ground)"/>
+    <text x="209" y="160" text-anchor="middle" class="body">Florence</text>
+    <text x="209" y="280" text-anchor="middle" class="big">46°</text>
+    <text x="209" y="318" text-anchor="middle" class="body">Supplied condition</text>
+    <text x="209" y="346" text-anchor="middle" class="small accent">11 PM source · selected 11:36 PM</text>
+    <text x="40" y="475" class="body">☂ 0%</text><text x="285" y="475" class="body">↖ 4 mph</text>
+    <text x="209" y="568" text-anchor="middle" class="small">11 PM       11:30       MIDNIGHT</text>
+    <line x1="50" y1="587" x2="368" y2="587" class="line"/>
+    <line x1="242" y1="565" x2="242" y2="635" stroke="#ffd27e" stroke-width="4"/>
+    <rect x="132" y="633" width="154" height="39" rx="20" fill="#18334b"/>
+    <text x="209" y="660" text-anchor="middle" class="body accent">11:36 PM</text>
+  </g>
+
+  <g transform="translate(540 155)">
+    <text x="0" y="0" class="head">B · INDEPENDENTLY MISSING</text>
+    <text x="0" y="27" class="small">Sunday 11:36 PM · condition absent</text>
+    <rect x="0" y="46" width="418" height="650" rx="18" fill="url(#sky)" stroke="#6383a0"/>
+    <use href="#city" x="0" y="46" width="418" height="650"/>
+    <rect x="0" y="534" width="418" height="162" fill="url(#ground)"/>
+    <text x="209" y="160" text-anchor="middle" class="body">Florence</text>
+    <text x="209" y="280" text-anchor="middle" class="big">46°</text>
+    <text x="209" y="318" text-anchor="middle" class="body">Condition unavailable</text>
+    <text x="209" y="346" text-anchor="middle" class="small accent">Temperature: 11 PM source</text>
+    <text x="40" y="475" class="body">☂ 0%</text><text x="285" y="475" class="body">↖ 4 mph</text>
+    <text x="209" y="568" text-anchor="middle" class="small">11 PM       11:30       MIDNIGHT</text>
+    <line x1="50" y1="587" x2="368" y2="587" class="line"/>
+    <line x1="242" y1="565" x2="242" y2="635" stroke="#ffd27e" stroke-width="4"/>
+    <rect x="132" y="633" width="154" height="39" rx="20" fill="#18334b"/>
+    <text x="209" y="660" text-anchor="middle" class="body accent">11:36 PM</text>
+  </g>
+
+  <g transform="translate(1026 155)">
+    <text x="0" y="0" class="head">C · DATE SWITCH</text>
+    <text x="0" y="27" class="small">Monday 12:00 AM · next local date</text>
+    <rect x="0" y="46" width="418" height="650" rx="18" fill="url(#sky)" stroke="#6383a0"/>
+    <use href="#city" x="0" y="46" width="418" height="650"/>
+    <rect x="0" y="534" width="418" height="162" fill="url(#ground)"/>
+    <text x="209" y="160" text-anchor="middle" class="body">Florence</text>
+    <text x="209" y="280" text-anchor="middle" class="big">—</text>
+    <text x="209" y="318" text-anchor="middle" class="body">Condition unavailable</text>
+    <text x="209" y="346" text-anchor="middle" class="small accent">No Monday 12 AM source</text>
+    <text x="40" y="475" class="body">☂ —</text><text x="285" y="475" class="body">Wind —</text>
+    <text x="209" y="568" text-anchor="middle" class="small">11 PM       MIDNIGHT       1 AM</text>
+    <line x1="50" y1="587" x2="368" y2="587" class="line"/>
+    <line x1="209" y1="565" x2="209" y2="635" stroke="#ffd27e" stroke-width="4"/>
+    <rect x="124" y="633" width="170" height="39" rx="20" fill="#18334b"/>
+    <text x="209" y="660" text-anchor="middle" class="body accent">12:00 AM</text>
+  </g>
+
+  <rect x="54" y="888" width="1390" height="123" rx="12" fill="#14283d" stroke="#6383a0"/>
+  <text x="76" y="920" class="head">Artwork constraints</text>
+  <text x="76" y="950" class="small">A: supported 11 PM values remain readable after 11:30 with 11 PM source disclosure. B: a missing condition does not erase supported temperature, chance, or wind.</text>
+  <text x="76" y="976" class="small">C: midnight belongs to Monday; missing Monday fields show unavailable. These cards illustrate meaning and placement, not actual Florence values or installed captures.</text>
+</svg>
