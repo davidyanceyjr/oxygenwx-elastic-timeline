@@ -1,0 +1,76 @@
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="2220" height="1420" viewBox="0 0 2220 1420">
+  <defs>
+    <linearGradient id="bg" x2="0" y2="1"><stop stop-color="#111b2b"/><stop offset="1" stop-color="#1a2b40"/></linearGradient>
+    <filter id="shadow" x="-15%" y="-15%" width="130%" height="130%"><feDropShadow dx="0" dy="5" stdDeviation="8" flood-color="#000" flood-opacity=".32"/></filter>
+    <symbol id="sun" viewBox="0 0 100 100"><g fill="none" stroke="currentColor" stroke-width="7" stroke-linecap="round"><circle cx="50" cy="48" r="19"/><path d="M50 8v13M50 75v13M10 48h13M77 48h13M22 20l9 9M69 67l9 9M78 20l-9 9M31 67l-9 9"/></g></symbol>
+    <symbol id="cloud" viewBox="0 0 100 100"><path d="M20 68c-10 0-16-7-16-16s7-17 17-17c4-14 18-22 32-18 10 3 16 11 18 21 12-1 22 7 22 17 0 8-7 13-16 13H20Z" fill="none" stroke="currentColor" stroke-width="7" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+    <symbol id="rain" viewBox="0 0 100 100"><use xlink:href="#cloud"/><g stroke="currentColor" stroke-width="7" stroke-linecap="round"><path d="m29 76-6 14M51 76l-6 14M73 76l-6 14"/></g></symbol>
+    <style>
+      .title{font:700 38px sans-serif;fill:#f5f7fb}.subtitle{font:400 18px sans-serif;fill:#b8c6d8}.panelTitle{font:700 23px sans-serif;fill:#f4f7fb;letter-spacing:.4px}.panelMeta{font:400 15px sans-serif;fill:#aebed1}.caption{font:600 16px sans-serif;fill:#e9eef5}.note{font:400 14px sans-serif;fill:#bac8d8}.chip{font:700 13px sans-serif;fill:#152235;letter-spacing:.8px}.hair{stroke:#61738b;stroke-width:1}.callout{font:600 14px sans-serif;fill:#ffdfa0}.icon{color:#f4f7fb}.selected{color:#ffe2a7}.hour{font:500 17px sans-serif;fill:#cbd5e1}
+    </style>
+  </defs>
+  <rect width="2220" height="1420" fill="url(#bg)"/>
+  <text x="64" y="66" class="title">P.2.20 · Daily and hourly timeline icon refinement</text>
+  <text x="64" y="105" class="subtitle">Use the current installed Pixel screen as input → enlarge daily symbols to fill their band; remove hourly symbols</text>
+  <rect x="1900" y="55" width="252" height="34" rx="17" fill="#f4d89a"/><text x="2026" y="77" text-anchor="middle" class="chip">BOARD · PENDING OWNER REVIEW</text>
+
+  <text x="64" y="160" class="panelTitle">BEFORE / INPUT</text>
+  <text x="64" y="187" class="panelMeta">Fresh installed Pixel 3 XL · daily scale</text>
+  <text x="773" y="160" class="panelTitle">DAILY / PROPOSED</text>
+  <text x="773" y="187" class="panelMeta">Existing daily events · larger icons fill label-to-divider gap</text>
+  <text x="1482" y="160" class="panelTitle">HOURLY / PROPOSED</text>
+  <text x="1482" y="187" class="panelMeta">No weather symbols · keep hour labels, ticks, playhead and divider</text>
+
+  <g filter="url(#shadow)"><rect x="106" y="211" width="450" height="925" rx="16" fill="#0a111c"/><image x="106" y="211" width="450" height="925" preserveAspectRatio="none" xlink:href="P.2.20-daily-hourly-icon-refinement-before.png"/></g>
+
+  <!-- Daily output is a focused strip diagram. The symbols shown only indicate scale and placement. -->
+  <rect x="773" y="211" width="640" height="925" rx="16" fill="#0b1421" stroke="#475a72"/>
+  <text x="810" y="270" class="panelMeta">DAILY TIMELINE BAND · enlargement shown at the target scale</text>
+  <rect x="806" y="336" width="574" height="478" rx="18" fill="#15243a" stroke="#334b68"/>
+  <text x="846" y="390" class="panelMeta">Forecast scene continues above this timeline band</text>
+  <text x="854" y="674" text-anchor="middle" class="hour">WED</text>
+  <text x="986" y="674" text-anchor="middle" class="hour">THU</text>
+  <text x="1118" y="674" text-anchor="middle" font-family="sans-serif" font-size="22" font-weight="700" fill="#ffe2a7">FRI</text>
+  <text x="1250" y="674" text-anchor="middle" class="hour">SAT</text>
+  <text x="1382" y="674" text-anchor="middle" class="hour">SUN</text>
+  <g class="icon">
+    <use xlink:href="#cloud" x="826" y="691" width="56" height="56"/>
+    <use xlink:href="#rain" x="958" y="691" width="56" height="56"/>
+    <use xlink:href="#sun" x="1090" y="691" width="56" height="56" class="selected"/>
+    <use xlink:href="#cloud" x="1222" y="691" width="56" height="56"/>
+    <use xlink:href="#sun" x="1354" y="691" width="56" height="56"/>
+  </g>
+  <path d="M806 778H1380" stroke="#bdc9d8" stroke-opacity=".38" stroke-width="2"/>
+  <path d="M854 767v22M986 767v22M1118 753v39M1250 767v22M1382 767v22" stroke="#bdc9d8" stroke-opacity=".55" stroke-width="2"/>
+  <path d="M1118 738v56" stroke="#ffe2a7" stroke-width="4"/><circle cx="1118" cy="778" r="6" fill="#ffe2a7"/>
+  <text x="810" y="860" class="caption">Fill the available band while preserving clear separation</text>
+  <text x="810" y="892" class="note">Use existing event symbol artwork, centered on each weekday/date.</text>
+  <text x="810" y="920" class="note">Keep the weekday label, symbol and date tick on one shared date center.</text>
+  <text x="810" y="948" class="note">Illustrative symbols show size only; runtime identities remain data driven.</text>
+
+  <!-- Hourly output intentionally has an empty event band. -->
+  <rect x="1482" y="211" width="640" height="925" rx="16" fill="#0b1421" stroke="#475a72"/>
+  <text x="1519" y="270" class="panelMeta">HOURLY TIMELINE BAND · event-symbol row removed</text>
+  <rect x="1519" y="336" width="566" height="478" rx="18" fill="#15243a" stroke="#334b68"/>
+  <text x="1550" y="390" class="panelMeta">Forecast scene continues above this timeline band</text>
+  <text x="1560" y="674" text-anchor="middle" class="hour">6a</text>
+  <text x="1690" y="674" text-anchor="middle" class="hour">9a</text>
+  <text x="1820" y="674" text-anchor="middle" class="hour">12p</text>
+  <text x="1950" y="674" text-anchor="middle" class="hour">3p</text>
+  <text x="2080" y="674" text-anchor="middle" class="hour">6p</text>
+  <path d="M1534 778H2070" stroke="#bdc9d8" stroke-opacity=".38" stroke-width="2"/>
+  <path d="M1560 767v22M1690 767v22M1820 753v39M1950 767v22M2080 767v22" stroke="#bdc9d8" stroke-opacity=".55" stroke-width="2"/>
+  <path d="M1820 738v56" stroke="#ffe2a7" stroke-width="4"/><circle cx="1820" cy="778" r="6" fill="#ffe2a7"/>
+  <text x="1519" y="860" class="caption">Reduce visual density in hourly mode</text>
+  <text x="1519" y="892" class="note">Keep hourly labels, ticks, selected-time playhead and divider.</text>
+  <text x="1519" y="920" class="note">Hourly scrub and scale toggling retain their existing behavior.</text>
+  <text x="1519" y="948" class="note">Weather facts remain available in the main forecast presentation.</text>
+
+  <path class="hair" d="M64 1180h2088"/>
+  <text x="64" y="1220" class="caption">BEHAVIOR</text><text x="164" y="1220" class="note">Daily symbols stay tied to each date's representative event; hourly mode renders no weather symbols.</text>
+  <text x="64" y="1252" class="caption">PRESERVE</text><text x="164" y="1252" class="note">Date/hour labels, ticks, divider, playhead, forecast facts, daily drag, hourly scrub and scale toggle.</text>
+  <text x="64" y="1284" class="caption">MISSING</text><text x="164" y="1284" class="note">A missing daily event still has no icon; do not infer clear weather or borrow an adjacent event.</text>
+  <text x="64" y="1328" class="note">The before panel is an actual installed Pixel capture. Output panels are artwork concepts; sample glyphs illustrate scale, not forecast identity.</text>
+  <text x="64" y="1354" class="note">The daily target uses the largest existing symbol size that fits between the weekday label and divider without overlap.</text>
+  <text x="64" y="1390" class="panelMeta">Pixel 3 XL · 1440×2960 px / 411×846 dp · Board status: pending owner approval</text>
+</svg>

@@ -1,6 +1,6 @@
 # Cycle plan — 112-p2-daily-drag-noon
 
-State: PLANNED — unfinalized draft; required owner approval of the combined board is pending. Do not activate or implement before approval and final plan review.
+State: CANCELLED before activation by owner direction on 2026-11-06. The board remained unapproved and no implementation began.
 
 Roadmap: P.2.19
 Objective: Select the target date's local noon when an active-catalog daily drag releases, while preserving the current timeline interaction contract.
@@ -10,8 +10,7 @@ Objective: Select the target date's local noon when an active-catalog daily drag
 - **Combined behavior and UI artwork board:** `.codex/concepts/P.2.19-daily-drag-noon-board.svg`, PNG preview `.codex/concepts/P.2.19-daily-drag-noon-board.png`, and behavior/art contract `.codex/concepts/P.2.19-daily-drag-noon-board.md`.
 - **Before/input:** `.codex/concepts/P.2.19-daily-drag-before.png`, an actual Pixel 3 XL cycle 111 daily-drag capture at SAT 11:39 PM.
 - **Draft revision:** SHA-256 `9dd1eb3fca5a0e599a4630cdacfa3746e640e2cd6a9e3b1d26574852bd3de345` for the preview shown by path above. This hash records the draft only; it is not an approval record.
-- **Owner approval:** PENDING. On 2026-11-05, the owner chose a separate approved slice for the observed daily-drag discrepancy. That decision authorizes this draft plan; it does not approve this board's detailed behavior or artwork.
-- **Approval record still required:** exact approved board revision/date, constraints, and relationship to scope and acceptance. The board is a design input; installed evidence remains required for closeout.
+- **Owner direction:** On 2026-11-06, the owner cancelled P.2.19 before activation and selected the daily/hourly icon refinement as the next priority. The draft board was not approved; no implementation began.
 
 ## Production boundary
 
@@ -34,11 +33,7 @@ Do not change the fixture/debug timeline, hourly time projection, weather symbol
 ## Steps
 
 - [x] Record the cycle 111 installed discrepancy and owner direction; prepare a separate roadmap slice, combined board, and unfinalized plan.
-- [ ] Show the combined board to the owner and record explicit approval of its exact revision and constraints.
-- [ ] Finalize/review this bounded plan after the board gate, then activate only with authorization.
-- [ ] Inspect the active-catalog gesture and existing adjustment-notice path; implement the release selection within this scope.
-- [ ] Build/install on the Pixel 3 XL and capture daily before/after, partial-boundary, and directly affected daily/hourly interaction states.
-- [ ] Record exact results and limits, inspect `git diff --check` and the final diff, and close only if the slice exit is met.
+- [x] Cancel this unactivated draft at the owner's direction before any implementation.
 
 ## Acceptance and evidence
 
@@ -57,3 +52,7 @@ Do not change the fixture/debug timeline, hourly time projection, weather symbol
 ## Out of scope
 
 Fixture/debug timeline behavior, hourly scale selection rules, new weather symbols or events, forecast-data derivation, central-readout redesign, location selection, new controls, provider integrations, app-wide accessibility/system acceptance, and unrelated body work.
+
+## Cancellation
+
+This cycle was cancelled before activation; no P.2.19 implementation or verification was performed. The daily-drag/noon behavior remains specified by `docs/SPECIFICATION.md`; cancelling this roadmap work does not amend that specification.

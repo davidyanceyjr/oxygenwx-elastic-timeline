@@ -505,7 +505,7 @@ private fun CatalogForecastTimeline(
         val h = size.height
         val playhead = w / 2.0
         val dateY = 30.dp.toPx()
-        val iconY = 49.dp.toPx()
+        val dailyIconY = 53.dp.toPx()
         val railY = 73.dp.toPx()
         val scale = pixelsPerSecond(animation)
         val stroke = 1.dp.toPx()
@@ -538,7 +538,7 @@ private fun CatalogForecastTimeline(
                 }
                 if (animation < .5f) {
                     day.weatherSymbolId?.let { symbol ->
-                        drawWeatherSymbol(symbol, Offset(noonX, iconY), 17.dp.toPx())
+                        drawWeatherSymbol(symbol, Offset(noonX, dailyIconY), 31.dp.toPx())
                     }
                 }
             }
@@ -554,21 +554,6 @@ private fun CatalogForecastTimeline(
                 drawLine(Color.White.copy(alpha = animation * if (major) .82f else .48f),
                     Offset(x, railY - if (major) 9.dp.toPx() else 3.dp.toPx()),
                     Offset(x, railY + if (major) 10.dp.toPx() else 5.dp.toPx()), stroke)
-            }
-        }
-        if (animation >= .5f) {
-            view.days.forEach { day ->
-                val startX = xFor(day.date.atStartOfDay(view.zone).toInstant())
-                val endX = xFor(day.date.plusDays(1).atStartOfDay(view.zone).toInstant())
-                if (minOf(startX, endX) <= w && maxOf(startX, endX) >= 0f) {
-                    day.hours.forEach { hour ->
-                        val symbol = hour.weatherSymbolId
-                        if (symbol != null) {
-                            val x = xFor(hour.instant)
-                            if (x in 0f..w) drawWeatherSymbol(symbol, Offset(x, iconY), 11.dp.toPx())
-                        }
-                    }
-                }
             }
         }
         drawCircle(Color(0xD9FFE2A7), 4.dp.toPx(), Offset(playhead.toFloat(), railY))
