@@ -436,12 +436,19 @@ private fun CatalogForecastTimeline(
     fun pixelsPerSecond(zoom: Float) =
         (compactDayPx / 24.0 + (expandedHourPx - compactDayPx / 24.0) * zoom) / 3600.0
     Canvas(
-        modifier.fillMaxWidth().height(120.dp).testTag("catalogTimeline")
+        modifier.fillMaxWidth().height(148.dp).testTag("catalogTimeline")
             .semantics {
+                val factTimeDescription = when {
+                    view.conditionSourceDisclosure != null && view.sourceTimeDisclosure != null ->
+                        "${view.conditionSourceDisclosure}; ${view.sourceTimeDisclosure}"
+                    view.conditionSourceDisclosure != null -> view.conditionSourceDisclosure
+                    view.sourceTimeDisclosure != null -> view.sourceTimeDisclosure
+                    view.factTimeLabel != null -> "Fact sample ${view.factTimeLabel}"
+                    else -> "No hourly fact for selected hour"
+                }
                 contentDescription = "${view.meaning} timeline. Selected ${view.selectedTimeLabel}. " +
                     "${view.temperature ?: "Temperature unavailable"}; ${view.condition ?: "condition unavailable"}. " +
-                    "${view.factTimeLabel?.let { if (it.startsWith("Condition from ")) it else "Fact sample $it" }
-                        ?: "No hourly fact for selected hour"}. Activate to browse."
+                    "$factTimeDescription. Activate to browse."
                 role = Role.Button
                 stateDescription = if (precision) "Hourly scale" else "Daily scale"
                 onClick(label = "Browse forecast values") { latestBrowse(); true }
@@ -539,6 +546,31 @@ private fun CatalogForecastTimeline(
                 if (animation < .5f) {
                     day.weatherSymbolId?.let { symbol ->
                         drawWeatherSymbol(symbol, Offset(noonX, dailyIconY), 31.dp.toPx())
+                    }
+                    val high = day.high ?: "—"
+                    drawIntoCanvas { canvas ->
+                        val native = canvas.nativeCanvas
+                        val markerPaint = Paint(Paint.ANTI_ALIAS_FLAG).apply {
+                            color = android.graphics.Color.argb(if (selectedDay) 255 else 220, 244, 250, 255)
+                            textAlign = Paint.Align.RIGHT
+                            textSize = 9.dp.toPx()
+                            isFakeBoldText = true
+                        }
+                        val highPaint = Paint(Paint.ANTI_ALIAS_FLAG).apply {
+                            color = if (selectedDay) android.graphics.Color.rgb(255, 210, 126)
+                                else android.graphics.Color.rgb(244, 250, 255)
+                            textAlign = Paint.Align.LEFT
+                            textSize = (if (selectedDay) 29.dp else 25.dp).toPx()
+                            isFakeBoldText = true
+                        }
+                        val marker = "HI"
+                        val markerWidth = markerPaint.measureText(marker)
+                        val valueWidth = highPaint.measureText(high)
+                        val gap = 3.dp.toPx()
+                        val left = noonX - (markerWidth + gap + valueWidth) / 2f
+                        val baseline = railY + 34.dp.toPx()
+                        native.drawText(marker, left + markerWidth, baseline, markerPaint)
+                        native.drawText(high, left + markerWidth + gap, baseline, highPaint)
                     }
                 }
             }

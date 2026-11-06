@@ -9,7 +9,7 @@
   </defs>
   <rect width="1500" height="1060" fill="#0a1828"/>
   <text x="54" y="56" class="title">SG · Late-day hourly display gap</text>
-  <text x="54" y="87" class="sub">Draft UI artwork board · proposed appearance and affected states · not installed evidence</text>
+  <text x="54" y="87" class="sub">UI artwork board · product owner approved 2026-11-06 · installed evidence still required</text>
   <text x="54" y="118" class="sub">Same selected time remains at the playhead. Source-valid time is disclosed whenever the last supplied hour represents a later minute.</text>
 
   <g transform="translate(54 155)">

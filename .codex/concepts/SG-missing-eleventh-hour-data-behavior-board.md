@@ -1,6 +1,6 @@
-# SG-missing-eleventh-hour-data — draft behavior board
+# SG-missing-eleventh-hour-data — approved behavior board
 
-Status: PROPOSED FOR OWNER REVIEW. This board is not approved and does not authorize implementation.
+Status: APPROVED BY PRODUCT OWNER AS WRITTEN — 2026-11-06. Approval governs the bounded SG-missing-eleventh-hour-data slice; implementation still requires an activated cycle plan.
 
 ## Observed input and question
 
@@ -39,4 +39,4 @@ selected Instant + location zone
 
 ## Review decision
 
-Approve or revise the proposed same-date continuation and source-time disclosure. The approved decision must be recorded in the cycle plan and reconciled with `docs/OXYGEN_SCENE_GENERATION_SPECIFICATION.md` before implementation. The companion UI artwork board shows the supplied late-hour, independently missing, and midnight states. Installed captures and focused interactions remain required after implementation.
+The product owner approved the proposed same-date continuation and source-time disclosure as written on 2026-11-06. The companion UI artwork board shows the supplied late-hour, independently missing, and midnight states. The decision is recorded in `.codex/plans/115-sg-missing-eleventh-hour-data.md`; reconcile it with `docs/OXYGEN_SCENE_GENERATION_SPECIFICATION.md` before implementation. Installed captures and focused interactions remain required after implementation.

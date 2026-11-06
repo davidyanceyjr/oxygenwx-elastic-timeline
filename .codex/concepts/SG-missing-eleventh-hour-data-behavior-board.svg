@@ -7,14 +7,14 @@
   </defs>
   <rect width="1600" height="980" fill="#091929"/>
   <text x="50" y="60" class="title">SG · Missing eleventh-hour data · behavior board</text>
-  <text x="50" y="91" class="sub">Draft for owner review · proposed source-honest rule · not approved implementation authority</text>
+  <text x="50" y="91" class="sub">Product owner approved 2026-11-06 · source-honest boundary contract · implementation requires an activated plan</text>
 
   <rect x="50" y="135" width="1500" height="152" rx="14" class="box"/>
   <text x="75" y="175" class="head">Observed Florence LIVE mismatch</text>
   <text x="75" y="210" class="body">Sunday 11 PM source row: 7.8 °C · precipitation chance 0% · wind 6.3 km/h, 336°.</text>
   <text x="75" y="243" class="body">Installed 11:36–11:49 PM readout showed unavailable values. Current final-hour scene cell ends at 11:30 PM.</text>
 
-  <text x="50" y="337" class="head">Proposed local-date boundary</text>
+  <text x="50" y="337" class="head">Approved local-date boundary</text>
   <line x1="95" y1="407" x2="1505" y2="407" class="rule"/>
   <g class="body">
     <line x1="120" y1="387" x2="120" y2="428" class="rule"/><text x="85" y="460">11:00</text>
@@ -53,7 +53,7 @@
   <text x="1105" y="731" class="body">unavailable, never carried.</text>
   <text x="1105" y="786" class="small accent">IANA local-date boundary applies.</text>
 
-  <text x="50" y="883" class="head">Owner decision needed</text>
-  <text x="50" y="918" class="body">Approve or revise the proposed 11 PM-to-midnight display association and source-time disclosure.</text>
+  <text x="50" y="883" class="head">Owner approval recorded</text>
+  <text x="50" y="918" class="body">Approved 2026-11-06: same-date 11 PM-to-midnight display association with source-time disclosure.</text>
   <text x="50" y="950" class="small">Approval requires a matching SG.1 specification amendment. SG.4 interior missing-hour carry and accumulation intervals remain unchanged.</text>
 </svg>
