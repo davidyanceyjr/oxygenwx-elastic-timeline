@@ -1,0 +1,53 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1440" height="900" viewBox="0 0 1440 900" role="img" aria-labelledby="title desc">
+  <title id="title">P.2.17 timeline double-tap scale toggle proposal</title>
+  <desc id="desc">A schematic showing the daily and hourly timeline states and a double-tap on the tape toggling scales without changing the selected instant.</desc>
+  <defs>
+    <linearGradient id="sky" x2="0" y2="1"><stop stop-color="#294969"/><stop offset="1" stop-color="#102539"/></linearGradient>
+    <linearGradient id="tape" x2="0" y2="1"><stop stop-color="#101d2b" stop-opacity=".82"/><stop offset="1" stop-color="#08131f" stop-opacity=".97"/></linearGradient>
+    <style>
+      .title{font:700 30px system-ui;fill:#eef5fa}.sub{font:16px system-ui;fill:#aebfcd}.state{font:700 20px system-ui;fill:#f1f6f9}.note{font:15px system-ui;fill:#d5e1e9}.muted{font:13px system-ui;fill:#a9bac8}.day{font:600 17px system-ui;fill:#c9d6df}.hour{font:500 13px system-ui;fill:#c9d6df}.selected{font:700 19px system-ui;fill:#fff}.panel{fill:#142639;stroke:#415a70;stroke-width:1.5}.line{stroke:#93aabe;stroke-width:2}.tick{stroke:#71889c;stroke-width:2}.hilite{stroke:#f4fbff;stroke-width:3}.arrow{stroke:#75c8df;stroke-width:3;fill:none;marker-end:url(#arrow)}
+    </style>
+    <marker id="arrow" markerWidth="10" markerHeight="10" refX="8" refY="5" orient="auto"><path d="M0 0L10 5L0 10Z" fill="#75c8df"/></marker>
+  </defs>
+  <rect width="1440" height="900" fill="#091521"/>
+  <text x="56" y="62" class="title">P.2.17 · Timeline double-tap scale toggle</text>
+  <text x="56" y="92" class="sub">Revised combined behavior and UI artwork board · owner approved 2026-11-05</text>
+
+  <rect x="55" y="125" width="625" height="535" rx="20" class="panel"/>
+  <rect x="760" y="125" width="625" height="535" rx="20" class="panel"/>
+  <text x="82" y="166" class="state">DAILY SCALE</text>
+  <text x="787" y="166" class="state">HOURLY SCALE</text>
+  <text x="82" y="196" class="muted">Existing scene/readout is schematic and remains visually unchanged.</text>
+  <text x="787" y="196" class="muted">Same composition; uniform hourly tape beneath the playhead.</text>
+
+  <rect x="82" y="218" width="571" height="220" rx="12" fill="url(#sky)"/>
+  <rect x="787" y="218" width="571" height="220" rx="12" fill="url(#sky)"/>
+  <circle cx="565" cy="270" r="30" fill="#f3d592" opacity=".88"/>
+  <circle cx="1270" cy="270" r="30" fill="#f3d592" opacity=".88"/>
+  <path d="M82 392 Q165 340 250 380 T420 376 T653 363V438H82Z" fill="#1a3441"/>
+  <path d="M787 392 Q870 340 955 380 T1125 376 T1358 363V438H787Z" fill="#1a3441"/>
+  <text x="104" y="260" class="note">Selected forecast scene and facts</text>
+  <text x="809" y="260" class="note">Selected forecast scene and facts</text>
+
+  <rect x="82" y="438" width="571" height="194" rx="0 0 12 12" fill="url(#tape)"/>
+  <rect x="787" y="438" width="571" height="194" rx="0 0 12 12" fill="url(#tape)"/>
+  <path d="M105 532H630" class="line"/><path d="M810 532H1335" class="line"/>
+  <g class="tick"><path d="M135 522v20M205 518v28M275 522v20M345 518v28M415 522v20M485 518v28M555 522v20M625 518v28"/></g>
+  <g class="tick"><path d="M827 522v20M875 518v28M923 522v20M971 518v28M1019 522v20M1067 518v28M1115 522v20M1163 518v28M1211 522v20M1259 518v28M1307 522v20"/></g>
+  <text x="121" y="500" class="day">MON</text><text x="259" y="500" class="day">TUE</text><text x="397" y="500" class="day">WED</text><text x="535" y="500" class="day">THU</text>
+  <text x="820" y="500" class="hour">9 AM</text><text x="914" y="500" class="hour">10 AM</text><text x="1008" y="500" class="hour">11 AM</text><text x="1102" y="500" class="hour">12 PM</text><text x="1196" y="500" class="hour">1 PM</text><text x="1290" y="500" class="hour">2 PM</text>
+  <path d="M369 511v42" class="hilite"/><path d="M1081 511v42" class="hilite"/>
+  <text x="324" y="590" class="selected">TUE · 12 PM</text><text x="1032" y="590" class="selected">TUE · 12 PM</text>
+  <text x="82" y="619" class="muted">Single tap does not select; drag browses dates.</text>
+  <text x="787" y="619" class="muted">Single tap does not select; drag scrubs hours.</text>
+
+  <path d="M654 706H783" class="arrow"/>
+  <path d="M786 758H657" class="arrow"/>
+  <text x="620" y="697" class="note">Double-tap tape</text>
+  <text x="592" y="787" class="note">Double-tap tape again</text>
+  <rect x="830" y="688" width="555" height="105" rx="14" fill="#102b3b" stroke="#3d7184"/>
+  <text x="856" y="723" class="state">Scale-only toggle</text>
+  <text x="856" y="751" class="note">Keep the exact selected instant; the double-tap's</text>
+  <text x="856" y="774" class="note">location does not select a different day or hour.</text>
+  <text x="56" y="850" class="sub">Timeline single taps do nothing. No mode row or new hint. Main-area double-tap still realigns.</text>
+</svg>

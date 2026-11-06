@@ -57,7 +57,7 @@ The app's scene and text presentation faithfully map supported supplied values a
 2. **Time is spatial.** The user can pull forecast time beneath a stable reading point, like a video-editor time ruler.
 3. **One coherent interaction language.** The shuttle, main-view swipes, and return-to-now gesture should reinforce one another, not compete.
 4. **Minimal permanent chrome.** Use compact labels, subtle ticks, and unobtrusive cues. Do not reintroduce a permanent daily/hourly button row or instructional footer without a new owner decision.
-5. **No surprise jumps.** Changing scale must not change the chosen timestamp. A long-press may first select the moment beneath the initial touch; the subsequent scale animation cannot silently alter it.
+5. **No surprise jumps.** Changing scale must not change the chosen timestamp. The owner-approved P.2.17 revision uses timeline double-tap as a scale-only toggle; its touch coordinate never selects another moment.
 6. **Forecast values remain distinguishable from illustration.** Never present an interpolated visual transition as a measured minute-by-minute forecast.
 7. **Reachability and clarity over novelty.** A beautiful gesture without a perceivable, accessible alternative is unfinished design.
 8. **Motion is optional.** Reduced-motion users get the same forecast and navigation meaning.
@@ -66,6 +66,8 @@ The app's scene and text presentation faithfully map supported supplied values a
 ## 4. Interaction contract: current preferred model
 
 **Important design decision:** The adopted prototype in the inspected repository uses a **uniform hourly time axis after long-press**, *not* the older local fisheye/day-only expansion. Preserve the shipped interaction until an intentional, evidence-backed revision is approved.
+
+**Bounded owner-approved revision — P.2.17 (cycle 110, 2026-11-05):** For the active-catalog and fixture/debug timeline surfaces, double-tap toggles daily/hourly scale without selecting the touched date/hour; single taps on either timeline scale do nothing; and stationary hold or hold-then-drag does not activate hourly scale. Immediate daily dragging, daily drag-release selection, hourly scrubbing, hourly-mode retention after release, main-area single-tap collapse, main-display double-tap fixture realignment, and the screen-reader scale action keep their existing meanings. This approved revision supersedes the timeline tap/hold rules below for these surfaces only. The remaining interaction and data invariants continue to apply.
 
 ### 4.1 Stable selected time
 
@@ -84,26 +86,25 @@ The single authoritative value is the **selected forecast moment**. UI position,
 - A narrow time tape floats near the bottom over a subtle contrast gradient; its touch region can be larger than the visible artwork.
 - Three-letter day labels (`FRI`, `SAT`, `SUN`) and day boundary ticks map to actual dates.
 - A small, subdued center marker plus larger selected label indicates the selected time; no oversized thumb, panel, or full-height ruler is required.
-- **Tap:** select the touched date at exactly 12:00 local time. On a partial boundary date, an out-of-window noon target clamps to the nearest catalog boundary with an adjustment notice.
+- **Tap:** under the P.2.17 revision, a single tap does not select a date or change scale. A double-tap toggles to hourly scale without selecting from its touch coordinate.
 - **Immediate horizontal drag:** move the **tape** beneath the central reading position. Drag left advances toward later dates; drag right moves toward earlier dates.
-- **Release in daily browsing:** select 12:00 local on the target date, subject to the boundary clamp. A displayed day summary is a daily representation, not an hourly fact.
+- **Release in daily browsing:** select 12:00 local on the target date, subject to the boundary clamp. A displayed day summary is a daily representation, not an hourly fact. On a partial boundary date, an out-of-window noon target clamps to the nearest catalog boundary with an adjustment notice.
 - Day labels remain compact; favor spatial breathing room over more controls.
 
-**Acceptance:** the shuttle remains reachable, the atmospheric canvas remains visually dominant, and a user can reach a future Saturday directly instead of scrubbing hour by hour across intermediate days.
+**Acceptance:** the shuttle remains reachable, the atmospheric canvas remains visually dominant, and a user can reach a future Saturday directly instead of scrubbing hour by hour across intermediate days. Under P.2.17, a single tap does not select a date; daily drag browsing remains available.
 
 ### 4.3 Timeline shuttle — hourly precision
 
 **Established prototype behavior**
 
-- A stationary touch lasting approximately **480 ms** activates hourly navigation, once the pointer has not exceeded touch slop. This threshold is a tuning default, not an immutable product constant.
-- The initial long-press selects the time under the finger; its selected timestamp then stays fixed while the time ruler transitions to the hourly scale.
+- Under P.2.17, a timeline double-tap activates hourly navigation as a scale-only transition; it does not select the time under either tap. A stationary hold, with or without subsequent drag, does not activate hourly scale.
 - The entire tape transitions to **uniform hourly spacing**, currently around **16 dp per hour**, rather than expanding one isolated day.
 - An animated scale transition (currently around **260 ms**) reveals hourly ticks and selective major-hour labels. Avoid drawing all 24 hour labels simultaneously.
 - Dragging now explores hour-level forecast samples under the fixed playhead; the selected hour label is emphasized.
-- Releasing ends the current gesture but leaves hourly precision active. A main-area tap collapses to daily overview and preserves the exact instant. An hourly tape tap resolves the touched instant on the hourly axis before collapse, selects it, and preserves it through collapse. The hourly sampling and daily overview remain semantically distinct.
+- Releasing ends the current gesture but leaves hourly precision active. A main-area tap collapses to daily overview and preserves the exact instant. Under P.2.17, an hourly timeline single tap does not select or collapse; a timeline double-tap toggles to daily scale while preserving the exact instant. The hourly sampling and daily overview remain semantically distinct.
 - A haptic confirmation of entering precision is appropriate; it must not be the only indication of the change.
 
-**Acceptance:** there is no clock jump caused solely by entering, animating, or leaving precision. Releasing a hold-then-drag leaves hourly precision active. A main-area tap collapses to daily overview without changing selected time; a timeline tap collapses to daily overview and selects its target time. No gesture is recognized as both an ordinary day drag and a hold-to-hour drag.
+**Acceptance:** there is no clock jump caused solely by entering, animating, or leaving precision. Releasing an hourly drag leaves hourly precision active. A main-area tap collapses to daily overview without changing selected time. A timeline double-tap toggles scale without selecting from its touch coordinate; a timeline single tap does nothing. Immediate daily drag and hourly drag retain their navigation meaning, and hold/hold-then-drag does not enter hourly scale.
 
 ### 4.4 Main atmospheric view — shortcut navigation
 
@@ -118,7 +119,7 @@ The prototype's fixed 24-hour fixture days permit ±24-hour navigation. Successo
 
 ### 4.5 Gestural precedence and discoverability
 
-- The earliest decisive gesture wins: tap, immediate horizontal drag, stationary hold then drag, main-view swipe, or main-view double-tap. Clear cancel paths on pointer loss or orientation change.
+- The earliest decisive gesture wins: timeline single tap (no-op under P.2.17), timeline double-tap scale toggle, immediate horizontal drag, main-view swipe, or main-view double-tap. Clear cancel paths on pointer loss or orientation change.
 - The fixed playhead and labeled tick marks make the tape perceivable as interactive without a permanent tutorial bar.
 - Prefer restrained, contextual, dismissible first-use education *only if device testing shows users fail to discover precision mode*.
 - **Accessibility parity is mandatory before release:** TalkBack or other assistive input must offer a discoverable method of switching scale and moving time. The prototype's custom accessibility scale action is a beginning, not completed acceptance.
@@ -239,16 +240,16 @@ The TalkBack, broad layout/font, RTL, and reduced-motion scenario rows below are
 
 | ID | Scenario | Pass condition |
 |---|---|---|
-| T01 | Tap `SAT` or release daily drag | Select 12:00 local Saturday; on a partial boundary date clamp an out-of-window noon and communicate the adjustment. Day summary and selected time agree. |
+| T01 | Timeline tap / daily drag release | Under P.2.17, a single timeline tap does not select or change scale; release after daily drag selects 12:00 local on the target date, clamping an out-of-window boundary noon with notice. |
 | T02 | Drag tape left then right | Time advances then reverses under a fixed playhead; no gesture gets stuck. |
-| T03 | Long-press then drag | Hour ticks appear with uniform spacing and finer time changes; haptic/visual confirmation occurs. |
+| T03 | Double-tap / hold then drag | Timeline double-tap toggles scale without changing selected time; hold/hold-then-drag does not activate hourly scale. |
 | T04 | Scale animation invariant | A known selected timestamp remains projected to the same playhead coordinate throughout expansion/collapse. |
 | T05 | Release precision | Releasing ends the drag but keeps hourly precision active and the selected time unchanged. |
-| T05a | Tap to collapse precision | Main-view tap preserves the exact instant. Hourly tape tap resolves its touched instant on the hourly axis before collapse and preserves that instant through animation. |
+| T05a | Collapse precision | Main-view tap preserves the exact instant. Under P.2.17, hourly timeline single tap is a no-op; timeline double-tap returns to daily while preserving that instant. |
 | T06 | Main-view horizontal swipe | Targets one adjacent local date at the same wall time using the DST rule; a missing destination stays selected with unavailable source facts and any eligible disclosed preceding-condition display, and an out-of-window target clamps with notice. |
 | T07 | Double-tap center | Live, including stale live, targets current instant; simulated/replay targets catalog `asOf`; outside coverage clamps with notice. |
 | T08 | Scrub bounds and gaps | Selection clamps only outside catalog boundaries; an in-window missing hour/day stays selectable with unavailable source facts. Only an eligible interior absent hour can show the prior condition scene with its source time disclosed; leading/trailing gaps and missing days make no hourly condition claim. Navigation crosses the gap. |
-| T09 | Tap / drag / hold arbitration | Early movement prevents false long-press; cancellation recovers; main-view and tape do not double-handle input. |
+| T09 | Timeline gesture arbitration | Single tap, double-tap, daily drag, and hourly drag follow P.2.17; holds do not enter hourly; main-view and tape do not double-handle input. |
 | T10 | Bright and dark scenes | Forecast facts and timeline markers stay legible with and without effects. |
 | T11 | Larger text / small screens | Key temperature/date/facts remain readable, not clipped or covered by the tape. |
 | T12 | TalkBack / non-gesture operation | A user can select time, switch granularity, and return to now with accessible actions. |

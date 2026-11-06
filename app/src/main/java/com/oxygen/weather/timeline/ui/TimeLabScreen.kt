@@ -108,13 +108,6 @@ fun TimeLabScreen(
     }
     val hourOfDay = if (precisionMode) selectedHour % 24.0 else 12.0
 
-    fun enterPrecision(day: Int, selected: Double) {
-        // Picking a day may change the selected time; expanding does not.
-        selectedHour = selected.roundToInt().coerceIn(0, forecastSource.lastIndex).toDouble()
-        focusDay = day.coerceIn(0, forecastSource.days.lastIndex)
-        precisionMode = true
-        haptics.performHapticFeedback(HapticFeedbackType.LongPress)
-    }
     fun leavePrecision(wasPrecisionGesture: Boolean) {
         selectedHour = if (wasPrecisionGesture) selectedHour
             else (floor(selectedHour / 24.0) * 24.0 + 12.0)
@@ -311,20 +304,18 @@ fun TimeLabScreen(
                     selectedHour = it
                     if (precisionMode) focusDay = ElasticTimeAxis.dayIndex(it).coerceIn(0, forecastSource.days.lastIndex)
                 },
-                onPrecisionStarted = { day, atHour -> enterPrecision(day, atHour) },
-                onTimelineTap = { hourOffset ->
-                    selectedHour = hourOffset.coerceIn(0.0, forecastSource.lastIndex.toDouble())
-                    focusDay = ElasticTimeAxis.dayIndex(selectedHour).coerceIn(0, forecastSource.days.lastIndex)
-                    precisionMode = false
-                },
                 onTogglePrecision = {
                     if (precisionMode) leavePrecision(true)
-                    else enterPrecision(ElasticTimeAxis.dayIndex(selectedHour), selectedHour)
+                    else {
+                        focusDay = ElasticTimeAxis.dayIndex(selectedHour).coerceIn(0, forecastSource.days.lastIndex)
+                        precisionMode = true
+                        haptics.performHapticFeedback(HapticFeedbackType.LongPress)
+                    }
                 },
                 onBrowseForecasts = { forecastBrowserOpen = true },
                 onGestureEnded = { wasPrecision ->
-                    // Precision remains active after release. Only a later explicit
-                    // main-area or timeline tap exits it. Daily drags still settle at noon.
+                    // Precision remains active after release. Daily drags settle at noon;
+                    // timeline taps are scale-only and do not select a time.
                     if (!wasPrecision && !precisionMode) leavePrecision(false)
                 },
             )

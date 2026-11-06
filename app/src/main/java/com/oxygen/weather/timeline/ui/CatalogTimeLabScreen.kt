@@ -1,7 +1,6 @@
 package com.oxygen.weather.timeline.ui
 
 import android.graphics.Paint
-import android.os.SystemClock
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.Canvas
@@ -85,7 +84,6 @@ import com.oxygen.weather.timeline.presentation.scene.SceneReading
 import java.time.Instant
 import java.time.format.DateTimeFormatter
 import java.util.Locale
-import kotlinx.coroutines.withTimeoutOrNull
 import kotlin.math.abs
 
 @Composable
@@ -454,47 +452,30 @@ private fun CatalogForecastTimeline(
                 )
             }
             .pointerInput(view.generation, rtl) {
+                val doubleTapDetector = TimelineDoubleTapDetector()
                 awaitEachGesture {
                     val down = awaitFirstDown(requireUnconsumed = false)
-                    val playhead = size.width / 2.0
-                    val downX = if (rtl) size.width - down.position.x.toDouble() else down.position.x.toDouble()
                     var previousX = down.position.x
                     var gestureSelection = selected
                     var dragging = false
                     var hourly = latestPrecision
-                    var holdActivated = false
-                    var longPressArmed = !hourly
                     while (true) {
-                        val remaining = (480L - (SystemClock.uptimeMillis() - down.uptimeMillis)).coerceAtLeast(1L)
-                        val event = if (longPressArmed) withTimeoutOrNull(remaining) { awaitPointerEvent() }
-                            else awaitPointerEvent()
-                        if (event == null) {
-                            val target = InstantTimeAxis.instantAtX(
-                                downX, selected, playhead, pixelsPerSecond(latestAnimation), view.interval,
-                            )
-                            latestSelect(target)
-                            gestureSelection = target
-                            hourly = true
-                            holdActivated = true
-                            longPressArmed = false
-                            latestSetPrecision(true)
-                            continue
-                        }
+                        val event = awaitPointerEvent()
                         val change = event.changes.firstOrNull { it.id == down.id }
-                        if (change == null || !change.pressed) {
-                            if (!dragging && !holdActivated) {
-                                val target = InstantTimeAxis.instantAtX(
-                                    downX, selected, playhead, pixelsPerSecond(latestAnimation), view.interval,
-                                )
-                                if (hourly) {
-                                    latestSelect(target)
-                                    latestSetPrecision(false)
-                                } else {
-                                    val date = target.atZone(view.zone).toLocalDate()
-                                    latestSelect(view.interval.clamp(
-                                        InstantTimeAxis.dailyOverviewAnchor(date, view.zone),
-                                    ))
+                        if (change == null) {
+                            doubleTapDetector.clear()
+                            break
+                        } else if (!change.pressed) {
+                            if (!dragging) {
+                                if (doubleTapDetector.registerTap(
+                                        down.position.x, change.uptimeMillis,
+                                        viewConfiguration.touchSlop,
+                                    )
+                                ) {
+                                    latestSetPrecision(!latestPrecision)
                                 }
+                            } else {
+                                doubleTapDetector.clear()
                             }
                             break
                         }
@@ -503,7 +484,7 @@ private fun CatalogForecastTimeline(
                         previousX = x
                         if (abs(x - down.position.x) > viewConfiguration.touchSlop) {
                             dragging = true
-                            longPressArmed = false
+                            doubleTapDetector.clear()
                         }
                         if (dragging && dx != 0f) {
                             gestureSelection = InstantTimeAxis.scrub(

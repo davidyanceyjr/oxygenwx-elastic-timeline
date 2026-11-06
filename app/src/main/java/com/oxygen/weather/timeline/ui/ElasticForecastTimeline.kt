@@ -1,7 +1,6 @@
 package com.oxygen.weather.timeline.ui
 
 import android.graphics.Paint
-import android.os.SystemClock
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.Canvas
@@ -35,17 +34,39 @@ import androidx.compose.ui.unit.LayoutDirection
 import com.oxygen.weather.timeline.presentation.ElasticTimeAxis
 import com.oxygen.weather.timeline.presentation.ForecastProjection
 import com.oxygen.weather.timeline.presentation.ForecastSource
-import kotlinx.coroutines.withTimeoutOrNull
 import kotlin.math.abs
 import kotlin.math.floor
 import kotlin.math.roundToInt
 
-private const val HOLD_DURATION_MS = 480L
+internal class TimelineDoubleTapDetector(
+    private val timeoutMillis: Long = 300L,
+) {
+    private var previousTapTime = Long.MIN_VALUE
+    private var previousTapX = Float.NaN
+
+    fun registerTap(x: Float, uptimeMillis: Long, touchSlop: Float): Boolean {
+        val elapsed = uptimeMillis - previousTapTime
+        val isDoubleTap = elapsed in 1..timeoutMillis &&
+            abs(x - previousTapX) <= touchSlop * 2f
+        if (isDoubleTap) {
+            clear()
+        } else {
+            previousTapTime = uptimeMillis
+            previousTapX = x
+        }
+        return isDoubleTap
+    }
+
+    fun clear() {
+        previousTapTime = Long.MIN_VALUE
+        previousTapX = Float.NaN
+    }
+}
 
 /**
  * One gesture owner, not two competing recognizers.
- * Tap = jump to day; drag = time tape moves beneath fixed playhead;
- * hold without dragging = switch the whole rail to equally spaced hours, then scrub.
+ * Double-tap toggles scale without selecting its coordinate; drag moves the tape
+ * beneath the fixed playhead. Single taps and holds do not select or change scale.
  * State always stores absolute hour offsets, never screen coordinates.
  */
 @Composable
@@ -55,8 +76,6 @@ fun ElasticForecastTimeline(
     focusDay: Int,
     expanded: Boolean,
     onSelectedHour: (Double) -> Unit,
-    onPrecisionStarted: (Int, Double) -> Unit,
-    onTimelineTap: (Double) -> Unit,
     onTogglePrecision: () -> Unit,
     onBrowseForecasts: () -> Unit,
     onGestureEnded: (Boolean) -> Unit,
@@ -76,8 +95,6 @@ fun ElasticForecastTimeline(
     val latestExpanded by rememberUpdatedState(expanded)
     val latestAnimation by rememberUpdatedState(animation)
     val latestSetHour by rememberUpdatedState(onSelectedHour)
-    val latestPrecision by rememberUpdatedState(onPrecisionStarted)
-    val latestTimelineTap by rememberUpdatedState(onTimelineTap)
     val latestTogglePrecision by rememberUpdatedState(onTogglePrecision)
     val latestBrowseForecasts by rememberUpdatedState(onBrowseForecasts)
     val latestEnded by rememberUpdatedState(onGestureEnded)
@@ -118,9 +135,9 @@ fun ElasticForecastTimeline(
                 )
             }
             .pointerInput(isRtl) {
+                val doubleTapDetector = TimelineDoubleTapDetector()
                 awaitEachGesture {
                     val down = awaitFirstDown(requireUnconsumed = false)
-                    val downX = down.position.x.toDouble()
                     val playhead = size.width / 2.0
                     val touchSlop = viewConfiguration.touchSlop
                     var previousX = down.position.x
@@ -128,49 +145,24 @@ fun ElasticForecastTimeline(
                     var peakDistance = 0f
                     var dragging = false
                     var inPrecision = latestExpanded
-                    var holdActivated = false
-                    var longPressArmed = !latestExpanded
                     var finished = false
                     while (!finished) {
-                        val remainingMs = (HOLD_DURATION_MS -
-                            (SystemClock.uptimeMillis() - down.uptimeMillis)).coerceAtLeast(1L)
-                        val event = if (longPressArmed) {
-                            withTimeoutOrNull(remainingMs) { awaitPointerEvent() }
-                        } else awaitPointerEvent()
-                        if (event == null) {
-                            // Long-press fired while finger is stationary: select the time at
-                            // the touch, THEN expand without changing that selected timestamp.
-                            val logicalDownX = if (isRtl) size.width - downX else downX
-                            val tappedHour = ElasticTimeAxis.hourAtX(
-                                logicalDownX, latestSelected, playhead, null,
-                                compactDayPx, widthForHour(latestAnimation),
-                            ).coerceIn(0.0, maxHour)
-                            val day = ElasticTimeAxis.dayIndex(tappedHour)
-                            val exactHour = tappedHour.roundToInt().toDouble()
-                            latestPrecision(day, exactHour)
-                            gestureSelection = exactHour
-                            inPrecision = true
-                            holdActivated = true
-                            longPressArmed = false
-                            continue
-                        }
+                        val event = awaitPointerEvent()
                         val change = event.changes.firstOrNull { it.id == down.id }
-                        if (change == null || !change.pressed) {
-                            if (!dragging && inPrecision && !holdActivated) {
-                                val logicalDownX = if (isRtl) size.width - downX else downX
-                                val target = ElasticTimeAxis.hourAtX(
-                                    logicalDownX, latestSelected, playhead, null,
-                                    compactDayPx, widthForHour(latestAnimation),
-                                ).coerceIn(0.0, maxHour).roundToInt().toDouble()
-                                latestTimelineTap(target)
-                            } else if (!dragging && !inPrecision) {
-                                val logicalDownX = if (isRtl) size.width - downX else downX
-                                val target = ElasticTimeAxis.hourAtX(
-                                    logicalDownX, latestSelected, playhead, null,
-                                    compactDayPx, widthForHour(latestAnimation),
-                                ).coerceIn(0.0, maxHour)
-                                val day = ElasticTimeAxis.dayIndex(target)
-                                latestSetHour((day * 24.0 + 12.0).coerceAtMost(maxHour))
+                        if (change == null) {
+                            doubleTapDetector.clear()
+                            finished = true
+                        } else if (!change.pressed) {
+                            if (!dragging) {
+                                if (doubleTapDetector.registerTap(
+                                        down.position.x, change.uptimeMillis,
+                                        touchSlop,
+                                    )
+                                ) {
+                                    latestTogglePrecision()
+                                }
+                            } else {
+                                doubleTapDetector.clear()
                             }
                             finished = true
                         } else {
@@ -180,7 +172,7 @@ fun ElasticForecastTimeline(
                             peakDistance = maxOf(peakDistance, abs(x - down.position.x))
                             if (peakDistance > touchSlop) {
                                 dragging = true
-                                longPressArmed = false
+                                doubleTapDetector.clear()
                             }
                             if (dragging && dx != 0.0) {
                                 // Once hourly precision is active, keep its drag mapping fixed
@@ -199,7 +191,7 @@ fun ElasticForecastTimeline(
                             change.consume()
                         }
                     }
-                    latestEnded(inPrecision)
+                    if (dragging) latestEnded(inPrecision)
                 }
             },
     ) {
