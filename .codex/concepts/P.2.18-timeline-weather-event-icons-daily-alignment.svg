@@ -1,0 +1,50 @@
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="1920" height="1020" viewBox="0 0 1920 1020">
+  <defs>
+    <linearGradient id="bg" x2="0" y2="1"><stop stop-color="#111b2b"/><stop offset="1" stop-color="#1c3048"/></linearGradient>
+    <clipPath id="beforeTape"><rect x="60" y="240" width="900" height="300" rx="12"/></clipPath>
+    <clipPath id="afterTape"><rect x="1010" y="240" width="900" height="300" rx="12"/></clipPath>
+    <clipPath id="beforeFri"><rect x="260" y="640" width="500" height="340" rx="12"/></clipPath>
+    <clipPath id="afterFri"><rect x="1160" y="640" width="500" height="340" rx="12"/></clipPath>
+    <symbol id="sun" viewBox="0 0 100 100"><g fill="none" stroke="currentColor" stroke-width="7" stroke-linecap="round"><circle cx="50" cy="48" r="19"/><path d="M50 8v13M50 75v13M10 48h13M77 48h13M22 20l9 9M69 67l9 9M78 20l-9 9M31 67l-9 9"/></g></symbol>
+    <symbol id="cloud" viewBox="0 0 100 100"><path d="M20 68c-10 0-16-7-16-16s7-17 17-17c4-14 18-22 32-18 10 3 16 11 18 21 12-1 22 7 22 17 0 8-7 13-16 13H20Z" fill="none" stroke="currentColor" stroke-width="7" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+    <symbol id="rain" viewBox="0 0 100 100"><use xlink:href="#cloud"/><g stroke="currentColor" stroke-width="7" stroke-linecap="round"><path d="m29 76-6 14M51 76l-6 14M73 76l-6 14"/></g></symbol>
+    <symbol id="snow" viewBox="0 0 100 100"><use xlink:href="#cloud"/><g stroke="currentColor" stroke-width="5" stroke-linecap="round"><path d="M31 78v14m-6-11 12 7m0-7-12 7M64 78v14m-6-11 12 7m0-7-12 7"/></g></symbol>
+    <symbol id="moon" viewBox="0 0 100 100"><path d="M66 12A39 39 0 1 0 87 70 34 34 0 0 1 66 12Z" fill="none" stroke="currentColor" stroke-width="7" stroke-linejoin="round"/><path d="M30 23l2 5m19-12 2 5m26 15 4 1" stroke="currentColor" stroke-width="5" stroke-linecap="round"/></symbol>
+    <style>
+      .title{font:700 36px sans-serif;fill:#f5f7fb}.sub{font:400 19px sans-serif;fill:#becbdd}.panel{font:700 24px sans-serif;fill:#f5f7fb}.small{font:400 16px sans-serif;fill:#bac8d8}.focus{font:700 21px sans-serif;fill:#ffe2a7}.icon{color:#f5f7fb}.selected{color:#ffe2a7}
+    </style>
+  </defs>
+  <rect width="1920" height="1020" fill="url(#bg)"/>
+  <text x="60" y="68" class="title">P.2.18 · Daily icon alignment</text>
+  <text x="60" y="104" class="sub">Each icon uses the exact center of its three letter weekday label; the FRI example is enlarged below.</text>
+  <text x="60" y="190" class="panel">BEFORE · installed Pixel tape</text>
+  <text x="1010" y="190" class="panel">AFTER · icon centered under each weekday</text>
+  <text x="60" y="215" class="small">Captured daily scale, Florence, Wednesday 7:59 PM</text>
+  <text x="1010" y="215" class="small">Date centers and spacing follow the existing timeline projection</text>
+
+  <!-- The same real screenshot is cropped to the timeline band in both top panels. -->
+  <g clip-path="url(#beforeTape)"><image x="60" y="-1310" width="900" height="1850" preserveAspectRatio="none" xlink:href="P.2.18-timeline-weather-event-icons-before.png"/></g>
+  <g clip-path="url(#afterTape)"><image x="1010" y="-1310" width="900" height="1850" preserveAspectRatio="none" xlink:href="P.2.18-timeline-weather-event-icons-before.png"/></g>
+  <rect x="60" y="240" width="900" height="300" rx="12" fill="none" stroke="#7589a1"/>
+  <rect x="1010" y="240" width="900" height="300" rx="12" fill="none" stroke="#7589a1"/>
+  <!-- Daily icon centers: 78, 271, 464, 656, 849, 1042, 1235, 1428 px in the installed 1440px screen. -->
+  <g class="icon">
+    <use xlink:href="#moon" x="1042" y="324" width="32" height="32"/>
+    <use xlink:href="#cloud" x="1163" y="324" width="32" height="32"/>
+    <use xlink:href="#rain" x="1283" y="324" width="32" height="32"/>
+    <use xlink:href="#sun" x="1404" y="324" width="32" height="32" class="selected"/>
+    <use xlink:href="#snow" x="1524" y="324" width="32" height="32"/>
+    <use xlink:href="#cloud" x="1645" y="324" width="32" height="32"/>
+    <use xlink:href="#moon" x="1765" y="324" width="32" height="32"/>
+    <use xlink:href="#cloud" x="1886" y="324" width="32" height="32"/>
+  </g>
+  <text x="260" y="608" class="panel">FRI · before</text>
+  <text x="1160" y="608" class="panel">FRI · proposed alignment</text>
+  <g clip-path="url(#beforeFri)"><image x="-934" y="-2846" width="2000" height="4111" preserveAspectRatio="none" xlink:href="P.2.18-timeline-weather-event-icons-before.png"/></g>
+  <g clip-path="url(#afterFri)"><image x="-34" y="-2846" width="2000" height="4111" preserveAspectRatio="none" xlink:href="P.2.18-timeline-weather-event-icons-before.png"/></g>
+  <rect x="260" y="640" width="500" height="340" rx="12" fill="none" stroke="#7589a1"/>
+  <rect x="1160" y="640" width="500" height="340" rx="12" fill="none" stroke="#7589a1"/>
+  <use xlink:href="#cloud" x="1377" y="799" width="68" height="68" class="icon"/>
+  <path d="M1411 711v27M1411 782v13M1411 871v28" stroke="#ffe2a7" stroke-width="3" stroke-dasharray="6 5" stroke-linecap="round"/>
+  <text x="60" y="1005" class="small">Proposed glyphs illustrate placement; implementation uses the existing mapped weather symbols from each date's daily representative forecast.</text>
+</svg>

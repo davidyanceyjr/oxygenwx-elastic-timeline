@@ -1,0 +1,53 @@
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="2220" height="1420" viewBox="0 0 2220 1420">
+  <defs>
+    <linearGradient id="bg" x2="0" y2="1"><stop stop-color="#111b2b"/><stop offset="1" stop-color="#1a2b40"/></linearGradient>
+    <filter id="shadow" x="-15%" y="-15%" width="130%" height="130%"><feDropShadow dx="0" dy="5" stdDeviation="8" flood-color="#000" flood-opacity=".32"/></filter>
+    <symbol id="sun" viewBox="0 0 100 100"><g fill="none" stroke="currentColor" stroke-width="7" stroke-linecap="round"><circle cx="50" cy="48" r="19"/><path d="M50 8v13M50 75v13M10 48h13M77 48h13M22 20l9 9M69 67l9 9M78 20l-9 9M31 67l-9 9"/></g></symbol>
+    <symbol id="cloud" viewBox="0 0 100 100"><path d="M20 68c-10 0-16-7-16-16s7-17 17-17c4-14 18-22 32-18 10 3 16 11 18 21 12-1 22 7 22 17 0 8-7 13-16 13H20Z" fill="none" stroke="currentColor" stroke-width="7" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+    <symbol id="rain" viewBox="0 0 100 100"><use href="#cloud"/><g stroke="currentColor" stroke-width="7" stroke-linecap="round"><path d="m29 76-6 14M51 76l-6 14M73 76l-6 14"/></g></symbol>
+    <symbol id="snow" viewBox="0 0 100 100"><use href="#cloud"/><g stroke="currentColor" stroke-width="5" stroke-linecap="round"><path d="M31 78v14m-6-11 12 7m0-7-12 7M64 78v14m-6-11 12 7m0-7-12 7"/></g></symbol>
+    <symbol id="moon" viewBox="0 0 100 100"><path d="M66 12A39 39 0 1 0 87 70 34 34 0 0 1 66 12Z" fill="none" stroke="currentColor" stroke-width="7" stroke-linejoin="round"/><path d="M30 23l2 5m19-12 2 5m26 15 4 1" stroke="currentColor" stroke-width="5" stroke-linecap="round"/></symbol>
+    <style>
+      .title{font:700 38px sans-serif;fill:#f5f7fb}.subtitle{font:400 18px sans-serif;fill:#b8c6d8}.panelTitle{font:700 23px sans-serif;fill:#f4f7fb;letter-spacing:.4px}.panelMeta{font:400 15px sans-serif;fill:#aebed1}.caption{font:600 16px sans-serif;fill:#e9eef5}.note{font:400 14px sans-serif;fill:#bac8d8}.chip{font:700 13px sans-serif;fill:#152235;letter-spacing:.8px}.hair{stroke:#61738b;stroke-width:1}.callout{font:600 14px sans-serif;fill:#ffdfa0}.icon{color:#f4f7fb}.selected{color:#ffe2a7}
+    </style>
+  </defs>
+  <rect width="2220" height="1420" fill="url(#bg)"/>
+  <text x="64" y="66" class="title">P.2.18 · Timeline weather event icons</text>
+  <text x="64" y="105" class="subtitle">Current installed Pixel screen as input → proposed date-level daily icons and hour-level hourly icons</text>
+  <rect x="1900" y="55" width="252" height="34" rx="17" fill="#f4d89a"/><text x="2026" y="77" text-anchor="middle" class="chip">BOARD · PENDING OWNER REVIEW</text>
+  <text x="64" y="160" class="panelTitle">BEFORE / INPUT</text>
+  <text x="64" y="187" class="panelMeta">Live Pixel 3 XL · daily scale · WED 7:59 PM</text>
+  <text x="773" y="160" class="panelTitle">DAILY SCALE / PROPOSED</text>
+  <text x="773" y="187" class="panelMeta">Daily representative event · one icon beneath each day label</text>
+  <text x="1482" y="160" class="panelTitle">HOURLY SCALE / PROPOSED</text>
+  <text x="1482" y="187" class="panelMeta">Hourly event at each visible sample · aligned to the hourly tape</text>
+
+  <!-- Each screenshot is the real 1440×2960 installed Pixel capture, displayed at the same scale. -->
+  <g filter="url(#shadow)"><rect x="106" y="211" width="450" height="925" rx="16" fill="#0a111c"/><image x="106" y="211" width="450" height="925" preserveAspectRatio="none" xlink:href="P.2.18-timeline-weather-event-icons-before.png"/></g>
+  <g filter="url(#shadow)"><rect x="815" y="211" width="450" height="925" rx="16" fill="#0a111c"/><image x="815" y="211" width="450" height="925" preserveAspectRatio="none" xlink:href="P.2.18-timeline-weather-event-icons-before.png"/></g>
+  <g filter="url(#shadow)"><rect x="1524" y="211" width="450" height="925" rx="16" fill="#0a111c"/><image x="1524" y="211" width="450" height="925" preserveAspectRatio="none" xlink:href="P.2.18-timeline-weather-event-icons-hourly-reference.png"/></g>
+
+  <!-- Proposed daily icons: centered at the existing visible weekday labels, in the gap before the divider. -->
+  <g class="icon">
+    <use xlink:href="#moon" x="830" y="1028" width="18" height="18"/><use xlink:href="#cloud" x="890" y="1028" width="18" height="18"/><use xlink:href="#rain" x="951" y="1028" width="18" height="18"/>
+    <use xlink:href="#sun" x="1011" y="1028" width="18" height="18" class="selected"/><use xlink:href="#snow" x="1071" y="1028" width="18" height="18"/><use xlink:href="#cloud" x="1131" y="1028" width="18" height="18"/><use xlink:href="#moon" x="1192" y="1028" width="18" height="18"/><use xlink:href="#cloud" x="1252" y="1028" width="18" height="18"/>
+  </g>
+
+  <!-- Proposed hourly icons: 25 visible hourly slots at the current uniform 16 dp/hour spacing. -->
+  <g class="icon">
+    <use xlink:href="#moon" x="1526" y="1028" width="13" height="13"/><use xlink:href="#moon" x="1544" y="1028" width="13" height="13"/><use xlink:href="#cloud" x="1561" y="1028" width="13" height="13"/><use xlink:href="#cloud" x="1579" y="1028" width="13" height="13"/><use xlink:href="#sun" x="1596" y="1028" width="13" height="13"/>
+    <use xlink:href="#sun" x="1614" y="1028" width="13" height="13"/><use xlink:href="#cloud" x="1631" y="1028" width="13" height="13"/><use xlink:href="#rain" x="1649" y="1028" width="13" height="13"/><use xlink:href="#rain" x="1666" y="1028" width="13" height="13"/><use xlink:href="#cloud" x="1684" y="1028" width="13" height="13"/>
+    <use xlink:href="#cloud" x="1701" y="1028" width="13" height="13"/><use xlink:href="#rain" x="1719" y="1028" width="13" height="13"/><use xlink:href="#moon" x="1736" y="1028" width="13" height="13" class="selected"/><use xlink:href="#moon" x="1754" y="1028" width="13" height="13"/><use xlink:href="#cloud" x="1771" y="1028" width="13" height="13"/>
+    <use xlink:href="#cloud" x="1789" y="1028" width="13" height="13"/><use xlink:href="#rain" x="1806" y="1028" width="13" height="13"/><use xlink:href="#snow" x="1824" y="1028" width="13" height="13"/><use xlink:href="#cloud" x="1841" y="1028" width="13" height="13"/><use xlink:href="#sun" x="1859" y="1028" width="13" height="13"/>
+    <use xlink:href="#sun" x="1876" y="1028" width="13" height="13"/><use xlink:href="#cloud" x="1894" y="1028" width="13" height="13"/><use xlink:href="#moon" x="1911" y="1028" width="13" height="13"/><use xlink:href="#moon" x="1929" y="1028" width="13" height="13"/><use xlink:href="#cloud" x="1946" y="1028" width="13" height="13"/>
+  </g>
+  <path d="M1743 1023v-29h108" fill="none" stroke="#ffe2a7" stroke-width="1.5"/><text x="1857" y="999" class="callout">selected-hour symbol</text>
+
+  <path class="hair" d="M64 1180h2088"/>
+  <text x="64" y="1220" class="caption">DAILY</text><text x="138" y="1220" class="note">one supported daily representative event per date; icon stays attached to its weekday label in daily scale</text>
+  <text x="64" y="1252" class="caption">HOURLY</text><text x="138" y="1252" class="note">one supported hourly event per visible hour; icon moves with its tick while scrubbing</text>
+  <text x="64" y="1284" class="caption">MISSING</text><text x="138" y="1284" class="note">no supported/mapped event = no icon; do not substitute clear weather or borrow a neighboring event</text>
+  <text x="64" y="1328" class="note">Screenshot sources are actual installed states. Proposed output glyph sequence is illustrative only; runtime artwork reuses the existing WeatherSymbol catalog and accessible event names.</text>
+  <text x="64" y="1354" class="note">Keep current date/hour labels, divider, playhead, forecast facts, scale gesture, daily drag, hourly scrub, and time selection behavior unchanged.</text>
+  <text x="64" y="1390" class="panelMeta">Pixel 3 XL · 1440×2960 px / 411×846 dp · Captured on connected device · Board status: pending owner approval</text>
+</svg>

@@ -31,13 +31,19 @@ import java.time.format.DateTimeFormatter
 import java.util.Locale
 import kotlin.math.roundToInt
 
-data class CatalogHourView(val instant: Instant, val label: String, val details: String)
+data class CatalogHourView(
+    val instant: Instant,
+    val label: String,
+    val details: String,
+    val weatherSymbolId: WeatherSymbolId? = null,
+)
 data class CatalogDayView(
     val date: LocalDate,
     val overviewInstant: Instant,
     val label: String,
     val details: String,
     val hours: List<CatalogHourView>,
+    val weatherSymbolId: WeatherSymbolId? = null,
 )
 
 /** Values and labels that may cross into Compose. No recording or source fact is exposed. */
@@ -110,10 +116,15 @@ class CatalogTimelinePresenter(private val active: ActiveCatalogSelection) {
     private val diagnosticSupportTimeFormat = DateTimeFormatter.ofPattern("h:mm a", Locale.US)
     private val days = window.days.map { day ->
         val anchor = interval.clamp(InstantTimeAxis.dailyOverviewAnchor(day.date, zone))
-        val overview = CanonicalForecastProjection.project(catalog, window, anchor, ForecastDisplayUnits.IMPERIAL)
+        val overviewFact = day.facts.firstOrNull { anchor >= it.validTime && anchor < it.validTime.plusSeconds(3600) }
+        val overview = CanonicalForecastProjection.project(
+            catalog, window, anchor, ForecastDisplayUnits.IMPERIAL,
+            overviewFact?.let { SelectedEventEvidence(it, it.validTime, carried = false) },
+        )
         CatalogDayView(
             date = day.date,
             overviewInstant = anchor,
+            weatherSymbolId = overview.selectedEvent?.symbolId,
             label = "${day.date.format(dateFormat)}, ${overview.meaning.label()}",
             details = buildString {
                 append("Coverage ${day.dayCoverage.name.lowercase(Locale.US)}")
@@ -126,10 +137,12 @@ class CatalogTimelinePresenter(private val active: ActiveCatalogSelection) {
                 .distinctBy { it.validTime }.sortedBy { it.validTime }.map { fact ->
                     val projected = CanonicalForecastProjection.project(
                         catalog, window, fact.validTime, ForecastDisplayUnits.IMPERIAL,
+                        SelectedEventEvidence(fact, fact.validTime, carried = false),
                     )
                     CatalogHourView(
                         instant = fact.validTime,
                         label = formatTime(fact.validTime),
+                        weatherSymbolId = projected.selectedEvent?.symbolId,
                         details = buildString {
                             append(projected.meaning.label())
                             append("; temperature ${projected.factSample?.temperature?.displayValue?.rounded()?.let { "$it degrees Fahrenheit" } ?: "unavailable"}")

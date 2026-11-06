@@ -153,86 +153,91 @@ fun WeatherSymbolIcon(
         this.contentDescription = contentDescription
     }
     Canvas(accessibleModifier) {
-        val unit = min(size.width, size.height) / 100f
-        val left = (size.width - 100f * unit) / 2f
-        val top = (size.height - 100f * unit) / 2f
-        translate(left, top) {
-            scale(unit, unit, pivot = Offset.Zero) {
-                when (WeatherSymbolCatalog.resolve(symbol).artwork) {
-                    WeatherSymbolArtwork.SUN -> drawSun(50f, 48f, 22f)
-                    WeatherSymbolArtwork.MOON -> {
-                        drawStars(listOf(Offset(20f, 29f), Offset(43f, 15f), Offset(74f, 34f), Offset(27f, 59f)))
-                        drawMoon(53f, 49f, 25f)
-                    }
-                    WeatherSymbolArtwork.MOSTLY_SUNNY -> {
-                        drawSun(35f, 37f, 19f)
-                        drawCloud(28f, 43f, 62f, 40f)
-                    }
-                    WeatherSymbolArtwork.MOSTLY_CLEAR_NIGHT -> {
-                        drawStars(listOf(Offset(17f, 26f), Offset(76f, 24f), Offset(83f, 51f)))
-                        drawMoon(37f, 37f, 21f)
-                        drawCloud(34f, 54f, 55f, 31f)
-                    }
-                    WeatherSymbolArtwork.PARTLY_SUNNY_CLOUDY -> {
-                        drawSun(32f, 35f, 22f)
-                        drawCloud(25f, 44f, 70f, 43f)
-                        drawCloud(57f, 59f, 31f, 23f, foreground = true)
-                    }
-                    WeatherSymbolArtwork.PARTLY_CLOUDY_NIGHT -> {
-                        drawStars(listOf(Offset(15f, 26f), Offset(78f, 24f), Offset(84f, 51f)))
-                        drawMoon(34f, 35f, 23f)
-                        drawCloud(23f, 46f, 70f, 42f)
-                    }
-                    WeatherSymbolArtwork.MOSTLY_CLOUDY -> {
-                        drawCloud(8f, 42f, 67f, 40f, foreground = false)
-                        drawCloud(31f, 53f, 63f, 38f, foreground = true)
-                    }
-                    WeatherSymbolArtwork.CLOUDY_OVERCAST -> {
-                        drawCloud(8f, 42f, 64f, 38f, foreground = false)
-                        drawCloud(30f, 45f, 64f, 39f, foreground = false)
-                        drawCloud(18f, 57f, 68f, 37f, foreground = true)
-                    }
-                    WeatherSymbolArtwork.DRIZZLE -> drawPrecipitation(drops = 3, small = true)
-                    WeatherSymbolArtwork.RAIN -> drawPrecipitation(drops = 3)
-                    WeatherSymbolArtwork.HEAVY_RAIN -> drawPrecipitation(drops = 5, heavy = true)
-                    WeatherSymbolArtwork.RAIN_SHOWERS -> drawPrecipitation(drops = 3, sun = true)
-                    WeatherSymbolArtwork.FREEZING_DRIZZLE -> drawPrecipitation(drops = 2, small = true, freezing = true)
-                    WeatherSymbolArtwork.FREEZING_RAIN -> drawPrecipitation(drops = 2, freezing = true)
-                    WeatherSymbolArtwork.ICE_PELLETS -> drawPrecipitation(pellets = true)
-                    WeatherSymbolArtwork.HAIL -> drawPrecipitation(hail = true)
-                    WeatherSymbolArtwork.FLURRIES_SNOW_GRAINS -> drawFrozenPrecipitation(flurries = true)
-                    WeatherSymbolArtwork.SNOW -> drawFrozenPrecipitation(snowflakes = 2)
-                    WeatherSymbolArtwork.HEAVY_SNOW -> drawFrozenPrecipitation(snowflakes = 3, heavy = true)
-                    WeatherSymbolArtwork.SNOW_SHOWERS -> drawFrozenPrecipitation(snowflakes = 3, sun = true)
-                    WeatherSymbolArtwork.RAIN_AND_SNOW -> drawFrozenPrecipitation(rain = 2, snowflakes = 1)
-                    WeatherSymbolArtwork.WINTRY_MIX -> drawFrozenPrecipitation(rain = 1, snowflakes = 1, pellets = true)
-                    WeatherSymbolArtwork.GRAUPEL -> drawFrozenPrecipitation(graupel = true)
-                    WeatherSymbolArtwork.ICE_CRYSTALS -> drawFrozenPrecipitation(crystalsOnly = true)
-                    WeatherSymbolArtwork.MIST -> drawVisibility(0)
-                    WeatherSymbolArtwork.FOG -> drawVisibility(1)
-                    WeatherSymbolArtwork.FREEZING_FOG -> drawVisibility(2)
-                    WeatherSymbolArtwork.HAZE_SMOKE -> drawVisibility(3)
-                    WeatherSymbolArtwork.DUST_SAND_ASH -> drawVisibility(4)
-                    WeatherSymbolArtwork.WINDY_GUSTY -> drawWind(0)
-                    WeatherSymbolArtwork.BLOWING_SNOW -> drawWind(1)
-                    WeatherSymbolArtwork.BLIZZARD -> drawWind(2)
-                    WeatherSymbolArtwork.THUNDERSTORM -> drawThunderstorm()
-                    WeatherSymbolArtwork.THUNDERSTORM_WITH_RAIN -> drawThunderstorm(precipitation = 1)
-                    WeatherSymbolArtwork.THUNDERSTORM_WITH_HAIL -> drawThunderstorm(precipitation = 2)
-                    WeatherSymbolArtwork.THUNDERSTORM_WITH_SNOW -> drawThunderstorm(precipitation = 3)
-                    WeatherSymbolArtwork.SQUALL -> drawSquall()
-                    WeatherSymbolArtwork.TROPICAL_CYCLONE -> drawTropicalCyclone()
-                    WeatherSymbolArtwork.TORNADO_FUNNEL -> drawTornadoFunnel()
-                    WeatherSymbolArtwork.CONDITION_UNAVAILABLE -> drawUnavailableCondition()
-                    WeatherSymbolArtwork.DRY_THUNDERSTORM -> drawDryThunderstorm()
-                    WeatherSymbolArtwork.TROPICAL_STORM -> drawTropicalStorm()
-                    WeatherSymbolArtwork.WATERSPOUT -> drawWaterspout()
-                    WeatherSymbolArtwork.FROST -> drawFrost()
-                    WeatherSymbolArtwork.EXTREME_HEAT -> drawExtremeHeat()
-                    WeatherSymbolArtwork.EXTREME_COLD -> drawExtremeCold()
-                    WeatherSymbolArtwork.DUST_SANDSTORM -> drawDustSandstorm()
-                    WeatherSymbolArtwork.VOLCANIC_ASH -> drawVolcanicAsh()
+        drawWeatherSymbol(symbol, Offset(size.width / 2f, size.height / 2f), min(size.width, size.height))
+    }
+}
+
+/** Draw the same catalog artwork inside a timeline or a standalone symbol canvas. */
+fun DrawScope.drawWeatherSymbol(symbol: WeatherSymbolId, center: Offset, diameter: Float) {
+    val unit = diameter / 100f
+    val left = center.x - diameter / 2f
+    val top = center.y - diameter / 2f
+    translate(left, top) {
+        scale(unit, unit, pivot = Offset.Zero) {
+            when (WeatherSymbolCatalog.resolve(symbol).artwork) {
+                WeatherSymbolArtwork.SUN -> drawSun(50f, 48f, 22f)
+                WeatherSymbolArtwork.MOON -> {
+                    drawStars(listOf(Offset(20f, 29f), Offset(43f, 15f), Offset(74f, 34f), Offset(27f, 59f)))
+                    drawMoon(53f, 49f, 25f)
                 }
+                WeatherSymbolArtwork.MOSTLY_SUNNY -> {
+                    drawSun(35f, 37f, 19f)
+                    drawCloud(28f, 43f, 62f, 40f)
+                }
+                WeatherSymbolArtwork.MOSTLY_CLEAR_NIGHT -> {
+                    drawStars(listOf(Offset(17f, 26f), Offset(76f, 24f), Offset(83f, 51f)))
+                    drawMoon(37f, 37f, 21f)
+                    drawCloud(34f, 54f, 55f, 31f)
+                }
+                WeatherSymbolArtwork.PARTLY_SUNNY_CLOUDY -> {
+                    drawSun(32f, 35f, 22f)
+                    drawCloud(25f, 44f, 70f, 43f)
+                    drawCloud(57f, 59f, 31f, 23f, foreground = true)
+                }
+                WeatherSymbolArtwork.PARTLY_CLOUDY_NIGHT -> {
+                    drawStars(listOf(Offset(15f, 26f), Offset(78f, 24f), Offset(84f, 51f)))
+                    drawMoon(34f, 35f, 23f)
+                    drawCloud(23f, 46f, 70f, 42f)
+                }
+                WeatherSymbolArtwork.MOSTLY_CLOUDY -> {
+                    drawCloud(8f, 42f, 67f, 40f, foreground = false)
+                    drawCloud(31f, 53f, 63f, 38f, foreground = true)
+                }
+                WeatherSymbolArtwork.CLOUDY_OVERCAST -> {
+                    drawCloud(8f, 42f, 64f, 38f, foreground = false)
+                    drawCloud(30f, 45f, 64f, 39f, foreground = false)
+                    drawCloud(18f, 57f, 68f, 37f, foreground = true)
+                }
+                WeatherSymbolArtwork.DRIZZLE -> drawPrecipitation(drops = 3, small = true)
+                WeatherSymbolArtwork.RAIN -> drawPrecipitation(drops = 3)
+                WeatherSymbolArtwork.HEAVY_RAIN -> drawPrecipitation(drops = 5, heavy = true)
+                WeatherSymbolArtwork.RAIN_SHOWERS -> drawPrecipitation(drops = 3, sun = true)
+                WeatherSymbolArtwork.FREEZING_DRIZZLE -> drawPrecipitation(drops = 2, small = true, freezing = true)
+                WeatherSymbolArtwork.FREEZING_RAIN -> drawPrecipitation(drops = 2, freezing = true)
+                WeatherSymbolArtwork.ICE_PELLETS -> drawPrecipitation(pellets = true)
+                WeatherSymbolArtwork.HAIL -> drawPrecipitation(hail = true)
+                WeatherSymbolArtwork.FLURRIES_SNOW_GRAINS -> drawFrozenPrecipitation(flurries = true)
+                WeatherSymbolArtwork.SNOW -> drawFrozenPrecipitation(snowflakes = 2)
+                WeatherSymbolArtwork.HEAVY_SNOW -> drawFrozenPrecipitation(snowflakes = 3, heavy = true)
+                WeatherSymbolArtwork.SNOW_SHOWERS -> drawFrozenPrecipitation(snowflakes = 3, sun = true)
+                WeatherSymbolArtwork.RAIN_AND_SNOW -> drawFrozenPrecipitation(rain = 2, snowflakes = 1)
+                WeatherSymbolArtwork.WINTRY_MIX -> drawFrozenPrecipitation(rain = 1, snowflakes = 1, pellets = true)
+                WeatherSymbolArtwork.GRAUPEL -> drawFrozenPrecipitation(graupel = true)
+                WeatherSymbolArtwork.ICE_CRYSTALS -> drawFrozenPrecipitation(crystalsOnly = true)
+                WeatherSymbolArtwork.MIST -> drawVisibility(0)
+                WeatherSymbolArtwork.FOG -> drawVisibility(1)
+                WeatherSymbolArtwork.FREEZING_FOG -> drawVisibility(2)
+                WeatherSymbolArtwork.HAZE_SMOKE -> drawVisibility(3)
+                WeatherSymbolArtwork.DUST_SAND_ASH -> drawVisibility(4)
+                WeatherSymbolArtwork.WINDY_GUSTY -> drawWind(0)
+                WeatherSymbolArtwork.BLOWING_SNOW -> drawWind(1)
+                WeatherSymbolArtwork.BLIZZARD -> drawWind(2)
+                WeatherSymbolArtwork.THUNDERSTORM -> drawThunderstorm()
+                WeatherSymbolArtwork.THUNDERSTORM_WITH_RAIN -> drawThunderstorm(precipitation = 1)
+                WeatherSymbolArtwork.THUNDERSTORM_WITH_HAIL -> drawThunderstorm(precipitation = 2)
+                WeatherSymbolArtwork.THUNDERSTORM_WITH_SNOW -> drawThunderstorm(precipitation = 3)
+                WeatherSymbolArtwork.SQUALL -> drawSquall()
+                WeatherSymbolArtwork.TROPICAL_CYCLONE -> drawTropicalCyclone()
+                WeatherSymbolArtwork.TORNADO_FUNNEL -> drawTornadoFunnel()
+                WeatherSymbolArtwork.CONDITION_UNAVAILABLE -> drawUnavailableCondition()
+                WeatherSymbolArtwork.DRY_THUNDERSTORM -> drawDryThunderstorm()
+                WeatherSymbolArtwork.TROPICAL_STORM -> drawTropicalStorm()
+                WeatherSymbolArtwork.WATERSPOUT -> drawWaterspout()
+                WeatherSymbolArtwork.FROST -> drawFrost()
+                WeatherSymbolArtwork.EXTREME_HEAT -> drawExtremeHeat()
+                WeatherSymbolArtwork.EXTREME_COLD -> drawExtremeCold()
+                WeatherSymbolArtwork.DUST_SANDSTORM -> drawDustSandstorm()
+                WeatherSymbolArtwork.VOLCANIC_ASH -> drawVolcanicAsh()
             }
         }
     }
