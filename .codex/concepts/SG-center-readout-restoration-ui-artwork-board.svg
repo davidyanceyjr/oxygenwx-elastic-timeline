@@ -1,0 +1,62 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="820" viewBox="0 0 1200 820">
+  <defs>
+    <linearGradient id="sky" x2="0" y2="1">
+      <stop offset="0" stop-color="#213752"/>
+      <stop offset="1" stop-color="#091a2c"/>
+    </linearGradient>
+    <style>
+      .title{font:700 26px sans-serif;fill:#10243a}.sub{font:15px sans-serif;fill:#40546a}
+      .head{font:700 15px sans-serif;fill:#213752;letter-spacing:1px}.screenTitle{font:600 20px sans-serif;fill:#fff}
+      .temp{font:300 76px sans-serif;fill:#fff}.condition{font:600 19px sans-serif;fill:#eef4f8}
+      .facts{font:15px sans-serif;fill:#eef4f8}.pill{font:600 16px sans-serif;fill:#ffe5a6}
+      .note{font:15px sans-serif;fill:#30465e}.small{font:13px sans-serif;fill:#52677c}
+      .rule{stroke:#8094a8;stroke-width:1}.accent{fill:#996b05;font-weight:700}
+    </style>
+  </defs>
+  <rect width="1200" height="820" fill="#edf2f6"/>
+  <text x="48" y="52" class="title">SG · Restore the previous center readout</text>
+  <text x="48" y="82" class="sub">UI artwork board · owner approved 2026-11-06 · installed evidence still required</text>
+  <text x="48" y="112" class="sub">Late-hour source behavior stays; remove the new grouped attribution row from the visible center stack.</text>
+
+  <g transform="translate(48 145)">
+    <text x="0" y="0" class="head">A · SUNDAY 11:36 PM · RESTORED READOUT</text>
+    <rect x="0" y="24" width="530" height="570" rx="18" fill="url(#sky)"/>
+    <text x="265" y="77" text-anchor="middle" class="screenTitle">Florence</text>
+    <text x="265" y="178" text-anchor="middle" class="temp">47°  ☁</text>
+    <text x="265" y="219" text-anchor="middle" class="condition">Cloudy or overcast</text>
+    <line x1="56" y1="237" x2="474" y2="237" class="rule" opacity=".42"/>
+    <text x="265" y="270" text-anchor="middle" class="facts">SUN ↑ 6:18 AM   ↓ 4:50 PM</text>
+    <text x="265" y="298" text-anchor="middle" class="facts">MOON ↑ 5:45 AM   ↓ 4:11 PM</text>
+    <text x="265" y="326" text-anchor="middle" class="facts">HIGH 64°   /   LOW 38°</text>
+    <text x="50" y="388" class="facts">☂ 0%</text>
+    <text x="380" y="388" class="facts">↖ 4 mph</text>
+    <line x1="0" y1="490" x2="530" y2="490" stroke="#e7eef5" opacity=".45"/>
+    <line x1="265" y1="467" x2="265" y2="520" stroke="#ffda78" stroke-width="4"/>
+    <circle cx="265" cy="490" r="6" fill="#ffda78"/>
+    <rect x="198" y="532" width="134" height="42" rx="21" fill="#21364b"/>
+    <text x="265" y="559" text-anchor="middle" class="pill">11:36 PM</text>
+  </g>
+
+  <g transform="translate(620 145)">
+    <text x="0" y="0" class="head">B · MIDNIGHT · SAME HIERARCHY</text>
+    <rect x="0" y="24" width="530" height="570" rx="18" fill="url(#sky)"/>
+    <text x="265" y="77" text-anchor="middle" class="screenTitle">Florence</text>
+    <text x="265" y="178" text-anchor="middle" class="temp">46°  ☾</text>
+    <text x="265" y="219" text-anchor="middle" class="condition">Clear night</text>
+    <line x1="56" y1="237" x2="474" y2="237" class="rule" opacity=".42"/>
+    <text x="265" y="270" text-anchor="middle" class="facts">SUN ↑ 6:18 AM   ↓ 4:50 PM</text>
+    <text x="265" y="298" text-anchor="middle" class="facts">MOON ↑ 5:45 AM   ↓ 4:11 PM</text>
+    <text x="265" y="326" text-anchor="middle" class="facts">HIGH 67°   /   LOW 42°</text>
+    <text x="50" y="388" class="facts">☂ 0%</text>
+    <text x="380" y="388" class="facts">↑ 4 mph</text>
+    <line x1="0" y1="490" x2="530" y2="490" stroke="#e7eef5" opacity=".45"/>
+    <line x1="265" y1="467" x2="265" y2="520" stroke="#ffda78" stroke-width="4"/>
+    <circle cx="265" cy="490" r="6" fill="#ffda78"/>
+    <rect x="198" y="532" width="134" height="42" rx="21" fill="#21364b"/>
+    <text x="265" y="559" text-anchor="middle" class="pill">12:00 AM</text>
+  </g>
+
+  <rect x="48" y="770" width="14" height="14" rx="3" fill="#ffda78"/>
+  <text x="72" y="782" class="note"><tspan class="accent">Keep:</tspan> exact selected time in the pill; source and selected times in timeline semantics and the fact browser.</text>
+  <text x="48" y="808" class="small">Do not show a grouped source-attribution row between condition and solar facts. Existing carried-condition disclosure remains unchanged.</text>
+</svg>

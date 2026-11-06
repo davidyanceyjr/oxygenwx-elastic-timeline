@@ -5,6 +5,7 @@ import com.oxygen.weather.timeline.data.catalog.AccumulatedSnowfallCentimeters
 import com.oxygen.weather.timeline.data.catalog.AccumulationInterval
 import com.oxygen.weather.timeline.data.catalog.CanonicalCatalog
 import com.oxygen.weather.timeline.data.catalog.CanonicalWeatherFacts
+import com.oxygen.weather.timeline.data.catalog.CatalogDay
 import com.oxygen.weather.timeline.data.catalog.CatalogField
 import com.oxygen.weather.timeline.data.catalog.CatalogWindow
 import com.oxygen.weather.timeline.data.catalog.ExpectedFieldSupport
@@ -134,7 +135,7 @@ class SemanticScenePlan internal constructor(
 }
 
 object SemanticSceneGenerator {
-    const val VERSION = "sg9-typed-selected-scene-v1"
+    const val VERSION = "sg9-typed-selected-scene-v2"
 
     fun generate(catalog: CanonicalCatalog, window: CatalogWindow, start: Instant, end: Instant): SemanticScenePlan {
         require(start < end && start >= window.startInclusive && end <= window.endExclusive)
@@ -214,6 +215,31 @@ private val CARRIED_CONDITIONS = setOf(
     WeatherCondition.SNOW,
 )
 
+/** Build the shared SG.1 cell for one field's expected point slot. */
+internal fun representativeCellForExpectedPoint(
+    day: CatalogDay,
+    expected: List<Instant>,
+    index: Int,
+    start: Instant,
+    end: Instant,
+    directlySupplied: Boolean,
+): RepresentativeCell? {
+    val slot = expected[index]
+    val left = expected.getOrNull(index - 1)?.takeIf { slot.epochSecond - it.epochSecond == 3600L }
+    val right = expected.getOrNull(index + 1)?.takeIf { it.epochSecond - slot.epochSecond == 3600L }
+    if (left == null && right == null) return null
+
+    val from = left?.plusSeconds(1800) ?: slot.minusSeconds(1800)
+    val to = when {
+        right != null -> right.minusSeconds(1800)
+        index == expected.lastIndex && directlySupplied && left != null -> day.localEnd
+        else -> slot.plusSeconds(1800)
+    }
+    val clippedStart = maxOf(from, start, day.localStart)
+    val clippedEnd = minOf(to, end, day.localEnd)
+    return if (clippedStart < clippedEnd) RepresentativeCell(clippedStart, clippedEnd) else null
+}
+
 private fun <T> pointTrack(
     window: CatalogWindow,
     start: Instant,
@@ -231,23 +257,27 @@ private fun <T> pointTrack(
             val previousIndex = (index - 1 downTo 0).takeWhile { offset ->
                 expected[offset + 1].epochSecond - expected[offset].epochSecond == 3600L
             }.firstOrNull { offset -> day.facts.any { it.validTime == expected[offset] } }
-            previousIndex?.let { offset ->
+            val nextIndex = (index + 1..expected.lastIndex).takeWhile { offset ->
+                expected[offset].epochSecond - expected[offset - 1].epochSecond == 3600L
+            }.firstOrNull { offset -> day.facts.any { it.validTime == expected[offset] } }
+            val previousValue = previousIndex?.let { offset ->
                 val previousSlot = expected[offset]
                 val previousValue = day.facts.firstOrNull { it.validTime == previousSlot }?.let(valueOf)
-                previousValue?.takeIf(carryForward)?.let { previousSlot to it }
+                previousValue?.takeIf(carryForward)
             }
+            val nextValue = nextIndex?.let { offset ->
+                val nextSlot = expected[offset]
+                day.facts.firstOrNull { it.validTime == nextSlot }?.let(valueOf)?.takeIf(carryForward)
+            }
+            if (previousValue != null && nextValue != null) {
+                expected[requireNotNull(previousIndex)] to previousValue
+            } else null
         } else null
         val value = fact?.let(valueOf) ?: carried?.second
-        val left = expected.getOrNull(index - 1)?.takeIf { slot.epochSecond - it.epochSecond == 3600L }
-        val right = expected.getOrNull(index + 1)?.takeIf { it.epochSecond - slot.epochSecond == 3600L }
-        val cell = if (left == null && right == null) null else {
-            val from = left?.plusSeconds(1800) ?: slot.minusSeconds(1800)
-            val to = right?.minusSeconds(1800) ?: slot.plusSeconds(1800)
-            val clippedStart = maxOf(from, start, day.localStart)
-            val clippedEnd = minOf(to, end, day.localEnd)
-            if (clippedStart < clippedEnd) RepresentativeCell(clippedStart, clippedEnd) else null
-        }
         val directlySupplied = fact?.let(valueOf)
+        val cell = representativeCellForExpectedPoint(
+            day, expected, index, start, end, directlySupplied != null,
+        )
         ScenePoint(
             expectedSlot = slot,
             sourceValidTime = carried?.first ?: slot.takeIf { directlySupplied != null },

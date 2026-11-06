@@ -438,10 +438,17 @@ private fun CatalogForecastTimeline(
     Canvas(
         modifier.fillMaxWidth().height(148.dp).testTag("catalogTimeline")
             .semantics {
+                val factTimeDescription = when {
+                    view.conditionSourceDisclosure != null && view.sourceTimeDisclosure != null ->
+                        "${view.conditionSourceDisclosure}; ${view.sourceTimeDisclosure}"
+                    view.conditionSourceDisclosure != null -> view.conditionSourceDisclosure
+                    view.sourceTimeDisclosure != null -> view.sourceTimeDisclosure
+                    view.factTimeLabel != null -> "Fact sample ${view.factTimeLabel}"
+                    else -> "No hourly fact for selected hour"
+                }
                 contentDescription = "${view.meaning} timeline. Selected ${view.selectedTimeLabel}. " +
                     "${view.temperature ?: "Temperature unavailable"}; ${view.condition ?: "condition unavailable"}. " +
-                    "${view.factTimeLabel?.let { if (it.startsWith("Condition from ")) it else "Fact sample $it" }
-                        ?: "No hourly fact for selected hour"}. Activate to browse."
+                    "$factTimeDescription. Activate to browse."
                 role = Role.Button
                 stateDescription = if (precision) "Hourly scale" else "Daily scale"
                 onClick(label = "Browse forecast values") { latestBrowse(); true }

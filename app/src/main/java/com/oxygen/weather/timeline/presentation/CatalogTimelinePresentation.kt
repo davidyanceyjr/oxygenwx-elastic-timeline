@@ -4,6 +4,7 @@ import com.oxygen.weather.timeline.data.PrecipitationAmount
 import com.oxygen.weather.timeline.data.SkyCondition
 import com.oxygen.weather.timeline.data.catalog.ActiveCatalogSelection
 import com.oxygen.weather.timeline.data.catalog.CatalogActivationState
+import com.oxygen.weather.timeline.data.catalog.CanonicalWeatherFacts
 import com.oxygen.weather.timeline.data.catalog.CatalogField
 import com.oxygen.weather.timeline.data.catalog.CatalogWindow
 import com.oxygen.weather.timeline.data.catalog.CatalogWindowResult
@@ -21,9 +22,11 @@ import com.oxygen.weather.timeline.presentation.scene.CityPrecipitation
 import com.oxygen.weather.timeline.presentation.scene.FirstCityComposition
 import com.oxygen.weather.timeline.presentation.scene.FirstCityTheme
 import com.oxygen.weather.timeline.presentation.scene.SceneEvidence
+import com.oxygen.weather.timeline.presentation.scene.RepresentativeCell
 import com.oxygen.weather.timeline.presentation.scene.SceneReading
 import com.oxygen.weather.timeline.presentation.scene.SemanticSceneGenerator
 import com.oxygen.weather.timeline.presentation.scene.SemanticScenePlan
+import com.oxygen.weather.timeline.presentation.scene.representativeCellForExpectedPoint
 import java.time.Instant
 import java.time.LocalDate
 import java.time.ZoneId
@@ -47,6 +50,12 @@ data class CatalogDayView(
     val weatherSymbolId: WeatherSymbolId? = null,
 )
 
+private data class SupportedFieldPoint(
+    val expectedSlot: Instant,
+    val representativeCell: RepresentativeCell?,
+    val fact: CanonicalWeatherFacts?,
+)
+
 /** Values and labels that may cross into Compose. No recording or source fact is exposed. */
 data class CatalogTimelineView(
     val generation: Long,
@@ -58,6 +67,7 @@ data class CatalogTimelineView(
     val selectedTimeLabel: String,
     val factTimeLabel: String?,
     val conditionSourceDisclosure: String? = null,
+    val sourceTimeDisclosure: String? = null,
     val temperature: String?,
     val condition: String?,
     val weatherSymbolId: WeatherSymbolId? = null,
@@ -251,6 +261,35 @@ class CatalogTimelinePresenter(private val active: ActiveCatalogSelection) {
         CatalogField.VISIBILITY_KM -> visibilityKm != null
     }
 
+    /** Select a field's own supported point cell without borrowing another field's support. */
+    private fun pointFactAt(selected: Instant, field: CatalogField): CanonicalWeatherFacts? {
+        val day = window.days.firstOrNull { selected >= it.localStart && selected < it.localEnd } ?: return null
+        val expected = (day.expectedFieldSupport()[field] as? ExpectedFieldSupport.Points)
+            ?.instants?.sorted() ?: return null
+        val points = expected.mapIndexed { index, slot ->
+            val fact = day.facts.firstOrNull { it.validTime == slot }
+                ?.takeIf { it.hasValue(field) }
+            SupportedFieldPoint(
+                expectedSlot = slot,
+                representativeCell = representativeCellForExpectedPoint(
+                    day, expected, index, window.startInclusive, window.endExclusive,
+                    directlySupplied = fact != null,
+                ),
+                fact = fact,
+            )
+        }
+        val point = points.firstOrNull { it.expectedSlot == selected }
+            ?: points.firstOrNull { candidate ->
+                candidate.representativeCell?.endExclusive == selected && points.any {
+                    it.representativeCell?.startInclusive == selected
+                }
+            }
+            ?: points.firstOrNull { candidate ->
+                candidate.representativeCell?.let { selected >= it.startInclusive && selected < it.endExclusive } == true
+            }
+        return point?.fact
+    }
+
     private fun selectedInstant(state: CatalogActivationState): Instant =
         interval.clamp(checkNotNull(state.active).selectedInstant)
 
@@ -272,7 +311,6 @@ class CatalogTimelinePresenter(private val active: ActiveCatalogSelection) {
         val projected = CanonicalForecastProjection.project(catalog, window, selected, ForecastDisplayUnits.IMPERIAL,
             SelectedEventEvidence(sourceFact, sourceFact?.validTime,
                 sourceFact === conditionSourceFact && conditionEvidence?.evidence == SceneEvidence.EXPECTED_MISSING))
-        val fact = projected.factSample
         val conditionPoint = reading.conditions
         // Preserve the catalog text label selection exactly; scene category priorities are separate.
         val supportedCondition = conditionPoint?.value
@@ -281,13 +319,18 @@ class CatalogTimelinePresenter(private val active: ActiveCatalogSelection) {
             ?.takeIf { it in DISPLAY_CONDITIONS }
         val carried = conditionPoint?.takeIf { it.evidence == SceneEvidence.EXPECTED_MISSING &&
             it.value != null && it.sourceValidTime != null }
-        val displayFact = fact.takeIf { candidate ->
-            when {
-                conditionPoint == null -> candidate?.validTime == selected
-                conditionPoint.evidence == SceneEvidence.EXPECTED_MISSING ->
-                    candidate?.validTime == conditionPoint.expectedSlot
-                else -> true
-            }
+        val temperatureFact = pointFactAt(selected, CatalogField.TEMPERATURE_C)
+        val windSpeedFact = pointFactAt(selected, CatalogField.WIND_SPEED_KPH)
+        val windDirectionFact = pointFactAt(selected, CatalogField.WIND_DIRECTION_DEGREES)
+        val temperaturePresentation = temperatureFact?.let { source ->
+            CanonicalForecastProjection.project(
+                catalog, window, source.validTime, ForecastDisplayUnits.IMPERIAL,
+            ).factSample
+        }
+        val windPresentation = windSpeedFact?.let { source ->
+            CanonicalForecastProjection.project(
+                catalog, window, source.validTime, ForecastDisplayUnits.IMPERIAL,
+            ).factSample
         }
         val local = selected.atZone(zone)
         val sourceId = projected.productSegment?.sourceId ?: projected.provenance.sourceId ?: "Source unavailable"
@@ -309,6 +352,29 @@ class CatalogTimelinePresenter(private val active: ActiveCatalogSelection) {
         val conditionSourceDisclosure = carried?.let {
             "Condition from ${formatTime(requireNotNull(it.sourceValidTime))}; selected hour unavailable"
         }
+        val pointSources = buildList {
+            conditionPoint?.takeIf { it.evidence == SceneEvidence.SUPPLIED }
+                ?.sourceValidTime?.let { add("Scene" to it) }
+            projected.selectedEvent?.takeIf { !it.carried }?.sourceTime?.let { add("Condition event" to it) }
+            temperatureFact?.let { add("Temperature" to it.validTime) }
+            reading.precipitationChancePercent?.takeIf { it.evidence == SceneEvidence.PROBABILITY_ONLY }
+                ?.sourceValidTime?.let { add("Chance" to it) }
+            windSpeedFact?.let { add("Wind speed" to it.validTime) }
+            windDirectionFact?.let { add("Wind direction" to it.validTime) }
+        }.distinct()
+        val selectedSourceLabel = selected.atZone(zone).format(DateTimeFormatter.ofPattern("h:mm a z", Locale.US))
+        val differingPointSources = pointSources.filter { (_, sourceTime) ->
+            formatTime(sourceTime) != selectedSourceLabel
+        }
+        val sourceTimeDisclosure = differingPointSources.takeIf { it.isNotEmpty() }?.let { sources ->
+            sources.groupBy { it.second }
+                .entries
+                .sortedBy { it.key }
+                .joinToString(" · ") { (sourceTime, fields) ->
+                    "${fields.joinToString(", ") { it.first }} from ${formatTime(sourceTime)}"
+                } + " · selected $selectedSourceLabel"
+        }
+        val sourceFactTime = pointSources.firstOrNull()?.second
         return CatalogTimelineView(
             generation = active.viewGeneration,
             selectedInstant = selected,
@@ -317,13 +383,15 @@ class CatalogTimelinePresenter(private val active: ActiveCatalogSelection) {
             days = days,
             heading = projected.selectedDate.format(dateFormat).uppercase(Locale.US),
             selectedTimeLabel = selected.atZone(zone).format(selectedTimeFormat),
-            factTimeLabel = conditionSourceDisclosure ?: displayFact?.let { formatTime(it.validTime) },
+            factTimeLabel = conditionSourceDisclosure ?: sourceFactTime?.let(::formatTime),
             conditionSourceDisclosure = conditionSourceDisclosure,
-            temperature = displayFact?.temperature?.let { "${it.displayValue.rounded()}°" },
+            sourceTimeDisclosure = sourceTimeDisclosure,
+            temperature = temperaturePresentation?.temperature?.let { "${it.displayValue.rounded()}°" },
             condition = projected.selectedEvent?.accessibleName
                 ?: if (sourceFact?.sourceWeatherCode != null) null else
                     supportedCondition?.name?.lowercase(Locale.US)?.replace('_', ' ')
-                        ?: conditionLabel(displayFact?.facts?.conditions).takeIf { conditionPoint?.evidence == SceneEvidence.SUPPLIED },
+                        ?: conditionLabel(conditionSourceFact?.conditions)
+                            .takeIf { conditionPoint?.evidence == SceneEvidence.SUPPLIED },
             weatherSymbolId = projected.selectedEvent?.symbolId,
             weatherSymbolName = projected.selectedEvent?.accessibleName,
             high = projected.dailyHigh.displayTemperature?.let { "${it.displayValue.rounded()}°" },
@@ -347,8 +415,8 @@ class CatalogTimelinePresenter(private val active: ActiveCatalogSelection) {
                         " · ${formatTime(bounds.start)}–${formatTime(bounds.end)}" } ?: " · ${formatTime(it.expectedSlot)}"))
                 }
             }.takeIf { it.isNotEmpty() }?.joinToString("\n"),
-            wind = displayFact?.windSpeed?.let { "${it.displayValue.rounded()} ${it.displayUnit}" },
-            windDirectionDegrees = displayFact?.facts?.windDirectionDegrees,
+            wind = windPresentation?.windSpeed?.let { "${it.displayValue.rounded()} ${it.displayUnit}" },
+            windDirectionDegrees = windDirectionFact?.windDirectionDegrees,
             meaning = projected.meaning.label(),
             source = sourceId,
             product = projected.productSegment?.productId ?: projected.provenance.productId ?: "Product unavailable",
