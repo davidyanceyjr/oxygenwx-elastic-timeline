@@ -43,6 +43,7 @@ data class CatalogDayView(
     val label: String,
     val details: String,
     val hours: List<CatalogHourView>,
+    val high: String? = null,
     val weatherSymbolId: WeatherSymbolId? = null,
 )
 
@@ -125,6 +126,7 @@ class CatalogTimelinePresenter(private val active: ActiveCatalogSelection) {
             date = day.date,
             overviewInstant = anchor,
             weatherSymbolId = overview.selectedEvent?.symbolId,
+            high = overview.dailyHigh.displayTemperature?.displayValue?.rounded()?.let { "$it°" },
             label = "${day.date.format(dateFormat)}, ${overview.meaning.label()}",
             details = buildString {
                 append("Coverage ${day.dayCoverage.name.lowercase(Locale.US)}")

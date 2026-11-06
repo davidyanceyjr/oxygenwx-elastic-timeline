@@ -1,0 +1,63 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1920" height="1220" viewBox="0 0 1920 1220">
+ <defs>
+  <linearGradient id="bg" x2="0" y2="1"><stop stop-color="#101b2d"/><stop offset="1" stop-color="#1a2c41"/></linearGradient>
+  <style>
+   text{font-family:Roboto,Arial,sans-serif;fill:#edf4fa}.muted{fill:#a9b9c8}.tiny{font-size:17px}.small{font-size:20px}.label{font-size:23px;font-weight:700}.head{font-size:36px;font-weight:700}.line{stroke:#8295a7;stroke-width:2}.mutedline{stroke:#d7ebf7;stroke-opacity:.28;stroke-width:2}.gold{fill:#ffe2a7}.symbol{fill:none;stroke:#eaf3fa;stroke-width:7;stroke-linecap:round;stroke-linejoin:round}
+  </style>
+ </defs>
+ <rect width="1920" height="1220" fill="url(#bg)"/>
+ <text x="48" y="58" class="head">P.2.21 · Daily high on the timeline</text>
+ <text x="50" y="98" class="small muted">Use bold, icon-scale daily high readouts beneath each event icon and below the divider.</text>
+ <rect x="1585" y="36" width="285" height="42" rx="21" fill="#f3d58d"/>
+ <text x="1727" y="64" text-anchor="middle" style="font-size:17px;font-weight:700;fill:#253246">OWNER APPROVED · 2026-11-06</text>
+
+ <text x="50" y="158" class="label">BEFORE / INSTALLED INPUT</text>
+ <text x="50" y="188" class="tiny muted">Pixel 3 XL · active catalog · daily scale · 2026-11-06</text>
+ <rect x="52" y="210" width="410" height="850" rx="20" fill="#0b1524" stroke="#35485e" stroke-width="2"/>
+ <image href="P.2.21-daily-high-before.png" x="58" y="216" width="398" height="838" preserveAspectRatio="xMidYMid meet"/>
+
+ <text x="520" y="158" class="label">DAILY / PROPOSED</text>
+ <text x="520" y="188" class="tiny muted">Bold date-matched high readouts beneath the divider</text>
+ <rect x="520" y="210" width="850" height="850" rx="20" fill="#0b1524" stroke="#35485e" stroke-width="2"/>
+ <rect x="555" y="275" width="780" height="410" rx="18" fill="#17283e" stroke="#31465f" stroke-width="2"/>
+ <text x="590" y="322" class="tiny muted">Forecast scene remains above this timeline band</text>
+ <text x="660" y="465" text-anchor="middle" class="small muted">THU</text>
+ <text x="820" y="465" text-anchor="middle" class="small muted">FRI</text>
+ <text x="980" y="465" text-anchor="middle" class="small gold" style="font-weight:700">SAT</text>
+ <text x="1140" y="465" text-anchor="middle" class="small muted">SUN</text>
+ <text x="1300" y="465" text-anchor="middle" class="small muted">MON</text>
+ <path d="M635 520c0-15 12-27 27-27 12 0 21 7 25 17 6-10 16-16 28-16 18 0 32 14 32 32 0 15-12 26-27 26h-57c-16 0-28-13-28-32z" class="symbol"/>
+ <circle cx="820" cy="520" r="25" class="symbol"/><path d="M820 480v-16m0 112v-16m40-40h16m-112 0h16m68-28 12-12m-80 80 12-12m56 0 12 12m-80-80 12 12" class="symbol"/>
+ <path d="M935 520c0-15 12-27 27-27 12 0 21 7 25 17 6-10 16-16 28-16 18 0 32 14 32 32 0 15-12 26-27 26h-57c-16 0-28-13-28-32z" class="symbol"/>
+ <path d="M1095 520c0-15 12-27 27-27 12 0 21 7 25 17 6-10 16-16 28-16 18 0 32 14 32 32 0 15-12 26-27 26h-57c-16 0-28-13-28-32z" class="symbol"/>
+ <circle cx="1300" cy="520" r="25" class="symbol"/><path d="M1300 480v-16m0 112v-16m40-40h16m-112 0h16m68-28 12-12m-80 80 12-12m56 0 12 12m-80-80 12 12" class="symbol"/>
+ <line x1="570" y1="590" x2="1320" y2="590" class="line"/>
+ <g stroke="#b7c5d2" stroke-opacity=".55" stroke-width="2"><path d="M660 578v24M820 578v24M980 578v24M1140 578v24M1300 578v24"/></g>
+ <line x1="980" y1="558" x2="980" y2="610" stroke="#ffe2a7" stroke-width="4"/><circle cx="980" cy="590" r="8" class="gold"/>
+ <g text-anchor="middle" font-weight="700"><text x="660" y="638"><tspan font-size="16">HI </tspan><tspan dx="7" font-size="44">58°</tspan></text><text x="820" y="638"><tspan font-size="16">HI </tspan><tspan dx="7" font-size="44">61°</tspan></text><text x="980" y="638" class="gold"><tspan font-size="16">HI </tspan><tspan dx="7" font-size="44">64°</tspan></text><text x="1140" y="638"><tspan font-size="16">HI </tspan><tspan dx="7" font-size="44">—</tspan></text><text x="1300" y="638"><tspan font-size="16">HI </tspan><tspan dx="7" font-size="44">67°</tspan></text></g>
+ <rect x="930" y="650" width="100" height="25" rx="12" fill="#26384d"/><text x="980" y="669" text-anchor="middle" class="tiny gold">2:19 PM</text>
+ <text x="565" y="745" class="label">Bold highs match icon scale and follow each date</text>
+ <text x="565" y="784" class="tiny muted">The numeric readout is bold and visually comparable to the icon above.</text>
+ <text x="565" y="818" class="tiny muted">Unavailable stays visible as HI —; never borrow or calculate a value.</text>
+ <text x="565" y="852" class="tiny muted">Keep the small HI marker; keep each readout within its date slot and clear of the time badge.</text>
+ <text x="565" y="886" class="tiny muted">The example values and symbols show placement, not forecast identity.</text>
+
+ <text x="1420" y="158" class="label">HOURLY / PRESERVED</text>
+ <text x="1420" y="188" class="tiny muted">No daily-high row in hourly scale</text>
+ <rect x="1420" y="210" width="450" height="850" rx="20" fill="#0b1524" stroke="#35485e" stroke-width="2"/>
+ <rect x="1450" y="275" width="390" height="410" rx="18" fill="#17283e" stroke="#31465f" stroke-width="2"/>
+ <text x="1480" y="322" class="tiny muted">Forecast scene stays above</text>
+ <g text-anchor="middle" class="tiny muted"><text x="1490" y="485">6a</text><text x="1580" y="485">9a</text><text x="1670" y="485">12p</text><text x="1760" y="485">3p</text></g>
+ <line x1="1470" y1="590" x2="1820" y2="590" class="line"/>
+ <g stroke="#b7c5d2" stroke-opacity=".55" stroke-width="2"><path d="M1490 578v24M1580 578v24M1670 578v24M1760 578v24"/></g>
+ <line x1="1670" y1="558" x2="1670" y2="625" stroke="#ffe2a7" stroke-width="4"/><circle cx="1670" cy="590" r="8" class="gold"/>
+ <rect x="1620" y="650" width="100" height="25" rx="12" fill="#26384d"/><text x="1670" y="669" text-anchor="middle" class="tiny gold">2:19 PM</text>
+ <text x="1455" y="745" class="label">Existing hourly view</text>
+ <text x="1455" y="784" class="tiny muted">Labels, ticks, divider, playhead and time badge remain.</text>
+ <text x="1455" y="818" class="tiny muted">Scrub and scale-toggle behavior remain unchanged.</text>
+
+ <line x1="48" y1="1100" x2="1872" y2="1100" stroke="#52677d"/>
+ <text x="52" y="1140" class="small"><tspan font-weight="700">BEHAVIOR</tspan><tspan class="muted" dx="12">Bold high readout is date-tied; its visual scale approaches the event icon above it.</tspan></text>
+ <text x="52" y="1174" class="small"><tspan font-weight="700">PRESERVE</tspan><tspan class="muted" dx="12">Existing event icons, date labels, divider, selected-time cue, facts and gestures.</tspan></text>
+ <text x="52" y="1205" class="tiny muted">Approved design input · before screenshot is installed input · proposed values are illustrative · installed acceptance is still required.</text>
+</svg>
