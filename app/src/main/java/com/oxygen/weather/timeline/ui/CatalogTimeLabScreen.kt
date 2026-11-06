@@ -349,6 +349,10 @@ private fun CatalogTimeLabScreenContent(
                 precision = precision,
                 onSelect = { onSelectInstant(it, view.generation) },
                 onSetPrecision = { precision = it },
+                onDailyDoubleTap = {
+                    onSelectInstant(it, view.generation)
+                    precision = true
+                },
                 onBrowse = { browserOpen = true },
             )
         }
@@ -415,6 +419,7 @@ private fun CatalogForecastTimeline(
     precision: Boolean,
     onSelect: (Instant) -> Unit,
     onSetPrecision: (Boolean) -> Unit,
+    onDailyDoubleTap: (Instant) -> Unit,
     onBrowse: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
@@ -432,6 +437,7 @@ private fun CatalogForecastTimeline(
     val latestAnimation by rememberUpdatedState(animation)
     val latestSelect by rememberUpdatedState(onSelect)
     val latestSetPrecision by rememberUpdatedState(onSetPrecision)
+    val latestDailyDoubleTap by rememberUpdatedState(onDailyDoubleTap)
     val latestBrowse by rememberUpdatedState(onBrowse)
     fun pixelsPerSecond(zoom: Float) =
         (compactDayPx / 24.0 + (expandedHourPx - compactDayPx / 24.0) * zoom) / 3600.0
@@ -480,7 +486,26 @@ private fun CatalogForecastTimeline(
                                         viewConfiguration.touchSlop,
                                     )
                                 ) {
-                                    latestSetPrecision(!latestPrecision)
+                                    if (latestPrecision) {
+                                        latestSetPrecision(false)
+                                    } else {
+                                        val logicalX = if (rtl) size.width - down.position.x
+                                            else down.position.x
+                                        val touched = InstantTimeAxis.instantAtXUnbounded(
+                                            logicalX.toDouble(), selected, size.width / 2.0,
+                                            pixelsPerSecond(latestAnimation),
+                                        )
+                                        val touchedDate = touched.atZone(view.zone).toLocalDate()
+                                        val requested = touchedDate.atTime(7, 0).atZone(view.zone).toInstant()
+                                        val inCatalog = view.days.any { it.date == touchedDate } &&
+                                            requested >= view.interval.startInclusive &&
+                                            requested <= view.interval.endInclusive
+                                        val target = if (inCatalog) requested else view.days.asSequence()
+                                            .map { it.date.atTime(7, 0).atZone(view.zone).toInstant() }
+                                            .first { it >= view.interval.startInclusive &&
+                                                it <= view.interval.endInclusive }
+                                        latestDailyDoubleTap(target)
+                                    }
                                 }
                             } else {
                                 doubleTapDetector.clear()

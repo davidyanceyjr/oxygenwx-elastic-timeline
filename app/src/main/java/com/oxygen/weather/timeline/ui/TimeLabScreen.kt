@@ -312,10 +312,16 @@ fun TimeLabScreen(
                         haptics.performHapticFeedback(HapticFeedbackType.LongPress)
                     }
                 },
+                onDailyDoubleTap = { hourOffset ->
+                    selectedHour = hourOffset.coerceIn(0.0, forecastSource.lastIndex.toDouble())
+                    focusDay = ElasticTimeAxis.dayIndex(selectedHour).coerceIn(0, forecastSource.days.lastIndex)
+                    precisionMode = true
+                    haptics.performHapticFeedback(HapticFeedbackType.LongPress)
+                },
                 onBrowseForecasts = { forecastBrowserOpen = true },
                 onGestureEnded = { wasPrecision ->
                     // Precision remains active after release. Daily drags settle at noon;
-                    // timeline taps are scale-only and do not select a time.
+                    // single timeline taps are no-ops.
                     if (!wasPrecision && !precisionMode) leavePrecision(false)
                 },
             )

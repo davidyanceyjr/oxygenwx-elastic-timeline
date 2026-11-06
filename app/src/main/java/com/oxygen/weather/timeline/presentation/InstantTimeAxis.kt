@@ -59,18 +59,29 @@ object InstantTimeAxis {
         pixelsPerSecond: Double,
         supported: SupportedTimeInterval,
     ): Instant {
+        return supported.clamp(
+            instantAtXUnbounded(x, supported.clamp(anchorInstant), anchorX, pixelsPerSecond),
+        )
+    }
+
+    /** Inverts the absolute-time projection without applying catalog bounds. */
+    fun instantAtXUnbounded(
+        x: Double,
+        anchorInstant: Instant,
+        anchorX: Double,
+        pixelsPerSecond: Double,
+    ): Instant {
         require(x.isFinite() && anchorX.isFinite())
         require(pixelsPerSecond.isFinite() && pixelsPerSecond > 0.0)
-        val anchor = supported.clamp(anchorInstant)
         val deltaNanos = ((x - anchorX) / pixelsPerSecond * NANOS_PER_SECOND).roundToLong()
         val target = try {
-            anchor.plusNanos(deltaNanos)
+            anchorInstant.plusNanos(deltaNanos)
         } catch (_: ArithmeticException) {
-            if (deltaNanos < 0) supported.startInclusive else supported.endInclusive
+            if (deltaNanos < 0) Instant.MIN else Instant.MAX
         } catch (_: DateTimeException) {
-            if (deltaNanos < 0) supported.startInclusive else supported.endInclusive
+            if (deltaNanos < 0) Instant.MIN else Instant.MAX
         }
-        return supported.clamp(target)
+        return target
     }
 
     /** Dragging the tape left (negative delta) advances the selected instant. */

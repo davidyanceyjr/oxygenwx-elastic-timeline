@@ -65,8 +65,9 @@ internal class TimelineDoubleTapDetector(
 
 /**
  * One gesture owner, not two competing recognizers.
- * Double-tap toggles scale without selecting its coordinate; drag moves the tape
- * beneath the fixed playhead. Single taps and holds do not select or change scale.
+ * Daily double-tap selects the completing tap's date at 7 AM before entering hourly
+ * scale. Hourly double-tap returns to daily while preserving selection. Drag moves
+ * the tape beneath the fixed playhead. Single taps and holds do nothing.
  * State always stores absolute hour offsets, never screen coordinates.
  */
 @Composable
@@ -77,6 +78,7 @@ fun ElasticForecastTimeline(
     expanded: Boolean,
     onSelectedHour: (Double) -> Unit,
     onTogglePrecision: () -> Unit,
+    onDailyDoubleTap: (Double) -> Unit,
     onBrowseForecasts: () -> Unit,
     onGestureEnded: (Boolean) -> Unit,
     modifier: Modifier = Modifier,
@@ -96,6 +98,7 @@ fun ElasticForecastTimeline(
     val latestAnimation by rememberUpdatedState(animation)
     val latestSetHour by rememberUpdatedState(onSelectedHour)
     val latestTogglePrecision by rememberUpdatedState(onTogglePrecision)
+    val latestDailyDoubleTap by rememberUpdatedState(onDailyDoubleTap)
     val latestBrowseForecasts by rememberUpdatedState(onBrowseForecasts)
     val latestEnded by rememberUpdatedState(onGestureEnded)
     val accessibleView = ForecastProjection.fromHourOffset(selectedHour, expanded, source)
@@ -159,7 +162,23 @@ fun ElasticForecastTimeline(
                                         touchSlop,
                                     )
                                 ) {
-                                    latestTogglePrecision()
+                                    if (latestExpanded) {
+                                        latestTogglePrecision()
+                                    } else {
+                                        val logicalX = if (isRtl) size.width - down.position.x
+                                            else down.position.x
+                                        val touchedHour = ElasticTimeAxis.hourAtX(
+                                            logicalX.toDouble(), latestSelected, size.width / 2.0,
+                                            null, compactDayPx, widthForHour(latestAnimation),
+                                        )
+                                        val touchedDay = floor(
+                                            touchedHour / ElasticTimeAxis.HOURS_PER_DAY,
+                                        ).toInt()
+                                        val targetDay = touchedDay.takeIf { it in source.days.indices } ?: 0
+                                        latestDailyDoubleTap(
+                                            targetDay * ElasticTimeAxis.HOURS_PER_DAY + 7.0,
+                                        )
+                                    }
                                 }
                             } else {
                                 doubleTapDetector.clear()
