@@ -1,0 +1,59 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1600" height="980" viewBox="0 0 1600 980">
+  <defs>
+    <style>
+      text{font-family:DejaVu Sans,Arial,sans-serif;fill:#f2f6fb}.title{font-size:34px;font-weight:700}.sub{font-size:18px;fill:#b8c9d9}.head{font-size:24px;font-weight:700}.body{font-size:20px}.small{font-size:17px;fill:#d3dfea}.accent{fill:#ffd17a}.muted{fill:#b8c9d9}.box{fill:#172e46;stroke:#6887a3;stroke-width:2}.rule{stroke:#6887a3;stroke-width:2}.arrow{stroke:#ffd17a;stroke-width:4;fill:none;marker-end:url(#tip)}
+    </style>
+    <marker id="tip" markerWidth="10" markerHeight="10" refX="8" refY="5" orient="auto"><path d="M0 0L10 5L0 10Z" fill="#ffd17a"/></marker>
+  </defs>
+  <rect width="1600" height="980" fill="#091929"/>
+  <text x="50" y="60" class="title">SG · Missing eleventh-hour data · behavior board</text>
+  <text x="50" y="91" class="sub">Draft for owner review · proposed source-honest rule · not approved implementation authority</text>
+
+  <rect x="50" y="135" width="1500" height="152" rx="14" class="box"/>
+  <text x="75" y="175" class="head">Observed Florence LIVE mismatch</text>
+  <text x="75" y="210" class="body">Sunday 11 PM source row: 7.8 °C · precipitation chance 0% · wind 6.3 km/h, 336°.</text>
+  <text x="75" y="243" class="body">Installed 11:36–11:49 PM readout showed unavailable values. Current final-hour scene cell ends at 11:30 PM.</text>
+
+  <text x="50" y="337" class="head">Proposed local-date boundary</text>
+  <line x1="95" y1="407" x2="1505" y2="407" class="rule"/>
+  <g class="body">
+    <line x1="120" y1="387" x2="120" y2="428" class="rule"/><text x="85" y="460">11:00</text>
+    <line x1="450" y1="387" x2="450" y2="428" class="rule"/><text x="414" y="460">11:29</text>
+    <line x1="690" y1="377" x2="690" y2="438" stroke="#ffd17a" stroke-width="4"/><text x="650" y="460" class="accent">11:30</text>
+    <line x1="915" y1="387" x2="915" y2="428" class="rule"/><text x="878" y="460">11:36</text>
+    <line x1="1230" y1="387" x2="1230" y2="428" class="rule"/><text x="1193" y="460">11:59</text>
+    <line x1="1480" y1="377" x2="1480" y2="438" stroke="#ffd17a" stroke-width="4"/><text x="1430" y="460" class="accent">12:00</text>
+  </g>
+  <path d="M120 399H1470" stroke="#ffd17a" stroke-width="11" opacity=".62"/>
+  <text x="180" y="378" class="small">Final supported 11 PM point represents its own field for display</text>
+  <text x="767" y="495" class="small">11 PM remains the disclosed source time; selected time stays exact</text>
+  <text x="1224" y="377" class="small">Exclusive midnight</text>
+
+  <rect x="50" y="545" width="470" height="280" rx="14" class="box"/>
+  <text x="75" y="585" class="head">At 11:36 and 11:59</text>
+  <text x="75" y="625" class="body">Use each supplied 11 PM field.</text>
+  <text x="75" y="661" class="body">Show its original source time.</text>
+  <text x="75" y="697" class="body">Do not claim a new observation</text>
+  <text x="75" y="731" class="body">or exact weather transition.</text>
+  <text x="75" y="786" class="small accent">Selected timestamp never moves.</text>
+
+  <rect x="565" y="545" width="470" height="280" rx="14" class="box"/>
+  <text x="590" y="585" class="head">Independent fields</text>
+  <text x="590" y="625" class="body">Missing condition → unknown scene.</text>
+  <text x="590" y="661" class="body">Supported temperature, chance,</text>
+  <text x="590" y="697" class="body">and wind stay visible.</text>
+  <text x="590" y="751" class="small">Absent/empty final field stays unavailable.</text>
+  <text x="590" y="786" class="small">No 10 PM or next-date substitution.</text>
+
+  <rect x="1080" y="545" width="470" height="280" rx="14" class="box"/>
+  <text x="1105" y="585" class="head">At local midnight</text>
+  <text x="1105" y="625" class="body">Switch to the next date.</text>
+  <text x="1105" y="661" class="body">Use its own supplied values.</text>
+  <text x="1105" y="697" class="body">Missing next-date values →</text>
+  <text x="1105" y="731" class="body">unavailable, never carried.</text>
+  <text x="1105" y="786" class="small accent">IANA local-date boundary applies.</text>
+
+  <text x="50" y="883" class="head">Owner decision needed</text>
+  <text x="50" y="918" class="body">Approve or revise the proposed 11 PM-to-midnight display association and source-time disclosure.</text>
+  <text x="50" y="950" class="small">Approval requires a matching SG.1 specification amendment. SG.4 interior missing-hour carry and accumulation intervals remain unchanged.</text>
+</svg>
