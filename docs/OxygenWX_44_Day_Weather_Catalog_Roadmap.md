@@ -1,20 +1,13 @@
-# OxygenWX 44-Day Weather Catalog Roadmap — Audit Record
+# OxygenWX 44-Day Weather Catalog Roadmap — Completed Audit Record
 
-The WX workstream from this source draft is now integrated into [`ROADMAP.md`](ROADMAP.md). This file records the pre-integration audit; `ROADMAP.md` is the canonical roadmap. The audit changed documentation and roadmap ordering only. No WX implementation or cycle has started.
+This file preserves the pre-integration audit of the WX source draft. The source workstream was integrated into [`ROADMAP.md`](ROADMAP.md). This audit is historical provenance, not an active roadmap.
 
-## Audit result
+## Audit outcomes
 
-- Reviewed all 28 WX leaves against [`ROADMAP_SPECIFICATION.md`](ROADMAP_SPECIFICATION.md). Each has a stable ID, one status, Objective/scope, Depends on, Exit, and Evidence fields. All dependency IDs resolve within the WX set, and the dependency graph has no cycles.
-- Corrected the draft's Evidence fields to identify the planned artifact, closeout, plan, and archived-plan paths. Chronological cycle IDs remain unassigned until each slice is planned.
-- Clarified WX.1's documentation-only boundary: the actual `scripts/dev.py` contract change belongs to WX.12.
-- Strengthened WX.14's time rule to request Unix instants and convert through the location's IANA timezone across DST. Open-Meteo documents that its request-time fixed UTC offset ignores DST changes within the requested range; it supports `past_days` 0–92 and up to 16 forecast days. The 30+14 request is within those parameter limits, while actual per-location coverage remains to be measured. [Forecast API documentation](https://open-meteo.com/en/docs)
-- Open-Meteo describes `past_days` as archived forecasts, and the Historical Forecast API as archived model forecasts. The draft correctly avoids labeling these as station observations. [Historical Forecast API](https://open-meteo.com/en/docs/historical-forecast-api)
-- Preserved the existing prototype authorities as controlling until WX.1 closes. WX.1 is now `NEXT`; ATM.8 is `PLANNED`, with an explicit return to ATM.8 after WX.28 and no artificial dependency edge.
+- Reviewed all 28 WX source-draft leaves against [`ROADMAP_SPECIFICATION.md`](ROADMAP_SPECIFICATION.md), checking stable IDs, required fields, dependency resolution, and cycles.
+- Aligned evidence fields with the plan, evidence, closeout, and archived-plan records used by the project.
+- Clarified WX.1's documentation-only boundary: the `scripts/dev.py` contract change belonged to WX.12.
+- Recorded the time-zone and provider-coverage considerations used in the source draft. Open-Meteo's request-time fixed UTC offset ignores DST changes within the requested range; its documented `past_days` and forecast limits were considered against the 30+14 request. Actual coverage was subsequently handled in bounded WX work. [Forecast API documentation](https://open-meteo.com/en/docs)
+- Preserved the distinction between archived forecasts and station observations. [Historical Forecast API](https://open-meteo.com/en/docs/historical-forecast-api)
 
-## Remaining planning checks
-
-Provider fields, product coverage, attribution/license terms, and actual 44-date completeness must be revalidated in the bounded WX.12–WX.14 plans. The audit does not claim provider acceptance, implementation evidence, or app behavior changes.
-
-## Follow-up test-scope audit
-
-The initial follow-up audit assigned broad installed experience checks to WX.29 and WX.28. That proposal was superseded by the owner decision recorded in [`ROADMAP.md`](ROADMAP.md#wx29--run-cross-app-experience-and-accessibility-suite--cancelled) on 2026-10-29: WX.29 is cancelled, checks remain focused within implementation slices, and a separate system-wide test roadmap for TalkBack, font scale, UI performance, persistence, and related coverage will be planned after the basic first-tier features work.
+Implementation outcomes, cycle IDs, acceptance, and evidence are recorded in the completed WX entries in [`ROADMAP.md`](ROADMAP.md).
