@@ -1,0 +1,133 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1920" height="1260" viewBox="0 0 1920 1260">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#102233"/><stop offset="1" stop-color="#17344a"/></linearGradient>
+    <marker id="arrow" markerWidth="12" markerHeight="12" refX="10" refY="6" orient="auto"><path d="M1,1 L11,6 L1,11 Z" fill="#83c9bf"/></marker>
+    <marker id="arrowGold" markerWidth="12" markerHeight="12" refX="10" refY="6" orient="auto"><path d="M1,1 L11,6 L1,11 Z" fill="#edc477"/></marker>
+    <style>
+      .title { font: 700 32px 'DejaVu Sans',sans-serif; fill:#edf4f7; }
+      .subtitle { font: 400 17px 'DejaVu Sans',sans-serif; fill:#b7cad5; }
+      .head { font: 700 17px 'DejaVu Sans',sans-serif; fill:#edf4f7; }
+      .body { font: 400 15px 'DejaVu Sans',sans-serif; fill:#d5e3ea; }
+      .small { font: 400 13px 'DejaVu Sans',sans-serif; fill:#b7cad5; }
+      .edge { font: 600 13px 'DejaVu Sans',sans-serif; fill:#d5e3ea; }
+      .node { fill:#1b394b; stroke:#64869a; stroke-width:2; }
+      .entry { fill:#24536a; stroke:#83aabe; stroke-width:2; }
+      .flow { fill:#214159; stroke:#64869a; stroke-width:2; }
+      .decision { fill:#5a4528; stroke:#edc477; stroke-width:2; }
+      .success { fill:#20483f; stroke:#7ad3b8; stroke-width:2; }
+      .arrow { fill:none; stroke:#83c9bf; stroke-width:2.5; marker-end:url(#arrow); }
+      .arrowGold { fill:none; stroke:#edc477; stroke-width:2.5; marker-end:url(#arrowGold); }
+      .line { fill:none; stroke:#83c9bf; stroke-width:2.5; }
+    </style>
+  </defs>
+  <rect width="1920" height="1260" fill="url(#bg)"/>
+  <text x="64" y="68" class="title">WX.29 · Location search and selection</text>
+  <text x="64" y="101" class="subtitle">Behavior board · draft awaiting product-owner approval · main appearance governed by the approved UI artwork</text>
+
+  <!-- Entry / exit -->
+  <rect x="70" y="145" width="390" height="160" rx="20" class="entry"/>
+  <text x="98" y="184" class="head">MAIN TIMELINE</text>
+  <text x="98" y="220" class="body">Current location and selected</text>
+  <text x="98" y="246" class="body">forecast time remain authoritative.</text>
+  <text x="98" y="280" class="small">Tap the location control beside the city.</text>
+
+  <rect x="530" y="174" width="282" height="104" rx="18" class="flow"/>
+  <text x="671" y="212" text-anchor="middle" class="head">OPEN LOCATION SEARCH</text>
+  <text x="671" y="241" text-anchor="middle" class="body">Refresh saved list + selected ID</text>
+  <text x="671" y="263" text-anchor="middle" class="small">No search or device location request</text>
+  <path d="M460 225 L522 225" class="arrow"/>
+  <text x="491" y="210" text-anchor="middle" class="edge">tap</text>
+
+  <rect x="884" y="145" width="510" height="160" rx="20" class="entry"/>
+  <text x="912" y="184" class="head">FULL-SCREEN LOCATION VIEW</text>
+  <text x="912" y="220" class="body">Use the owner-approved location-search artwork.</text>
+  <text x="912" y="247" class="body">Show current/saved distinction and readable city context.</text>
+  <text x="912" y="279" class="small">Florence / “flor” are sample content, not fixed results.</text>
+  <path d="M812 225 L876 225" class="arrow"/>
+  <text x="844" y="210" text-anchor="middle" class="edge">open</text>
+
+  <rect x="1470" y="145" width="380" height="160" rx="20" class="success"/>
+  <text x="1498" y="184" class="head">EXIT WITHOUT COMMIT</text>
+  <text x="1498" y="220" class="body">System Back or an approved exit returns</text>
+  <text x="1498" y="246" class="body">to the same location and selected time.</text>
+  <text x="1498" y="280" class="small">Full-screen art does not imply scrim dismissal.</text>
+  <path d="M1394 225 L1462 225" class="arrow"/>
+  <text x="1428" y="210" text-anchor="middle" class="edge">back</text>
+  <path d="M1660 305 L1660 325 L265 325 L265 313" class="arrow"/>
+  <text x="964" y="319" text-anchor="middle" class="edge">return to unchanged main state</text>
+
+  <!-- Search flow -->
+  <text x="70" y="374" class="section" style="font:700 19px 'DejaVu Sans',sans-serif;fill:#8be7dc;letter-spacing:1px">MANUAL SEARCH</text>
+  <rect x="70" y="405" width="310" height="138" rx="18" class="flow"/>
+  <text x="96" y="446" class="head">EDIT QUERY</text>
+  <text x="96" y="480" class="body">Tap magnifier / keyboard Search to submit.</text>
+  <text x="96" y="508" class="small">Empty trimmed query stays idle.</text>
+
+  <rect x="430" y="405" width="310" height="138" rx="18" class="flow"/>
+  <text x="456" y="446" class="head">SUBMIT QUERY</text>
+  <text x="456" y="480" class="body">Non-empty query starts provider search.</text>
+  <text x="456" y="508" class="small">Keep submitted query visible.</text>
+
+  <rect x="790" y="405" width="310" height="138" rx="18" class="flow"/>
+  <text x="816" y="446" class="head">LOADING</text>
+  <text x="816" y="480" class="body">Show search progress.</text>
+  <text x="816" y="508" class="small">Edit/new request/dismiss invalidates old work.</text>
+
+  <rect x="1150" y="405" width="330" height="138" rx="18" class="decision"/>
+  <text x="1176" y="446" class="head">SEARCH OUTCOME</text>
+  <text x="1176" y="480" class="body">Matches · No matches · Failure</text>
+  <text x="1176" y="508" class="small">No-match/failure supports edit or retry.</text>
+
+  <rect x="1530" y="405" width="320" height="138" rx="18" class="success"/>
+  <text x="1556" y="446" class="head">CHOOSE A RESULT</text>
+  <text x="1556" y="480" class="body">Save if needed, then persist selection.</text>
+  <text x="1556" y="508" class="small">Return to main; load that location.</text>
+  <text x="1556" y="531" class="small">Keep identity, context, and attribution.</text>
+
+  <path d="M380 474 L422 474" class="arrow"/>
+  <text x="401" y="459" text-anchor="middle" class="edge">submit</text>
+  <path d="M740 474 L782 474" class="arrow"/>
+  <path d="M1100 474 L1142 474" class="arrow"/>
+  <path d="M1480 474 L1522 474" class="arrow"/>
+  <path d="M1138 305 L1138 340 L40 340 L40 474 L62 474" class="arrow"/>
+  <text x="585" y="332" text-anchor="middle" class="edge">search field</text>
+  <text x="1200" y="568" class="small">Retry or edit returns to the query field; a changed request owns the visible state.</text>
+
+  <!-- Saved locations / removal -->
+  <text x="70" y="622" style="font:700 19px 'DejaVu Sans',sans-serif;fill:#8be7dc;letter-spacing:1px">SAVED LOCATIONS</text>
+  <rect x="70" y="653" width="430" height="154" rx="18" class="flow"/>
+  <text x="96" y="695" class="head">SAVED LIST</text>
+  <text x="96" y="729" class="body">Clearly mark the current location.</text>
+  <text x="96" y="758" class="small">Other saved places keep separate actions.</text>
+  <text x="96" y="785" class="small">Search results remain separate from saved items.</text>
+
+  <rect x="560" y="653" width="350" height="154" rx="18" class="success"/>
+  <text x="586" y="695" class="head">SELECT SAVED PLACE</text>
+  <text x="586" y="729" class="body">Persist the saved ID as selected.</text>
+  <text x="586" y="758" class="small">Return to main and load matching catalog.</text>
+
+  <rect x="970" y="653" width="330" height="154" rx="18" class="decision"/>
+  <text x="996" y="695" class="head">REMOVE ACTION</text>
+  <text x="996" y="729" class="body">Show confirmation before deletion.</text>
+  <text x="996" y="758" class="small">Cancel makes no mutation.</text>
+
+  <rect x="1360" y="653" width="490" height="154" rx="18" class="decision"/>
+  <text x="1386" y="695" class="head">CONFIRM REMOVAL</text>
+  <text x="1386" y="729" class="body">Cancel: no mutation. Confirm: remove saved location</text>
+  <text x="1386" y="758" class="small">and stored catalogs, then refresh the view.</text>
+  <path d="M500 730 L552 730" class="arrow"/>
+  <text x="526" y="715" text-anchor="middle" class="edge">select</text>
+  <path d="M285 807 L285 831 L1135 831 L1135 815" class="arrowGold"/>
+  <text x="710" y="849" text-anchor="middle" class="edge">remove</text>
+  <path d="M1300 730 L1352 730" class="arrowGold"/>
+  <text x="1326" y="715" text-anchor="middle" class="edge">confirm</text>
+  <!-- Commit, loading, and scope rules -->
+  <rect x="70" y="904" width="1780" height="220" rx="22" fill="#172f43" stroke="#52738a" stroke-width="2"/>
+  <text x="100" y="946" class="section" style="font:700 19px 'DejaVu Sans',sans-serif;fill:#8be7dc;letter-spacing:1px">COMMIT + SCOPE RULES</text>
+  <text x="100" y="986" class="body">• A committed result or saved-place choice returns to the main screen and uses the existing WX.26 location-scoped catalog handoff.</text>
+  <text x="100" y="1020" class="body">• Never show another location's weather under the newly selected city. Failed/no-data catalog behavior remains governed by WX.26.</text>
+  <text x="100" y="1054" class="body">• Search stays manual: no device-location permission, GPS lookup, background tracking, new provider, or schema change.</text>
+  <text x="100" y="1088" class="body">• Dismissal without selection changes neither current location nor selected forecast time. Keep result context and supplied attribution available.</text>
+  <text x="100" y="1165" class="small">Artwork: `design_draft/location_search_ui_board.png` · proposed error/confirmation state artwork is separately pending owner approval.</text>
+  <text x="100" y="1196" class="small">Focused view acceptance only; broad TalkBack, RTL, font-scale, and system matrices remain outside WX.29.</text>
+</svg>

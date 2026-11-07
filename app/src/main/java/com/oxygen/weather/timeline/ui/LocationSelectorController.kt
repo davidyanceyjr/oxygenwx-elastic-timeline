@@ -212,7 +212,7 @@ class LocationSelectorController(
                                     ?: "No location is selected.",
                                 messageIsError = false,
                             )
-                            if (selected != null) onSelectionCompleted()
+                            // Keep the rail visible so its newly current place can be seen in green.
                         }
                         SavedLocationResult.MissingLocation -> if (generation == selectionGeneration)
                             announce("That saved location is no longer available. Refresh and try again.")
@@ -300,9 +300,10 @@ class LocationSelectorController(
                         savedLoading = false,
                     )
                 } else {
-                    val reason = if (list is SavedLocationListResult.MalformedRecord || selection is SavedLocationResult.MalformedRecord)
-                        "Saved location data is invalid. Your last known list is still shown."
-                    else "Saved locations could not be refreshed. Your last known list is still shown."
+                    val detail = if (list is SavedLocationListResult.MalformedRecord || selection is SavedLocationResult.MalformedRecord)
+                        "Saved location data is invalid." else "Saved locations could not be refreshed."
+                    val reason = if (mutableState.value.saved == null) "$detail Retry to check again."
+                        else "$detail Your last known list is still shown."
                     mutableState.value = mutableState.value.copy(savedLoading = false, message = reason, messageIsError = true)
                 }
             } catch (cancelled: CancellationException) { throw cancelled }
