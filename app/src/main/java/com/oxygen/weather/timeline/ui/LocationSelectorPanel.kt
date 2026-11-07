@@ -162,7 +162,7 @@ fun LocationSelectorPanel(
                     }
                     Spacer(Modifier.height(8.dp))
                     Column(
-                        Modifier.fillMaxWidth().heightIn(min = 66.dp, max = 150.dp)
+                        Modifier.fillMaxWidth().heightIn(min = 92.dp, max = 230.dp)
                             .verticalScroll(rememberScrollState()),
                         horizontalAlignment = Alignment.CenterHorizontally,
                     ) {
@@ -170,11 +170,47 @@ fun LocationSelectorPanel(
                             LocationSearchState.Idle -> Text("Enter a place and tap Search", color = Color.White)
                             is LocationSearchState.Loading -> Text("Searching for ${search.query}…",
                                 color = Color.White, modifier = Modifier.semantics { liveRegion = LiveRegionMode.Polite })
-                            is LocationSearchState.Matches -> search.candidates.forEachIndexed { index, candidate ->
-                                CandidateCard(candidate, index,
-                                    alreadySaved = savedLocations.orEmpty().any {
-                                        it.location.id.value == candidate.canonicalPlaceId?.value
-                                    }, onSelect = { controller.selectCandidate(candidate) })
+                            is LocationSearchState.Matches -> {
+                                var detailsIndex by remember(search) { mutableStateOf<Int?>(null) }
+                                LazyRow(
+                                    modifier = Modifier.fillMaxWidth().heightIn(min = 78.dp),
+                                    horizontalArrangement = Arrangement.spacedBy(14.dp),
+                                ) {
+                                    items(search.candidates.size) { index ->
+                                        val candidate = search.candidates[index]
+                                        val alreadySaved = savedLocations.orEmpty().any {
+                                            it.location.id.value == candidate.canonicalPlaceId?.value
+                                        }
+                                        Column(
+                                            Modifier.width(196.dp).clickable { controller.selectCandidate(candidate) }
+                                                .semantics {
+                                                    contentDescription = "Choose search result ${index + 1}, ${candidate.displayLabel}, ${if (alreadySaved) "already saved" else "saves if needed"}"
+                                                },
+                                            horizontalAlignment = Alignment.CenterHorizontally,
+                                        ) {
+                                            Box(Modifier.width(1.dp).height(9.dp).background(Color(0xFFDAE8F4)))
+                                            Text(candidate.name.take(3).uppercase(), color = Color.White, fontWeight = FontWeight.Bold)
+                                            Text(candidate.displayLabel, color = Color.White,
+                                                style = MaterialTheme.typography.labelSmall,
+                                                maxLines = 3, overflow = TextOverflow.Ellipsis,
+                                                textAlign = TextAlign.Center)
+                                            TextButton(onClick = { detailsIndex = if (detailsIndex == index) null else index }) {
+                                                Text(if (detailsIndex == index) "Hide details" else "Details")
+                                            }
+                                        }
+                                    }
+                                }
+                                detailsIndex?.let { index ->
+                                    val candidate = search.candidates.getOrNull(index)
+                                    candidate?.let {
+                                        Text(it.displayLabel, color = Color.White,
+                                            style = MaterialTheme.typography.labelSmall,
+                                            maxLines = 2, overflow = TextOverflow.Ellipsis)
+                                        Text("${it.timeZone.id} · ${it.coordinates.latitudeDegrees}, ${it.coordinates.longitudeDegrees}",
+                                            color = Color.White, style = MaterialTheme.typography.labelSmall)
+                                        Attribution(it.attribution)
+                                    }
+                                }
                             }
                             is LocationSearchState.NoMatches -> Text("No places found for “${search.query}”.", color = Color.White)
                             is LocationSearchState.Failed -> {
@@ -308,9 +344,9 @@ private fun CandidateCard(candidate: PlaceSearchCandidate, index: Int, alreadySa
 @Composable
 private fun Attribution(value: PlaceSearchAttribution) {
     Spacer(Modifier.height(5.dp))
-    Text("Source: ${value.sourceName} · ${value.sourceUrl}", style = MaterialTheme.typography.labelSmall)
-    Text("License: ${value.licenseName} · ${value.licenseUrl}", style = MaterialTheme.typography.labelSmall)
-    value.changesMadeNotice?.let { Text(it, style = MaterialTheme.typography.labelSmall) }
+    Text("Source: ${value.sourceName} · ${value.sourceUrl}", color = Color.White, style = MaterialTheme.typography.labelSmall)
+    Text("License: ${value.licenseName} · ${value.licenseUrl}", color = Color.White, style = MaterialTheme.typography.labelSmall)
+    value.changesMadeNotice?.let { Text(it, color = Color.White, style = MaterialTheme.typography.labelSmall) }
 }
 
 @Composable

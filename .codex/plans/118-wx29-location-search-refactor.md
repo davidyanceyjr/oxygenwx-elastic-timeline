@@ -18,7 +18,7 @@ The activation command rejects incomplete or unapproved records.
   "schema_version": 1,
   "cycle_id": "118-wx29-location-search-refactor",
   "plan_maturity": "FINAL",
-  "active_slice": "WX.29.2",
+  "active_slice": "WX.29.3",
   "slices": [
     {
       "id": "WX.29.1",
@@ -92,7 +92,7 @@ The activation command rejects incomplete or unapproved records.
       "depends_on": [
         "WX.29.1"
       ],
-      "status": "ACTIVE",
+      "status": "DONE",
       "exit": "Installed Pixel 3 XL portrait query editing, explicit submit, idle/loading/matches/no-match/failure/retry, upper result row, identity/context, attribution, and persistent lower saved row match approved boards. Result selection uses existing handoff. Scoped responsiveness, gesture ownership, readability, screenshots, and interaction results are recorded.",
       "boards": {
         "behavior": {
@@ -141,15 +141,26 @@ The activation command rejects incomplete or unapproved records.
           ]
         }
       },
-      "outcome": null,
-      "evidence": []
+      "outcome": "Installed Pixel 3 XL portrait query editing/explicit submit, loading, matches, no-match, connectivity failure/retry, result identity/context and attribution, persistent lower saved rail, result selection handoff, and timeline responsiveness recorded. The required loading capture used a temporary five-second debug-only delay; it was removed, and the final source was rebuilt and reinstalled. Lint remains blocked by four unrelated existing errors; no automated tests were run.",
+      "evidence": [
+        ".codex/test-artifacts/118-wx29-location-search-refactor/README.md",
+        ".codex/test-artifacts/118-wx29-location-search-refactor/wx29-2-loading.png",
+        ".codex/test-artifacts/118-wx29-location-search-refactor/wx29-2-matches-final.png",
+        ".codex/test-artifacts/118-wx29-location-search-refactor/wx29-2-details-final.png",
+        ".codex/test-artifacts/118-wx29-location-search-refactor/wx29-2-no-matches.png",
+        ".codex/test-artifacts/118-wx29-location-search-refactor/wx29-2-failure.png",
+        ".codex/test-artifacts/118-wx29-location-search-refactor/wx29-2-retry.png",
+        ".codex/test-artifacts/118-wx29-location-search-refactor/wx29-2-result-selected.png",
+        ".codex/test-artifacts/118-wx29-location-search-refactor/wx29-2-after-select-picker.png",
+        ".codex/test-artifacts/118-wx29-location-search-refactor/wx29-2-timeline-responsive.png"
+      ]
     },
     {
       "id": "WX.29.3",
       "depends_on": [
         "WX.29.2"
       ],
-      "status": "PLANNED",
+      "status": "ACTIVE",
       "exit": "Installed Pixel 3 XL portrait full-screen removal confirmation and Cancel/Remove work; result and saved selection persist and activate matching catalog without cross-location weather; Back after opening or searching preserves current location and selected forecast instant; search remains manual with no device-location permission. Original WX.29 visual and interaction exit, scoped responsiveness, gesture ownership, readability, screenshots, and exact results are recorded.",
       "boards": {
         "behavior": {
@@ -254,11 +265,15 @@ Update this record at every stage boundary. Keep its next-stage read set exact.
     "final_plan_reviewed"
   ],
   "decisions": [
-    "Owner chose option 1: use a temporary debug-only saved-store fixture; existing debug catalog activity has a repository but no picker delay/failure controls."
+    "Owner chose option 1: use a temporary debug-only search delay to capture the required installed Loading state; the fixture was removed and final source rebuilt/reinstalled.",
+    "Owner request scoped this execution to WX.29.2; the approved plan requires a separate owner prompt before implementing WX.29.3."
   ],
   "open_questions": [],
   "completed_outputs": [
-    "Closed WX.29.1 as DONE and stopped before WX.29.2 implementation."
+    "Closed WX.29.1 as DONE with installed saved-location scene evidence.",
+    "Implemented WX.29.2 upper results rail and attribution; recorded installed search states, interaction outcomes, and timeline responsiveness.",
+    "Captured the required loading state with a temporary debug-only delay, removed the fixture, and rebuilt/reinstalled final source.",
+    "Closed WX.29.2 as DONE."
   ],
   "evidence": [
     ".codex/test-artifacts/118-wx29-location-search-refactor/README.md",
@@ -268,7 +283,16 @@ Update this record at every stage boundary. Keep its next-stage read set exact.
     ".codex/test-artifacts/118-wx29-location-search-refactor/wx29-1-unavailable-final.png",
     ".codex/test-artifacts/118-wx29-location-search-refactor/wx29-1-retry-final.png",
     ".codex/test-artifacts/118-wx29-location-search-refactor/wx29-1-after-touch.png",
-    ".codex/test-artifacts/118-wx29-location-search-refactor/wx29-1-chicago-active.png"
+    ".codex/test-artifacts/118-wx29-location-search-refactor/wx29-1-chicago-active.png",
+    ".codex/test-artifacts/118-wx29-location-search-refactor/wx29-2-matches-final.png",
+    ".codex/test-artifacts/118-wx29-location-search-refactor/wx29-2-details-final.png",
+    ".codex/test-artifacts/118-wx29-location-search-refactor/wx29-2-no-matches.png",
+    ".codex/test-artifacts/118-wx29-location-search-refactor/wx29-2-failure.png",
+    ".codex/test-artifacts/118-wx29-location-search-refactor/wx29-2-retry.png",
+    ".codex/test-artifacts/118-wx29-location-search-refactor/wx29-2-result-selected.png",
+    ".codex/test-artifacts/118-wx29-location-search-refactor/wx29-2-loading.png",
+    ".codex/test-artifacts/118-wx29-location-search-refactor/wx29-2-after-select-picker.png",
+    ".codex/test-artifacts/118-wx29-location-search-refactor/wx29-2-timeline-responsive.png"
   ],
   "next_stage_read_set": [
     "AGENTS.md",
@@ -278,9 +302,11 @@ Update this record at every stage boundary. Keep its next-stage read set exact.
     ".codex/concepts/WX.29-location-search-behavior-board.md",
     ".codex/concepts/WX.29-location-search-ui-states-v2.md",
     "app/src/main/java/com/oxygen/weather/timeline/ui/LocationSelectorPanel.kt",
-    "app/src/main/java/com/oxygen/weather/timeline/ui/LocationSelectorController.kt"
+    "app/src/main/java/com/oxygen/weather/timeline/ui/LocationSelectorController.kt",
+    "app/src/main/java/com/oxygen/weather/timeline/MainActivity.kt",
+    "app/src/main/java/com/oxygen/weather/timeline/ui/CatalogTimeLabScreen.kt"
   ],
-  "next_action": "Await the owner prompt before implementing WX.29.2; WX.29.1 is DONE with installed evidence and the temporary debug fixture removed."
+  "next_action": "Await the separate owner prompt for WX.29.3; preserve completed WX.29.2 and resume this cycle at EXECUTE without repeating its accepted gates."
 }
 ```
 <!-- cycle-checkpoint:end -->
