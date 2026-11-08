@@ -117,6 +117,19 @@ class CatalogSourceRegistry(sources: Collection<WeatherCatalogSource>) {
     }
 }
 
+/** Fetch a LIVE recording in memory without reading or writing the dataset store. */
+suspend fun CatalogSourceRegistry.loadTransientLive(request: CatalogLoadRequest): Pair<CatalogRecording, CatalogRefreshStatus> {
+    val result = load(CatalogOrigin.LIVE, request)
+    val recording = when (result) {
+        is CatalogLoadResult.Success -> CatalogRecording(result.catalog, result.expectedSupport, result.dailyExpectedSupport, result.metadata.rawCapture)
+        is CatalogLoadResult.Partial -> CatalogRecording(result.catalog, result.expectedSupport, result.dailyExpectedSupport, result.metadata.rawCapture)
+        is CatalogLoadResult.NoData -> error("No LIVE data is available (${result.reason})")
+        is CatalogLoadResult.InvalidRequest -> error("LIVE request is invalid (${result.reason})")
+        is CatalogLoadResult.TransportFailure -> error("LIVE request failed (${result.reason})")
+    }
+    return recording to if (result is CatalogLoadResult.Success) CatalogRefreshStatus.SUCCESS else CatalogRefreshStatus.PARTIAL
+}
+
 /** Pure candidate gate; callers retain ownership of their active catalog. */
 fun acceptedCatalog(current: CanonicalCatalog?, result: CatalogLoadResult): CanonicalCatalog? = when (result) {
     is CatalogLoadResult.Success -> result.catalog

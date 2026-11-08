@@ -159,6 +159,72 @@ open class CatalogCoordinatorTestSupport {
 }
 
 class CatalogActivationCoordinatorTest : CatalogCoordinatorTestSupport() {
+    @Test fun transientViewAndRefreshNeverWriteAndRestartRestoresPersistedChoice() = runBlocking {
+        val h = harness()
+        val saved = SavedLocation(a, com.oxygen.weather.timeline.data.catalog.PlaceSearchCandidate(
+            "Chicago", "United States", "US", emptyList(), a.coordinates, a.timeZone,
+            null, PlaceSearchAttribution("test", java.net.URI("https://example.com"), "test", java.net.URI("https://example.com"), null),
+            CanonicalPlaceId.geonames(1)))
+        h.restorer.selection = SavedLocationResult.Selected(saved)
+        val coordinator = h.coordinator(this)
+        coordinator.restoreStartup()
+        awaitState { coordinator.state.value.active?.location == a }
+        val initialWrites = h.dao.writes
+        val initialReads = h.dao.reads
+        val first = coordinator.requestTransientLive(b, "New York").await()
+        assertTrue(first is DebugActivationResult.Success)
+        assertEquals(b, coordinator.state.value.selectedLocation)
+        assertTrue(coordinator.isTransientSelection())
+        coordinator.refreshCurrent()
+        awaitState { !coordinator.state.value.loading && coordinator.state.value.active?.location == b }
+        assertEquals(initialWrites, h.dao.writes)
+        assertEquals(initialReads, h.dao.reads)
+        val restarted = h.coordinator(this)
+        restarted.restoreStartup()
+        awaitState { restarted.state.value.active?.location == a }
+        assertEquals(a, restarted.state.value.selectedLocation)
+        coordinator.committedLocationSelection(a, "Chicago")
+        awaitState { coordinator.state.value.active?.location == a && !coordinator.state.value.loading }
+        assertFalse(coordinator.isTransientSelection())
+    }
+
+    @Test fun failedAndSupersededTransientViewsRetainPreviousPublication() = runBlocking {
+        val gate = CompletableDeferred<Unit>()
+        val live = FakeSource(CatalogOrigin.LIVE) { request ->
+            if (request.location == b) { gate.await(); result(request, CatalogOrigin.LIVE) }
+            else result(request, CatalogOrigin.LIVE)
+        }
+        val h = harness(live = live)
+        val coordinator = h.coordinator(this)
+        coordinator.committedLocationSelection(a, "Chicago")
+        awaitState { coordinator.state.value.active?.location == a }
+        val initialWrites = h.dao.writes
+        val pending = coordinator.requestTransientLive(b, "New York")
+        awaitState { coordinator.state.value.loading }
+        assertEquals(a, coordinator.state.value.selectedLocation)
+        assertEquals(a, coordinator.state.value.active?.location)
+        val newer = coordinator.requestTransientLive(a, "Chicago").await()
+        assertTrue(newer is DebugActivationResult.Success)
+        gate.complete(Unit)
+        assertEquals(DebugActivationResult.Superseded, pending.await())
+        assertEquals(a, coordinator.state.value.active?.location)
+        assertEquals(initialWrites, h.dao.writes)
+
+        h.live.respond = { CatalogLoadResult.TransportFailure(TransportFailureReason.UNAVAILABLE) }
+        val failed = coordinator.requestTransientLive(b, "New York").await()
+        assertTrue(failed is DebugActivationResult.Failure)
+        assertEquals(a, coordinator.state.value.selectedLocation)
+        assertEquals(a, coordinator.state.value.active?.location)
+        assertEquals(initialWrites, h.dao.writes)
+
+        h.live.respond = { request -> result(request.copy(location = a), CatalogOrigin.LIVE) }
+        val mismatched = coordinator.requestTransientLive(b, "New York").await()
+        assertTrue(mismatched is DebugActivationResult.Failure)
+        assertEquals(a, coordinator.state.value.selectedLocation)
+        assertEquals(a, coordinator.state.value.active?.location)
+        assertEquals(initialWrites, h.dao.writes)
+    }
+
     @Test fun savedPreviewForAnotherLocationRetainsPublishedSelectionUntilAtomicCommit() = runBlocking {
         val h = harness()
         val coordinator = h.coordinator(this)

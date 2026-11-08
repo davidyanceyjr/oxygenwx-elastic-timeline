@@ -303,6 +303,26 @@ The completed WX entries below record the successor catalog, location, startup, 
 **Slice board(s):** Same owner-approved 2026-11-07 WX.29 behavior and UI package, applied to removal, selection, catalog handoff, and dismissal; cycle 118 records fingerprints and exact relationship.
 **Evidence:** `.codex/test-artifacts/118-wx29-location-search-refactor/README.md`; cycle 118 closeout and archived plan.
 
+### WX.30 — One location timeline — SUPERSEDED
+
+**Decision:** The owner split the approved, unstarted WX.30 outcome on 2026-11-08 into WX.30.1 and WX.30.2 at the transient LIVE handoff boundary. The approved revision 5 behavior/UI package governs both narrower outcomes; the original exit is distributed across their exits. Cycle 119 was replanned for WX.30.1 before activation.
+
+### WX.30.1 — Transient result View catalog handoff — DONE
+
+**Objective/scope:** Provide a source-only LIVE recording path and explicit transient coordinator request for result View. Validate canonical location, provenance, and the whole recording before publishing the current request. Do not write saved-location, selected-location, or dataset state, including for an already-saved result or transient refresh. Preserve durable result selection and saved View paths, switch-away discard, and restart restore of the last persisted choice. Expose the transient controller/activity action for WX.30.2 to connect to a visible View control; no selector artwork changes.
+**Depends on:** WX.29.3 and WX.26.
+**Exit:** Focused controller and coordinator checks show the canonical result View handoff, valid temporary activation and refresh without writes; failed, mismatched, or superseded loads publish no new selection or catalog and write nothing; durable paths retain their persistence semantics; switching and restart restore the persisted choice. Record exact focused verification results and limitations.
+**Slice board(s):** Product-owner-approved 2026-11-08 revision 5 behavior package at `.codex/concepts/WX.30-location-timeline-board-v5.svg`, with PNG and Markdown. Its result View, Save, and persistence contract governs this boundary; cycle 119 records the original approval and fingerprints.
+**Evidence:** `.codex/test-artifacts/119-wx30-location-timeline/README.md`; `.codex/history/119-wx30-location-timeline.md`; archived plan `.codex/history/plans/119-wx30-location-timeline.md`.
+
+### WX.30.2 — One location rail with selected-instant temperatures — PLANNED
+
+**Objective/scope:** Replace the independent selector rails with one main-view-style controller showing saved locations by default and submitted results until the query clears. Show canonical place context, focus and actions, and saved temperatures from each matching catalog at the authoritative selected forecast instant or an explicit unavailable placeholder. Connect result View to WX.30.1's transient path. Preserve search, identity, attribution, saved confirmation, Back, gesture ownership, and forecast-time semantics.
+**Depends on:** WX.30.1.
+**Exit:** Installed Pixel 3 XL portrait main, saved-focused, and result-focused captures and scoped interactions show one rail matching the main controller, correct mode transitions and focus without activation, available/unavailable exact-instant saved temperatures, Save/temporary View and saved Remove/View behavior, no temporary View writes, query states, identity, attribution, Back dismissal, responsiveness, gesture ownership, and readable labels.
+**Slice board(s):** Product-owner-approved 2026-11-08 revision 5 combined behavior and UI artwork package at `.codex/concepts/WX.30-location-timeline-board-v5.svg`, with PNG and Markdown. Its controller artwork and one-set behavior govern this slice. The package and approvals are inherited from the original WX.30 review; the future cycle plan must record their fingerprints and its own final review before activation.
+**Evidence:** Planned under the next allocated cycle ID after cycle 119 closes; no second cycle is open yet.
+
 ## P.1 — Standalone elastic time tape
 
 ### P.1.1 — Implement the isolated timeline prototype — DONE

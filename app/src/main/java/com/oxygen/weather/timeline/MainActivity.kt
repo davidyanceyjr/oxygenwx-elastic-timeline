@@ -186,6 +186,17 @@ class MainActivity : ComponentActivity(), ActivityVariantDelegate.Host {
                     onSearchSubmission = { variantDelegate?.onSearchSubmission(this@MainActivity, it) == true },
                     beforeSelection = { variantDelegate?.beforeOrdinaryAction(this@MainActivity) },
                     onSelectionCompleted = { catalogLocationSelectorOpen = false },
+                    onTransientView = { location, name ->
+                        lifecycleScope.launch {
+                            variantDelegate?.beforeOrdinaryAction(this@MainActivity)
+                            pendingForegroundUpdate = null
+                            pendingForegroundLoadingObserved = false
+                            val result = activationCoordinator.requestTransientLive(location, name).await()
+                            if (result is com.oxygen.weather.timeline.data.catalog.DebugActivationResult.Success) {
+                                catalogLocationSelectorOpen = false
+                            }
+                        }
+                    },
                     onCommittedSelection = { selected ->
                     pendingForegroundUpdate = selected.location.id
                     pendingForegroundLoadingObserved = false
@@ -236,7 +247,8 @@ class MainActivity : ComponentActivity(), ActivityVariantDelegate.Host {
                             onChooseLocation = { catalogLocationSelectorOpen = true },
                             onRefresh = { lifecycleScope.launch {
                                 variantDelegate?.beforeOrdinaryAction(this@MainActivity)
-                                pendingForegroundUpdate = activationCoordinator.state.value.selectedLocation?.id
+                                pendingForegroundUpdate = if (activationCoordinator.isTransientSelection()) null
+                                    else activationCoordinator.state.value.selectedLocation?.id
                                 pendingForegroundLoadingObserved = false
                                 activationCoordinator.refreshCurrent()
                             } },
@@ -269,7 +281,8 @@ class MainActivity : ComponentActivity(), ActivityVariantDelegate.Host {
                         if (activation.selectedLocation != null && !activation.loading) {
                             TextButton(onClick = { lifecycleScope.launch {
                                 variantDelegate?.beforeOrdinaryAction(this@MainActivity)
-                                pendingForegroundUpdate = activationCoordinator.state.value.selectedLocation?.id
+                                pendingForegroundUpdate = if (activationCoordinator.isTransientSelection()) null
+                                    else activationCoordinator.state.value.selectedLocation?.id
                                 pendingForegroundLoadingObserved = false
                                 activationCoordinator.refreshCurrent()
                                     } }) {

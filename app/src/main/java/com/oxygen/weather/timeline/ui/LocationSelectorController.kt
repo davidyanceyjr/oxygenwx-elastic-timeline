@@ -1,6 +1,7 @@
 package com.oxygen.weather.timeline.ui
 
 import com.oxygen.weather.timeline.data.catalog.LocationId
+import com.oxygen.weather.timeline.data.catalog.CatalogLocation
 import com.oxygen.weather.timeline.data.catalog.PlaceSearchCandidate
 import com.oxygen.weather.timeline.data.catalog.PlaceSearchResult
 import com.oxygen.weather.timeline.data.catalog.PlaceSearcher
@@ -65,6 +66,7 @@ class LocationSelectorController(
     private val beforeSelection: suspend () -> Unit = {},
     private val onCommittedSelection: (SavedLocation) -> Unit = {},
     private val onSelectionCompleted: () -> Unit = {},
+    private val onTransientView: (CatalogLocation, String) -> Unit = { _, _ -> },
 ) {
     private val mutableState = MutableStateFlow(LocationSelectorState())
     val state: StateFlow<LocationSelectorState> = mutableState.asStateFlow()
@@ -138,6 +140,16 @@ class LocationSelectorController(
     }
 
     fun retrySearch() = submitSearch()
+
+    /** Hand a canonical result to the transient catalog path without touching the location store. */
+    fun viewCandidate(candidate: PlaceSearchCandidate) {
+        val canonicalId = candidate.canonicalPlaceId
+        if (canonicalId == null) {
+            announce("This result cannot be viewed because it has no stable location identity.")
+            return
+        }
+        onTransientView(candidate.toCatalogLocation(LocationId(canonicalId.value)), candidate.name)
+    }
 
     fun add(candidate: PlaceSearchCandidate) {
         scope.launch {

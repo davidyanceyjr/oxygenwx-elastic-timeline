@@ -26,6 +26,24 @@ import java.util.concurrent.CopyOnWriteArrayList
 
 class LocationSelectorControllerTest {
     @Test
+    fun resultViewUsesCanonicalIdentityWithoutStoreCalls() = runBlocking {
+        val place = candidate("Chicago", 30)
+        val store = FakeStore(mutableListOf(saved(place)))
+        val viewed = mutableListOf<Pair<com.oxygen.weather.timeline.data.catalog.CatalogLocation, String>>()
+        val controller = LocationSelectorController(this,
+            RecordingSearcher { _, _ -> PlaceSearchResult.NoMatches }, store,
+            onTransientView = { location, name -> viewed += location to name })
+
+        controller.viewCandidate(place)
+        assertEquals(listOf(place.toCatalogLocation(LocationId(place.canonicalPlaceId!!.value)) to place.name), viewed)
+        assertEquals(0, store.addCalls)
+        assertEquals(0, store.selectCalls)
+        controller.viewCandidate(place.copy(canonicalPlaceId = null))
+        assertEquals(1, viewed.size)
+        assertTrue(controller.state.value.messageIsError)
+    }
+
+    @Test
     fun consumedSearchSkipsSearcherAndOrdinarySearchStillRuns() = runBlocking {
         val searcher = RecordingSearcher { _, _ -> PlaceSearchResult.NoMatches }
         val controller = LocationSelectorController(this, searcher, FakeStore(),
