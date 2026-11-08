@@ -67,6 +67,8 @@ class LocationSelectorController(
     private val onCommittedSelection: (SavedLocation) -> Unit = {},
     private val onSelectionCompleted: () -> Unit = {},
     private val onTransientView: (CatalogLocation, String) -> Unit = { _, _ -> },
+    private val preserveSubmittedSetWhileEditing: Boolean = false,
+    private val resetSearchAfterResultSelection: Boolean = false,
 ) {
     private val mutableState = MutableStateFlow(LocationSelectorState())
     val state: StateFlow<LocationSelectorState> = mutableState.asStateFlow()
@@ -93,20 +95,43 @@ class LocationSelectorController(
     }
 
     fun editQuery(value: String) {
-        searchGeneration++
-        searchJob?.cancel()
-        searchJob = null
-        mutableState.value = mutableState.value.copy(
-            query = value,
-            search = LocationSearchState.Idle,
-            message = null,
-        )
+        if (!preserveSubmittedSetWhileEditing) {
+            searchGeneration++
+            searchJob?.cancel()
+            searchJob = null
+            mutableState.value = mutableState.value.copy(
+                query = value,
+                search = LocationSearchState.Idle,
+                message = null,
+            )
+            return
+        }
+        if (value.isBlank()) {
+            searchGeneration++
+            searchJob?.cancel()
+            searchJob = null
+            mutableState.value = mutableState.value.copy(
+                query = value,
+                search = LocationSearchState.Idle,
+                message = null,
+            )
+        } else {
+            // The visible rail belongs to the last submitted query. Editing a new
+            // query does not replace that set or cancel its in-flight request.
+            mutableState.value = mutableState.value.copy(query = value, message = null)
+        }
     }
 
     fun submitSearch() {
         val query = mutableState.value.query.trim()
         if (query.isEmpty()) {
-            editQuery(mutableState.value.query)
+            searchGeneration++
+            searchJob?.cancel()
+            searchJob = null
+            mutableState.value = mutableState.value.copy(
+                search = LocationSearchState.Idle,
+                message = null,
+            )
             return
         }
         searchGeneration++
@@ -241,16 +266,21 @@ class LocationSelectorController(
     private suspend fun persistSelection(location: SavedLocation, generation: Long) {
         when (val result = withContext(Dispatchers.IO) { store.select(location.location.id) }) {
             is SavedLocationResult.Selected -> {
-                val selected = result.location
-                if (selected != null) {
-                    onCommittedSelection(selected)
-                    if (generation == selectionGeneration) mutableState.value = mutableState.value.copy(
-                            selectedId = selected.location.id,
-                            message = "${selected.candidate.name} selected. Loading its forecast catalog.",
-                            messageIsError = false,
-                        )
-                    refreshSnapshot(preserveMessage = true)
-                    onSelectionCompleted()
+                    val selected = result.location
+                    if (selected != null) {
+                        onCommittedSelection(selected)
+                        if (generation == selectionGeneration) {
+                            val current = mutableState.value
+                            mutableState.value = current.copy(
+                                selectedId = selected.location.id,
+                                query = if (resetSearchAfterResultSelection) "" else current.query,
+                                search = if (resetSearchAfterResultSelection) LocationSearchState.Idle else current.search,
+                                message = "${selected.candidate.name} selected. Loading its forecast catalog.",
+                                messageIsError = false,
+                            )
+                        }
+                        refreshSnapshot(preserveMessage = true)
+                        onSelectionCompleted()
                 }
             }
             SavedLocationResult.MissingLocation -> if (generation == selectionGeneration)

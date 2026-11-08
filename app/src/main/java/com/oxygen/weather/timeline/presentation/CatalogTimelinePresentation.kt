@@ -56,6 +56,60 @@ private data class SupportedFieldPoint(
     val fact: CanonicalWeatherFacts?,
 )
 
+/** Select a field's own supported point cell without borrowing another field's support. */
+internal fun supportedPointFactAt(
+    window: CatalogWindow,
+    selected: Instant,
+    field: CatalogField,
+): CanonicalWeatherFacts? {
+    val day = window.days.firstOrNull { selected >= it.localStart && selected < it.localEnd } ?: return null
+    val expected = (day.expectedFieldSupport()[field] as? ExpectedFieldSupport.Points)
+        ?.instants?.sorted() ?: return null
+    val points = expected.mapIndexed { index, slot ->
+        val fact = day.facts.firstOrNull { it.validTime == slot }
+            ?.takeIf { it.supportsValue(field) }
+        SupportedFieldPoint(
+            expectedSlot = slot,
+            representativeCell = representativeCellForExpectedPoint(
+                day, expected, index, window.startInclusive, window.endExclusive,
+                directlySupplied = fact != null,
+            ),
+            fact = fact,
+        )
+    }
+    val point = points.firstOrNull { it.expectedSlot == selected }
+        ?: points.firstOrNull { candidate ->
+            candidate.representativeCell?.endExclusive == selected && points.any {
+                it.representativeCell?.startInclusive == selected
+            }
+        }
+        ?: points.firstOrNull { candidate ->
+            candidate.representativeCell?.let { selected >= it.startInclusive && selected < it.endExclusive } == true
+        }
+    return point?.fact
+}
+
+private fun CanonicalWeatherFacts.supportsValue(field: CatalogField): Boolean = when (field) {
+    CatalogField.CONDITIONS -> conditions.isNotEmpty()
+    CatalogField.PHENOMENA -> phenomena.isNotEmpty()
+    CatalogField.TEMPERATURE_C -> temperatureC != null
+    CatalogField.PRECIPITATION_PROBABILITY_PERCENT -> precipitationProbabilityPercent != null
+    CatalogField.THUNDERSTORM_PROBABILITY_PERCENT -> thunderstormProbabilityPercent != null
+    CatalogField.RELATIVE_HUMIDITY_PERCENT -> relativeHumidityPercent != null
+    CatalogField.CLOUD_COVER_PERCENT -> cloudCoverPercent != null
+    CatalogField.WIND_SPEED_KPH -> windSpeedKph != null
+    CatalogField.WIND_GUST_KPH -> windGustKph != null
+    CatalogField.WIND_DIRECTION_DEGREES -> windDirectionDegrees != null
+    CatalogField.RAIN_AMOUNT_MILLIMETERS -> rainAmountMillimeters != null
+    CatalogField.TOTAL_PRECIPITATION_MILLIMETERS -> totalPrecipitationMillimeters != null
+    CatalogField.PRECIPITATION_RATE -> precipitationRate != null
+    CatalogField.SNOWFALL_CENTIMETERS -> snowfallCentimeters != null
+    CatalogField.SNOW_DEPTH_CENTIMETERS -> snowDepthCentimeters != null
+    CatalogField.SURFACE_PRESSURE_HPA -> surfacePressureHpa != null
+    CatalogField.MEAN_SEA_LEVEL_PRESSURE_HPA -> meanSeaLevelPressureHpa != null
+    CatalogField.VISIBILITY_KM -> visibilityKm != null
+}
+
 /** Values and labels that may cross into Compose. No recording or source fact is exposed. */
 data class CatalogTimelineView(
     val generation: Long,
@@ -226,7 +280,7 @@ class CatalogTimelinePresenter(private val active: ActiveCatalogSelection) {
             if (intervalSupport.isEmpty()) "Interval support: unavailable" else "Intervals: ${intervalSupport.joinToString("; ")}",
         )
         val missing = matched.mapNotNull { (field, _) ->
-            if (sample?.facts?.hasValue(field) == false) field.diagnosticLabel() else null
+            if (sample?.facts?.supportsValue(field) == false) field.diagnosticLabel() else null
         }.let { fields -> when { sample == null -> listOf("unavailable"); fields.isEmpty() -> listOf("none"); else -> fields } }
         return CatalogDiagnosticPresentation(catalogLines, selectionLines, missing,
             timeline.weatherSymbolId, timeline.weatherSymbolName,
@@ -240,54 +294,8 @@ class CatalogTimelinePresenter(private val active: ActiveCatalogSelection) {
         else -> null
     }
 
-    private fun com.oxygen.weather.timeline.data.catalog.CanonicalWeatherFacts.hasValue(field: CatalogField): Boolean = when (field) {
-        CatalogField.CONDITIONS -> conditions.isNotEmpty()
-        CatalogField.PHENOMENA -> phenomena.isNotEmpty()
-        CatalogField.TEMPERATURE_C -> temperatureC != null
-        CatalogField.PRECIPITATION_PROBABILITY_PERCENT -> precipitationProbabilityPercent != null
-        CatalogField.THUNDERSTORM_PROBABILITY_PERCENT -> thunderstormProbabilityPercent != null
-        CatalogField.RELATIVE_HUMIDITY_PERCENT -> relativeHumidityPercent != null
-        CatalogField.CLOUD_COVER_PERCENT -> cloudCoverPercent != null
-        CatalogField.WIND_SPEED_KPH -> windSpeedKph != null
-        CatalogField.WIND_GUST_KPH -> windGustKph != null
-        CatalogField.WIND_DIRECTION_DEGREES -> windDirectionDegrees != null
-        CatalogField.RAIN_AMOUNT_MILLIMETERS -> rainAmountMillimeters != null
-        CatalogField.TOTAL_PRECIPITATION_MILLIMETERS -> totalPrecipitationMillimeters != null
-        CatalogField.PRECIPITATION_RATE -> precipitationRate != null
-        CatalogField.SNOWFALL_CENTIMETERS -> snowfallCentimeters != null
-        CatalogField.SNOW_DEPTH_CENTIMETERS -> snowDepthCentimeters != null
-        CatalogField.SURFACE_PRESSURE_HPA -> surfacePressureHpa != null
-        CatalogField.MEAN_SEA_LEVEL_PRESSURE_HPA -> meanSeaLevelPressureHpa != null
-        CatalogField.VISIBILITY_KM -> visibilityKm != null
-    }
-
-    /** Select a field's own supported point cell without borrowing another field's support. */
     private fun pointFactAt(selected: Instant, field: CatalogField): CanonicalWeatherFacts? {
-        val day = window.days.firstOrNull { selected >= it.localStart && selected < it.localEnd } ?: return null
-        val expected = (day.expectedFieldSupport()[field] as? ExpectedFieldSupport.Points)
-            ?.instants?.sorted() ?: return null
-        val points = expected.mapIndexed { index, slot ->
-            val fact = day.facts.firstOrNull { it.validTime == slot }
-                ?.takeIf { it.hasValue(field) }
-            SupportedFieldPoint(
-                expectedSlot = slot,
-                representativeCell = representativeCellForExpectedPoint(
-                    day, expected, index, window.startInclusive, window.endExclusive,
-                    directlySupplied = fact != null,
-                ),
-                fact = fact,
-            )
-        }
-        val point = points.firstOrNull { it.expectedSlot == selected }
-            ?: points.firstOrNull { candidate ->
-                candidate.representativeCell?.endExclusive == selected && points.any {
-                    it.representativeCell?.startInclusive == selected
-                }
-            }
-            ?: points.firstOrNull { candidate ->
-                candidate.representativeCell?.let { selected >= it.startInclusive && selected < it.endExclusive } == true
-            }
-        return point?.fact
+        return supportedPointFactAt(window, selected, field)
     }
 
     private fun selectedInstant(state: CatalogActivationState): Instant =

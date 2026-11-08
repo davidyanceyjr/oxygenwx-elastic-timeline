@@ -344,7 +344,7 @@ fun TimeLabScreen(
             )
         }
         if (locationSelectorOpen && locationSelectorController != null) {
-            LocationSelectorPanel(
+            FixtureLocationSelectorPanel(
                 controller = locationSelectorController,
                 onDismiss = { locationSelectorOpen = false },
             )

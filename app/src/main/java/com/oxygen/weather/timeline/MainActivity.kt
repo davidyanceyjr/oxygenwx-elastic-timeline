@@ -40,7 +40,10 @@ import com.oxygen.weather.timeline.ui.CatalogTimeLabScreen
 import com.oxygen.weather.timeline.ui.LocationSelectorController
 import com.oxygen.weather.timeline.ui.LocationSelectorPanel
 import com.oxygen.weather.timeline.presentation.CatalogTimelinePresenter
+import com.oxygen.weather.timeline.presentation.SavedLocationRailTemperatureProjection
 import com.oxygen.weather.timeline.data.catalog.CatalogStorageDatabase
+import com.oxygen.weather.timeline.data.catalog.CatalogStorageNamespace
+import com.oxygen.weather.timeline.data.catalog.StoredCatalogResult
 import com.oxygen.weather.timeline.data.catalog.SavedLocationRepository
 import com.oxygen.weather.timeline.data.catalog.PlaceSearcher
 import com.oxygen.weather.timeline.ui.RepositoryLocationSelectorStore
@@ -197,6 +200,8 @@ class MainActivity : ComponentActivity(), ActivityVariantDelegate.Host {
                             }
                         }
                     },
+                    preserveSubmittedSetWhileEditing = true,
+                    resetSearchAfterResultSelection = true,
                     onCommittedSelection = { selected ->
                     pendingForegroundUpdate = selected.location.id
                     pendingForegroundLoadingObserved = false
@@ -293,7 +298,25 @@ class MainActivity : ComponentActivity(), ActivityVariantDelegate.Host {
                         }
                     }
                     if (!fixturePreview && catalogLocationSelectorOpen) {
-                        LocationSelectorPanel(catalogSelector) { catalogLocationSelectorOpen = false }
+                        LocationSelectorPanel(
+                            controller = catalogSelector,
+                            selectedInstant = matchingActive?.selectedInstant,
+                            currentLocationName = activation.selectedLocationName,
+                            loadSavedTemperature = { saved, selectedInstant ->
+                                val stored = catalogStorage.load(
+                                    saved.location,
+                                    CatalogStorageNamespace.LIVE,
+                                    DatasetId("forecast-44d"),
+                                )
+                                val recording = (stored as? StoredCatalogResult.Found)?.recording
+                                SavedLocationRailTemperatureProjection.project(
+                                    saved.location,
+                                    recording,
+                                    selectedInstant,
+                                )
+                            },
+                            onDismiss = { catalogLocationSelectorOpen = false },
+                        )
                     }
                     if (sessionMenuVisible) variantDelegate?.DebugSessionMenu(this@MainActivity)
                 }

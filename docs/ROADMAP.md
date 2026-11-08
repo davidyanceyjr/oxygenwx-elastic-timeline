@@ -315,13 +315,13 @@ The completed WX entries below record the successor catalog, location, startup, 
 **Slice board(s):** Product-owner-approved 2026-11-08 revision 5 behavior package at `.codex/concepts/WX.30-location-timeline-board-v5.svg`, with PNG and Markdown. Its result View, Save, and persistence contract governs this boundary; cycle 119 records the original approval and fingerprints.
 **Evidence:** `.codex/test-artifacts/119-wx30-location-timeline/README.md`; `.codex/history/119-wx30-location-timeline.md`; archived plan `.codex/history/plans/119-wx30-location-timeline.md`.
 
-### WX.30.2 — One location rail with selected-instant temperatures — PLANNED
+### WX.30.2 — One location rail with selected-instant temperatures — DONE
 
 **Objective/scope:** Replace the independent selector rails with one main-view-style controller showing saved locations by default and submitted results until the query clears. Show canonical place context, focus and actions, and saved temperatures from each matching catalog at the authoritative selected forecast instant or an explicit unavailable placeholder. Connect result View to WX.30.1's transient path. Preserve search, identity, attribution, saved confirmation, Back, gesture ownership, and forecast-time semantics.
 **Depends on:** WX.30.1.
 **Exit:** Installed Pixel 3 XL portrait main, saved-focused, and result-focused captures and scoped interactions show one rail matching the main controller, correct mode transitions and focus without activation, available/unavailable exact-instant saved temperatures, Save/temporary View and saved Remove/View behavior, no temporary View writes, query states, identity, attribution, Back dismissal, responsiveness, gesture ownership, and readable labels.
 **Slice board(s):** Product-owner-approved 2026-11-08 revision 5 combined behavior and UI artwork package at `.codex/concepts/WX.30-location-timeline-board-v5.svg`, with PNG and Markdown. Its controller artwork and one-set behavior govern this slice. The package and approvals are inherited from the original WX.30 review; the future cycle plan must record their fingerprints and its own final review before activation.
-**Evidence:** Planned under the next allocated cycle ID after cycle 119 closes; no second cycle is open yet.
+**Evidence:** Planned for cycle 120 (`120-wx30-one-location-rail`): `.codex/test-artifacts/120-wx30-one-location-rail/README.md`; `.codex/history/120-wx30-one-location-rail.md`; archived plan `.codex/history/plans/120-wx30-one-location-rail.md`.
 
 ## P.1 — Standalone elastic time tape
 
