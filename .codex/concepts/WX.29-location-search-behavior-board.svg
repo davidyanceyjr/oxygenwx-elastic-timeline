@@ -22,7 +22,7 @@
   </defs>
   <rect width="1920" height="1260" fill="url(#bg)"/>
   <text x="64" y="68" class="title">WX.29 · Location search and selection</text>
-  <text x="64" y="101" class="subtitle">Behavior board · draft awaiting product-owner approval · main appearance governed by the approved UI artwork</text>
+  <text x="64" y="101" class="subtitle">Behavior board · owner-approved 2026-11-07 · coupled to the approved location-search UI state board</text>
 
   <!-- Entry / exit -->
   <rect x="70" y="145" width="390" height="160" rx="20" class="entry"/>
@@ -48,7 +48,7 @@
 
   <rect x="1470" y="145" width="380" height="160" rx="20" class="success"/>
   <text x="1498" y="184" class="head">EXIT WITHOUT COMMIT</text>
-  <text x="1498" y="220" class="body">System Back or an approved exit returns</text>
+  <text x="1498" y="220" class="body">System Back returns</text>
   <text x="1498" y="246" class="body">to the same location and selected time.</text>
   <text x="1498" y="280" class="small">Full-screen art does not imply scrim dismissal.</text>
   <path d="M1394 225 L1462 225" class="arrow"/>
@@ -114,13 +114,16 @@
   <rect x="1360" y="653" width="490" height="154" rx="18" class="decision"/>
   <text x="1386" y="695" class="head">CONFIRM REMOVAL</text>
   <text x="1386" y="729" class="body">Cancel: no mutation. Confirm: remove saved location</text>
-  <text x="1386" y="758" class="small">and stored catalogs, then refresh the view.</text>
+  <text x="1386" y="758" class="small">Show its full saved displayLabel under the city name.</text>
+  <text x="1386" y="785" class="small">Also remove stored catalogs, then refresh the view.</text>
   <path d="M500 730 L552 730" class="arrow"/>
   <text x="526" y="715" text-anchor="middle" class="edge">select</text>
   <path d="M285 807 L285 831 L1135 831 L1135 815" class="arrowGold"/>
   <text x="710" y="849" text-anchor="middle" class="edge">remove</text>
   <path d="M1300 730 L1352 730" class="arrowGold"/>
   <text x="1326" y="715" text-anchor="middle" class="edge">confirm</text>
+  <path d="M1605 807 L1605 874 L285 874 L285 815" class="arrow"/>
+  <text x="960" y="893" text-anchor="middle" class="edge">System Back cancels; stay in selector</text>
   <!-- Commit, loading, and scope rules -->
   <rect x="70" y="904" width="1780" height="220" rx="22" fill="#172f43" stroke="#52738a" stroke-width="2"/>
   <text x="100" y="946" class="section" style="font:700 19px 'DejaVu Sans',sans-serif;fill:#8be7dc;letter-spacing:1px">COMMIT + SCOPE RULES</text>
@@ -128,6 +131,6 @@
   <text x="100" y="1020" class="body">• Never show another location's weather under the newly selected city. Failed/no-data catalog behavior remains governed by WX.26.</text>
   <text x="100" y="1054" class="body">• Search stays manual: no device-location permission, GPS lookup, background tracking, new provider, or schema change.</text>
   <text x="100" y="1088" class="body">• Dismissal without selection changes neither current location nor selected forecast time. Keep result context and supplied attribution available.</text>
-  <text x="100" y="1165" class="small">Artwork: `design_draft/location_search_ui_board.png` · proposed error/confirmation state artwork is separately pending owner approval.</text>
+  <text x="100" y="1165" class="small">Owner-approved 2026-11-07: search and removal states stay in the supplied scene and use the coupled UI state board.</text>
   <text x="100" y="1196" class="small">Focused view acceptance only; broad TalkBack, RTL, font-scale, and system matrices remain outside WX.29.</text>
 </svg>

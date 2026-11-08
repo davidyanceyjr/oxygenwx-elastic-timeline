@@ -295,7 +295,7 @@ The completed WX entries below record the successor catalog, location, startup, 
 **Slice board(s):** Same owner-approved 2026-11-07 WX.29 behavior and UI package, applied to search flow, upper result row, status placement, and attribution; cycle 118 records fingerprints and exact relationship.
 **Evidence:** `.codex/test-artifacts/118-wx29-location-search-refactor/README.md`; cycle 118 closeout and archived plan.
 
-### WX.29.3 — Complete confirmation, handoff, and dismissal — ACTIVE
+### WX.29.3 — Complete confirmation, handoff, and dismissal — DONE
 
 **Objective/scope:** Show full-screen same-scene removal confirmation with Cancel/Remove, preserve explicit result and saved-place selection through the existing location-scoped catalog handoff, and make system Back dismiss without committing or changing selected forecast time. No provider, startup policy, or other-screen redesign.
 **Depends on:** WX.29.2.

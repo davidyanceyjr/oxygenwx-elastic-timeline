@@ -29,7 +29,6 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.darkColorScheme
@@ -74,16 +73,24 @@ fun LocationSelectorPanel(
     val state by controller.state.collectAsState()
     val savedLocations = state.saved
     val keyboard = LocalSoftwareKeyboardController.current
+    val pendingRemoval = state.pendingRemoval
     val dismiss = {
         controller.close()
         onDismiss()
     }
-    BackHandler(onBack = dismiss)
+    val handleBack = {
+        if (pendingRemoval != null) controller.cancelRemoval() else dismiss()
+    }
+    BackHandler(onBack = handleBack)
     LaunchedEffect(controller) { controller.open() }
 
     Dialog(
-        onDismissRequest = dismiss,
-        properties = DialogProperties(usePlatformDefaultWidth = false, decorFitsSystemWindows = false),
+        onDismissRequest = handleBack,
+        properties = DialogProperties(
+            usePlatformDefaultWidth = false,
+            decorFitsSystemWindows = false,
+            dismissOnClickOutside = false,
+        ),
     ) {
         MaterialTheme(colorScheme = selectorColorScheme()) {
             Box(Modifier.fillMaxSize().background(Color(0xFF102743))) {
@@ -147,13 +154,14 @@ fun LocationSelectorPanel(
                             modifier = Modifier.weight(1f),
                             placeholder = { Text("Search places") },
                             singleLine = true,
+                            enabled = pendingRemoval == null,
                             keyboardOptions = androidx.compose.foundation.text.KeyboardOptions(imeAction = ImeAction.Search),
                             keyboardActions = androidx.compose.foundation.text.KeyboardActions(onSearch = {
                                 keyboard?.hide()
                                 controller.submitSearch()
                             }),
                         )
-                        TextButton(onClick = {
+                        TextButton(enabled = pendingRemoval == null, onClick = {
                             keyboard?.hide()
                             controller.submitSearch()
                         }, modifier = Modifier.semantics { contentDescription = "Search places" }) {
@@ -161,61 +169,100 @@ fun LocationSelectorPanel(
                         }
                     }
                     Spacer(Modifier.height(8.dp))
-                    Column(
-                        Modifier.fillMaxWidth().heightIn(min = 92.dp, max = 230.dp)
-                            .verticalScroll(rememberScrollState()),
-                        horizontalAlignment = Alignment.CenterHorizontally,
-                    ) {
-                        when (val search = state.search) {
-                            LocationSearchState.Idle -> Text("Enter a place and tap Search", color = Color.White)
-                            is LocationSearchState.Loading -> Text("Searching for ${search.query}…",
-                                color = Color.White, modifier = Modifier.semantics { liveRegion = LiveRegionMode.Polite })
-                            is LocationSearchState.Matches -> {
-                                var detailsIndex by remember(search) { mutableStateOf<Int?>(null) }
-                                LazyRow(
-                                    modifier = Modifier.fillMaxWidth().heightIn(min = 78.dp),
-                                    horizontalArrangement = Arrangement.spacedBy(14.dp),
-                                ) {
-                                    items(search.candidates.size) { index ->
-                                        val candidate = search.candidates[index]
-                                        val alreadySaved = savedLocations.orEmpty().any {
-                                            it.location.id.value == candidate.canonicalPlaceId?.value
-                                        }
-                                        Column(
-                                            Modifier.width(196.dp).clickable { controller.selectCandidate(candidate) }
-                                                .semantics {
-                                                    contentDescription = "Choose search result ${index + 1}, ${candidate.displayLabel}, ${if (alreadySaved) "already saved" else "saves if needed"}"
-                                                },
-                                            horizontalAlignment = Alignment.CenterHorizontally,
-                                        ) {
-                                            Box(Modifier.width(1.dp).height(9.dp).background(Color(0xFFDAE8F4)))
-                                            Text(candidate.name.take(3).uppercase(), color = Color.White, fontWeight = FontWeight.Bold)
-                                            Text(candidate.displayLabel, color = Color.White,
-                                                style = MaterialTheme.typography.labelSmall,
-                                                maxLines = 3, overflow = TextOverflow.Ellipsis,
-                                                textAlign = TextAlign.Center)
-                                            TextButton(onClick = { detailsIndex = if (detailsIndex == index) null else index }) {
-                                                Text(if (detailsIndex == index) "Hide details" else "Details")
+                    if (pendingRemoval != null) {
+                        Column(
+                            Modifier.fillMaxWidth().heightIn(min = 150.dp, max = 230.dp)
+                                .verticalScroll(rememberScrollState()),
+                            horizontalAlignment = Alignment.CenterHorizontally,
+                            verticalArrangement = Arrangement.spacedBy(8.dp),
+                        ) {
+                            Text(
+                                "Remove ${pendingRemoval.candidate.name}?",
+                                color = Color.White,
+                                style = MaterialTheme.typography.headlineSmall,
+                                textAlign = TextAlign.Center,
+                            )
+                            Text(
+                                pendingRemoval.candidate.displayLabel,
+                                color = Color(0xFFE1ECF7),
+                                style = MaterialTheme.typography.bodyMedium,
+                                textAlign = TextAlign.Center,
+                            )
+                            Text(
+                                "Stored catalog data will also be removed.",
+                                color = Color(0xFFE1ECF7),
+                                style = MaterialTheme.typography.bodyMedium,
+                                textAlign = TextAlign.Center,
+                            )
+                            Row(horizontalArrangement = Arrangement.spacedBy(32.dp)) {
+                                TextButton(onClick = controller::cancelRemoval) {
+                                    Text("Cancel", color = Color.White)
+                                }
+                                TextButton(onClick = controller::confirmRemoval) {
+                                    Text("Remove", color = Color(0xFFFFB4A6))
+                                }
+                            }
+                        }
+                    } else {
+                        Column(
+                            Modifier.fillMaxWidth().heightIn(min = 92.dp, max = 230.dp)
+                                .verticalScroll(rememberScrollState()),
+                            horizontalAlignment = Alignment.CenterHorizontally,
+                        ) {
+                            when (val search = state.search) {
+                                LocationSearchState.Idle -> Text("Enter a place and tap Search", color = Color.White)
+                                is LocationSearchState.Loading -> Text(
+                                    "Searching for ${search.query}…",
+                                    color = Color.White,
+                                    modifier = Modifier.semantics { liveRegion = LiveRegionMode.Polite },
+                                )
+                                is LocationSearchState.Matches -> {
+                                    var detailsIndex by remember(search) { mutableStateOf<Int?>(null) }
+                                    LazyRow(
+                                        modifier = Modifier.fillMaxWidth().heightIn(min = 78.dp),
+                                        horizontalArrangement = Arrangement.spacedBy(14.dp),
+                                    ) {
+                                        items(search.candidates.size) { index ->
+                                            val candidate = search.candidates[index]
+                                            val alreadySaved = savedLocations.orEmpty().any {
+                                                it.location.id.value == candidate.canonicalPlaceId?.value
+                                            }
+                                            Column(
+                                                Modifier.width(196.dp).clickable { controller.selectCandidate(candidate) }
+                                                    .semantics {
+                                                        contentDescription = "Choose search result ${index + 1}, ${candidate.displayLabel}, ${if (alreadySaved) "already saved" else "saves if needed"}"
+                                                    },
+                                                horizontalAlignment = Alignment.CenterHorizontally,
+                                            ) {
+                                                Box(Modifier.width(1.dp).height(9.dp).background(Color(0xFFDAE8F4)))
+                                                Text(candidate.name.take(3).uppercase(), color = Color.White, fontWeight = FontWeight.Bold)
+                                                Text(candidate.displayLabel, color = Color.White,
+                                                    style = MaterialTheme.typography.labelSmall,
+                                                    maxLines = 3, overflow = TextOverflow.Ellipsis,
+                                                    textAlign = TextAlign.Center)
+                                                TextButton(onClick = { detailsIndex = if (detailsIndex == index) null else index }) {
+                                                    Text(if (detailsIndex == index) "Hide details" else "Details")
+                                                }
                                             }
                                         }
                                     }
-                                }
-                                detailsIndex?.let { index ->
-                                    val candidate = search.candidates.getOrNull(index)
-                                    candidate?.let {
-                                        Text(it.displayLabel, color = Color.White,
-                                            style = MaterialTheme.typography.labelSmall,
-                                            maxLines = 2, overflow = TextOverflow.Ellipsis)
-                                        Text("${it.timeZone.id} · ${it.coordinates.latitudeDegrees}, ${it.coordinates.longitudeDegrees}",
-                                            color = Color.White, style = MaterialTheme.typography.labelSmall)
-                                        Attribution(it.attribution)
+                                    detailsIndex?.let { index ->
+                                        val candidate = search.candidates.getOrNull(index)
+                                        candidate?.let {
+                                            Text(it.displayLabel, color = Color.White,
+                                                style = MaterialTheme.typography.labelSmall,
+                                                maxLines = 2, overflow = TextOverflow.Ellipsis)
+                                            Text("${it.timeZone.id} · ${it.coordinates.latitudeDegrees}, ${it.coordinates.longitudeDegrees}",
+                                                color = Color.White, style = MaterialTheme.typography.labelSmall)
+                                            Attribution(it.attribution)
+                                        }
                                     }
                                 }
-                            }
-                            is LocationSearchState.NoMatches -> Text("No places found for “${search.query}”.", color = Color.White)
-                            is LocationSearchState.Failed -> {
-                                Text("Search failed for “${search.query}”. ${search.reason}", color = Color.White)
-                                TextButton(onClick = controller::retrySearch) { Text("Retry search") }
+                                is LocationSearchState.NoMatches -> Text("No places found for “${search.query}”.", color = Color.White)
+                                is LocationSearchState.Failed -> {
+                                    Text("Search failed for “${search.query}”. ${search.reason}", color = Color.White)
+                                    TextButton(onClick = controller::retrySearch) { Text("Retry search") }
+                                }
                             }
                         }
                     }
@@ -235,12 +282,13 @@ fun LocationSelectorPanel(
                         else -> LazyRow(
                             modifier = Modifier.fillMaxWidth().heightIn(min = 96.dp),
                             horizontalArrangement = Arrangement.spacedBy(20.dp),
+                            userScrollEnabled = pendingRemoval == null,
                         ) {
                             items(savedLocations, key = { it.location.id.value }) { location ->
                                 val selected = location.location.id == state.selectedId
                                 Column(
                                     Modifier.width(148.dp)
-                                        .clickable { controller.select(location) }
+                                        .clickable(enabled = pendingRemoval == null) { controller.select(location) }
                                         .semantics {
                                             contentDescription = "${location.candidate.displayLabel}, ${if (selected) "current location" else "saved location"}"
                                         },
@@ -255,7 +303,13 @@ fun LocationSelectorPanel(
                                         style = MaterialTheme.typography.labelSmall,
                                         maxLines = 2, overflow = TextOverflow.Ellipsis,
                                         textAlign = TextAlign.Center)
-                                    TextButton(onClick = { controller.requestRemoval(location) }) {
+                                    TextButton(
+                                        enabled = pendingRemoval == null,
+                                        onClick = {
+                                            keyboard?.hide()
+                                            controller.requestRemoval(location)
+                                        },
+                                    ) {
                                         Text("Remove", maxLines = 1)
                                     }
                                 }
@@ -271,17 +325,6 @@ fun LocationSelectorPanel(
         }
     }
 
-    state.pendingRemoval?.let { location ->
-        MaterialTheme(colorScheme = selectorColorScheme()) {
-            AlertDialog(
-                onDismissRequest = controller::cancelRemoval,
-                title = { Text("Remove ${location.candidate.name}?") },
-                text = { Text("This removes the saved location and its stored catalog data. The action cannot be undone.") },
-                confirmButton = { TextButton(onClick = controller::confirmRemoval) { Text("Remove") } },
-                dismissButton = { TextButton(onClick = controller::cancelRemoval) { Text("Cancel") } },
-            )
-        }
-    }
 }
 
 @Composable
