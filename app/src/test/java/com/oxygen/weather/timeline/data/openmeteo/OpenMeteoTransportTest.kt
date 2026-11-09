@@ -20,6 +20,12 @@ class OpenMeteoTransportTest {
     private val location = CatalogLocation(LocationId("chicago"), GeoCoordinates(41.9, -87.6), ZoneId.of("America/Chicago"))
     private val valid = """{"timezone":"America/Chicago","hourly":{"time":[]},"daily":{"time":[]}}"""
 
+    @Test fun requestIncludesApparentTemperatureInCelsius() {
+        val request = OpenMeteoTransport(OkHttpClient()).request(location)
+        assertTrue(request.url.queryParameter("hourly")!!.split(",").contains("apparent_temperature"))
+        assertEquals("celsius", request.url.queryParameter("temperature_unit"))
+    }
+
     @Test fun requestIsFixedAndEncoded() {
         val request = OpenMeteoTransport(OkHttpClient()).request(location)
         assertEquals("https", request.url.scheme)

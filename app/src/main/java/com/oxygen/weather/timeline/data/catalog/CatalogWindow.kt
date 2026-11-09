@@ -10,6 +10,7 @@ enum class CatalogField {
     CONDITIONS,
     PHENOMENA,
     TEMPERATURE_C,
+    APPARENT_TEMPERATURE_C,
     PRECIPITATION_PROBABILITY_PERCENT,
     THUNDERSTORM_PROBABILITY_PERCENT,
     RELATIVE_HUMIDITY_PERCENT,
@@ -268,6 +269,7 @@ class CatalogWindow private constructor(
             return intervals.isNotEmpty() &&
                 fact.conditions.isEmpty() && fact.phenomena.isEmpty() &&
                 fact.temperatureC == null &&
+                fact.apparentTemperatureC == null &&
                 fact.precipitationProbabilityPercent == null &&
                 fact.thunderstormProbabilityPercent == null &&
                 fact.relativeHumidityPercent == null &&
@@ -404,6 +406,7 @@ private fun CanonicalWeatherFacts.hasValue(field: CatalogField): Boolean = when 
     CatalogField.CONDITIONS -> conditions.isNotEmpty()
     CatalogField.PHENOMENA -> conditions.isNotEmpty() || phenomena.isNotEmpty()
     CatalogField.TEMPERATURE_C -> temperatureC != null
+    CatalogField.APPARENT_TEMPERATURE_C -> apparentTemperatureC != null
     CatalogField.PRECIPITATION_PROBABILITY_PERCENT -> precipitationProbabilityPercent != null
     CatalogField.THUNDERSTORM_PROBABILITY_PERCENT -> thunderstormProbabilityPercent != null
     CatalogField.RELATIVE_HUMIDITY_PERCENT -> relativeHumidityPercent != null

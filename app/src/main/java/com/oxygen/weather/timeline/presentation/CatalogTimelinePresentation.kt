@@ -93,6 +93,7 @@ private fun CanonicalWeatherFacts.supportsValue(field: CatalogField): Boolean = 
     CatalogField.CONDITIONS -> conditions.isNotEmpty()
     CatalogField.PHENOMENA -> phenomena.isNotEmpty()
     CatalogField.TEMPERATURE_C -> temperatureC != null
+    CatalogField.APPARENT_TEMPERATURE_C -> apparentTemperatureC != null
     CatalogField.PRECIPITATION_PROBABILITY_PERCENT -> precipitationProbabilityPercent != null
     CatalogField.THUNDERSTORM_PROBABILITY_PERCENT -> thunderstormProbabilityPercent != null
     CatalogField.RELATIVE_HUMIDITY_PERCENT -> relativeHumidityPercent != null
@@ -123,6 +124,8 @@ data class CatalogTimelineView(
     val conditionSourceDisclosure: String? = null,
     val sourceTimeDisclosure: String? = null,
     val temperature: String?,
+    val apparentTemperature: String? = null,
+    val humidity: String? = null,
     val condition: String?,
     val weatherSymbolId: WeatherSymbolId? = null,
     val weatherSymbolName: String? = null,
@@ -328,6 +331,8 @@ class CatalogTimelinePresenter(private val active: ActiveCatalogSelection) {
         val carried = conditionPoint?.takeIf { it.evidence == SceneEvidence.EXPECTED_MISSING &&
             it.value != null && it.sourceValidTime != null }
         val temperatureFact = pointFactAt(selected, CatalogField.TEMPERATURE_C)
+        val apparentTemperatureFact = pointFactAt(selected, CatalogField.APPARENT_TEMPERATURE_C)
+        val humidityFact = pointFactAt(selected, CatalogField.RELATIVE_HUMIDITY_PERCENT)
         val windSpeedFact = pointFactAt(selected, CatalogField.WIND_SPEED_KPH)
         val windDirectionFact = pointFactAt(selected, CatalogField.WIND_DIRECTION_DEGREES)
         val temperaturePresentation = temperatureFact?.let { source ->
@@ -336,6 +341,11 @@ class CatalogTimelinePresenter(private val active: ActiveCatalogSelection) {
             ).factSample
         }
         val windPresentation = windSpeedFact?.let { source ->
+            CanonicalForecastProjection.project(
+                catalog, window, source.validTime, ForecastDisplayUnits.IMPERIAL,
+            ).factSample
+        }
+        val apparentTemperaturePresentation = apparentTemperatureFact?.let { source ->
             CanonicalForecastProjection.project(
                 catalog, window, source.validTime, ForecastDisplayUnits.IMPERIAL,
             ).factSample
@@ -365,6 +375,8 @@ class CatalogTimelinePresenter(private val active: ActiveCatalogSelection) {
                 ?.sourceValidTime?.let { add("Scene" to it) }
             projected.selectedEvent?.takeIf { !it.carried }?.sourceTime?.let { add("Condition event" to it) }
             temperatureFact?.let { add("Temperature" to it.validTime) }
+            apparentTemperatureFact?.let { add("Apparent temperature" to it.validTime) }
+            humidityFact?.let { add("Humidity" to it.validTime) }
             reading.precipitationChancePercent?.takeIf { it.evidence == SceneEvidence.PROBABILITY_ONLY }
                 ?.sourceValidTime?.let { add("Chance" to it) }
             windSpeedFact?.let { add("Wind speed" to it.validTime) }
@@ -395,6 +407,8 @@ class CatalogTimelinePresenter(private val active: ActiveCatalogSelection) {
             conditionSourceDisclosure = conditionSourceDisclosure,
             sourceTimeDisclosure = sourceTimeDisclosure,
             temperature = temperaturePresentation?.temperature?.let { "${it.displayValue.rounded()}°" },
+            apparentTemperature = apparentTemperaturePresentation?.apparentTemperature?.let { "${it.displayValue.rounded()}°" },
+            humidity = humidityFact?.relativeHumidityPercent?.let { "${it.rounded()}%" },
             condition = projected.selectedEvent?.accessibleName
                 ?: if (sourceFact?.sourceWeatherCode != null) null else
                     supportedCondition?.name?.lowercase(Locale.US)?.replace('_', ' ')
@@ -447,6 +461,7 @@ class CatalogTimelinePresenter(private val active: ActiveCatalogSelection) {
         CatalogField.CONDITIONS -> "conditions"
         CatalogField.PHENOMENA -> "phenomena"
         CatalogField.TEMPERATURE_C -> "temp"
+        CatalogField.APPARENT_TEMPERATURE_C -> "apparent temp"
         CatalogField.PRECIPITATION_PROBABILITY_PERCENT -> "precip%"
         CatalogField.THUNDERSTORM_PROBABILITY_PERCENT -> "thunder%"
         CatalogField.RELATIVE_HUMIDITY_PERCENT -> "humidity"

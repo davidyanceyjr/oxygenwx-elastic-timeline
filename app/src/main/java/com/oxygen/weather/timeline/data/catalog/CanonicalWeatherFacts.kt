@@ -74,6 +74,7 @@ class CanonicalWeatherFacts(
     events: List<WeatherEventFact> = emptyList(),
     val primaryEventIndex: Int? = null,
     val sourceWeatherCode: Int? = null,
+    val apparentTemperatureC: Double? = null,
 ) {
     val conditions: Set<WeatherCondition> = Collections.unmodifiableSet(conditions.toSet())
     val phenomena: Set<WeatherPhenomenon> = Collections.unmodifiableSet(phenomena.toSet())
@@ -83,6 +84,7 @@ class CanonicalWeatherFacts(
         require(primaryEventIndex == null || primaryEventIndex in this.events.indices) { "Primary event must reference a supplied member" }
         require(sourceWeatherCode == null || sourceWeatherCode in 0..99)
         temperatureC?.requireRange(-100.0..70.0, "Temperature must be in -100..70 °C")
+        require(apparentTemperatureC == null || apparentTemperatureC.isFinite()) { "Apparent temperature must be finite" }
         precipitationProbabilityPercent?.requireRange(0.0..100.0, "Precipitation probability must be in 0..100%")
         thunderstormProbabilityPercent?.requireRange(0.0..100.0, "Thunderstorm probability must be in 0..100%")
         relativeHumidityPercent?.requireRange(0.0..100.0, "Relative humidity must be in 0..100%")
@@ -114,6 +116,7 @@ class CanonicalWeatherFacts(
         conditions == other.conditions &&
         phenomena == other.phenomena &&
         temperatureC == other.temperatureC &&
+        apparentTemperatureC == other.apparentTemperatureC &&
         precipitationProbabilityPercent == other.precipitationProbabilityPercent &&
         thunderstormProbabilityPercent == other.thunderstormProbabilityPercent &&
         relativeHumidityPercent == other.relativeHumidityPercent &&
@@ -136,6 +139,7 @@ class CanonicalWeatherFacts(
         conditions,
         phenomena,
         temperatureC,
+        apparentTemperatureC,
         precipitationProbabilityPercent,
         thunderstormProbabilityPercent,
         relativeHumidityPercent,
@@ -157,7 +161,7 @@ class CanonicalWeatherFacts(
     ).hashCode()
 
     override fun toString(): String = "CanonicalWeatherFacts(validTime=$validTime, conditions=$conditions, " +
-        "phenomena=$phenomena, temperatureC=$temperatureC, " +
+        "phenomena=$phenomena, temperatureC=$temperatureC, apparentTemperatureC=$apparentTemperatureC, " +
         "precipitationProbabilityPercent=$precipitationProbabilityPercent, " +
         "thunderstormProbabilityPercent=$thunderstormProbabilityPercent, relativeHumidityPercent=$relativeHumidityPercent, " +
         "cloudCoverPercent=$cloudCoverPercent, windSpeedKph=$windSpeedKph, windGustKph=$windGustKph, " +
@@ -182,6 +186,7 @@ class CanonicalWeatherFacts(
         snowDepthCentimeters = snowDepthCentimeters, surfacePressureHpa = surfacePressureHpa,
         meanSeaLevelPressureHpa = meanSeaLevelPressureHpa, visibilityKm = visibilityKm,
         events = suppliedEvents, primaryEventIndex = primaryIndex, sourceWeatherCode = sourceWeatherCode,
+        apparentTemperatureC = apparentTemperatureC,
     )
 }
 

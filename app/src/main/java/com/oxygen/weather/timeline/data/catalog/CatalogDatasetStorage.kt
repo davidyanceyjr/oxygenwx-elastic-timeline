@@ -81,7 +81,7 @@ class CatalogDatasetStorage(private val dao: CatalogDatasetDao) {
         invalid: MutableList<String>,
     ): CatalogRecording? {
         fun bad(reason: String): CatalogRecording? { invalid += reason; return null }
-        if (row.payloadFormatVersion !in 1..5) return bad("Unsupported payload format version")
+        if (row.payloadFormatVersion !in 1..6) return bad("Unsupported payload format version")
         val decoded = RecordedCatalogCodec.decode(row.payload)
         if (decoded is RecordingDecodeResult.Failure) return bad("${decoded.kind}: ${decoded.detail}")
         val recording = (decoded as RecordingDecodeResult.Success).recording

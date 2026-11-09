@@ -19,6 +19,29 @@ class RecordedCatalogTest {
 
     private fun fixture(): ByteArray = javaClass.getResourceAsStream("/catalog/wx11-full-sequence-v1.json")!!.readBytes()
 
+    @Test fun apparentTemperatureAndSupportRoundTripInVersionSix() {
+        val original = captured()
+        val first = original.catalog.facts.first()
+        val changed = CanonicalWeatherFacts(first.validTime, temperatureC = first.temperatureC,
+            apparentTemperatureC = 0.0)
+        val catalog = CanonicalCatalog(original.catalog.location, original.catalog.datasetId,
+            original.catalog.provenance, original.catalog.asOf,
+            listOf(changed) + original.catalog.facts.drop(1))
+        val date = first.validTime.atZone(request.location.timeZone).toLocalDate()
+        val support = original.expectedSupport.toMutableMap()
+        support[date] = original.expectedSupport.getValue(date) +
+            (CatalogField.APPARENT_TEMPERATURE_C to ExpectedFieldSupport.Points(setOf(first.validTime)))
+        val encoded = RecordedCatalogCodec.encode(CatalogRecording(catalog, support))
+        assertEquals(6, com.fasterxml.jackson.databind.ObjectMapper().readTree(encoded).path("schemaVersion").intValue())
+        val decoded = (RecordedCatalogCodec.decode(encoded) as RecordingDecodeResult.Success).recording
+        assertEquals(0.0, decoded.catalog.facts.first().apparentTemperatureC!!, 0.0)
+        assertEquals(setOf(first.validTime),
+            (decoded.expectedSupport.getValue(date).getValue(CatalogField.APPARENT_TEMPERATURE_C)
+                as ExpectedFieldSupport.Points).instants)
+        assertNull((RecordedCatalogCodec.decode(fixture()) as RecordingDecodeResult.Success)
+            .recording.catalog.facts.first().apparentTemperatureC)
+    }
+
     @Test fun fixtureRoundTripsAndReplays() = runBlocking {
         val original = captured()
         val encoded = RecordedCatalogCodec.encode(original)
@@ -28,7 +51,7 @@ class RecordedCatalogTest {
         val legacyBytes = fixture()
         val decoded = RecordedCatalogCodec.decode(legacyBytes) as RecordingDecodeResult.Success
         val upgradedBytes = RecordedCatalogCodec.encode(decoded.recording)
-        assertEquals(5, com.fasterxml.jackson.databind.ObjectMapper().readTree(upgradedBytes).path("schemaVersion").intValue())
+        assertEquals(6, com.fasterxml.jackson.databind.ObjectMapper().readTree(upgradedBytes).path("schemaVersion").intValue())
         assertTrue(decoded.recording.catalog.facts.all {
             it.events.isEmpty() && it.primaryEventIndex == null && it.sourceWeatherCode == null
         })

@@ -37,6 +37,7 @@ object RecordedCatalogCodec {
         "precipitationRate", "snowfallCentimeters", "snowDepthCentimeters", "surfacePressureHpa",
         "meanSeaLevelPressureHpa", "visibilityKm",
     )
+    private val version6FactFields = factFields + "apparentTemperatureC"
 
     fun encode(recording: CatalogRecording): ByteArray {
         require(recording.catalog.provenance.origin != CatalogOrigin.REPLAY) { "Recording must capture an original catalog" }
@@ -45,7 +46,7 @@ object RecordedCatalogCodec {
         require(CatalogWindow.create(recording.catalog, recording.expectedSupport, dailyExpectedSupport = recording.dailyExpectedSupport) is CatalogWindowResult.Success)
         val catalog = recording.catalog
         val root = mapper.createObjectNode()
-        val version = 5
+        val version = 6
         root.put("schemaVersion", version)
         root.set<JsonNode>("location", mapper.createObjectNode().apply {
             put("id", catalog.location.id.value)
@@ -156,13 +157,13 @@ object RecordedCatalogCodec {
             return RecordingDecodeResult.Failure(RecordingError.MALFORMED, "schemaVersion must be an integer")
         }
         val version = root["schemaVersion"].takeIf { it.canConvertToInt() }?.intValue() ?: 0
-        if (version !in 1..5) {
+        if (version !in 1..6) {
             return RecordingDecodeResult.Failure(RecordingError.UNSUPPORTED_VERSION, "Unsupported schemaVersion")
         }
         return try {
             root.fieldsExact(*(when (version) {
                 1 -> arrayOf("schemaVersion", "location", "datasetId", "provenance", "asOf", "facts", "expectedSupport")
-                5 -> arrayOf("schemaVersion", "location", "datasetId", "provenance", "asOf", "facts", "expectedSupport", "productSegments", "dailySummaries", "dailyExpectedSupport", "rawCapture")
+                5, 6 -> arrayOf("schemaVersion", "location", "datasetId", "provenance", "asOf", "facts", "expectedSupport", "productSegments", "dailySummaries", "dailyExpectedSupport", "rawCapture")
                 else -> arrayOf("schemaVersion", "location", "datasetId", "provenance", "asOf", "facts", "expectedSupport", "productSegments", "dailySummaries", "dailyExpectedSupport")
             }))
             val locationNode = root.required("location").fieldsExact("id", "coordinates", "timeZone")
@@ -250,7 +251,7 @@ object RecordedCatalogCodec {
             }
             require(summaries.all { it.date in dailySupport }) { "Daily summaries require declared daily support" }
             require(CatalogWindow.create(catalog, support, dailyExpectedSupport = dailySupport) is CatalogWindowResult.Success) { "Invalid window or support" }
-            val capture = if (version == 5) root.required("rawCapture").takeUnless(JsonNode::isNull)?.let { node ->
+            val capture = if (version >= 5) root.required("rawCapture").takeUnless(JsonNode::isNull)?.let { node ->
                 node.fieldsExact("captureContractVersion", "provider", "requestIdentity", "retrievedAt", "responseBase64")
                 RawResponseCapture(
                     Base64.getDecoder().decode(node.required("responseBase64").string()),
@@ -270,6 +271,7 @@ object RecordedCatalogCodec {
         set<JsonNode>("conditions", mapper.createArrayNode().apply { f.conditions.map { it.name }.sorted().forEach(::add) })
         set<JsonNode>("phenomena", mapper.createArrayNode().apply { f.phenomena.map { it.name }.sorted().forEach(::add) })
         putNumber("temperatureC", f.temperatureC)
+        putNumber("apparentTemperatureC", f.apparentTemperatureC)
         putNumber("precipitationProbabilityPercent", f.precipitationProbabilityPercent)
         putNumber("thunderstormProbabilityPercent", f.thunderstormProbabilityPercent)
         putNumber("relativeHumidityPercent", f.relativeHumidityPercent)
@@ -303,7 +305,11 @@ object RecordedCatalogCodec {
     }
 
     private fun readFact(node: JsonNode, version: Int): CanonicalWeatherFacts {
-        node.fieldsExact(*(if (version >= 5) factFields + setOf("sourceWeatherCode", "events", "primaryEventIndex") else factFields).toTypedArray())
+        node.fieldsExact(*(when {
+            version >= 6 -> version6FactFields + setOf("sourceWeatherCode", "events", "primaryEventIndex")
+            version >= 5 -> factFields + setOf("sourceWeatherCode", "events", "primaryEventIndex")
+            else -> factFields
+        }).toTypedArray())
         val events = if (version >= 5) node.required("events").array().map { event ->
             event.fieldsExact("id", "sourceCode", "suppliedWording", "documentedCodeDescription", "provider", "descriptionSource")
             WeatherEventFact(
@@ -339,6 +345,7 @@ object RecordedCatalogCodec {
             node.required("meanSeaLevelPressureHpa").nullableNumber(), node.required("visibilityKm").nullableNumber(),
             events, if (version >= 5) node.required("primaryEventIndex").nullableInteger() else null,
             if (version >= 5) node.required("sourceWeatherCode").nullableInteger() else null,
+            if (version >= 6) node.required("apparentTemperatureC").nullableNumber() else null,
         )
     }
 

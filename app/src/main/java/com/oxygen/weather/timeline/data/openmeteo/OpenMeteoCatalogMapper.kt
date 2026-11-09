@@ -27,6 +27,7 @@ object OpenMeteoCatalogMapper {
     private val json = ObjectMapper(JsonFactory.builder().enable(StreamReadFeature.STRICT_DUPLICATE_DETECTION).build())
     private val pointFields = linkedMapOf(
         "temperature_2m" to CatalogField.TEMPERATURE_C,
+        "apparent_temperature" to CatalogField.APPARENT_TEMPERATURE_C,
         "relative_humidity_2m" to CatalogField.RELATIVE_HUMIDITY_PERCENT,
         "precipitation_probability" to CatalogField.PRECIPITATION_PROBABILITY_PERCENT,
         "weather_code" to CatalogField.CONDITIONS,
@@ -141,6 +142,7 @@ object OpenMeteoCatalogMapper {
                         conditions = if (isWindowBoundary) emptySet() else mapped?.conditions.orEmpty(),
                         phenomena = if (isWindowBoundary) emptySet() else mapped?.phenomena.orEmpty(),
                         temperatureC = if (isWindowBoundary) null else values["temperature_2m"],
+                        apparentTemperatureC = if (isWindowBoundary) null else values["apparent_temperature"],
                         relativeHumidityPercent = if (isWindowBoundary) null else values["relative_humidity_2m"],
                         precipitationProbabilityPercent = if (isWindowBoundary) null else values["precipitation_probability"],
                         cloudCoverPercent = if (isWindowBoundary) null else values["cloud_cover"],
@@ -163,7 +165,7 @@ object OpenMeteoCatalogMapper {
                 } catch (e: Exception) { throw IllegalArgumentException("Invalid hourly value at $time: ${e.message}") }
                 factsByTime[time] = fact
                 if (!isWindowBoundary && (fact.conditions.isNotEmpty() || listOfNotNull(
-                        fact.temperatureC, fact.relativeHumidityPercent, fact.precipitationProbabilityPercent,
+                        fact.temperatureC, fact.apparentTemperatureC, fact.relativeHumidityPercent, fact.precipitationProbabilityPercent,
                         fact.cloudCoverPercent, fact.windSpeedKph, fact.windDirectionDegrees, fact.windGustKph,
                         fact.meanSeaLevelPressureHpa, fact.surfacePressureHpa, fact.visibilityKm,
                         fact.rainAmountMillimeters?.valueMillimeters, fact.totalPrecipitationMillimeters?.valueMillimeters,
@@ -371,7 +373,7 @@ object OpenMeteoCatalogMapper {
 
     private fun hourlyUnit(name: String): String = when (name) {
         "time" -> "unixtime"
-        "temperature_2m" -> "°C"
+        "temperature_2m", "apparent_temperature" -> "°C"
         "relative_humidity_2m", "precipitation_probability", "cloud_cover" -> "%"
         "precipitation", "rain" -> "mm"
         "snowfall" -> "cm"

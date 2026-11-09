@@ -15,6 +15,25 @@ class OpenMeteoCatalogMapperTest {
     private val chicago = CatalogLocation(LocationId("reference-chicago"), GeoCoordinates(41.8781, -87.6298), ZoneId.of("America/Chicago"))
     private val mapper = ObjectMapper()
 
+    @Test fun apparentTemperatureMapsIndependentlyAndKeepsWindowBoundaryEmpty() {
+        val date = LocalDate.parse("2026-07-10")
+        val selected = date.atTime(12, 0).atZone(chicago.timeZone).toInstant()
+        val request = request(selected)
+        val boundary = date.plusDays(14).atStartOfDay(chicago.timeZone).toInstant()
+        val response = fixture(request, -5 * 3600, listOf(selected, selected.plusSeconds(3600), boundary), listOf(date))
+        val series = response.path("hourly").path("apparent_temperature") as ArrayNode
+        series.set(0, mapper.nodeFactory.numberNode(15.0))
+        series.set(1, mapper.nodeFactory.nullNode())
+        val mapped = mapBytes(response, request).success()
+        assertEquals(15.0, mapped.catalog.facts.first().apparentTemperatureC!!, 0.0)
+        assertNull(mapped.catalog.facts[1].apparentTemperatureC)
+        assertEquals(12.0, mapped.catalog.facts[1].temperatureC!!, 0.0)
+        assertNull(mapped.catalog.facts.last().apparentTemperatureC)
+        assertTrue(CatalogField.APPARENT_TEMPERATURE_C in mapped.expectedSupport.getValue(date))
+        (response.path("hourly_units") as ObjectNode).put("apparent_temperature", "°F")
+        assertTrue(mapBytes(response, request) is OpenMeteoMappingResult.Invalid)
+    }
+
     @Test fun `captured public Chicago response maps to a 44-date partial canonical catalog`() {
         val request = request(Instant.parse("2026-10-28T14:57:55.714828Z"))
         val bytes = javaClass.getResourceAsStream("/openmeteo/provider-response-public-chicago.json")!!.use { it.readBytes() }
@@ -85,7 +104,7 @@ class OpenMeteoCatalogMapperTest {
         val mapped = OpenMeteoCatalogMapper.decode(input, request).success()
         val original = CatalogRecording(mapped.catalog, mapped.expectedSupport, mapped.dailyExpectedSupport)
         val encoded = RecordedCatalogCodec.encode(original)
-        assertEquals(5, mapper.readTree(encoded).path("schemaVersion").intValue())
+        assertEquals(6, mapper.readTree(encoded).path("schemaVersion").intValue())
         assertNull(mapped.catalog.dailySummaries.first().sunriseInstant)
         assertNull(mapped.catalog.dailySummaries.first().sunsetInstant)
         assertNull(mapped.catalog.dailySummaries.first().moonPhase)
@@ -125,7 +144,7 @@ class OpenMeteoCatalogMapperTest {
         val encoded = RecordedCatalogCodec.encode(CatalogRecording(
             mapped.catalog, mapped.expectedSupport, mapped.dailyExpectedSupport,
         ))
-        assertEquals(5, mapper.readTree(encoded).path("schemaVersion").intValue())
+        assertEquals(6, mapper.readTree(encoded).path("schemaVersion").intValue())
         val decoded = (RecordedCatalogCodec.decode(encoded) as RecordingDecodeResult.Success).recording
         assertEquals(mapped.catalog.dailySummaries, decoded.catalog.dailySummaries)
         assertArrayEquals(encoded, RecordedCatalogCodec.encode(decoded))
@@ -154,7 +173,7 @@ class OpenMeteoCatalogMapperTest {
 
         val mapped = mapBytes(response, request).success()
         val encoded = RecordedCatalogCodec.encode(CatalogRecording(mapped.catalog, mapped.expectedSupport, mapped.dailyExpectedSupport))
-        assertEquals(5, mapper.readTree(encoded).path("schemaVersion").intValue())
+        assertEquals(6, mapper.readTree(encoded).path("schemaVersion").intValue())
         val decoded = (RecordedCatalogCodec.decode(encoded) as RecordingDecodeResult.Success).recording
         assertEquals(mapped.catalog, decoded.catalog)
         assertEquals(mapped.dailyExpectedSupport, decoded.dailyExpectedSupport)
@@ -427,7 +446,7 @@ class OpenMeteoCatalogMapperTest {
 
         val recording = CatalogRecording(mapped.catalog, mapped.expectedSupport, mapped.dailyExpectedSupport)
         val encoded = RecordedCatalogCodec.encode(recording)
-        assertEquals(5, mapper.readTree(encoded).path("schemaVersion").intValue())
+        assertEquals(6, mapper.readTree(encoded).path("schemaVersion").intValue())
         val decoded = (RecordedCatalogCodec.decode(encoded) as RecordingDecodeResult.Success).recording
         assertEquals(recording.catalog, decoded.catalog)
         assertArrayEquals(encoded, RecordedCatalogCodec.encode(decoded))
@@ -487,7 +506,7 @@ class OpenMeteoCatalogMapperTest {
 
         val recording = CatalogRecording(mapped.catalog, mapped.expectedSupport, mapped.dailyExpectedSupport)
         val encoded = RecordedCatalogCodec.encode(recording)
-        assertEquals(5, mapper.readTree(encoded).path("schemaVersion").intValue())
+        assertEquals(6, mapper.readTree(encoded).path("schemaVersion").intValue())
         val decoded = (RecordedCatalogCodec.decode(encoded) as RecordingDecodeResult.Success).recording
         assertEquals(recording.catalog, decoded.catalog)
         assertArrayEquals(encoded, RecordedCatalogCodec.encode(decoded))
@@ -570,7 +589,7 @@ class OpenMeteoCatalogMapperTest {
 
         val recording = CatalogRecording(mapped.catalog, mapped.expectedSupport, mapped.dailyExpectedSupport)
         val encoded = RecordedCatalogCodec.encode(recording)
-        assertEquals(5, mapper.readTree(encoded).path("schemaVersion").intValue())
+        assertEquals(6, mapper.readTree(encoded).path("schemaVersion").intValue())
         val decoded = (RecordedCatalogCodec.decode(encoded) as RecordingDecodeResult.Success).recording
         assertEquals(recording.catalog, decoded.catalog)
         assertArrayEquals(encoded, RecordedCatalogCodec.encode(decoded))
@@ -729,7 +748,7 @@ class OpenMeteoCatalogMapperTest {
     }
     private fun hourUnit(name: String) = when (name) {
         "time" -> "unixtime"
-        "temperature_2m" -> "°C"
+        "temperature_2m", "apparent_temperature" -> "°C"
         "relative_humidity_2m", "precipitation_probability", "cloud_cover" -> "%"
         "precipitation", "rain" -> "mm"
         "snowfall" -> "cm"

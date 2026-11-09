@@ -15,6 +15,38 @@ import kotlin.math.roundToInt
 class CanonicalForecastProjectionTest {
     private val zone = ZoneId.of("America/Chicago")
 
+    @Test fun apparentTemperatureAndHumidityFollowFocusedTimeIndependently() {
+        val date = LocalDate.parse("2026-10-28")
+        val nine = date.atTime(9, 0).atZone(zone).toInstant()
+        val ten = nine.plusSeconds(3600)
+        val support = mapOf(date to mapOf(
+            CatalogField.TEMPERATURE_C to ExpectedFieldSupport.Points(setOf(nine, ten)),
+            CatalogField.APPARENT_TEMPERATURE_C to ExpectedFieldSupport.Points(setOf(nine, ten)),
+            CatalogField.RELATIVE_HUMIDITY_PERCENT to ExpectedFieldSupport.Points(setOf(nine, ten)),
+        ))
+        val (catalog, _) = snapshot(date, listOf(
+            CanonicalWeatherFacts(nine, temperatureC = 10.0, apparentTemperatureC = 0.0,
+                relativeHumidityPercent = 58.0),
+            CanonicalWeatherFacts(ten, temperatureC = 12.0, relativeHumidityPercent = 0.0),
+        ), support)
+        fun view(selected: Instant): CatalogTimelineView {
+            val active = ActiveCatalogSelection(catalog.location, CatalogRecording(catalog, support),
+                CatalogOrigin.LIVE, catalog.datasetId, null, CatalogActivationDelivery.SOURCE,
+                CatalogFreshness.FRESH, null, selected, 1L)
+            return CatalogTimelinePresenter(active).view(CatalogActivationState(active = active))
+        }
+        val first = view(nine.plusSeconds(900))
+        assertEquals(nine.plusSeconds(900), first.selectedInstant)
+        assertEquals("32°", first.apparentTemperature)
+        assertEquals("58%", first.humidity)
+        assertTrue(first.sourceTimeDisclosure!!.contains("Apparent temperature"))
+        assertTrue(first.sourceTimeDisclosure!!.contains("Humidity"))
+        val second = view(ten)
+        assertEquals("54°", second.temperature)
+        assertNull(second.apparentTemperature)
+        assertEquals("0%", second.humidity)
+    }
+
     @Test
     fun keepsSelectedInstantSeparateFromNearestExactFactAndSceneBlend() {
         val date = LocalDate.parse("2026-10-28")

@@ -15,6 +15,14 @@ class CatalogDatasetStorageTest {
         return CatalogRecording(result.catalog, result.expectedSupport)
     }
 
+    @Test fun acceptsVersionSixPayload() = runBlocking {
+        val dao = MemoryDao()
+        val storage = CatalogDatasetStorage(dao)
+        storage.save(CatalogStorageNamespace.SIMULATED, recording())
+        assertEquals(6, dao.rows.values.single().payloadFormatVersion)
+        assertTrue(storage.load(location, CatalogStorageNamespace.SIMULATED, request.datasetId) is StoredCatalogResult.Found)
+    }
+
     private class MemoryDao : CatalogDatasetDao {
         val rows = linkedMapOf<String, CatalogDatasetRow>()
         private fun key(row: CatalogDatasetRow) = "${row.locationId}|${row.storageNamespace}|${row.datasetId}|${row.asOfEpochSecond}|${row.asOfNano}"

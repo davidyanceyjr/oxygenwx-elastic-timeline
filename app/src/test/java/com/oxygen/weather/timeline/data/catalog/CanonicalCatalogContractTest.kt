@@ -18,6 +18,31 @@ class CanonicalCatalogContractTest {
     private val interval = AccumulationInterval(validTime.minusSeconds(3600), validTime)
 
     @Test
+    fun apparentTemperaturePreservesIndependentNullZeroAndFactIdentity() {
+        val missing = CanonicalWeatherFacts(validTime, temperatureC = 10.0)
+        val zero = CanonicalWeatherFacts(validTime, temperatureC = 10.0, apparentTemperatureC = 0.0)
+        assertNull(missing.apparentTemperatureC)
+        assertEquals(0.0, zero.apparentTemperatureC!!, 0.0)
+        assertNotEquals(missing, zero)
+        assertEquals(zero.hashCode(), zero.withEvents(emptyList()).hashCode())
+        assertEquals(0.0, zero.withEvents(emptyList()).apparentTemperatureC!!, 0.0)
+        assertThrows(IllegalArgumentException::class.java) {
+            CanonicalWeatherFacts(validTime, apparentTemperatureC = Double.NaN)
+        }
+        val catalog = catalog(CatalogOrigin.LIVE, CatalogProductKind.FORECAST)
+        val withValue = CanonicalCatalog(catalog.location, catalog.datasetId, catalog.provenance,
+            catalog.asOf, listOf(zero))
+        val date = validTime.atZone(catalog.location.timeZone).toLocalDate()
+        val support = mapOf(date to mapOf(CatalogField.APPARENT_TEMPERATURE_C to ExpectedFieldSupport.Points(setOf(validTime))))
+        val window = (CatalogWindow.create(withValue, support) as CatalogWindowResult.Success).window
+        assertEquals(CoverageStatus.COMPLETE, window.days.single { it.date == date }.fieldCoverage[CatalogField.APPARENT_TEMPERATURE_C])
+        val withoutValue = CanonicalCatalog(catalog.location, catalog.datasetId, catalog.provenance,
+            catalog.asOf, listOf(missing))
+        val missingWindow = (CatalogWindow.create(withoutValue, support) as CatalogWindowResult.Success).window
+        assertEquals(CoverageStatus.MISSING, missingWindow.days.single { it.date == date }.fieldCoverage[CatalogField.APPARENT_TEMPERATURE_C])
+    }
+
+    @Test
     fun identityUsesOpaqueNonblankIdsBoundedCoordinatesAndIanaTimeZone() {
         assertEquals("home", LocationId("home").value)
         assertEquals("snapshot-1", DatasetId("snapshot-1").value)

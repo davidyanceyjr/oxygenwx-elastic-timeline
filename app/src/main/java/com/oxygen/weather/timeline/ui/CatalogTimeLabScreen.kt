@@ -51,7 +51,6 @@ import androidx.compose.ui.graphics.Shadow
 import androidx.compose.ui.graphics.StrokeCap
 import androidx.compose.ui.graphics.StrokeJoin
 import androidx.compose.ui.graphics.drawscope.Stroke
-import androidx.compose.ui.graphics.drawscope.rotate
 import androidx.compose.ui.graphics.drawscope.drawIntoCanvas
 import androidx.compose.ui.graphics.nativeCanvas
 import androidx.compose.ui.input.pointer.pointerInput
@@ -136,20 +135,6 @@ private fun CatalogTimeLabScreenContent(
     val compact = with(LocalDensity.current) { fontScale >= 1.3f }
     val latestSelected by rememberUpdatedState(view.selectedInstant)
     val isRtl = LocalLayoutDirection.current == LayoutDirection.Rtl
-    val locale = Locale.getDefault()
-    val eventTimeFormat = remember(locale) { DateTimeFormatter.ofPattern("h:mm a", locale) }
-    val eventDateFormat = remember(locale) { DateTimeFormatter.ofPattern("MMM d", locale) }
-    fun eventTimeLabel(instant: Instant?): String {
-        if (instant == null) return "—"
-        val localEvent = instant.atZone(view.zone)
-        val time = eventTimeFormat.format(localEvent)
-        return if (localEvent.toLocalDate() == view.selectedInstant.atZone(view.zone).toLocalDate()) time
-        else "${eventDateFormat.format(localEvent)} $time"
-    }
-    val solarFacts = sceneReading?.solarEvents
-    val lunarFacts = sceneReading?.lunarDay
-    val solarFactsLine = "SUN ↑ ${eventTimeLabel(solarFacts?.sunriseInstant)}   ↓ ${eventTimeLabel(solarFacts?.sunsetInstant)}"
-    val lunarFactsLine = "MOON ↑ ${eventTimeLabel(lunarFacts?.rise)}   ↓ ${eventTimeLabel(lunarFacts?.set)}"
     val readoutShadow = with(LocalDensity.current) {
         Shadow(
             color = Color.Black.copy(alpha = 0.32f),
@@ -189,7 +174,8 @@ private fun CatalogTimeLabScreenContent(
             }
         }
         Column(
-            Modifier.fillMaxWidth().align(Alignment.Center).offset(y = (-48).dp)
+            Modifier.fillMaxWidth().align(Alignment.Center)
+                .offset(y = (if (compactLayout) -85 else -48).dp)
                 .padding(horizontal = 25.dp * responsiveScale),
             horizontalAlignment = Alignment.CenterHorizontally,
         ) {
@@ -222,6 +208,7 @@ private fun CatalogTimeLabScreenContent(
                     }
                 }
             }
+            Spacer(Modifier.height(14.dp * responsiveScale))
             Column(
                 Modifier.fillMaxWidth()
                     .pointerInput(view.generation, view.zone, view.interval) {
@@ -256,22 +243,40 @@ private fun CatalogTimeLabScreenContent(
                 val symbol = view.weatherSymbolId ?: WeatherSymbolId.CONDITION_UNAVAILABLE
                 val symbolName = if (view.weatherSymbolId == null) symbol.label
                     else view.weatherSymbolName ?: symbol.label
-                Row(
-                    verticalAlignment = Alignment.CenterVertically,
-                    horizontalArrangement = Arrangement.Center,
-                    modifier = Modifier.semantics(mergeDescendants = true) {},
+                Box(
+                    modifier = Modifier.size((if (compactLayout) 214.dp else 270.dp) * responsiveScale,
+                        (if (compactLayout) 103.dp else 129.dp) * responsiveScale),
+                    contentAlignment = Alignment.Center,
                 ) {
-                    Text(view.temperature ?: "—", color = Color.White,
-                        fontSize = (if (compactLayout) 78.sp else 102.sp) * responsiveScale,
-                        fontWeight = FontWeight.Light,
-                        style = TextStyle(shadow = readoutShadow),
-                        modifier = Modifier.testTag("forecastTemperature"))
-                    Spacer(Modifier.size(7.dp * responsiveScale))
+                    Canvas(Modifier.fillMaxSize()) {
+                        drawArc(
+                            color = Color(0xFFFFCF67), startAngle = 180f, sweepAngle = 180f,
+                            useCenter = false, topLeft = Offset(3.dp.toPx(), 3.dp.toPx()),
+                            size = androidx.compose.ui.geometry.Size(size.width - 6.dp.toPx(), size.height * 1.9f),
+                            style = Stroke(width = 2.dp.toPx(), cap = StrokeCap.Round),
+                        )
+                    }
                     WeatherSymbolIcon(
                         symbol = symbol,
-                        modifier = Modifier.size((if (compactLayout) 64.dp else 82.dp) * responsiveScale),
+                        modifier = Modifier.size((if (compactLayout) 56.dp else 72.dp) * responsiveScale)
+                            .offset(y = 22.dp * responsiveScale),
                         contentDescription = symbolName,
                     )
+                }
+                Text(view.temperature ?: "—", color = Color.White,
+                    fontSize = (if (compactLayout) 78.sp else 102.sp) * responsiveScale,
+                    fontWeight = FontWeight.Light,
+                    style = TextStyle(shadow = readoutShadow),
+                    modifier = Modifier.testTag("forecastTemperature"))
+                Row(verticalAlignment = Alignment.CenterVertically) {
+                    Text("≈", color = Color(0xFF59DCEF),
+                        fontSize = (if (compactLayout) 34.sp else 42.sp) * responsiveScale,
+                        fontWeight = FontWeight.Medium)
+                    Spacer(Modifier.width(6.dp * responsiveScale))
+                    Text(view.apparentTemperature ?: "—", color = Color.White,
+                        fontSize = (if (compactLayout) 29.sp else 35.sp) * responsiveScale,
+                        modifier = Modifier.testTag("catalogApparentTemperature")
+                            .semantics { contentDescription = "Apparent temperature ${view.apparentTemperature ?: "unavailable"}" })
                 }
                 Text(view.condition ?: "Condition unavailable", color = Color(0xFFECF3F8),
                     fontSize = 18.sp * responsiveScale, fontWeight = FontWeight.SemiBold,
@@ -284,25 +289,13 @@ private fun CatalogTimeLabScreenContent(
                         style = TextStyle(shadow = readoutShadow),
                         modifier = Modifier.testTag("catalogConditionSourceDisclosure"))
                 }
-                Text(solarFactsLine, color = Color(0xFFECF3F8),
-                    fontSize = 12.sp * responsiveScale, textAlign = TextAlign.Center,
-                    style = TextStyle(shadow = readoutShadow),
-                    modifier = Modifier.testTag("catalogSolarFacts"))
-                Text(lunarFactsLine, color = Color(0xFFECF3F8),
-                    fontSize = 12.sp * responsiveScale, textAlign = TextAlign.Center,
-                    style = TextStyle(shadow = readoutShadow),
-                    modifier = Modifier.testTag("catalogLunarFacts"))
-                Text("HIGH ${view.high ?: "—"}    /    LOW ${view.low ?: "—"}",
-                    color = Color(0xFFECF3F8), fontSize = 12.sp * responsiveScale,
-                    style = TextStyle(shadow = readoutShadow))
             }
         }
         Column(Modifier.fillMaxWidth().align(Alignment.BottomCenter).navigationBarsPadding()) {
             CompositionLocalProvider(LocalLayoutDirection provides LayoutDirection.Ltr) {
                 Row(
-                    Modifier.fillMaxWidth().offset(y = (-23).dp)
-                        .padding(horizontal = 27.dp * responsiveScale),
-                    horizontalArrangement = Arrangement.Center,
+                    Modifier.fillMaxWidth().padding(horizontal = 16.dp * responsiveScale),
+                    horizontalArrangement = Arrangement.SpaceEvenly,
                     verticalAlignment = Alignment.CenterVertically,
                 ) {
                     Column(
@@ -311,17 +304,12 @@ private fun CatalogTimeLabScreenContent(
                             contentDescription = "Precipitation chance ${view.precipitationChance ?: "unavailable"}"
                         },
                     ) {
-                        Row(verticalAlignment = Alignment.CenterVertically) {
-                            Text("☂", color = Color.White.copy(alpha = 0.78f),
-                                fontSize = (if (compactLayout) 15 else 18).sp * responsiveScale)
-                            Spacer(Modifier.width(4.dp * responsiveScale))
-                            Text(view.precipitationChance ?: "Unknown", color = Color.White,
-                                fontSize = (if (compactLayout) 15 else 18).sp * responsiveScale,
-                                fontWeight = FontWeight.Medium,
-                                modifier = Modifier.testTag("catalogPrecipitationChance"))
-                        }
+                        Text("☂", color = Color(0xFF59DCEF), fontSize = 28.sp * responsiveScale)
+                        Text("Precip", color = Color(0xFFECF3F8), fontSize = 13.sp * responsiveScale)
+                        Text(view.precipitationChance ?: "—", color = Color.White,
+                            fontSize = 20.sp * responsiveScale, fontWeight = FontWeight.SemiBold,
+                            modifier = Modifier.testTag("catalogPrecipitationChance"))
                     }
-                    Box(Modifier.weight(1.2f).heightIn(min = 56.dp))
                     Column(
                         horizontalAlignment = Alignment.CenterHorizontally,
                         modifier = Modifier.weight(1f).semantics(mergeDescendants = true) {
@@ -332,14 +320,23 @@ private fun CatalogTimeLabScreenContent(
                             }
                         },
                     ) {
-                        Row(verticalAlignment = Alignment.CenterVertically) {
-                            CatalogWindIndicator(view.windDirectionDegrees, responsiveScale)
-                            Spacer(Modifier.width(4.dp * responsiveScale))
-                            Text(view.wind ?: "Unknown", color = Color.White,
-                                fontSize = (if (compactLayout) 15 else 18).sp * responsiveScale,
-                                fontWeight = FontWeight.Medium,
-                                modifier = Modifier.testTag("catalogWind"))
-                        }
+                        Text("≋", color = Color(0xFF59DCEF), fontSize = 28.sp * responsiveScale)
+                        Text("Wind", color = Color(0xFFECF3F8), fontSize = 13.sp * responsiveScale)
+                        Text(view.wind ?: "—", color = Color.White,
+                            fontSize = 20.sp * responsiveScale, fontWeight = FontWeight.SemiBold,
+                            modifier = Modifier.testTag("catalogWind"))
+                    }
+                    Column(
+                        horizontalAlignment = Alignment.CenterHorizontally,
+                        modifier = Modifier.weight(1f).semantics(mergeDescendants = true) {
+                            contentDescription = "Humidity ${view.humidity ?: "unavailable"}"
+                        },
+                    ) {
+                        CatalogHumidityIcon(responsiveScale)
+                        Text("Humidity", color = Color(0xFFECF3F8), fontSize = 13.sp * responsiveScale)
+                        Text(view.humidity ?: "—", color = Color.White,
+                            fontSize = 20.sp * responsiveScale, fontWeight = FontWeight.SemiBold,
+                            modifier = Modifier.testTag("catalogHumidity"))
                     }
                 }
             }
@@ -388,28 +385,20 @@ private fun CatalogLocationPickerIcon(scale: Float) {
 }
 
 @Composable
-private fun CatalogWindIndicator(bearingDegrees: Double?, scale: Float) {
-    Canvas(Modifier.size(16.dp * scale)) {
-        val color = Color.White.copy(alpha = 0.67f)
-        val center = Offset(size.width / 2f, size.height / 2f)
-        bearingDegrees?.let { bearing ->
-            val radius = size.minDimension * .46f
-            val stroke = 1.7.dp.toPx()
-            rotate(bearing.toFloat(), center) {
-                val needle = Path().apply {
-                    moveTo(center.x, center.y + radius * .55f)
-                    lineTo(center.x, center.y - radius * .55f)
-                    moveTo(center.x - radius * .34f, center.y - radius * .12f)
-                    lineTo(center.x, center.y - radius * .55f)
-                    lineTo(center.x + radius * .34f, center.y - radius * .12f)
-                }
-                drawPath(
-                    needle,
-                    color,
-                    style = Stroke(width = stroke, cap = StrokeCap.Round, join = StrokeJoin.Round),
-                )
-            }
+private fun CatalogHumidityIcon(scale: Float) {
+    Canvas(Modifier.size(29.dp * scale)) {
+        val centerX = size.width / 2f
+        val path = Path().apply {
+            moveTo(centerX, size.height * .08f)
+            cubicTo(size.width * .38f, size.height * .36f, size.width * .15f, size.height * .55f,
+                size.width * .2f, size.height * .7f)
+            cubicTo(size.width * .28f, size.height * 1.02f, size.width * .72f, size.height * 1.02f,
+                size.width * .8f, size.height * .7f)
+            cubicTo(size.width * .85f, size.height * .55f, size.width * .62f, size.height * .36f,
+                centerX, size.height * .08f)
+            close()
         }
+        drawPath(path, Color(0xFF59DCEF), style = Stroke(width = 2.dp.toPx(), cap = StrokeCap.Round))
     }
 }
 

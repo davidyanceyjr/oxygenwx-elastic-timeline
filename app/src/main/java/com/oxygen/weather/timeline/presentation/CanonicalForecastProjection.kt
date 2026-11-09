@@ -58,6 +58,7 @@ data class CanonicalHourlyPresentation(
     val validTime: Instant,
     val facts: CanonicalWeatherFacts,
     val temperature: PresentedMeasurement?,
+    val apparentTemperature: PresentedMeasurement?,
     val windSpeed: PresentedMeasurement?,
     val snow: SnowVisualIdentity,
 )
@@ -239,6 +240,7 @@ object CanonicalForecastProjection {
         validTime = validTime,
         facts = this,
         temperature = temperatureC?.let { temperature(it, units) },
+        apparentTemperature = apparentTemperatureC?.let { temperature(it, units) },
         windSpeed = windSpeedKph?.let { wind(it, units) },
         snow = when {
             WeatherCondition.SNOW in conditions || snowfallCentimeters != null || snowDepthCentimeters != null -> SnowVisualIdentity.SNOW
