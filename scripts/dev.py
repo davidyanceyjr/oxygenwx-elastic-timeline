@@ -8,6 +8,8 @@ import subprocess
 import sys
 import xml.etree.ElementTree as ET
 
+from codex_cycle import WorkflowError, validate_workflow
+
 ROOT = pathlib.Path(__file__).resolve().parents[1]
 PACKAGE = "com.oxygen.weather.timeline"
 
@@ -19,14 +21,18 @@ def gradle(*tasks: str) -> None:
 
 def workflow() -> None:
     required = [
-        "AGENTS.md", "docs/SPECIFICATION.md", "docs/ROADMAP.md",
+        "AGENTS.md", "docs/SPECIFICATION.md", "docs/ROADMAP_SPECIFICATION.md", "docs/ROADMAP.md",
         "docs/UI_DEVELOPMENT_WORKFLOW.md", ".codex/current.md",
-        ".codex/README.md", "app/build.gradle.kts",
+        ".codex/README.md", "scripts/codex_cycle.py", "app/build.gradle.kts",
         "app/src/main/java/com/oxygen/weather/timeline/presentation/ElasticTimeAxis.kt",
     ]
     absent = [name for name in required if not (ROOT / name).is_file()]
     if absent:
         raise RuntimeError("Incomplete prototype scaffold: " + ", ".join(absent))
+    try:
+        validate_workflow(ROOT)
+    except WorkflowError as exc:
+        raise RuntimeError(f"Invalid cycle workflow: {exc}") from exc
     print("Workflow scaffold: OK")
     print((ROOT / ".codex/current.md").read_text(encoding="utf-8").strip())
 

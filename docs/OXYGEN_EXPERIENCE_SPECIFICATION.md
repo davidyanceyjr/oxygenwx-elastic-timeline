@@ -99,8 +99,11 @@ The single authoritative value is the **selected forecast moment**. UI position,
 
 **Established prototype behavior**
 
+**Bounded owner-approved update — P.2.24 (cycle 124, 2026-11-09):** On the active-catalog and fixture/debug surfaces, hourly precision uses a uniform 48 dp/hour scale and supported hourly symbols use 24 dp at their existing `:30` visual midpoints. Existing mapping, icon-free missing/unsupported samples, selected-time authority, daily layout, and gesture rules remain unchanged.
+
 - Under P.2.17, a timeline double-tap activates hourly navigation; under P.2.22, daily entry first selects the touched date's 7:00 AM local target, wrapping to the earliest in-catalog local 7:00 AM if needed. A stationary hold, with or without subsequent drag, does not activate hourly scale.
-- The entire tape transitions to **uniform hourly spacing**, currently around **16 dp per hour**, rather than expanding one isolated day.
+- The entire tape transitions to **uniform hourly spacing**, at **48 dp per hour**, rather than expanding one isolated day.
+- Supported hourly weather symbols appear at their source hours' existing `:30` visual midpoints at 24 dp; missing or unsupported samples remain icon-free.
 - An animated scale transition (currently around **260 ms**) reveals hourly ticks and selective major-hour labels. Avoid drawing all 24 hour labels simultaneously.
 - Dragging now explores hour-level forecast samples under the fixed playhead; the selected hour label is emphasized.
 - Releasing ends the current gesture but leaves hourly precision active. A main-area tap collapses to daily overview and preserves the exact instant. An hourly timeline single tap does not select or collapse; a timeline double-tap returns to daily scale while preserving the exact instant and ignoring its coordinate. The hourly sampling and daily overview remain semantically distinct.

@@ -1,0 +1,69 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1800" height="1050" viewBox="0 0 1800 1050">
+<defs>
+  <linearGradient id="bg" x2="0" y2="1"><stop stop-color="#0c1d31"/><stop offset="1" stop-color="#142e49"/></linearGradient>
+  <style>
+    .title{font:700 38px Arial,sans-serif;fill:#f5f8fc}.sub{font:20px Arial,sans-serif;fill:#b8c9d9}
+    .head{font:700 24px Arial,sans-serif;fill:#fff}.body{font:19px Arial,sans-serif;fill:#d9e5ef}
+    .small{font:16px Arial,sans-serif;fill:#aebfd0}.tag{font:700 17px Arial,sans-serif;fill:#f4d17c}
+  </style>
+</defs>
+<rect width="1800" height="1050" rx="26" fill="url(#bg)"/>
+<text x="66" y="78" class="title">P.2.24 · Hourly forecast glance</text>
+<text x="68" y="117" class="sub">Behavior board · 48 dp/hour and 24 dp symbols · Owner-approved 2026-11-09</text>
+
+<rect x="64" y="155" width="1672" height="168" rx="18" fill="#203954" stroke="#48647f" stroke-width="2"/>
+<text x="94" y="196" class="head">Owner goal</text>
+<text x="94" y="231" class="body">Keep several upcoming hourly weather events on-screen with visible gaps between symbols.</text>
+<text x="94" y="270" class="body">Current: 16 dp/hour · a 360 dp viewport spans about 22.5 hours.</text>
+<text x="940" y="270" class="body">Proposed: 48 dp/hour · the same viewport spans about 7.5 hours.</text>
+
+<rect x="64" y="350" width="817" height="530" rx="18" fill="#142a40" stroke="#3c546c" stroke-width="2"/>
+<rect x="919" y="350" width="817" height="530" rx="18" fill="#142a40" stroke="#3c546c" stroke-width="2"/>
+<text x="96" y="394" class="head">Scale and scrub contract</text>
+<text x="951" y="394" class="head">Three upcoming sample events stay visible</text>
+
+<text x="96" y="439" class="body">One uniform axis; centered playhead remains fixed.</text>
+<text x="96" y="474" class="body">Hourly drag and inverse mapping both use 48 dp/hour.</text>
+<text x="96" y="509" class="body">Existing entry/return gestures and selection rules remain.</text>
+<text x="96" y="544" class="body">Date labels stay at local midnight; event symbols stay at :30.</text>
+
+<!-- left axis example, current 16 dp/hour -->
+<text x="96" y="604" class="small">CURRENT · 16 dp/hour · crowded symbols</text>
+<line x1="108" y1="668" x2="838" y2="668" stroke="#9ab0c4" stroke-width="3"/>
+<line x1="473" y1="621" x2="473" y2="715" stroke="#f8d682" stroke-width="4"/>
+<circle cx="473" cy="668" r="8" fill="#f8d682"/>
+<g fill="#60d1dc">
+  <path d="M477 643c7-14 17-14 24 0-8-4-16-4-24 0z"/><path d="M509 643c7-14 17-14 24 0-8-4-16-4-24 0z"/>
+  <path d="M541 643c7-14 17-14 24 0-8-4-16-4-24 0z"/><path d="M573 643c7-14 17-14 24 0-8-4-16-4-24 0z"/>
+</g>
+<text x="441" y="749" class="small">6p</text><text x="466" y="778" class="tag">7p</text><text x="505" y="749" class="small">8p</text><text x="537" y="749" class="small">9p</text><text x="569" y="749" class="small">10p</text>
+<text x="96" y="822" class="small">A full day currently fits in one viewport-width drag.</text>
+
+<!-- target axis example at 48dp/h: relative 8:30, 9:30, 10:30 centers +72,+120,+168dp -->
+<text x="951" y="439" class="body">At 48 dp/hour, 24 dp symbols have a 24 dp gap.</text>
+<text x="951" y="474" class="body">The next three centers sit at +72, +120, and +168 dp.</text>
+<text x="951" y="509" class="body">Supported icons stay distinct; missing events stay blank.</text>
+<text x="951" y="544" class="body">Symbol mapping, source times, daily scale, and gestures are unchanged.</text>
+<line x1="970" y1="668" x2="1684" y2="668" stroke="#9ab0c4" stroke-width="3"/>
+<line x1="1327" y1="620" x2="1327" y2="716" stroke="#f8d682" stroke-width="4"/>
+<circle cx="1327" cy="668" r="8" fill="#f8d682"/>
+<g stroke="#b4c6d8" stroke-width="2"><line x1="1042" y1="656" x2="1042" y2="682"/><line x1="1137" y1="656" x2="1137" y2="682"/><line x1="1232" y1="656" x2="1232" y2="682"/><line x1="1327" y1="656" x2="1327" y2="682"/><line x1="1422" y1="656" x2="1422" y2="682"/><line x1="1517" y1="656" x2="1517" y2="682"/><line x1="1612" y1="656" x2="1612" y2="682"/></g>
+<g stroke="#e7f2fb" stroke-width="2"><line x1="1089" y1="661" x2="1089" y2="675"/><line x1="1184" y1="661" x2="1184" y2="675"/><line x1="1279" y1="661" x2="1279" y2="675"/><line x1="1375" y1="661" x2="1375" y2="675"/><line x1="1470" y1="661" x2="1470" y2="675"/><line x1="1565" y1="661" x2="1565" y2="675"/><line x1="1660" y1="661" x2="1660" y2="675"/></g>
+<g stroke="#e0f7fb" stroke-width="2.5" stroke-linejoin="round" stroke-linecap="round">
+  <path fill="#60d1dc" d="M1065 650c0-8 7-13 15-11c4-11 16-11 20 0c8-2 12 3 12 11z"/>
+  <path fill="#60d1dc" d="M1160 650c0-8 7-13 15-11c4-11 16-11 20 0c8-2 12 3 12 11z"/>
+  <circle cx="1279" cy="644" r="24" fill="#f4d17c"/><circle cx="1291" cy="636" r="19" fill="#142a40" stroke="none"/>
+  <circle cx="1375" cy="644" r="24" fill="#f4d17c"/><circle cx="1387" cy="636" r="19" fill="#142a40" stroke="none"/>
+  <path fill="#60d1dc" d="M1446 650c0-8 7-13 15-11c4-11 16-11 20 0c8-2 12 3 12 11z"/>
+  <path fill="#60d1dc" d="M1541 650c0-8 7-13 15-11c4-11 16-11 20 0c8-2 12 3 12 11z"/>
+  <path fill="none" d="M1557 655l-4 12m12-12l-4 12m12-12l-4 12"/>
+  <path fill="#60d1dc" d="M1636 650c0-8 7-13 15-11c4-11 16-11 20 0c8-2 12 3 12 11z"/>
+  <path fill="none" d="M1652 655l-4 12m12-12l-4 12m12-12l-4 12"/>
+</g>
+<g text-anchor="middle"><text x="1042" y="750" class="small">4p</text><text x="1327" y="778" class="tag">7p</text><text x="1612" y="750" class="small">10p</text></g>
+<text x="951" y="850" class="small">Icons represent each source hour at its existing :30 visual midpoint.</text>
+
+<rect x="64" y="910" width="1672" height="94" rx="16" fill="#213c56"/>
+<text x="94" y="950" class="body">Daily → hourly: existing scale-entry selection · Hourly drag: 48 dp/hour · Hourly → daily: existing return behavior</text>
+<text x="94" y="983" class="small">Selection remains authoritative. No forecast values, event identities, or missing samples are inferred.</text>
+</svg>

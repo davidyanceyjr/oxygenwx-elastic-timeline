@@ -1,0 +1,88 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1440" height="1160" viewBox="0 0 1440 1160" role="img" aria-labelledby="title desc">
+  <title id="title">Timeline midnight labels and half-hour event icon behavior board</title>
+  <desc id="desc">Product-owner-approved revised behavior board dated 2026-11-09. Daily and hourly weekday labels sit at local midnight boundaries. In hourly mode, catalog event symbols and fixture symbols from an explicit six-condition mapping are drawn at the half-hour midpoint while their source facts remain at the exact hour. Releasing a daily drag selects local noon on its target date. A debug SIMULATED request beyond the complete 44-local-date window clamps to its last instant; this is not a partial-day support clamp.</desc>
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#f3f6fa"/><stop offset="1" stop-color="#dce5ee"/></linearGradient>
+    <linearGradient id="tape" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#18304d"/><stop offset="1" stop-color="#091a2d"/></linearGradient>
+  </defs>
+  <rect width="1440" height="1160" fill="url(#bg)"/>
+  <text x="64" y="68" fill="#172b43" font-family="sans-serif" font-size="34" font-weight="700">Timeline labels and hourly event placement</text>
+  <text x="64" y="105" fill="#315f8d" font-family="sans-serif" font-size="19" font-weight="700">OWNER APPROVED · FIXTURE MAP + NOON RELEASE + WINDOW EDGE · 2026-11-09</text>
+
+  <g font-family="sans-serif">
+    <rect x="64" y="140" width="1312" height="280" rx="20" fill="#fff" stroke="#b7c3cf" stroke-width="2"/>
+    <text x="96" y="183" fill="#315f8d" font-size="20" font-weight="700" letter-spacing="1.5">DAILY SCALE · LABEL MARKS THE DATE START</text>
+    <rect x="96" y="207" width="1248" height="164" rx="14" fill="url(#tape)"/>
+    <line x1="128" y1="305" x2="1312" y2="305" stroke="#9ab0c5" stroke-width="2" opacity=".5"/>
+    <line x1="280" y1="258" x2="280" y2="322" stroke="#e4edf6" stroke-width="2"/>
+    <line x1="720" y1="258" x2="720" y2="322" stroke="#e4edf6" stroke-width="2"/>
+    <line x1="1160" y1="258" x2="1160" y2="322" stroke="#e4edf6" stroke-width="2"/>
+    <text x="280" y="246" text-anchor="middle" fill="#fff" font-size="20" font-weight="700">WED</text>
+    <text x="720" y="246" text-anchor="middle" fill="#fff" font-size="20" font-weight="700">THU</text>
+    <text x="1160" y="246" text-anchor="middle" fill="#fff" font-size="20" font-weight="700">FRI</text>
+    <text x="280" y="345" text-anchor="middle" fill="#aac0d4" font-size="15">local 00:00</text>
+    <text x="720" y="345" text-anchor="middle" fill="#aac0d4" font-size="15">local 00:00</text>
+    <text x="1160" y="345" text-anchor="middle" fill="#aac0d4" font-size="15">local 00:00</text>
+    <circle cx="500" cy="292" r="20" fill="#ffd46b" stroke="#fff2c8" stroke-width="3"/>
+    <path d="M480 300c0-10 8-18 18-18 4-10 18-12 24-3 10-2 18 5 18 15 0 8-6 14-15 14h-29c-9 0-16-3-16-8z" fill="#d6e8f5" stroke="#fff" stroke-width="2"/>
+    <text x="500" y="348" text-anchor="middle" fill="#d6e8f5" font-size="15">daily symbol + high stay at noon overview</text>
+    <text x="96" y="397" fill="#4e6176" font-size="16">Date label moves to midnight; daily representative content keeps its established date-center position.</text>
+
+    <rect x="64" y="445" width="1312" height="300" rx="20" fill="#fff" stroke="#6c96bd" stroke-width="3"/>
+    <text x="96" y="488" fill="#315f8d" font-size="20" font-weight="700" letter-spacing="1.5">HOURLY SCALE · FACT AT :00, SYMBOL AT :30</text>
+    <rect x="96" y="512" width="1248" height="184" rx="14" fill="url(#tape)"/>
+    <line x1="128" y1="622" x2="1312" y2="622" stroke="#9ab0c5" stroke-width="2" opacity=".5"/>
+    <line x1="240" y1="563" x2="240" y2="641" stroke="#e4edf6" stroke-width="2"/>
+    <line x1="480" y1="579" x2="480" y2="634" stroke="#fff" stroke-width="2" opacity=".7"/>
+    <line x1="720" y1="579" x2="720" y2="634" stroke="#fff" stroke-width="2" opacity=".7"/>
+    <line x1="960" y1="579" x2="960" y2="634" stroke="#fff" stroke-width="2" opacity=".7"/>
+    <line x1="1200" y1="563" x2="1200" y2="641" stroke="#e4edf6" stroke-width="2"/>
+    <text x="240" y="552" text-anchor="middle" fill="#fff" font-size="19" font-weight="700">THU</text>
+    <text x="240" y="671" text-anchor="middle" fill="#aac0d4" font-size="15">00:00</text>
+    <text x="480" y="660" text-anchor="middle" fill="#aac0d4" font-size="15">01:00</text>
+    <text x="720" y="660" text-anchor="middle" fill="#aac0d4" font-size="15">02:00</text>
+    <text x="960" y="660" text-anchor="middle" fill="#aac0d4" font-size="15">03:00</text>
+    <text x="1200" y="552" text-anchor="middle" fill="#fff" font-size="19" font-weight="700">FRI</text>
+    <text x="1200" y="671" text-anchor="middle" fill="#aac0d4" font-size="15">00:00</text>
+    <g fill="#b9d1e6" stroke="#f4f9ff" stroke-width="2">
+      <path d="M335 597c0-8 6-14 14-14 3-8 15-9 20-2 8-2 14 4 14 12 0 6-5 11-12 11h-23c-7 0-13-3-13-7z"/>
+      <path d="M575 597c0-8 6-14 14-14 3-8 15-9 20-2 8-2 14 4 14 12 0 6-5 11-12 11h-23c-7 0-13-3-13-7z"/>
+      <path d="M815 597c0-8 6-14 14-14 3-8 15-9 20-2 8-2 14 4 14 12 0 6-5 11-12 11h-23c-7 0-13-3-13-7z"/>
+      <path d="M1055 597c0-8 6-14 14-14 3-8 15-9 20-2 8-2 14 4 14 12 0 6-5 11-12 11h-23c-7 0-13-3-13-7z"/>
+    </g>
+    <g stroke="#8fa9c0" stroke-width="2">
+      <line x1="360" y1="622" x2="360" y2="632"/><line x1="600" y1="622" x2="600" y2="632"/>
+      <line x1="840" y1="622" x2="840" y2="632"/><line x1="1080" y1="622" x2="1080" y2="632"/>
+    </g>
+    <text x="360" y="650" text-anchor="middle" fill="#ffd46b" font-size="14" font-weight="700">00:30</text>
+    <text x="600" y="650" text-anchor="middle" fill="#ffd46b" font-size="14" font-weight="700">01:30</text>
+    <text x="840" y="650" text-anchor="middle" fill="#ffd46b" font-size="14" font-weight="700">02:30</text>
+    <text x="1080" y="650" text-anchor="middle" fill="#ffd46b" font-size="14" font-weight="700">03:30</text>
+    <text x="96" y="727" fill="#4e6176" font-size="16">Each symbol represents its own supported :00 sample; :30 is a display midpoint, not a new weather fact.</text>
+
+    <rect x="64" y="770" width="1312" height="86" rx="16" fill="#fff" stroke="#c1ccd6" stroke-width="2"/>
+    <text x="92" y="807" fill="#172b43" font-size="18" font-weight="700">Daily interaction</text>
+    <text x="260" y="807" fill="#34475b" font-size="16">Drag release → local noon · debug request beyond D+13 → existing full-window end clamp</text>
+    <text x="92" y="837" fill="#4e6176" font-size="15">Scale-only collapse preserves the exact instant · double-tap still enters at 07:00 · hourly scrub unchanged · no fabricated :30 fact.</text>
+
+    <rect x="64" y="875" width="1312" height="250" rx="18" fill="#fff8ef" stroke="#dc9b5e" stroke-width="2"/>
+    <text x="96" y="917" fill="#774215" font-size="20" font-weight="700" letter-spacing="1.2">FIXTURE / DEBUG ONLY · CONDITION TO EXISTING SYMBOL</text>
+    <g fill="#fff" stroke="#dec9b4" stroke-width="1.5">
+      <rect x="96" y="936" width="382" height="54" rx="10"/>
+      <rect x="529" y="936" width="382" height="54" rx="10"/>
+      <rect x="962" y="936" width="382" height="54" rx="10"/>
+      <rect x="96" y="1000" width="382" height="54" rx="10"/>
+      <rect x="529" y="1000" width="382" height="54" rx="10"/>
+      <rect x="962" y="1000" width="382" height="54" rx="10"/>
+    </g>
+    <g fill="#263b51" font-size="17">
+      <text x="118" y="970"><tspan font-weight="700">CLEAR</tspan><tspan dx="20">→ SUNNY</tspan></text>
+      <text x="551" y="970"><tspan font-weight="700">PARTLY_CLOUDY</tspan><tspan dx="14">→ PARTLY_SUNNY_CLOUDY</tspan></text>
+      <text x="984" y="970"><tspan font-weight="700">CLOUDY</tspan><tspan dx="20">→ CLOUDY_OVERCAST</tspan></text>
+      <text x="118" y="1034"><tspan font-weight="700">RAIN</tspan><tspan dx="20">→ RAIN</tspan></text>
+      <text x="551" y="1034"><tspan font-weight="700">SNOW</tspan><tspan dx="20">→ SNOW</tspan></text>
+      <text x="984" y="1034"><tspan font-weight="700">STORM</tspan><tspan dx="20">→ THUNDERSTORM</tspan></text>
+    </g>
+    <text x="96" y="1091" fill="#694e36" font-size="15">Maps existing PresentedCondition inputs to existing WeatherSymbolId artwork only; no new fact. Unmapped future categories stay icon-free.</text>
+  </g>
+</svg>

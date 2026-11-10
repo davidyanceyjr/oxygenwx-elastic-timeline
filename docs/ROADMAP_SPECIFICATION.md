@@ -8,17 +8,70 @@ The roadmap is the ordered, durable list of bounded work slices. A roadmap slice
 
 - A **slice ID** (such as `P.2.9`) identifies a stable roadmap outcome. Keep it unchanged when ordering or inserting other slices.
 - A **cycle ID** (such as `021-p2-acceptance-closure`) identifies one unique, chronological bounded execution. It is independent of the slice ID and roadmap position; never derive it from the slice number.
-- Each cycle names the slice it addresses. A later bounded attempt at the same slice receives a new cycle ID; an inserted or split slice gets its own slice ID and receives a cycle ID only when work is planned.
-- `.codex/current.md` identifies the active cycle, its slice, and plan.
+- Each cycle names the one or more slices it addresses. A later bounded attempt at the same slice receives a new cycle ID; an inserted or split slice gets its own slice ID and receives a cycle ID only when work is planned.
+- `.codex/current.md` identifies the open cycle, its ordered slice roster, current stage, active slice when one exists, and plan.
 - `.codex/plans/` holds the bounded execution plan for an active or planned cycle.
 - `.codex/test-artifacts/<cycle-id>/` holds actual evidence, including device captures.
 - `.codex/history/` holds closed cycle outcomes, verification performed, and limitations.
 
 Assign the next cycle number after the latest cycle record. Do not reuse a cycle
-ID or renumber existing cycles when inserting roadmap work. Include both the
-cycle ID and slice ID in plan and history metadata, and use the cycle ID in the
+ID or renumber existing cycles when inserting roadmap work. Include the cycle ID
+and every slice ID in plan and history metadata, and use the cycle ID in the
 plan, evidence, and history paths. This keeps roadmap state distinct from the
 execution chronology while preserving a traceable record across the Git diff.
+
+A cycle contains one or more stable slice IDs in dependency order. A single
+slice remains the default when outcomes are unrelated. Each roster entry keeps
+its own objective, dependencies, approved board package, exit, authorized
+verification, status, outcome, and evidence. In-cycle dependencies must appear
+earlier in the roster; dependencies outside it must already be resolved. At
+most one roster slice is `ACTIVE`. Later slices remain `PLANNED` until all
+dependencies are complete and they are selected as the next eligible item.
+Cycle 117 is the initial single-slice compatibility example; it does not imply
+that unrelated existing roadmap work belongs in one cycle.
+
+## Cycle state and workflow checkpoints
+
+Cycle lifecycle and workflow stage are separate fields:
+
+- **IDLE** — no open cycle.
+- **PLANNED** — slice intake, boards, first draft, or review is underway; no
+  roadmap slice is `ACTIVE`.
+- **ACTIVE** — an eligible slice is being executed, or the cycle is in
+  closeout. At most one roster slice and one roadmap slice are `ACTIVE`.
+- **PAUSED** — the same cycle is paused at a saved stage. Record `Resume state`
+  as `PLANNED` or `ACTIVE`; keep the cycle ID, roster, active slice, plan, and
+  roadmap statuses unchanged.
+
+The stage values are `SLICE`, `BOARDS`, `DRAFT`, `REVIEW`, `EXECUTE`, and
+`CLOSEOUT`. Starting a cycle begins at `SLICE`. Advance only after saving the
+current stage output. Activation requires a final plan and approved required
+boards for every roster slice, then marks the first dependency-eligible slice
+`ACTIVE` and enters `EXECUTE`. After a slice closes, the tracker may activate
+the next eligible roster member. Enter `CLOSEOUT` only after each included
+slice is complete or has an exact terminal outcome; a cycle is not `DONE` just
+because a stage or command ran.
+
+Every stage boundary stores a durable checkpoint in the current plan with:
+cycle ID and ordered slice IDs; current stage and prior cycle state; accepted
+boards and completed gates; decisions and open questions; completed outputs;
+actual evidence; exact next-stage read-set paths; and the next action. The
+current pointer repeats the state, cycle ID, roster, active slice, stage, and
+plan path so `python scripts/dev.py workflow` can reject mismatches. A
+`PAUSED` pointer also records its prior state. Resume restores that state at
+the saved stage without replacing identifiers, losing accepted gates, or
+repeating completed work. Reopen an earlier gate only if its approved input
+changes or new evidence contradicts it. A pending owner answer is a pause, not
+a failed cycle or roadmap blocker.
+
+The cycle plan carries a versioned JSON roster and checkpoint between explicit
+`cycle-manifest` and `cycle-checkpoint` markers. The tracker validates unique
+IDs, dependency order, one active slice, per-slice approvals and exits, pointer
+consistency, checkpoint fields, and roadmap statuses. It preserves readability
+of existing single-slice records; closed historical records are not rewritten.
+Record a content fingerprint for every file in an approved board package. A
+changed or missing approved input invalidates that approval until it is reviewed
+and recorded again.
 
 Roadmap changes do not silently expand an active slice. Scope or ordering changes are recorded in the active plan/history and reflected in the roadmap before dependent work proceeds.
 
@@ -27,7 +80,7 @@ Roadmap changes do not silently expand an active slice. Scope or ordering change
 Every leaf slice has exactly one status:
 
 - **NEXT** — the sole recommended slice to activate next. It has no unresolved dependency. A roadmap may retain one NEXT while another slice is ACTIVE.
-- **ACTIVE** — currently being executed. At most one roadmap slice is ACTIVE, and it must correspond to the active cycle in `.codex/current.md`.
+- **ACTIVE** — currently being executed. At most one roadmap slice is ACTIVE, and it must correspond to the active slice in `.codex/current.md`.
 - **PLANNED** — ordered work that is not the next slice and has no active blocker.
 - **DONE** — the defined exit was met and its evidence is recorded in `.codex/history/`.
 - **CANCELLED** — the owner explicitly removed the slice from the roadmap. Preserve the ID and record the decision and reason; do not treat it as unfinished work or a dependency.

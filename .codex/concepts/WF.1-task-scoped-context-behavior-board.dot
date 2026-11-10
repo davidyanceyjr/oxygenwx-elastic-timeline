@@ -1,0 +1,24 @@
+digraph WF1 {
+  graph [layout=neato, dpi=110, label="WF.1  |  WORKFLOW LIFECYCLE + SKILL HANDOFF\nBehavior board • PRODUCT-OWNER APPROVED • 2026-11-07", labelloc=t, fontsize=21, fontname="DejaVu Sans", fontcolor="#edf4f7", bgcolor="#102233", pad=0.24, overlap=false, splines=ortho];
+  node [shape=box, style="rounded,filled", color="#64869a", fillcolor="#1b394b", fontcolor="#edf4f7", fontname="DejaVu Sans", fontsize=11, margin="0.16,0.10", penwidth=1.5, pin=true];
+  edge [color="#83c9bf", fontcolor="#edf4f7", fontname="DejaVu Sans", fontsize=9, penwidth=1.7, arrowsize=0.72];
+
+  idle_in [label="IDLE\nGeneral questions, concepts, future ideas\nNo active cycle", fillcolor="#24536a", width=3.4, pos="202,576!"];
+  slices [label="IDEA → SLICE(S)\nRoadmap-format leaf slices • stable WF.* IDs\nSplit large outcomes; order real dependencies\nSkills: oxygen-plan-next-slice + slice-select (overlap)", fillcolor="#294d65", width=4.05, pos="727,576!"];
+  boards [label="SLICE → BOARD(S)\nBehavior/state board per slice\nUI artwork for visual work\nOwner approves before first plan draft", fillcolor="#294d65", width=3.75, pos="727,432!"];
+  draft [label="APPROVED BOARDS → FIRST DRAFT\nBounded scope • exit • authorized checks • evidence\nSkills: oxygen-plan-next-slice + slice-select (overlap)", fillcolor="#294d65", width=4.0, pos="202,432!"];
+  review [label="DRAFT → FINISHED PLAN\nReview and resolve gaps in a loop\nUse repository evidence; ask owner when a decision remains\nSkills: oxygen-review-plan / review-planned-draft (overlap)\nresolve-plan-ambiguity • audit-planned-context • rate-plan", fillcolor="#71542e", color="#edc477", width=4.5, pos="202,288!"];
+  execute [label="FINISHED PLAN → EXECUTE\nActivate an eligible bounded slice\nMaterial gap? Pause, ask owner, record answer, then resume\nSkills: oxygen-execute-plan / execute-plan (overlap)", fillcolor="#294d65", width=4.35, pos="727,288!"];
+  close [label="REVIEW & CLOSE\nReview scoped checks and evidence\nFix in-scope failures; rerun authorized checks\nDONE only on exit; otherwise record blocker and follow-up", fillcolor="#245247", color="#7ad3b8", width=4.35, pos="727,144!"];
+  idle_out [label="IDLE\nReady for the next question or idea", fillcolor="#24536a", width=3.4, pos="202,144!"];
+
+  idle_in:e -> slices:w [label="new idea"];
+  slices:s -> boards:n [label="one or many slices"];
+  boards:w -> draft:e [label="approved package"];
+  draft:s -> review:n [label="first draft"];
+  review:e -> execute:w [label="finished + eligible"];
+  execute:s -> close:n [label="planned work + checks"];
+  close:w -> idle_out:e [label="exit met or cycle recorded"];
+
+  note [shape=note, label="PAUSE / RESUME AT EVERY STAGE BOUNDARY\nPersist cycle/slice IDs, stage, outputs/approvals, decisions, evidence, exact read set,\nand next action. Pause keeps the same cycle and accepted work: no reset, failure,\nstatus downgrade, replacement ID, lost work, or repeated gates. Resume at saved stage;\nreopen earlier work only if an approved input changes or evidence contradicts it.\nCONTEXT: Load current-stage material, boards, exact dependencies, and linked authority.\nRead completed roadmap/history only for a named dependency, conflict, or audit.\nSLICE GROUPING: Owner target groups focused slices in one cycle (e.g. 117 →\nEX.1.01…EX.1.04), dependencies first. Current ROADMAP_SPECIFICATION.md says\none slice per cycle; update the authority and lifecycle tooling before adoption.\nSKILL OVERLAP: planning (oxygen-plan-next-slice / slice-select), review\n(oxygen-review-plan / review-planned-draft), execution (oxygen-execute-plan /\nexecute-plan). Specialists: resolve-plan-ambiguity, audit-planned-context,\nrate-plan; compact-history is a separate history task.", fillcolor="#293a52", color="#a8b9d2", fontsize=9, width=12.0, pos="464,0!"];
+}

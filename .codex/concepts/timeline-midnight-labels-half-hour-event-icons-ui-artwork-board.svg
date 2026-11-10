@@ -1,0 +1,105 @@
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="1920" height="1300" viewBox="0 0 1920 1300" role="img" aria-labelledby="title desc">
+  <title id="title">Timeline midnight labels and half-hour event icons UI artwork board</title>
+  <desc id="desc">Product-owner-approved UI artwork dated 2026-11-09, paired with an unedited installed Pixel 3 XL daily-screen capture. Proposed daily and hourly timeline strips put weekday labels at local midnight. Daily summary content stays at noon; compact hourly event symbols sit at half-hour positions.</desc>
+  <defs>
+    <linearGradient id="page" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#f2f5f8"/><stop offset="1" stop-color="#dce5ee"/></linearGradient>
+    <linearGradient id="tape" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#254b6c"/><stop offset=".42" stop-color="#112a43"/><stop offset="1" stop-color="#08182a"/></linearGradient>
+    <clipPath id="captureClip"><rect x="108" y="230" width="420" height="864" rx="12"/></clipPath>
+  </defs>
+  <rect width="1920" height="1300" fill="url(#page)"/>
+  <text x="64" y="68" fill="#172b43" font-family="sans-serif" font-size="34" font-weight="700">Timeline tape · UI artwork board</text>
+  <text x="64" y="106" fill="#4e6176" font-family="sans-serif" font-size="19">BEHAVIOR BOARD APPROVED · UI ARTWORK APPROVED 2026-11-09 · capture-led proposals</text>
+
+  <!-- The installed capture is retained unedited as the actual before reference. -->
+  <g font-family="sans-serif">
+    <rect x="64" y="150" width="500" height="1080" rx="20" fill="#fff" stroke="#b7c3cf" stroke-width="2"/>
+    <text x="88" y="192" fill="#315f8d" font-size="18" font-weight="700" letter-spacing="1.3">INSTALLED REFERENCE · DAILY</text>
+    <text x="88" y="216" fill="#5b6d7f" font-size="14">Pixel 3 XL · captured 2026-11-09 · unedited</text>
+    <image x="108" y="230" width="420" height="864" preserveAspectRatio="xMidYMid meet" href="timeline-midnight-labels-half-hour-event-icons-before.png" xlink:href="timeline-midnight-labels-half-hour-event-icons-before.png" clip-path="url(#captureClip)"/>
+    <rect x="100" y="921" width="436" height="145" rx="12" fill="none" stroke="#ffcf67" stroke-width="4" stroke-dasharray="12 8"/>
+    <rect x="88" y="1107" width="452" height="80" rx="10" fill="#eef3f7"/>
+    <text x="105" y="1137" fill="#34475b" font-size="14" font-weight="700">Current daily tape</text>
+    <text x="105" y="1162" fill="#4e6176" font-size="13">Weekday, daily symbol and HI are centered in each day.</text>
+
+    <rect x="600" y="150" width="1256" height="478" rx="20" fill="#fff" stroke="#6c96bd" stroke-width="3"/>
+    <text x="632" y="193" fill="#315f8d" font-size="19" font-weight="700" letter-spacing="1.5">DAILY SCALE · PROPOSED</text>
+    <text x="632" y="220" fill="#5b6d7f" font-size="15">Date labels move to midnight; date summaries stay at their noon overview.</text>
+    <rect x="628" y="240" width="1200" height="306" rx="15" fill="url(#tape)"/>
+    <path d="M628 506l86-49 68 35 78-64 70 55 75-38 83 57 80-51 82 47 80-57 79 48 75-35 82 52 82-45 80 45v40H628z" fill="#173752" opacity=".42"/>
+    <line x1="650" y1="413" x2="1806" y2="413" stroke="#c4d4e1" stroke-width="2" opacity=".45"/>
+    <line x1="780" y1="316" x2="780" y2="432" stroke="#e8f0f6" stroke-width="2"/>
+    <line x1="1190" y1="316" x2="1190" y2="432" stroke="#e8f0f6" stroke-width="2"/>
+    <line x1="1600" y1="316" x2="1600" y2="432" stroke="#e8f0f6" stroke-width="2"/>
+    <text x="780" y="302" text-anchor="middle" fill="#f4f8fb" font-size="19" font-weight="700">WED</text>
+    <text x="1190" y="302" text-anchor="middle" fill="#f4f8fb" font-size="19" font-weight="700">THU</text>
+    <text x="1600" y="302" text-anchor="middle" fill="#f4f8fb" font-size="19" font-weight="700">FRI</text>
+    <text x="780" y="457" text-anchor="middle" fill="#b5c9d9" font-size="14">local 00:00</text>
+    <text x="1190" y="457" text-anchor="middle" fill="#b5c9d9" font-size="14">local 00:00</text>
+    <text x="1600" y="457" text-anchor="middle" fill="#b5c9d9" font-size="14">local 00:00</text>
+    <!-- The representative WED event and high remain centered at WED noon. -->
+    <circle cx="985" cy="373" r="18" fill="#ffb72f" stroke="#ffe6a5" stroke-width="2"/>
+    <path d="M964 385c0-9 7-16 16-16 4-9 16-10 22-3 8-2 15 4 15 13 0 7-5 12-13 12h-26c-8 0-14-3-14-6z" fill="#d7e6f1" stroke="#f6fbff" stroke-width="2"/>
+    <text x="985" y="462" text-anchor="middle" fill="#e7eef5" font-size="18" font-weight="700">HI 66°</text>
+    <!-- Exact selected time/playhead is unchanged and can coincide with the noon overview. -->
+    <line x1="1395" y1="345" x2="1395" y2="438" stroke="#ffe2a7" stroke-width="3"/>
+    <circle cx="1395" cy="413" r="7" fill="#ffe2a7"/>
+    <circle cx="1395" cy="373" r="18" fill="#ffb72f" stroke="#ffe6a5" stroke-width="2"/>
+    <path d="M1374 385c0-9 7-16 16-16 4-9 16-10 22-3 8-2 15 4 15 13 0 7-5 12-13 12h-26c-8 0-14-3-14-6z" fill="#d7e6f1" stroke="#f6fbff" stroke-width="2"/>
+    <text x="1395" y="462" text-anchor="middle" fill="#ffd36d" font-size="18" font-weight="700">HI 67°</text>
+    <rect x="1338" y="486" width="114" height="27" rx="14" fill="#10273d" stroke="#7890a5"/>
+    <text x="1395" y="505" text-anchor="middle" fill="#ffe2a7" font-size="14" font-weight="700">11:02 AM</text>
+    <text x="632" y="589" fill="#4e6176" font-size="15">Labels identify date starts; symbols and daily highs continue to follow their existing date-center overview.</text>
+
+    <rect x="600" y="654" width="1256" height="478" rx="20" fill="#fff" stroke="#6c96bd" stroke-width="3"/>
+    <text x="632" y="697" fill="#315f8d" font-size="19" font-weight="700" letter-spacing="1.5">HOURLY SCALE · PROPOSED</text>
+    <text x="632" y="724" fill="#5b6d7f" font-size="15">Weekday at midnight · hourly fact at :00 · compact event symbol at :30</text>
+    <rect x="628" y="744" width="1200" height="306" rx="15" fill="url(#tape)"/>
+    <path d="M628 1012l83-48 70 36 80-58 70 52 75-34 78 46 82-50 81 43 79-56 79 45 78-38 82 51 84-48 79 48v49H628z" fill="#173752" opacity=".42"/>
+    <line x1="650" y1="953" x2="1806" y2="953" stroke="#c4d4e1" stroke-width="2" opacity=".45"/>
+    <line x1="700" y1="804" x2="700" y2="974" stroke="#e8f0f6" stroke-width="2.5"/>
+    <line x1="865" y1="847" x2="865" y2="972" stroke="#fff" stroke-width="2" opacity=".74"/>
+    <line x1="1030" y1="847" x2="1030" y2="972" stroke="#fff" stroke-width="2" opacity=".74"/>
+    <line x1="1195" y1="847" x2="1195" y2="972" stroke="#fff" stroke-width="2" opacity=".74"/>
+    <line x1="1360" y1="847" x2="1360" y2="972" stroke="#fff" stroke-width="2" opacity=".74"/>
+    <line x1="1525" y1="847" x2="1525" y2="972" stroke="#fff" stroke-width="2" opacity=".74"/>
+    <line x1="1690" y1="847" x2="1690" y2="972" stroke="#fff" stroke-width="2" opacity=".74"/>
+    <text x="700" y="835" text-anchor="middle" fill="#f4f8fb" font-size="19" font-weight="700">WED</text>
+    <text x="700" y="997" text-anchor="middle" fill="#b5c9d9" font-size="14">12a</text>
+    <text x="865" y="991" text-anchor="middle" fill="#b5c9d9" font-size="14">1a</text>
+    <text x="1030" y="991" text-anchor="middle" fill="#b5c9d9" font-size="14">2a</text>
+    <text x="1195" y="991" text-anchor="middle" fill="#b5c9d9" font-size="14">3a</text>
+    <text x="1360" y="991" text-anchor="middle" fill="#b5c9d9" font-size="14">4a</text>
+    <text x="1525" y="991" text-anchor="middle" fill="#b5c9d9" font-size="14">5a</text>
+    <text x="1690" y="991" text-anchor="middle" fill="#b5c9d9" font-size="14">6a</text>
+    <!-- Same supported event-symbol artwork, reduced to fit one symbol per hourly interval. -->
+    <g fill="#d7e6f1" stroke="#f6fbff" stroke-width="1.7">
+      <path d="M759 898c0-6 5-11 11-11 3-6 11-7 15-2 6-1 11 3 11 9 0 5-4 9-9 9h-19c-5 0-9-2-9-5z"/>
+      <path d="M924 898c0-6 5-11 11-11 3-6 11-7 15-2 6-1 11 3 11 9 0 5-4 9-9 9h-19c-5 0-9-2-9-5z"/>
+      <path d="M1089 898c0-6 5-11 11-11 3-6 11-7 15-2 6-1 11 3 11 9 0 5-4 9-9 9h-19c-5 0-9-2-9-5z"/>
+      <path d="M1254 898c0-6 5-11 11-11 3-6 11-7 15-2 6-1 11 3 11 9 0 5-4 9-9 9h-19c-5 0-9-2-9-5z"/>
+      <path d="M1419 898c0-6 5-11 11-11 3-6 11-7 15-2 6-1 11 3 11 9 0 5-4 9-9 9h-19c-5 0-9-2-9-5z"/>
+      <path d="M1584 898c0-6 5-11 11-11 3-6 11-7 15-2 6-1 11 3 11 9 0 5-4 9-9 9h-19c-5 0-9-2-9-5z"/>
+    </g>
+    <g stroke="#a9bdcf" stroke-width="2">
+      <line x1="782" y1="953" x2="782" y2="966"/><line x1="947" y1="953" x2="947" y2="966"/>
+      <line x1="1112" y1="953" x2="1112" y2="966"/><line x1="1277" y1="953" x2="1277" y2="966"/>
+      <line x1="1442" y1="953" x2="1442" y2="966"/><line x1="1607" y1="953" x2="1607" y2="966"/>
+    </g>
+    <text x="782" y="986" text-anchor="middle" fill="#ffd36d" font-size="12" font-weight="700">:30</text>
+    <text x="947" y="986" text-anchor="middle" fill="#ffd36d" font-size="12" font-weight="700">:30</text>
+    <text x="1112" y="986" text-anchor="middle" fill="#ffd36d" font-size="12" font-weight="700">:30</text>
+    <text x="1277" y="986" text-anchor="middle" fill="#ffd36d" font-size="12" font-weight="700">:30</text>
+    <text x="1442" y="986" text-anchor="middle" fill="#ffd36d" font-size="12" font-weight="700">:30</text>
+    <text x="1607" y="986" text-anchor="middle" fill="#ffd36d" font-size="12" font-weight="700">:30</text>
+    <line x1="898" y1="826" x2="898" y2="974" stroke="#ffe2a7" stroke-width="3"/>
+    <circle cx="898" cy="953" r="7" fill="#ffe2a7"/>
+    <rect x="843" y="1010" width="110" height="27" rx="14" fill="#10273d" stroke="#7890a5"/>
+    <text x="898" y="1029" text-anchor="middle" fill="#ffe2a7" font-size="14" font-weight="700">1:12 AM</text>
+    <text x="632" y="1094" fill="#4e6176" font-size="15">Small midpoint symbols remain secondary to the playhead; no symbol appears for missing or unsupported hours.</text>
+
+    <rect x="600" y="1156" width="1256" height="74" rx="16" fill="#fff" stroke="#c1ccd6" stroke-width="2"/>
+    <text x="626" y="1187" fill="#172b43" font-size="16" font-weight="700">Reference note</text>
+    <text x="756" y="1187" fill="#34475b" font-size="15">The left image is an untouched installed capture; the two right strips are proposed artwork, not installed evidence.</text>
+    <text x="626" y="1213" fill="#4e6176" font-size="14">Half-hour placement is visual only; event data and source disclosure remain at the original hourly instant.</text>
+  </g>
+</svg>

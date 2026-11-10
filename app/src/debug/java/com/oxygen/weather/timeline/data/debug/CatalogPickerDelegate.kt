@@ -676,14 +676,22 @@ internal suspend fun processCatalogActivationRequest(
     check(stillCurrent()) { "Debug session ended while looking up the saved location" }
     require(saved is SavedLocationResult.Selected && saved.location != null) { "Saved location is missing or malformed" }
     val selectedInstant = values.selectedInstant?.let(Instant::parse)
-    require(selectedInstant == null ||
-        (origin == CatalogOrigin.REPLAY && datasetId.value in setOf(
+    val zone = saved.location.location.timeZone
+    val simulatedWindowEndProbe = origin == CatalogOrigin.SIMULATED &&
+        datasetId.value == DebugCatalogActivity.SIMULATED_DATASET_ID &&
+        selectedInstant?.let { requested ->
+            val earliestProbe = Instant.now().atZone(zone).toLocalDate().plusDays(15)
+                .atStartOfDay(zone).toInstant()
+            !requested.isBefore(earliestProbe)
+        } == true
+    val replayTimeInspection = origin == CatalogOrigin.REPLAY && datasetId.value in setOf(
             DebugCatalogActivity.SG4_GAP_REPLAY_ID, DebugCatalogActivity.SG11_SKY_REPLAY_ID,
             DebugCatalogActivity.SG11_RAIN_ICE_REPLAY_ID, DebugCatalogActivity.SG11_SNOW_MIXED_REPLAY_ID,
             DebugCatalogActivity.SG11_VISIBILITY_WIND_REPLAY_ID, DebugCatalogActivity.SG11_STORM_FALLBACK_REPLAY_ID,
             DebugCatalogActivity.SG11_ADDITIONAL_EVENTS_REPLAY_ID,
-        ))) {
-        "Exact-time selection is only available for the bounded SG.4 and SG.11 debug replays"
+        )
+    require(selectedInstant == null || simulatedWindowEndProbe || replayTimeInspection) {
+        "Exact-time selection is only available for approved debug replay and SIMULATED window-boundary scenarios"
     }
     val activationRequest = CatalogActivationRequest(saved.location.location, origin, datasetId, replayId, values.forceRefresh)
     if (values.savedPreview) {

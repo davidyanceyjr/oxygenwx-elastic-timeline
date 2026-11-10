@@ -15,7 +15,9 @@ specify the scoped visual/touch objective
 
 Design-slice checks compare supplied forecast values and categories with their intended presentation. They do not independently evaluate meteorological plausibility. Do not add RTL, TalkBack, or broad system/environment matrices to design slices. Assign cross-cutting system acceptance to a dedicated roadmap slice explicitly designated `TEST`. Product-level accessibility and compatibility requirements remain part of the product; dedicated `TEST` slices establish their broad acceptance.
 
-`python scripts/dev.py workflow` validates the project scaffold.
+`python scripts/dev.py workflow` validates the project scaffold and current
+cycle pointer, ordered roster, stage checkpoint, approved board inputs,
+dependencies, and roadmap status.
 `python scripts/dev.py contract` validates isolation and architecture guards.
 `python scripts/dev.py test/build/lint/run/screenshot` are Gradle/adb entry points. Run only commands authorized by the bounded slice and task.
 

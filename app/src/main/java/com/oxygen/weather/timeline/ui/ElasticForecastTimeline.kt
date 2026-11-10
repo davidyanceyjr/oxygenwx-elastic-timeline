@@ -34,6 +34,11 @@ import androidx.compose.ui.unit.LayoutDirection
 import com.oxygen.weather.timeline.presentation.ElasticTimeAxis
 import com.oxygen.weather.timeline.presentation.ForecastProjection
 import com.oxygen.weather.timeline.presentation.ForecastSource
+import com.oxygen.weather.timeline.presentation.PresentedCondition
+import com.oxygen.weather.timeline.presentation.symbol.WeatherSymbolId
+import com.oxygen.weather.timeline.presentation.symbol.drawWeatherSymbol
+import java.time.Duration
+import java.time.LocalDateTime
 import kotlin.math.abs
 import kotlin.math.floor
 import kotlin.math.roundToInt
@@ -92,7 +97,7 @@ fun ElasticForecastTimeline(
     val isRtl = LocalLayoutDirection.current == LayoutDirection.Rtl
     val compactDayPx = with(density) { 55.dp.toPx().toDouble() }
     val maxHour = source.lastIndex.toDouble()
-    val expandedPx = with(density) { 16.dp.toPx().toDouble() }
+    val expandedPx = with(density) { 48.dp.toPx().toDouble() }
     val latestSelected by rememberUpdatedState(selectedHour)
     val latestExpanded by rememberUpdatedState(expanded)
     val latestAnimation by rememberUpdatedState(animation)
@@ -224,6 +229,8 @@ fun ElasticForecastTimeline(
         val pixelPerHour = compactDayPx / 24.0 + (expandedPx - compactDayPx / 24.0) * zoom
         val stroke = 1.dp.toPx()
         val baseY = h * .60f
+        val weekdayLabelProgress = (zoom / .5f).coerceIn(0f, 1f)
+        val weekdayLabelY = baseY - 17.dp.toPx() - 15.dp.toPx() * weekdayLabelProgress
 
         drawRect(
             Brush.verticalGradient(
@@ -240,15 +247,19 @@ fun ElasticForecastTimeline(
             )
             return (if (isRtl) w - logicalX else logicalX).toFloat()
         }
+        val firstSampleTime = source.hours.first().time
+        fun mapTime(time: LocalDateTime): Float {
+            val hourOffset = Duration.between(firstSampleTime, time).toMillis() / 3_600_000.0
+            return mapHour(hourOffset)
+        }
 
         for (day in source.days.indices) {
             val startX = mapHour(day * 24.0)
-            val midX = mapHour(day * 24.0 + 12.0)
             if (startX >= -8f && startX <= w + 8f) {
                 drawLine(Color(0xA6E0EDF6), Offset(startX, baseY - 9.dp.toPx()),
                     Offset(startX, baseY + 10.dp.toPx()), stroke)
             }
-            if (midX >= -60f && midX <= w + 60f) {
+            if (startX >= -60f && startX <= w + 60f) {
                 val text = source.days[day].date.dayOfWeek.name.take(3)
                 val selectedDayIndex = if (zoom > .8f) focusDay
                     else ElasticTimeAxis.dayIndex(selectedHour)
@@ -263,13 +274,21 @@ fun ElasticForecastTimeline(
                         textSize = (if (selectedDay) 15.dp else 11.dp).toPx()
                         isFakeBoldText = selectedDay
                     }
-                    canvas.nativeCanvas.drawText(text, midX, baseY - 17.dp.toPx(), paint)
+                    canvas.nativeCanvas.drawText(text, startX, weekdayLabelY, paint)
                 }
             }
         }
         if (zoom > .01f) {
             // Keep the full fixture on one uniform hourly axis; only nearby marks render.
             for (hour in 0..source.lastIndex) {
+                val sourceHour = source.hours[hour]
+                val midpointTime = sourceHour.time.plusMinutes(30)
+                val midpointX = mapTime(midpointTime)
+                if (midpointX >= -30f && midpointX <= w + 30f) {
+                    drawLine(Color.White.copy(alpha = zoom * .36f),
+                        Offset(midpointX, baseY),
+                        Offset(midpointX, baseY + 5.dp.toPx()), stroke)
+                }
                 val x = mapHour(hour.toDouble())
                 if (x < -30f || x > w + 30f) continue
                 val isMajor = hour % 3 == 0
@@ -288,6 +307,11 @@ fun ElasticForecastTimeline(
                             textAlign = Paint.Align.CENTER
                         }
                         canvas.nativeCanvas.drawText(hourText, x, baseY + 24.dp.toPx(), paint)
+                    }
+                }
+                if (zoom > .5f && midpointX in -6f..(w + 6f)) {
+                    sourceHour.condition.timelineSymbol()?.let { symbol ->
+                        drawWeatherSymbol(symbol, Offset(midpointX, baseY - 8.dp.toPx()), 24.dp.toPx())
                     }
                 }
             }
@@ -315,3 +339,14 @@ fun ElasticForecastTimeline(
         )
     }
 }
+
+private val timelineSymbolsByCondition = mapOf(
+    PresentedCondition.CLEAR to WeatherSymbolId.SUNNY,
+    PresentedCondition.PARTLY_CLOUDY to WeatherSymbolId.PARTLY_SUNNY_CLOUDY,
+    PresentedCondition.CLOUDY to WeatherSymbolId.CLOUDY_OVERCAST,
+    PresentedCondition.RAIN to WeatherSymbolId.RAIN,
+    PresentedCondition.SNOW to WeatherSymbolId.SNOW,
+    PresentedCondition.STORM to WeatherSymbolId.THUNDERSTORM,
+)
+
+private fun PresentedCondition.timelineSymbol(): WeatherSymbolId? = timelineSymbolsByCondition[this]

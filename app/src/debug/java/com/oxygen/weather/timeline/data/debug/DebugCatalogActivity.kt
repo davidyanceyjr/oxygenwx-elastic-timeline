@@ -398,7 +398,23 @@ class DebugCatalogActivity : ComponentActivity() {
                     }
                 }
                 when (selectedOrigin) {
-                    CatalogOrigin.SIMULATED -> Text("SIMULATED · $SIMULATED_DATASET_ID · deterministic synthetic catalog")
+                    CatalogOrigin.SIMULATED -> {
+                        Text("SIMULATED · $SIMULATED_DATASET_ID · deterministic synthetic catalog")
+                        val location = selectedLocation?.location
+                        if (location != null) {
+                            OutlinedButton(
+                                enabled = !relay.activation.loading,
+                                onClick = {
+                                    val zone = location.timeZone
+                                    val requested = Instant.now().atZone(zone).toLocalDate()
+                                        .plusDays(16).atTime(12, 0).atZone(zone).toInstant()
+                                    routeActivation(
+                                        location, CatalogOrigin.SIMULATED, SIMULATED_DATASET_ID, requested,
+                                    )
+                                },
+                            ) { Text("Verify full-window end clamp") }
+                        }
+                    }
                     CatalogOrigin.LIVE -> Text("LIVE · forecast-44d · force refresh selected location")
                     CatalogOrigin.REPLAY -> {
                         Text(fixtureStatus)
@@ -426,7 +442,7 @@ class DebugCatalogActivity : ComponentActivity() {
                                     "19:30:00 · clear/rain tie" to rainDay.atTime(19, 30).atZone(zone).toInstant(),
                                     "19:30:00.001 · just after tie" to rainDay.atTime(19, 30).atZone(zone).toInstant().plusMillis(1),
                                     "20:00 · supplied rain point" to rainDay.atTime(20, 0).atZone(zone).toInstant(),
-                                    "11:30 · missing expected hour" to rainDay.atTime(11, 30).atZone(zone).toInstant(),
+                                    "10:30 supported rain / 11:30 missing midpoint" to rainDay.atTime(11, 30).atZone(zone).toInstant(),
                                     "13:45 · interval-only rain" to rainDay.atTime(13, 45).atZone(zone).toInstant(),
                                     "14:30 · simultaneous rain/snow intervals" to rainDay.atTime(14, 30).atZone(zone).toInstant(),
                                     ))

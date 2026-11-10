@@ -8,19 +8,49 @@ This repository is the successor OxygenWX app, developed in stages from an isola
 2. `docs/ROADMAP_SPECIFICATION.md` — required roadmap statuses, slice format, evidence, and replanning rules.
 3. `docs/ROADMAP.md` — bounded ordered follow-ups conforming to the roadmap specification.
 4. `docs/UI_DEVELOPMENT_WORKFLOW.md` — installed visual acceptance.
-5. `.codex/current.md` and its referenced bounded plan — cycle status.
+5. `.codex/current.md` and its referenced bounded plan — cycle state, ordered slice roster, workflow stage, and checkpoint.
+
+## Task-scoped workflow context
+
+For an actionable request, begin with `.codex/current.md`, `.codex/README.md`,
+and `python scripts/dev.py workflow`, then follow the installed `oxygen-*`
+skill for the current stage. Read only its routine set: the current plan,
+accepted boards, exact dependency records, relevant authority passages, and
+affected files. General questions and concepts stay in `IDLE` and do not create
+a cycle. Read full specifications, unrelated roadmap sections, closed plans,
+or history only when a named scope, dependency, conflict, regression question,
+or audit needs them. Keep every required authority and evidence recoverable.
+
+At each workflow boundary, save the cycle checkpoint before advancing. It
+records the cycle and ordered slice IDs, stage and prior cycle state, accepted
+boards and gates, decisions and open questions, completed outputs, evidence,
+exact next-stage read set, and next action. `PAUSED` preserves the same cycle,
+roster, roadmap status, and stage; `Resume state` records whether to restore
+`PLANNED` or `ACTIVE`. Resume without resetting IDs or repeating accepted
+gates. Only reopen an earlier gate when its approved input changes or evidence
+contradicts it.
 
 ## Required cycle lifecycle
 
 Before app implementation or behavior changes:
 
-1. Read the relevant authority above, `.codex/README.md`, and `.codex/current.md`.
-2. Run `python scripts/dev.py workflow`.
-3. Ensure a bounded plan exists under `.codex/plans/`. A PLANNED plan is eligible for final review and activation only after its required approved slice board(s) are recorded. If the board gate is unmet, keep the plan an unfinalized draft and resolve that prerequisite first. If the current state is IDLE, select and plan a roadmap slice before implementation.
+1. Read the current stage's routine sources defined above and by its installed
+   `oxygen-*` skill. For app implementation or behavior changes, also read the
+   relevant product and UI authority passages and the referenced bounded plan.
+2. Run `python scripts/dev.py workflow`; it validates the current pointer,
+   plan roster, checkpoint, dependencies, board approvals, and roadmap state.
+3. Ensure a bounded plan exists under `.codex/plans/`. A cycle may contain one or more stable roadmap slice IDs in dependency order. A PLANNED plan is eligible for final review and activation only after each included slice has its required approved board(s), its own exit, and finished plan record. If the board gate is unmet, keep the plan an unfinalized draft and resolve that prerequisite first. If the current state is IDLE, select and plan a roadmap slice before implementation.
 4. Before finalizing any cycle plan for any project roadmap or workstream, ensure it has an objective-specific behavior board and, for UI/visual work, a UI artwork board; one combined slice board may cover both if it makes each reviewable. This project-wide gate applies to every slice, including future roadmaps, and covers code, text/documentation, interface, and logic changes. The product owner must approve the required board(s). Record their paths, approval, constraints, and relationship to scope and acceptance in the plan. Behavior boards may use finite-state-machine-like flows with text and images, annotated content maps, contracts, schemas, sequences, or boundary diagrams. UI artwork boards show the intended appearance and affected states. A prompt, target path, existing implementation, or screenshot alone does not satisfy the board or approval requirement. A draft may be prepared while its board is pending, but it cannot be finalized or activated. Boards guide scope and acceptance; they do not replace implementation verification or installed acceptance evidence.
 5. Stay within the plan's scope, invariants, acceptance criteria, and exclusions. Do not silently expand a slice.
 6. Preserve actual evidence under `.codex/test-artifacts/<cycle-id>/`.
 7. Inspect `git diff --check` and the final diff, then close completed work into `.codex/history/` with exact verification results and limitations.
+
+Cycle lifecycle states are `IDLE`, `PLANNED`, `ACTIVE`, and `PAUSED`; stages
+are `SLICE`, `BOARDS`, `DRAFT`, `REVIEW`, `EXECUTE`, and `CLOSEOUT`. Only one
+roster slice may be `ACTIVE` at a time. Close each slice only on its exit or
+with a recorded terminal outcome; close the cycle only when every included
+slice has a completed or explicitly recorded incomplete outcome. Keep existing
+single-slice cycle records readable and closed history unchanged.
 
 Do not claim slice-scoped visual/device acceptance without installed screenshots and the applicable scoped interaction checks. A build or preview alone is not visual evidence. App-wide accessibility and system acceptance is established in dedicated `TEST` slices.
 
@@ -34,7 +64,8 @@ Reusable workflows live under `.agents/skills/`. Use a skill when it directly fi
 - `app/src/main/java/com/oxygen/weather/timeline/presentation/` — typed forecast presentation and pure time projection.
 - `app/src/main/java/com/oxygen/weather/timeline/ui/` — Compose timeline and atmospheric rendering.
 - `app/src/test/` — focused unit tests.
-- `scripts/dev.py` — workflow, contract, build, test, lint, run, and screenshot entry points.
+- `scripts/codex_cycle.py` — ordered cycle roster, stage checkpoint, pause/resume, and closeout tracker.
+- `scripts/dev.py` — workflow validation, contract, build, test, lint, run, and screenshot entry points.
 
 ## Verification
 

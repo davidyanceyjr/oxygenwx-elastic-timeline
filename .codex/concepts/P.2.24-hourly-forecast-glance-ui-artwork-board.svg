@@ -1,0 +1,59 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="720" viewBox="0 0 1200 720">
+<defs>
+  <linearGradient id="bg" x2="0" y2="1"><stop stop-color="#091a2e"/><stop offset="1" stop-color="#17324f"/></linearGradient>
+  <style>
+    .title{font:700 34px Arial,sans-serif;fill:#f5f8fc}.sub{font:19px Arial,sans-serif;fill:#bacada}
+    .label{font:16px Arial,sans-serif;fill:#afc2d4}.hour{font:17px Arial,sans-serif;fill:#c6d4e1}
+    .event{stroke:#d7fbff;stroke-width:3;stroke-linecap:round;stroke-linejoin:round}
+  </style>
+</defs>
+<rect width="1200" height="720" rx="26" fill="url(#bg)"/>
+<text x="60" y="70" class="title">Hourly timeline · proposed spacing</text>
+<text x="60" y="108" class="sub">One view · 48 dp/hour · 24 dp weather symbols</text>
+<rect x="60" y="160" width="1080" height="252" rx="16" fill="#0b1e33" stroke="#314d69" stroke-width="2"/>
+<!-- Date label remains on the local-midnight tick. -->
+<text x="1032" y="214" text-anchor="middle" class="label">WED</text>
+<line x1="60" y1="380" x2="1140" y2="380" stroke="#a4b8ca" stroke-width="3"/>
+<!-- 360 dp viewport, 3 px per dp. The selected 9 PM instant is centered. -->
+<line x1="600" y1="182" x2="600" y2="400" stroke="#f4d17c" stroke-width="4"/>
+<circle cx="600" cy="380" r="9" fill="#f4d17c"/>
+<!-- Hour marks at 6 PM through midnight; weekday boundary coincides with midnight. -->
+<g stroke="#c4d2df" stroke-width="2">
+  <line x1="168" y1="368" x2="168" y2="392"/><line x1="312" y1="368" x2="312" y2="392"/>
+  <line x1="456" y1="368" x2="456" y2="392"/><line x1="600" y1="362" x2="600" y2="398"/>
+  <line x1="744" y1="368" x2="744" y2="392"/><line x1="888" y1="368" x2="888" y2="392"/>
+  <line x1="1032" y1="362" x2="1032" y2="398"/>
+</g>
+<line x1="1032" y1="220" x2="1032" y2="406" stroke="#91a9bd" stroke-width="2" stroke-dasharray="6 7"/>
+<!-- Hourly events at :30. Centers are 144 px apart: 48 dp/hour at 3 px per dp. -->
+<g class="event">
+  <!-- 5:30 PM, partly cloudy -->
+  <circle cx="96" cy="304" r="15" fill="#f4d17c" stroke="none"/>
+  <path d="M83 326c0-10 8-16 17-14c5-13 22-13 27 0c10-2 16 4 16 14z" fill="#60d5df"/>
+  <!-- 6:30 PM, cloudy -->
+  <path d="M207 324c0-11 9-18 20-15c6-15 26-15 32 0c11-2 18 5 18 15z" fill="#60d5df"/>
+  <!-- 7:30 PM, clear -->
+  <circle cx="384" cy="320" r="22" fill="#f4d17c" stroke="none"/>
+  <g stroke="#f4d17c" stroke-width="4"><line x1="384" y1="284" x2="384" y2="276"/><line x1="384" y1="356" x2="384" y2="364"/><line x1="348" y1="320" x2="340" y2="320"/><line x1="420" y1="320" x2="428" y2="320"/><line x1="359" y1="295" x2="353" y2="289"/><line x1="409" y1="345" x2="415" y2="351"/><line x1="409" y1="295" x2="415" y2="289"/><line x1="359" y1="345" x2="353" y2="351"/></g>
+  <!-- 8:30 PM, clear night -->
+  <circle cx="528" cy="320" r="27" fill="#f4d17c" stroke="none"/>
+  <circle cx="541" cy="309" r="25" fill="#0b1e33" stroke="none"/>
+  <!-- 9:30 PM, clear night -->
+  <circle cx="672" cy="320" r="27" fill="#f4d17c" stroke="none"/>
+  <circle cx="685" cy="309" r="25" fill="#0b1e33" stroke="none"/>
+  <!-- 10:30 PM, cloudy -->
+  <path d="M779 324c0-11 9-18 20-15c6-15 26-15 32 0c11-2 18 5 18 15z" fill="#60d5df"/>
+  <!-- 11:30 PM, rain -->
+  <path d="M923 310c0-10 8-16 18-14c5-13 22-13 27 0c10-2 16 4 16 14z" fill="#60d5df"/>
+  <g fill="none"><path d="M940 319l-8 20m25-20l-8 20m25-20l-8 20"/></g>
+  <!-- 12:30 AM, snow -->
+  <path d="M1067 310c0-10 8-16 18-14c5-13 22-13 27 0c10-2 16 4 16 14z" fill="#60d5df"/>
+  <g fill="none"><path d="M1081 325l7 7m-7 8l7-7m7-8l7 7m-7 8l7-7m7-8l7 7m-7 8l7-7"/></g>
+</g>
+<g text-anchor="middle" class="hour"><text x="168" y="432">6 PM</text><text x="600" y="432" fill="#f4d17c">9 PM</text><text x="1032" y="432">12 AM</text></g>
+<rect x="536" y="466" width="128" height="42" rx="21" fill="#203954"/>
+<text x="600" y="494" text-anchor="middle" style="font:700 19px Arial,sans-serif;fill:#f8e2a7">9:00 PM</text>
+<text x="60" y="566" class="sub">Next samples: 10:30 PM · 11:30 PM · 12:30 AM</text>
+<text x="60" y="604" class="label">A 360 dp-wide view spans 7.5 hours. Consecutive 24 dp symbols have 24 dp between them.</text>
+<text x="60" y="652" class="label">Artwork proposal only; installed interaction review follows board approval.</text>
+</svg>

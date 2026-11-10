@@ -1,0 +1,147 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1920" height="1660" viewBox="0 0 1920 1660">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#10243b"/><stop offset="1" stop-color="#153456"/>
+    </linearGradient>
+    <linearGradient id="panel" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#1c4266"/><stop offset="1" stop-color="#122e4e"/>
+    </linearGradient>
+    <style>
+      .title { font: 700 34px 'DejaVu Sans', sans-serif; fill: #f2f7fb; }
+      .subtitle { font: 400 17px 'DejaVu Sans', sans-serif; fill: #b9cddd; }
+      .tag { font: 700 15px 'DejaVu Sans', sans-serif; fill: #102b3a; }
+      .section { font: 700 19px 'DejaVu Sans', sans-serif; fill: #8be7dc; letter-spacing: 1px; }
+      .label { font: 700 19px 'DejaVu Sans', sans-serif; fill: #f2f7fb; }
+      .dialog-label { font: 700 19px 'DejaVu Sans', sans-serif; fill: #10243b; }
+      .body { font: 400 17px 'DejaVu Sans', sans-serif; fill: #dce8f0; }
+      .small { font: 400 14px 'DejaVu Sans', sans-serif; fill: #b9cddd; }
+      .dialog-copy { font: 400 14px 'DejaVu Sans', sans-serif; fill: #27465e; }
+      .tiny { font: 400 12px 'DejaVu Sans', sans-serif; fill: #b9cddd; }
+      .city { font: 700 17px 'DejaVu Sans', sans-serif; fill: #fff; }
+      .green { fill: #76f37b; }
+      .stroke { stroke: #9fb9cc; stroke-width: 2; }
+      .thin { stroke: #6f91a9; stroke-width: 1.5; }
+    </style>
+  </defs>
+  <rect width="1920" height="1660" fill="url(#bg)"/>
+  <text x="64" y="74" class="title">WX.29 · Location search view</text>
+  <text x="64" y="108" class="subtitle">Proposed UI state extensions · primary target approved · owner review pending</text>
+  <rect x="1580" y="48" width="276" height="42" rx="21" fill="#f2cc83"/>
+  <text x="1718" y="75" text-anchor="middle" class="tag">DRAFT · REVIEW PACKAGE</text>
+
+  <!-- Primary target summary -->
+  <rect x="64" y="142" width="1792" height="270" rx="24" fill="url(#panel)" stroke="#668aa5" stroke-width="2"/>
+  <text x="92" y="180" class="section">PRIMARY TARGET · PRESERVE AS PROVIDED</text>
+  <text x="1828" y="180" text-anchor="end" class="small">design_draft/location_search_ui_board.png</text>
+  <text x="92" y="210" class="small">Full-screen location view · Florence and “flor” are sample content only</text>
+  <text x="92" y="266" class="label">Select Florence</text>
+  <text x="300" y="266" class="small">◉</text>
+  <rect x="90" y="284" width="628" height="54" rx="27" fill="#44617c" fill-opacity="0.72" stroke="#d3e1ec" stroke-width="1.5"/>
+  <text x="116" y="318" class="body">⌕  flor</text>
+  <text x="672" y="318" class="body">×</text>
+  <text x="776" y="249" class="small">SEARCH RESULT CHIPS</text>
+  <g transform="translate(775 266)">
+    <rect width="106" height="62" rx="10" fill="#263f5c"/><text x="53" y="27" text-anchor="middle" class="city">TUS</text><text x="53" y="48" text-anchor="middle" class="tiny">Tuscaloosa</text>
+    <rect x="116" width="106" height="62" rx="10" fill="#263f5c"/><text x="169" y="27" text-anchor="middle" class="city">BHM</text><text x="169" y="48" text-anchor="middle" class="tiny">Birmingham</text>
+    <rect x="232" width="106" height="62" rx="10" fill="#76f37b"/><text x="285" y="27" text-anchor="middle" class="city" fill="#12351c">FLO</text><text x="285" y="48" text-anchor="middle" class="tiny" fill="#12351c">Florence</text>
+    <rect x="348" width="106" height="62" rx="10" fill="#263f5c"/><text x="401" y="27" text-anchor="middle" class="city">HSV</text><text x="401" y="48" text-anchor="middle" class="tiny">Huntsville</text>
+    <rect x="464" width="106" height="62" rx="10" fill="#263f5c"/><text x="517" y="27" text-anchor="middle" class="city">MOB</text><text x="517" y="48" text-anchor="middle" class="tiny">Mobile</text>
+  </g>
+  <line x1="92" y1="356" x2="1824" y2="356" class="thin"/>
+  <text x="92" y="384" class="small">Saved locations</text>
+  <text x="294" y="384" class="small">HSV · BHM · ATL · NSH · <tspan class="green" font-weight="700">FLO selected</tspan></text>
+
+  <!-- Variant panels -->
+  <g>
+    <rect x="64" y="444" width="570" height="360" rx="22" fill="#183858" stroke="#668aa5" stroke-width="1.5"/>
+    <text x="92" y="484" class="section">01 · SEARCH IDLE</text>
+    <rect x="92" y="506" width="514" height="52" rx="26" fill="#304d6c" stroke="#9fb9cc" stroke-width="1.5"/>
+    <text x="116" y="539" class="small">⌕  Search a city, town, or place</text>
+    <text x="92" y="600" class="small">SEARCH RESULTS</text>
+    <text x="92" y="635" class="body">Tap magnifier or keyboard Search to submit.</text>
+    <line x1="92" y1="666" x2="606" y2="666" class="thin"/>
+    <text x="92" y="704" class="small">SAVED LOCATIONS</text>
+    <text x="92" y="742" class="body">Florence · <tspan class="green" font-weight="700">Selected</tspan></text>
+    <text x="92" y="774" class="small">Chicago · Anchorage · Madison</text>
+
+    <rect x="675" y="444" width="570" height="360" rx="22" fill="#183858" stroke="#668aa5" stroke-width="1.5"/>
+    <text x="703" y="484" class="section">02 · SEARCH LOADING</text>
+    <rect x="703" y="506" width="514" height="52" rx="26" fill="#304d6c" stroke="#9fb9cc" stroke-width="1.5"/>
+    <text x="727" y="539" class="small">⌕  flor</text>
+    <circle cx="728" cy="604" r="12" fill="none" stroke="#8be7dc" stroke-width="4" stroke-dasharray="42 22"/>
+    <text x="754" y="611" class="body">Searching for “flor”…</text>
+    <line x1="703" y1="666" x2="1217" y2="666" class="thin"/>
+    <text x="703" y="704" class="small">SAVED LOCATIONS</text>
+    <text x="703" y="742" class="body">Florence · <tspan class="green" font-weight="700">Selected</tspan></text>
+    <text x="703" y="774" class="small">Saved locations remain available.</text>
+
+    <rect x="1286" y="444" width="570" height="360" rx="22" fill="#183858" stroke="#668aa5" stroke-width="1.5"/>
+    <text x="1314" y="484" class="section">03 · NO MATCHES</text>
+    <rect x="1314" y="506" width="514" height="52" rx="26" fill="#304d6c" stroke="#9fb9cc" stroke-width="1.5"/>
+    <text x="1338" y="539" class="small">⌕  xyz</text>
+    <text x="1314" y="609" class="label">No places found for “xyz”.</text>
+    <text x="1314" y="641" class="body">Edit the query and search again.</text>
+    <line x1="1314" y1="666" x2="1828" y2="666" class="thin"/>
+    <text x="1314" y="704" class="small">SAVED LOCATIONS</text>
+    <text x="1314" y="742" class="body">Florence · <tspan class="green" font-weight="700">Selected</tspan></text>
+    <text x="1314" y="774" class="small">Existing locations remain available.</text>
+  </g>
+
+  <g>
+    <rect x="64" y="832" width="570" height="360" rx="22" fill="#183858" stroke="#668aa5" stroke-width="1.5"/>
+    <text x="92" y="872" class="section">04 · SEARCH FAILURE</text>
+    <rect x="92" y="894" width="514" height="52" rx="26" fill="#304d6c" stroke="#9fb9cc" stroke-width="1.5"/>
+    <text x="116" y="927" class="small">⌕  flor</text>
+    <text x="92" y="994" class="label">Search couldn't complete.</text>
+    <text x="92" y="1026" class="body">Retry the query or edit it.</text>
+    <rect x="92" y="1052" width="142" height="48" rx="24" fill="#85dfd1"/>
+    <text x="163" y="1083" text-anchor="middle" class="tag">Retry search</text>
+    <text x="92" y="1156" class="small">Keep the submitted query and saved locations visible.</text>
+
+    <rect x="675" y="832" width="570" height="360" rx="22" fill="#183858" stroke="#668aa5" stroke-width="1.5"/>
+    <text x="703" y="872" class="section">05 · PLACE DETAILS</text>
+    <rect x="703" y="894" width="514" height="108" rx="14" fill="#294766"/>
+    <text x="725" y="930" class="label">Florence, Alabama</text>
+    <text x="725" y="960" class="small">United States · America/Chicago</text>
+    <circle cx="1174" cy="930" r="20" fill="#1a3654" stroke="#a9c4d4" stroke-width="1.5"/>
+    <text x="1174" y="937" text-anchor="middle" class="small">i</text>
+    <text x="703" y="1042" class="small">Source: place-search provider</text>
+    <text x="703" y="1072" class="small">License: provider terms</text>
+    <text x="703" y="1137" class="body">Proposed detail affordance preserves current attribution.</text>
+    <text x="703" y="1165" class="tiny">Exact supplied attribution text is dynamic provider data.</text>
+
+    <rect x="1286" y="832" width="570" height="360" rx="22" fill="#183858" stroke="#668aa5" stroke-width="1.5"/>
+    <text x="1314" y="872" class="section">06 · REMOVE CONFIRMATION</text>
+    <rect x="1350" y="906" width="442" height="228" rx="18" fill="#e7eef4"/>
+    <text x="1380" y="952" class="dialog-label">Remove Florence?</text>
+    <text x="1380" y="990" class="dialog-copy">This also removes its stored</text>
+    <text x="1380" y="1016" class="dialog-copy">catalog data. This can't be undone.</text>
+    <rect x="1380" y="1050" width="150" height="50" rx="25" fill="#d9e3eb"/>
+    <text x="1455" y="1082" text-anchor="middle" class="tag">Cancel</text>
+    <rect x="1580" y="1050" width="180" height="50" rx="25" fill="#963e47"/>
+    <text x="1670" y="1082" text-anchor="middle" class="city">Remove</text>
+  </g>
+  <rect x="64" y="1220" width="1792" height="300" rx="22" fill="#183858" stroke="#668aa5" stroke-width="1.5"/>
+  <text x="92" y="1260" class="section">07 · SAVED-LOCATION SNAPSHOT STATES</text>
+  <g>
+    <rect x="92" y="1280" width="536" height="190" rx="16" fill="#213f5e"/>
+    <text x="116" y="1318" class="label">Loading</text>
+    <circle cx="132" cy="1372" r="12" fill="none" stroke="#8be7dc" stroke-width="4" stroke-dasharray="42 22"/>
+    <text x="158" y="1379" class="body">Loading saved locations…</text>
+    <text x="116" y="1436" class="small">Keep the location view and search available.</text>
+
+    <rect x="692" y="1280" width="536" height="190" rx="16" fill="#213f5e"/>
+    <text x="716" y="1318" class="label">Empty</text>
+    <text x="716" y="1372" class="body">No saved locations yet.</text>
+    <text x="716" y="1436" class="small">The search result area remains the primary path.</text>
+
+    <rect x="1292" y="1280" width="536" height="190" rx="16" fill="#213f5e"/>
+    <text x="1316" y="1318" class="label">Unavailable</text>
+    <text x="1316" y="1366" class="body">Saved locations couldn't be refreshed.</text>
+    <rect x="1316" y="1392" width="178" height="46" rx="23" fill="#85dfd1"/>
+    <text x="1405" y="1422" text-anchor="middle" class="tag">Retry locations</text>
+  </g>
+  <text x="64" y="1560" class="subtitle">All examples are illustrative. Proposed states inherit the target's deep-blue scene, readable city labels, and green selected state.</text>
+  <text x="64" y="1596" class="subtitle">Pending owner approval: state placement, per-result details affordance, and removal-confirmation treatment. No provider result count/order is fixed.</text>
+  <text x="64" y="1642" class="small">WX.29 · UI ARTWORK STATE EXTENSION · Target: Pixel 3 XL portrait · Does not replace the primary approved artwork.</text>
+</svg>

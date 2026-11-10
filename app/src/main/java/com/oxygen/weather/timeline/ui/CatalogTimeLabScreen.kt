@@ -52,6 +52,7 @@ import androidx.compose.ui.graphics.StrokeCap
 import androidx.compose.ui.graphics.StrokeJoin
 import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.graphics.drawscope.drawIntoCanvas
+import androidx.compose.ui.graphics.drawscope.rotate
 import androidx.compose.ui.graphics.nativeCanvas
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.platform.LocalDensity
@@ -135,6 +136,34 @@ private fun CatalogTimeLabScreenContent(
     val compact = with(LocalDensity.current) { fontScale >= 1.3f }
     val latestSelected by rememberUpdatedState(view.selectedInstant)
     val isRtl = LocalLayoutDirection.current == LayoutDirection.Rtl
+    val readoutGestures = Modifier
+        .pointerInput(view.generation, view.zone, view.interval) {
+            var totalDrag = 0f
+            detectHorizontalDragGestures(
+                onHorizontalDrag = { change, distance ->
+                    totalDrag += distance
+                    change.consume()
+                },
+                onDragEnd = {
+                    if (abs(totalDrag) > 48.dp.toPx()) {
+                        val dayDelta = if ((totalDrag < 0f) != isRtl) 1L else -1L
+                        onSelectInstant(
+                            InstantTimeAxis.shiftLocalDay(
+                                latestSelected, dayDelta, view.zone, view.interval,
+                            ), view.generation,
+                        )
+                    }
+                    totalDrag = 0f
+                },
+                onDragCancel = { totalDrag = 0f },
+            )
+        }
+        .pointerInput(view.generation) {
+            detectTapGestures(
+                onTap = { precision = false },
+                onDoubleTap = { onReturnToNow() },
+            )
+        }
     val readoutShadow = with(LocalDensity.current) {
         Shadow(
             color = Color.Black.copy(alpha = 0.32f),
@@ -175,14 +204,27 @@ private fun CatalogTimeLabScreenContent(
         }
         Column(
             Modifier.fillMaxWidth().align(Alignment.Center)
-                .offset(y = (if (compactLayout) -85 else -48).dp)
-                .padding(horizontal = 25.dp * responsiveScale),
+                .offset(y = (if (compactLayout) -36 else -48).dp),
             horizontalAlignment = Alignment.CenterHorizontally,
         ) {
+            Box(
+                modifier = Modifier.fillMaxWidth()
+                    .height((if (compactLayout) 56.dp else 72.dp) * responsiveScale)
+                    .then(readoutGestures),
+                contentAlignment = Alignment.Center,
+            ) {
+                WeatherSymbolIcon(
+                    symbol = view.weatherSymbolId ?: WeatherSymbolId.CONDITION_UNAVAILABLE,
+                    modifier = Modifier.size((if (compactLayout) 56.dp else 72.dp) * responsiveScale),
+                    contentDescription = view.weatherSymbolId?.let { view.weatherSymbolName ?: it.label }
+                        ?: WeatherSymbolId.CONDITION_UNAVAILABLE.label,
+                )
+            }
+            Spacer(Modifier.height(7.dp))
             Row(
                 verticalAlignment = Alignment.CenterVertically,
                 horizontalArrangement = Arrangement.Center,
-                modifier = Modifier.fillMaxWidth(),
+                modifier = Modifier.fillMaxWidth().padding(horizontal = 25.dp * responsiveScale),
             ) {
                 Text(
                     view.selectedLocationName ?: "Selected location",
@@ -208,90 +250,45 @@ private fun CatalogTimeLabScreenContent(
                     }
                 }
             }
-            Spacer(Modifier.height(14.dp * responsiveScale))
+            Spacer(Modifier.height(7.dp))
             Column(
                 Modifier.fillMaxWidth()
-                    .pointerInput(view.generation, view.zone, view.interval) {
-                        var totalDrag = 0f
-                        detectHorizontalDragGestures(
-                            onHorizontalDrag = { change, distance ->
-                                totalDrag += distance
-                                change.consume()
-                            },
-                            onDragEnd = {
-                                if (abs(totalDrag) > 48.dp.toPx()) {
-                                    val dayDelta = if ((totalDrag < 0f) != isRtl) 1L else -1L
-                                    onSelectInstant(
-                                        InstantTimeAxis.shiftLocalDay(
-                                            latestSelected, dayDelta, view.zone, view.interval,
-                                        ), view.generation,
-                                    )
-                                }
-                                totalDrag = 0f
-                            },
-                            onDragCancel = { totalDrag = 0f },
-                        )
-                    }
-                    .pointerInput(view.generation) {
-                        detectTapGestures(
-                            onTap = { precision = false },
-                            onDoubleTap = { onReturnToNow() },
-                        )
-                    },
+                    .then(readoutGestures),
                 horizontalAlignment = Alignment.CenterHorizontally,
             ) {
-                val symbol = view.weatherSymbolId ?: WeatherSymbolId.CONDITION_UNAVAILABLE
-                val symbolName = if (view.weatherSymbolId == null) symbol.label
-                    else view.weatherSymbolName ?: symbol.label
-                Box(
-                    modifier = Modifier.size((if (compactLayout) 214.dp else 270.dp) * responsiveScale,
-                        (if (compactLayout) 103.dp else 129.dp) * responsiveScale),
-                    contentAlignment = Alignment.Center,
-                ) {
-                    Canvas(Modifier.fillMaxSize()) {
-                        drawArc(
-                            color = Color(0xFFFFCF67), startAngle = 180f, sweepAngle = 180f,
-                            useCenter = false, topLeft = Offset(3.dp.toPx(), 3.dp.toPx()),
-                            size = androidx.compose.ui.geometry.Size(size.width - 6.dp.toPx(), size.height * 1.9f),
-                            style = Stroke(width = 2.dp.toPx(), cap = StrokeCap.Round),
-                        )
-                    }
-                    WeatherSymbolIcon(
-                        symbol = symbol,
-                        modifier = Modifier.size((if (compactLayout) 56.dp else 72.dp) * responsiveScale)
-                            .offset(y = 22.dp * responsiveScale),
-                        contentDescription = symbolName,
-                    )
-                }
-                Text(view.temperature ?: "—", color = Color.White,
-                    fontSize = (if (compactLayout) 78.sp else 102.sp) * responsiveScale,
-                    fontWeight = FontWeight.Light,
-                    style = TextStyle(shadow = readoutShadow),
-                    modifier = Modifier.testTag("forecastTemperature"))
-                Row(verticalAlignment = Alignment.CenterVertically) {
-                    Text("≈", color = Color(0xFF59DCEF),
-                        fontSize = (if (compactLayout) 34.sp else 42.sp) * responsiveScale,
-                        fontWeight = FontWeight.Medium)
-                    Spacer(Modifier.width(6.dp * responsiveScale))
-                    Text(view.apparentTemperature ?: "—", color = Color.White,
-                        fontSize = (if (compactLayout) 29.sp else 35.sp) * responsiveScale,
-                        modifier = Modifier.testTag("catalogApparentTemperature")
-                            .semantics { contentDescription = "Apparent temperature ${view.apparentTemperature ?: "unavailable"}" })
-                }
                 Text(view.condition ?: "Condition unavailable", color = Color(0xFFECF3F8),
                     fontSize = 18.sp * responsiveScale, fontWeight = FontWeight.SemiBold,
                     textAlign = TextAlign.Center,
                     style = TextStyle(shadow = readoutShadow),
-                    modifier = Modifier.testTag("catalogSelectedCondition"))
+                    modifier = Modifier.fillMaxWidth().padding(horizontal = 25.dp * responsiveScale)
+                        .testTag("catalogSelectedCondition"))
                 view.conditionSourceDisclosure?.let { disclosure ->
                     Text(disclosure, color = Color(0xFFECF3F8),
                         fontSize = 12.sp * responsiveScale, textAlign = TextAlign.Center,
                         style = TextStyle(shadow = readoutShadow),
-                        modifier = Modifier.testTag("catalogConditionSourceDisclosure"))
+                        modifier = Modifier.fillMaxWidth().padding(horizontal = 25.dp * responsiveScale)
+                            .testTag("catalogConditionSourceDisclosure"))
+                }
+                Spacer(Modifier.height(7.dp))
+                Row(horizontalArrangement = Arrangement.Center) {
+                    Text(view.temperature ?: "—", color = Color.White,
+                        fontSize = (if (compactLayout) 78.sp else 102.sp) * responsiveScale,
+                        fontWeight = FontWeight.Light,
+                        style = TextStyle(shadow = readoutShadow),
+                        modifier = Modifier.alignByBaseline().testTag("forecastTemperature"))
+                    Spacer(Modifier.width(18.dp * responsiveScale))
+                    Text("≈", color = Color(0xFF59DCEF),
+                        fontSize = (if (compactLayout) 34.sp else 42.sp) * responsiveScale,
+                        fontWeight = FontWeight.Medium,
+                        modifier = Modifier.alignByBaseline())
+                    Spacer(Modifier.width(6.dp * responsiveScale))
+                    Text(view.apparentTemperature ?: "—", color = Color.White,
+                        fontSize = (if (compactLayout) 29.sp else 35.sp) * responsiveScale,
+                        modifier = Modifier.alignByBaseline().testTag("catalogApparentTemperature")
+                            .semantics { contentDescription = "Apparent temperature ${view.apparentTemperature ?: "unavailable"}" })
                 }
             }
-        }
-        Column(Modifier.fillMaxWidth().align(Alignment.BottomCenter).navigationBarsPadding()) {
+            Spacer(Modifier.height(20.dp))
             CompositionLocalProvider(LocalLayoutDirection provides LayoutDirection.Ltr) {
                 Row(
                     Modifier.fillMaxWidth().padding(horizontal = 16.dp * responsiveScale),
@@ -304,7 +301,10 @@ private fun CatalogTimeLabScreenContent(
                             contentDescription = "Precipitation chance ${view.precipitationChance ?: "unavailable"}"
                         },
                     ) {
-                        Text("☂", color = Color(0xFF59DCEF), fontSize = 28.sp * responsiveScale)
+                        Box(Modifier.size(32.dp * responsiveScale), contentAlignment = Alignment.Center) {
+                            Text("☂", color = Color(0xFF59DCEF), fontSize = 28.sp * responsiveScale)
+                        }
+                        Spacer(Modifier.height(7.dp))
                         Text("Precip", color = Color(0xFFECF3F8), fontSize = 13.sp * responsiveScale)
                         Text(view.precipitationChance ?: "—", color = Color.White,
                             fontSize = 20.sp * responsiveScale, fontWeight = FontWeight.SemiBold,
@@ -320,7 +320,10 @@ private fun CatalogTimeLabScreenContent(
                             }
                         },
                     ) {
-                        Text("≋", color = Color(0xFF59DCEF), fontSize = 28.sp * responsiveScale)
+                        Box(Modifier.size(32.dp * responsiveScale), contentAlignment = Alignment.Center) {
+                            CatalogWindDirectionIcon(view.windDirectionDegrees, responsiveScale)
+                        }
+                        Spacer(Modifier.height(7.dp))
                         Text("Wind", color = Color(0xFFECF3F8), fontSize = 13.sp * responsiveScale)
                         Text(view.wind ?: "—", color = Color.White,
                             fontSize = 20.sp * responsiveScale, fontWeight = FontWeight.SemiBold,
@@ -332,7 +335,10 @@ private fun CatalogTimeLabScreenContent(
                             contentDescription = "Humidity ${view.humidity ?: "unavailable"}"
                         },
                     ) {
-                        CatalogHumidityIcon(responsiveScale)
+                        Box(Modifier.size(32.dp * responsiveScale), contentAlignment = Alignment.Center) {
+                            CatalogHumidityIcon(responsiveScale)
+                        }
+                        Spacer(Modifier.height(7.dp))
                         Text("Humidity", color = Color(0xFFECF3F8), fontSize = 13.sp * responsiveScale)
                         Text(view.humidity ?: "—", color = Color.White,
                             fontSize = 20.sp * responsiveScale, fontWeight = FontWeight.SemiBold,
@@ -340,6 +346,8 @@ private fun CatalogTimeLabScreenContent(
                     }
                 }
             }
+        }
+        Column(Modifier.fillMaxWidth().align(Alignment.BottomCenter).navigationBarsPadding()) {
             Spacer(Modifier.height(19.dp * responsiveScale))
             CatalogForecastTimeline(
                 view = view,
@@ -385,6 +393,30 @@ private fun CatalogLocationPickerIcon(scale: Float) {
 }
 
 @Composable
+private fun CatalogWindDirectionIcon(bearingDegrees: Double?, scale: Float) {
+    if (bearingDegrees == null) {
+        Text("≋", color = Color(0xFF59DCEF), fontSize = 28.sp * scale)
+    } else {
+        Canvas(Modifier.size(28.dp * scale)) {
+            val center = Offset(size.width / 2f, size.height / 2f)
+            rotate((bearingDegrees + 180.0).toFloat(), center) {
+                val arrow = Path().apply {
+                    moveTo(center.x, size.height * .08f)
+                    lineTo(size.width * .79f, size.height * .42f)
+                    lineTo(size.width * .59f, size.height * .42f)
+                    lineTo(size.width * .59f, size.height * .92f)
+                    lineTo(size.width * .41f, size.height * .92f)
+                    lineTo(size.width * .41f, size.height * .42f)
+                    lineTo(size.width * .21f, size.height * .42f)
+                    close()
+                }
+                drawPath(arrow, Color(0xFF59DCEF))
+            }
+        }
+    }
+}
+
+@Composable
 private fun CatalogHumidityIcon(scale: Float) {
     Canvas(Modifier.size(29.dp * scale)) {
         val centerX = size.width / 2f
@@ -419,7 +451,7 @@ private fun CatalogForecastTimeline(
     )
     val density = LocalDensity.current
     val compactDayPx = with(density) { 55.dp.toPx().toDouble() }
-    val expandedHourPx = with(density) { 16.dp.toPx().toDouble() }
+    val expandedHourPx = with(density) { 48.dp.toPx().toDouble() }
     val rtl = LocalLayoutDirection.current == LayoutDirection.Rtl
     val selected by rememberUpdatedState(view.selectedInstant)
     val latestPrecision by rememberUpdatedState(precision)
@@ -498,6 +530,10 @@ private fun CatalogForecastTimeline(
                                 }
                             } else {
                                 doubleTapDetector.clear()
+                                if (!hourly) {
+                                    val targetDate = gestureSelection.atZone(view.zone).toLocalDate()
+                                    latestSelect(InstantTimeAxis.dailyOverviewAnchor(targetDate, view.zone))
+                                }
                             }
                             break
                         }
@@ -526,6 +562,8 @@ private fun CatalogForecastTimeline(
         val h = size.height
         val playhead = w / 2.0
         val dateY = 30.dp.toPx()
+        val weekdayLabelProgress = (animation / .5f).coerceIn(0f, 1f)
+        val weekdayLabelY = dateY - 12.dp.toPx() * weekdayLabelProgress
         val dailyIconY = 53.dp.toPx()
         val railY = 73.dp.toPx()
         val scale = pixelsPerSecond(animation)
@@ -544,7 +582,7 @@ private fun CatalogForecastTimeline(
                 drawLine(Color(0x4DD7EBF7), Offset(startX, dateY + 6.dp.toPx()),
                     Offset(startX, dateY + 18.dp.toPx()), stroke)
             }
-            if (noonX in -60f..(w + 60f)) {
+            if (startX in -60f..(w + 60f)) {
                 val selectedDay = view.selectedInstant.atZone(view.zone).toLocalDate() == day.date
                 drawIntoCanvas { canvas ->
                     val paint = Paint(Paint.ANTI_ALIAS_FLAG).apply {
@@ -554,9 +592,12 @@ private fun CatalogForecastTimeline(
                         isFakeBoldText = selectedDay
                     }
                     val dayLabel = day.date.dayOfWeek.name.take(3)
-                    canvas.nativeCanvas.drawText(dayLabel, noonX,
-                        dateY, paint)
+                    canvas.nativeCanvas.drawText(dayLabel, startX,
+                        weekdayLabelY, paint)
                 }
+            }
+            if (noonX in -60f..(w + 60f)) {
+                val selectedDay = view.selectedInstant.atZone(view.zone).toLocalDate() == day.date
                 if (animation < .5f) {
                     day.weatherSymbolId?.let { symbol ->
                         drawWeatherSymbol(symbol, Offset(noonX, dailyIconY), 31.dp.toPx())
@@ -595,11 +636,34 @@ private fun CatalogForecastTimeline(
                 val tick = selectedHour.plusHours(offset.toLong()).toInstant()
                 if (tick < view.interval.startInclusive || tick > view.interval.endInclusive) continue
                 val x = xFor(tick)
-                if (x !in -30f..(w + 30f)) continue
-                val major = tick.atZone(view.zone).hour % 3 == 0
-                drawLine(Color.White.copy(alpha = animation * if (major) .82f else .48f),
-                    Offset(x, railY - if (major) 9.dp.toPx() else 3.dp.toPx()),
-                    Offset(x, railY + if (major) 10.dp.toPx() else 5.dp.toPx()), stroke)
+                if (x in -30f..(w + 30f)) {
+                    val major = tick.atZone(view.zone).hour % 3 == 0
+                    drawLine(Color.White.copy(alpha = animation * if (major) .82f else .48f),
+                        Offset(x, railY - if (major) 9.dp.toPx() else 3.dp.toPx()),
+                        Offset(x, railY + if (major) 10.dp.toPx() else 5.dp.toPx()), stroke)
+                }
+                val midpoint = tick.plusSeconds(1_800L)
+                if (midpoint >= view.interval.startInclusive && midpoint <= view.interval.endInclusive) {
+                    val midpointX = xFor(midpoint)
+                    if (midpointX in -30f..(w + 30f)) {
+                        drawLine(Color.White.copy(alpha = animation * .36f),
+                            Offset(midpointX, railY),
+                            Offset(midpointX, railY + 6.dp.toPx()), stroke)
+                    }
+                }
+            }
+            if (animation > .5f) {
+                view.days.asSequence().flatMap { it.hours.asSequence() }.forEach { hour ->
+                    val midpoint = hour.instant.plusSeconds(1_800L)
+                    if (midpoint < view.interval.startInclusive || midpoint > view.interval.endInclusive) {
+                        return@forEach
+                    }
+                    val midpointX = xFor(midpoint)
+                    if (midpointX !in -6f..(w + 6f)) return@forEach
+                    hour.weatherSymbolId?.let { symbol ->
+                        drawWeatherSymbol(symbol, Offset(midpointX, railY - 20.dp.toPx()), 24.dp.toPx())
+                    }
+                }
             }
         }
         drawCircle(Color(0xD9FFE2A7), 4.dp.toPx(), Offset(playhead.toFloat(), railY))

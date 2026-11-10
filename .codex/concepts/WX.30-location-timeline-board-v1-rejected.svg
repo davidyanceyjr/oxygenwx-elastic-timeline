@@ -1,0 +1,80 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="2500" height="1550" viewBox="0 0 2500 1550">
+<defs>
+ <linearGradient id="bg" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#0c1e34"/><stop offset="1" stop-color="#07121e"/></linearGradient>
+ <linearGradient id="screen" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#17375a"/><stop offset=".55" stop-color="#244a66"/><stop offset="1" stop-color="#0a1c2c"/></linearGradient>
+ <linearGradient id="haze" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#85bac2" stop-opacity="0"/><stop offset="1" stop-color="#081625" stop-opacity=".45"/></linearGradient>
+ <filter id="shadow" x="-25%" y="-20%" width="150%" height="150%"><feDropShadow dx="0" dy="12" stdDeviation="16" flood-color="#000" flood-opacity=".4"/></filter>
+ <style>
+ .h{font:700 42px Inter,Roboto,Arial,sans-serif;fill:#f4f8fa}.sub{font:400 20px Inter,Roboto,Arial,sans-serif;fill:#aac1cb}.label{font:700 16px Inter,Roboto,Arial,sans-serif;letter-spacing:1.3px;fill:#99cfc9}.body{font:400 18px Inter,Roboto,Arial,sans-serif;fill:#dbe7ec}.small{font:400 15px Inter,Roboto,Arial,sans-serif;fill:#b6c9d0}.phoneTitle{font:700 16px Inter,Roboto,Arial,sans-serif;letter-spacing:1px;fill:#dbecef}.place{font:700 30px Inter,Roboto,Arial,sans-serif;fill:#f8fbfc}.detail{font:400 14px Inter,Roboto,Arial,sans-serif;fill:#d0e0e7}.code{font:700 20px Inter,Roboto,Arial,sans-serif;fill:#eff7f8}.region{font:400 11px Inter,Roboto,Arial,sans-serif;fill:#bed0d8}.chip{font:700 12px Inter,Roboto,Arial,sans-serif;letter-spacing:.7px;fill:#09202b}.note{font:400 16px Inter,Roboto,Arial,sans-serif;fill:#c7d8de}
+ </style>
+</defs>
+<rect width="2500" height="1550" fill="url(#bg)"/>
+<text x="70" y="76" class="h">WX.30 · ONE LOCATION TIMELINE</text>
+<text x="72" y="113" class="sub">Draft combined behavior and UI artwork board · review the shared rail, centered place details, and Save/View distinction</text>
+<rect x="2142" y="47" width="286" height="46" rx="23" fill="#173b47" stroke="#4f8e8b" stroke-width="1.5"/>
+<text x="2285" y="76" text-anchor="middle" class="label">OWNER REVIEW PENDING</text>
+<line x1="70" y1="142" x2="2430" y2="142" stroke="#294456" stroke-width="2"/>
+
+<text x="92" y="190" class="label">01 · SAVED LOCATION IN FOCUS</text>
+<text x="92" y="220" class="small">Current saved Florence stays green on the lower rail.</text>
+<g transform="translate(118 250)" filter="url(#shadow)">
+ <rect width="500" height="1080" rx="38" fill="#081521" stroke="#648096" stroke-width="3"/><rect x="12" y="12" width="476" height="1056" rx="30" fill="url(#screen)"/>
+ <path d="M12 670 Q112 635 215 670 T488 660 L488 1068 L12 1068Z" fill="url(#haze)"/>
+ <g fill="#122d43" opacity=".8"><rect x="16" y="740" width="39" height="190"/><rect x="58" y="690" width="52" height="240"/><rect x="114" y="754" width="44" height="176"/><rect x="163" y="708" width="63" height="222"/><rect x="232" y="665" width="55" height="265"/><rect x="292" y="735" width="47" height="195"/><rect x="344" y="685" width="69" height="245"/><rect x="418" y="750" width="66" height="180"/></g>
+ <rect x="12" y="12" width="476" height="42" rx="28" fill="#081827" opacity=".86"/><text x="34" y="40" class="small">5:38</text><text x="460" y="40" text-anchor="end" class="small">◈ 100%</text>
+ <text x="250" y="102" text-anchor="middle" class="phoneTitle">LOCATIONS</text><text x="250" y="155" text-anchor="middle" class="label">CENTER READOUT · SAVED</text>
+ <text x="250" y="204" text-anchor="middle" class="place">Florence</text><text x="250" y="235" text-anchor="middle" class="detail">Florence, Alabama · Lauderdale County · United States</text><text x="250" y="260" text-anchor="middle" class="detail">America/Chicago</text>
+ <rect x="90" y="283" width="145" height="48" rx="24" fill="#143c48" stroke="#69c8b7" stroke-width="2"/><text x="162" y="313" text-anchor="middle" class="body">Remove</text>
+ <rect x="265" y="283" width="145" height="48" rx="24" fill="#89d9c7"/><text x="337" y="313" text-anchor="middle" class="chip">VIEW</text>
+ <rect x="48" y="357" width="404" height="54" rx="27" fill="#173248" stroke="#b4cad1" stroke-width="1.5"/><text x="77" y="391" class="body">⌕  Scottsdale</text><text x="426" y="390" text-anchor="end" class="small">×</text>
+ <text x="48" y="449" class="label">SEARCH RESULTS</text><text x="452" y="449" text-anchor="end" class="small">3 places</text>
+ <line x1="45" y1="520" x2="455" y2="520" stroke="#a9c4cb" stroke-width="2" opacity=".78"/><line x1="250" y1="487" x2="250" y2="551" stroke="#e3eef1" stroke-width="2" opacity=".7"/>
+ <g text-anchor="middle"><text x="112" y="493" class="code">TUS</text><text x="112" y="514" class="region">Arizona / US</text><text x="250" y="493" class="code">SCO</text><text x="250" y="514" class="region">Arizona / US</text><text x="388" y="493" class="code">DTH</text><text x="388" y="514" class="region">Alabama / US</text></g>
+ <text x="48" y="596" class="label">SAVED LOCATIONS</text><text x="452" y="596" text-anchor="end" class="small">3 places · repeats to fill</text>
+ <line x1="45" y1="690" x2="455" y2="690" stroke="#a9c4cb" stroke-width="2" opacity=".78"/><line x1="250" y1="640" x2="250" y2="742" stroke="#8ee3a3" stroke-width="3"/><circle cx="250" cy="690" r="8" fill="#8ee3a3"/>
+ <g text-anchor="middle"><text x="112" y="661" class="code">ANC</text><text x="112" y="681" class="region">Alaska / US</text><text x="250" y="661" style="font:700 22px Inter,Roboto,Arial,sans-serif;fill:#83ed8b">FLO</text><text x="250" y="681" style="font:600 12px Inter,Roboto,Arial,sans-serif;fill:#83ed8b">Alabama / US</text><text x="388" y="661" class="code">PIT</text><text x="388" y="681" class="region">Pennsylvania / US</text></g>
+ <rect x="47" y="790" width="406" height="80" rx="15" fill="#0e2638" stroke="#3d5b6d"/><text x="66" y="822" class="small">ONE CONTROL</text><text x="66" y="847" class="note">One swipe moves both rails together.</text>
+ <text x="250" y="951" text-anchor="middle" class="small">Touch or drag a rail item to center it.</text><rect x="197" y="1018" width="106" height="7" rx="4" fill="#e9f0f3"/>
+</g>
+
+<text x="688" y="190" class="label">02 · SEARCH RESULT IN FOCUS</text><text x="688" y="220" class="small">Gold marks the preview; Florence remains green as the saved current place.</text>
+<g transform="translate(714 250)" filter="url(#shadow)">
+ <rect width="500" height="1080" rx="38" fill="#081521" stroke="#648096" stroke-width="3"/><rect x="12" y="12" width="476" height="1056" rx="30" fill="url(#screen)"/>
+ <path d="M12 670 Q112 635 215 670 T488 660 L488 1068 L12 1068Z" fill="url(#haze)"/><g fill="#122d43" opacity=".8"><rect x="16" y="740" width="39" height="190"/><rect x="58" y="690" width="52" height="240"/><rect x="114" y="754" width="44" height="176"/><rect x="163" y="708" width="63" height="222"/><rect x="232" y="665" width="55" height="265"/><rect x="292" y="735" width="47" height="195"/><rect x="344" y="685" width="69" height="245"/><rect x="418" y="750" width="66" height="180"/></g>
+ <rect x="12" y="12" width="476" height="42" rx="28" fill="#081827" opacity=".86"/><text x="34" y="40" class="small">5:38</text><text x="460" y="40" text-anchor="end" class="small">◈ 100%</text>
+ <text x="250" y="102" text-anchor="middle" class="phoneTitle">LOCATIONS</text><text x="250" y="155" text-anchor="middle" class="label">CENTER READOUT · SEARCH RESULT</text>
+ <text x="250" y="204" text-anchor="middle" class="place">Scottsdale</text><text x="250" y="235" text-anchor="middle" class="detail">Scottsdale, Arizona · Maricopa County · United States</text><text x="250" y="260" text-anchor="middle" class="detail">America/Phoenix</text>
+ <rect x="90" y="283" width="145" height="48" rx="24" fill="#89d9c7"/><text x="162" y="313" text-anchor="middle" class="chip">SAVE</text><rect x="265" y="283" width="145" height="48" rx="24" fill="#143c48" stroke="#69c8b7" stroke-width="2"/><text x="337" y="313" text-anchor="middle" class="body">View</text>
+ <rect x="48" y="357" width="404" height="54" rx="27" fill="#173248" stroke="#b4cad1" stroke-width="1.5"/><text x="77" y="391" class="body">⌕  Scottsdale</text><text x="426" y="390" text-anchor="end" class="small">×</text>
+ <text x="48" y="449" class="label">SEARCH RESULTS</text><text x="452" y="449" text-anchor="end" class="small">3 places</text>
+ <line x1="45" y1="520" x2="455" y2="520" stroke="#a9c4cb" stroke-width="2" opacity=".78"/><line x1="250" y1="487" x2="250" y2="551" stroke="#ffd67b" stroke-width="3"/><circle cx="250" cy="520" r="8" fill="#ffd67b"/>
+ <g text-anchor="middle"><text x="112" y="493" class="code">TUS</text><text x="112" y="514" class="region">Arizona / US</text><text x="250" y="493" style="font:700 22px Inter,Roboto,Arial,sans-serif;fill:#ffd67b">SCO</text><text x="250" y="514" style="font:600 12px Inter,Roboto,Arial,sans-serif;fill:#ffd67b">Arizona / US</text><text x="388" y="493" class="code">DTH</text><text x="388" y="514" class="region">Alabama / US</text></g>
+ <text x="48" y="596" class="label">SAVED LOCATIONS</text><text x="452" y="596" text-anchor="end" class="small">3 places · repeats to fill</text><line x1="45" y1="690" x2="455" y2="690" stroke="#a9c4cb" stroke-width="2" opacity=".78"/>
+ <g text-anchor="middle"><text x="80" y="661" class="code">ANC</text><text x="80" y="681" class="region">Alaska / US</text><text x="218" y="661" style="font:700 22px Inter,Roboto,Arial,sans-serif;fill:#83ed8b">FLO</text><text x="218" y="681" style="font:600 12px Inter,Roboto,Arial,sans-serif;fill:#83ed8b">Alabama / US</text><text x="356" y="661" class="code">PIT</text><text x="356" y="681" class="region">Pennsylvania / US</text></g>
+ <text x="250" y="951" text-anchor="middle" class="small">Focus follows the rail you touch or drag.</text><rect x="197" y="1018" width="106" height="7" rx="4" fill="#e9f0f3"/>
+</g>
+
+<g transform="translate(1280 184)">
+ <rect width="1148" height="1146" rx="24" fill="#0d2030" stroke="#294456" stroke-width="2"/>
+ <text x="42" y="62" class="h" style="font-size:30px">ONE CONTROLLER · TWO LOCATION TRACKS</text><text x="42" y="98" class="sub">The location timeline owns gesture, focus, loop, readout, and actions.</text>
+ <rect x="42" y="130" width="1064" height="220" rx="18" fill="#122b3d" stroke="#315264"/>
+ <text x="70" y="169" class="label">SHARED HORIZONTAL NAVIGATION</text><path d="M118 220 H1025" stroke="#91b6c1" stroke-width="3" stroke-linecap="round"/><path d="M118 220 l16 -10 M118 220 l16 10 M1025 220 l-16 -10 M1025 220 l-16 10" stroke="#91b6c1" stroke-width="3" fill="none"/>
+ <line x1="572" y1="194" x2="572" y2="248" stroke="#ffd67b" stroke-width="3"/><circle cx="572" cy="220" r="9" fill="#ffd67b"/><text x="572" y="272" text-anchor="middle" class="small">one pan · one center · both tracks move</text>
+ <text x="75" y="316" class="small">SEARCH RESULTS · TUS  SCO  DTH  TUS …</text><text x="625" y="316" class="small">SAVED PLACES · ANC  FLO  PIT  ANC …</text>
+ <text x="42" y="405" class="label">FOCUS AND ACTIONS</text>
+ <rect x="42" y="430" width="510" height="215" rx="18" fill="#172c3b" stroke="#765f31" stroke-width="2"/><text x="70" y="472" style="font:700 20px Inter,Roboto,Arial,sans-serif;fill:#ffd67b">SEARCH RESULT · PREVIEW</text><text x="70" y="511" class="body">Center readout shows full place details.</text>
+ <rect x="70" y="542" width="150" height="44" rx="22" fill="#ffd67b"/><text x="145" y="570" text-anchor="middle" class="chip">SAVE</text><rect x="240" y="542" width="150" height="44" rx="22" fill="#153a45" stroke="#67c8b6" stroke-width="2"/><text x="315" y="570" text-anchor="middle" class="body">View</text><text x="70" y="619" class="small">Save persists location + catalog · View is temporary</text>
+ <rect x="596" y="430" width="510" height="215" rx="18" fill="#172c3b" stroke="#3d806d" stroke-width="2"/><text x="624" y="472" style="font:700 20px Inter,Roboto,Arial,sans-serif;fill:#86e99b">SAVED LOCATION · PREVIEW</text><text x="624" y="511" class="body">Center readout shows full place details.</text>
+ <rect x="624" y="542" width="150" height="44" rx="22" fill="#153a45" stroke="#67c8b6" stroke-width="2"/><text x="699" y="570" text-anchor="middle" class="body">Remove</text><rect x="794" y="542" width="150" height="44" rx="22" fill="#89d9c7"/><text x="869" y="570" text-anchor="middle" class="chip">VIEW</text><text x="624" y="619" class="small">View loads saved catalog · Remove keeps confirmation</text>
+ <text x="42" y="700" class="label">PERSISTENCE PATH</text>
+ <rect x="42" y="725" width="322" height="126" rx="16" fill="#112d3c" stroke="#4a8b77"/><text x="68" y="764" style="font:700 18px Inter,Roboto,Arial,sans-serif;fill:#8fea9b">SAVE RESULT</text><text x="68" y="795" class="small">Persist place + catalog;</text><text x="68" y="820" class="small">activate and return.</text>
+ <path d="M375 788 H432" stroke="#8fc3c2" stroke-width="3"/><path d="M432 788 l-12 -8 v16Z" fill="#8fc3c2"/>
+ <rect x="444" y="725" width="322" height="126" rx="16" fill="#112d3c" stroke="#4a8b77"/><text x="470" y="764" style="font:700 18px Inter,Roboto,Arial,sans-serif;fill:#8fea9b">VIEW RESULT</text><text x="470" y="795" class="small">Activate in memory;</text><text x="470" y="820" class="small">discard on switch/restart.</text>
+ <path d="M777 788 H834" stroke="#8fc3c2" stroke-width="3"/><path d="M834 788 l-12 -8 v16Z" fill="#8fc3c2"/>
+ <rect x="846" y="725" width="260" height="126" rx="16" fill="#112d3c" stroke="#4a8b77"/><text x="872" y="764" style="font:700 18px Inter,Roboto,Arial,sans-serif;fill:#8fea9b">NEXT LOCATION</text><text x="872" y="795" class="small">Saved selection wins</text><text x="872" y="820" class="small">on restore.</text>
+ <text x="42" y="910" class="label">UNCHANGED LOCATION FLOW</text><text x="42" y="947" class="note">• Manual query, loading, matches, empty and failed states stay in the city scene.</text><text x="42" y="980" class="note">• Attribution and place identity remain available; no device-location request is added.</text><text x="42" y="1013" class="note">• Saved removal uses the approved confirmation and storage behavior.</text>
+ <text x="42" y="1065" class="label">COLOR KEY</text><circle cx="154" cy="1107" r="9" fill="#83ed8b"/><text x="174" y="1113" class="small">current saved</text><circle cx="382" cy="1107" r="9" fill="#ffd67b"/><text x="402" y="1113" class="small">focused result</text><circle cx="623" cy="1107" r="9" fill="#eaf2f4"/><text x="643" y="1113" class="small">other locations</text>
+ <text x="42" y="1185" class="small">Owner review: shared drag · Save/View lifecycle · colors · preview vs commit.</text>
+</g>
+<text x="70" y="1489" class="small">Draft board only · References are not installed acceptance evidence · Cycle 119 remains at BOARDS until approval.</text>
+</svg>
