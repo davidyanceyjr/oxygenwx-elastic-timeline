@@ -6,6 +6,7 @@ import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.focusable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.BoxWithConstraints
@@ -17,6 +18,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.heightIn
+import androidx.compose.foundation.layout.imePadding
 import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
@@ -49,6 +51,8 @@ import androidx.compose.runtime.setValue
 import androidx.compose.runtime.snapshotFlow
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.geometry.Offset
+import androidx.compose.ui.focus.FocusRequester
+import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
@@ -93,12 +97,13 @@ fun LocationSelectorPanel(
     controller: LocationSelectorController,
     selectedInstant: Instant? = null,
     currentLocationName: String? = null,
+    forecastError: String? = null,
+    onRetryForecast: (() -> Unit)? = null,
     loadSavedTemperature: suspend (SavedLocation, Instant) -> PresentedMeasurement? = { _, _ -> null },
     onDismiss: () -> Unit,
 ) {
     val state by controller.state.collectAsState()
     val savedLocations = state.saved
-    val keyboard = LocalSoftwareKeyboardController.current
     val pendingRemoval = state.pendingRemoval
     val dismiss = {
         controller.close()
@@ -193,6 +198,13 @@ fun LocationSelectorPanel(
         ),
     ) {
         MaterialTheme(colorScheme = selectorColorScheme()) {
+            val keyboard = LocalSoftwareKeyboardController.current
+            val searchActionFocusRequester = remember { FocusRequester() }
+            val submitSearch = {
+                controller.submitSearch()
+                searchActionFocusRequester.requestFocus()
+                keyboard?.hide()
+            }
             Box(Modifier.fillMaxSize().background(Color(0xFF102743))) {
                 Image(
                     painter = painterResource(com.oxygen.weather.timeline.R.drawable.sg2_city_architecture),
@@ -220,7 +232,7 @@ fun LocationSelectorPanel(
                 }
 
                 Column(
-                    Modifier.fillMaxSize().statusBarsPadding().navigationBarsPadding()
+                    Modifier.fillMaxSize().statusBarsPadding().imePadding().navigationBarsPadding()
                         .padding(horizontal = 16.dp),
                     horizontalAlignment = Alignment.CenterHorizontally,
                 ) {
@@ -318,7 +330,28 @@ fun LocationSelectorPanel(
                             if (attributionExpanded) Attribution(focused.candidate.attribution)
                         }
                     }
-                    state.message?.let { message ->
+                    if (forecastError != null) {
+                        Row(
+                            modifier = Modifier.fillMaxWidth(),
+                            verticalAlignment = Alignment.CenterVertically,
+                            horizontalArrangement = Arrangement.Center,
+                        ) {
+                            Text(
+                                forecastError,
+                                color = Color(0xFFFFB4A6),
+                                style = MaterialTheme.typography.bodySmall,
+                                textAlign = TextAlign.Center,
+                                modifier = Modifier.weight(1f).semantics {
+                                    liveRegion = LiveRegionMode.Polite
+                                },
+                            )
+                            if (onRetryForecast != null) {
+                                TextButton(onClick = onRetryForecast) {
+                                    Text("Retry forecast", color = Color.White)
+                                }
+                            }
+                        }
+                    } else state.message?.let { message ->
                         Text(message,
                             color = if (state.messageIsError) Color(0xFFFFB4A6) else Color.White,
                             style = MaterialTheme.typography.bodySmall,
@@ -342,10 +375,7 @@ fun LocationSelectorPanel(
                             singleLine = true,
                             enabled = pendingRemoval == null,
                             keyboardOptions = KeyboardOptions(imeAction = ImeAction.Search),
-                            keyboardActions = KeyboardActions(onSearch = {
-                                keyboard?.hide()
-                                controller.submitSearch()
-                            }),
+                            keyboardActions = KeyboardActions(onSearch = { submitSearch() }),
                         )
                         if (state.query.isNotEmpty()) {
                             TextButton(onClick = { controller.editQuery("") }, modifier = Modifier.semantics {
@@ -353,9 +383,11 @@ fun LocationSelectorPanel(
                             }) { Text("×", color = Color.White, fontSize = 21.sp) }
                         }
                         TextButton(enabled = pendingRemoval == null, onClick = {
-                            keyboard?.hide()
-                            controller.submitSearch()
-                        }, modifier = Modifier.semantics { contentDescription = "Search places" }) {
+                            submitSearch()
+                        }, modifier = Modifier
+                            .focusRequester(searchActionFocusRequester)
+                            .focusable(enabled = pendingRemoval == null)
+                            .semantics { contentDescription = "Search places" }) {
                             Text("Search", color = Color.White)
                         }
                     }

@@ -1,0 +1,140 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1920" height="1480" viewBox="0 0 1920 1480" role="img" aria-labelledby="title desc">
+  <title id="title">MR.3 saved-location and search behavior board</title>
+  <desc id="desc">Product-owner-approved behavior board for saved-location View handoff and keyboard-aware location search.</desc>
+  <defs>
+    <marker id="arrow" markerWidth="12" markerHeight="12" refX="10" refY="6" orient="auto" markerUnits="strokeWidth">
+      <path d="M1,1 L11,6 L1,11 Z" fill="#42566b" />
+    </marker>
+    <filter id="shadow" x="-10%" y="-10%" width="120%" height="130%">
+      <feDropShadow dx="0" dy="4" stdDeviation="5" flood-color="#18334a" flood-opacity=".12" />
+    </filter>
+    <style>
+      .title { font: 700 38px Inter, Roboto, Arial, sans-serif; fill: #f8fbff; }
+      .subtitle { font: 400 18px Inter, Roboto, Arial, sans-serif; fill: #cbd8e3; }
+      .panel-title { font: 700 24px Inter, Roboto, Arial, sans-serif; fill: #17324b; }
+      .panel-kicker { font: 700 14px Inter, Roboto, Arial, sans-serif; letter-spacing: 1.2px; fill: #577087; }
+      .node-title { font: 700 19px Inter, Roboto, Arial, sans-serif; fill: #17324b; }
+      .node-text { font: 400 16px Inter, Roboto, Arial, sans-serif; fill: #344b60; }
+      .small { font: 400 14px Inter, Roboto, Arial, sans-serif; fill: #4e6478; }
+      .pill { font: 700 14px Inter, Roboto, Arial, sans-serif; letter-spacing: .8px; fill: #15364a; }
+      .footer-kicker { font: 700 14px Inter, Roboto, Arial, sans-serif; letter-spacing: 1.2px; fill: #9ecbd3; }
+      .footer-text { font: 400 16px Inter, Roboto, Arial, sans-serif; fill: #f8fbff; }
+      .footer-small { font: 400 14px Inter, Roboto, Arial, sans-serif; fill: #cbd8e3; }
+      .line { fill: none; stroke: #42566b; stroke-width: 3; marker-end: url(#arrow); }
+      .card { fill: #ffffff; stroke: #d4e0e9; stroke-width: 2; rx: 16; filter: url(#shadow); }
+    </style>
+  </defs>
+
+  <rect width="1920" height="1480" fill="#eef3f7" />
+  <rect x="0" y="0" width="1920" height="132" fill="#11283d" />
+  <text x="52" y="57" class="title">MR.3 — Saved-location return and keyboard-aware search</text>
+  <text x="54" y="97" class="subtitle">Behavior board · current screen reference plus target state flows</text>
+  <rect x="1610" y="36" width="258" height="44" rx="22" fill="#d9e7ef" />
+  <text x="1739" y="64" text-anchor="middle" class="pill">OWNER APPROVED · 2026-11-10</text>
+
+  <!-- Current installed reference -->
+  <rect x="48" y="160" width="352" height="1035" rx="22" fill="#ffffff" stroke="#cddbe5" stroke-width="2" filter="url(#shadow)" />
+  <text x="74" y="204" class="panel-kicker">CURRENT INSTALLED REFERENCE</text>
+  <text x="74" y="239" class="node-title">Keyboard covers the query field</text>
+  <image href="MR.3-current-keyboard-obstruction-reference.png" x="91" y="266" width="266" height="545" preserveAspectRatio="xMidYMid meet" />
+  <rect x="73" y="834" width="302" height="94" rx="14" fill="#fff0ec" stroke="#e8b7aa" stroke-width="2" />
+  <text x="91" y="869" class="node-title" fill="#7b3328">Observed on Pixel 3 XL</text>
+  <text x="91" y="895" class="small">Typed text appears in IME suggestions;</text>
+  <text x="91" y="916" class="small">the app's search field is obscured.</text>
+  <text x="74" y="972" class="small">Reference only — not target artwork</text>
+  <text x="74" y="994" class="small">or installed acceptance evidence.</text>
+
+  <!-- Saved-location handoff -->
+  <rect x="424" y="160" width="1448" height="505" rx="22" fill="#ffffff" stroke="#cddbe5" stroke-width="2" filter="url(#shadow)" />
+  <text x="456" y="203" class="panel-kicker">A · SAVED-LOCATION VIEW</text>
+  <text x="456" y="238" class="panel-title">Keep the selector until the chosen LIVE catalog is active</text>
+
+  <rect x="456" y="285" width="210" height="136" class="card" />
+  <text x="476" y="320" class="node-title">Selector open</text>
+  <text x="476" y="350" class="node-text">Saved location is</text>
+  <text x="476" y="373" class="node-text">available to view.</text>
+
+  <rect x="710" y="285" width="210" height="136" class="card" />
+  <text x="730" y="320" class="node-title">Choose View</text>
+  <text x="730" y="350" class="node-text">User selects the</text>
+  <text x="730" y="373" class="node-text">saved location.</text>
+
+  <rect x="964" y="274" width="270" height="158" rx="16" fill="#e8f5f5" stroke="#79b8b5" stroke-width="2" filter="url(#shadow)" />
+  <text x="986" y="310" class="node-title">LIVE catalog loads</text>
+  <text x="986" y="341" class="node-text">Keep the selector visible</text>
+  <text x="986" y="364" class="node-text">while activation is pending.</text>
+  <text x="986" y="397" class="small">Selection persistence stays as-is.</text>
+
+  <polygon points="1332,280 1422,352 1332,424 1242,352" fill="#f4f1e6" stroke="#c8b778" stroke-width="2" />
+  <text x="1332" y="347" text-anchor="middle" class="node-title">Activation</text>
+  <text x="1332" y="371" text-anchor="middle" class="node-text">outcome?</text>
+
+  <rect x="1503" y="266" width="330" height="143" rx="16" fill="#e9f5ec" stroke="#8bbd96" stroke-width="2" filter="url(#shadow)" />
+  <text x="1527" y="301" class="node-title">Success</text>
+  <text x="1527" y="332" class="node-text">Dismiss selector; show the</text>
+  <text x="1527" y="355" class="node-text">new location on the main view.</text>
+  <text x="1527" y="384" class="small">Its LIVE catalog is active.</text>
+
+  <rect x="1248" y="488" width="585" height="112" rx="16" fill="#fff0ec" stroke="#dfa99b" stroke-width="2" filter="url(#shadow)" />
+  <text x="1272" y="525" class="node-title">Failure</text>
+  <text x="1272" y="554" class="node-text">Keep selector open; preserve existing failure feedback.</text>
+  <text x="1272" y="579" class="small">Do not dismiss as though activation succeeded.</text>
+
+  <path d="M666 353 H702" class="line" />
+  <path d="M920 353 H956" class="line" />
+  <path d="M1234 353 H1238" class="line" />
+  <path d="M1422 352 H1495" class="line" />
+  <text x="1450" y="332" class="small">success</text>
+  <path d="M1332 424 V480" class="line" />
+  <text x="1347" y="460" class="small">failure</text>
+
+  <!-- Search and keyboard flow -->
+  <rect x="424" y="685" width="1448" height="510" rx="22" fill="#ffffff" stroke="#cddbe5" stroke-width="2" filter="url(#shadow)" />
+  <text x="456" y="728" class="panel-kicker">B · SEARCH FIELD, IME, AND RESULTS</text>
+  <text x="456" y="763" class="panel-title">Keep typing visible; hide the keyboard on Enter/Search</text>
+
+  <rect x="456" y="810" width="218" height="166" class="card" />
+  <text x="476" y="846" class="node-title">Focus field</text>
+  <text x="476" y="876" class="node-text">Keyboard opens;</text>
+  <text x="476" y="899" class="node-text">selector stays open.</text>
+  <text x="476" y="942" class="small">No query submitted yet.</text>
+
+  <rect x="716" y="798" width="292" height="190" rx="16" fill="#e8f5f5" stroke="#79b8b5" stroke-width="2" filter="url(#shadow)" />
+  <text x="738" y="834" class="node-title">Type a location</text>
+  <text x="738" y="865" class="node-text">Search field and current</text>
+  <text x="738" y="888" class="node-text">query stay visible and</text>
+  <text x="738" y="911" class="node-text">unobscured with the</text>
+  <text x="738" y="934" class="node-text">keyboard open.</text>
+  <text x="738" y="956" class="small">Typing alone does not submit.</text>
+
+  <rect x="1050" y="798" width="292" height="190" rx="16" fill="#edf0fa" stroke="#a0a8d3" stroke-width="2" filter="url(#shadow)" />
+  <text x="1072" y="834" class="node-title">Press IME Search</text>
+  <text x="1072" y="865" class="node-text">Hide keyboard and submit</text>
+  <text x="1072" y="888" class="node-text">the non-empty query.</text>
+  <text x="1072" y="933" class="small">No extra dismiss gesture.</text>
+
+  <rect x="1384" y="780" width="450" height="226" rx="16" fill="#f4f7fa" stroke="#9aafc0" stroke-width="2" filter="url(#shadow)" />
+  <text x="1408" y="816" class="node-title">Results state in selector</text>
+  <text x="1408" y="847" class="node-text">Loading → matches / no matches / failure.</text>
+  <text x="1408" y="878" class="node-text">Keep query available; existing retry</text>
+  <text x="1408" y="901" class="node-text">and result Save/View actions remain.</text>
+  <text x="1408" y="946" class="small">Submission alone does not select a place.</text>
+
+  <path d="M674 893 H708" class="line" />
+  <path d="M1008 893 H1042" class="line" />
+  <path d="M1342 893 H1376" class="line" />
+
+  <rect x="716" y="1034" width="1118" height="92" rx="14" fill="#f7f3e7" stroke="#d6c99b" stroke-width="2" />
+  <text x="740" y="1070" class="node-title">Existing Search button</text>
+  <text x="740" y="1098" class="node-text">Retains its current submit behavior; no provider, attribution, or result-selection rules change.</text>
+
+  <!-- Boundaries -->
+  <rect x="48" y="1220" width="1824" height="218" rx="22" fill="#11283d" />
+  <text x="78" y="1266" class="footer-kicker">PRESERVE</text>
+  <text x="78" y="1310" class="footer-text">• Search results require explicit Save or View.</text>
+  <text x="78" y="1342" class="footer-text">• Temporary result View path remains unchanged.</text>
+  <text x="78" y="1374" class="footer-text">• Saved selection persistence, selected time, and timeline interactions remain unchanged.</text>
+  <text x="1000" y="1310" class="footer-text">• Existing loading and failure feedback remains available.</text>
+  <text x="1000" y="1342" class="footer-text">• Manual search only; no new provider or device-location behavior.</text>
+  <text x="1000" y="1374" class="footer-small">Behavior board only. A product-owner-approved UI artwork board is still required before plan finalization.</text>
+</svg>

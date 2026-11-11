@@ -1,0 +1,18 @@
+--------- beginning of main
+11-10 19:05:36.494 D/MR3Focus(24993): field focus=false hasFocus=false
+11-10 19:05:36.643 D/MR3Focus(24993): effect start search=Idle
+11-10 19:05:52.426 D/MR3Focus(24993): field focus=true hasFocus=true
+11-10 19:06:00.379 D/MR3Focus(24993): submit before search=Idle
+11-10 19:06:00.380 D/MR3Focus(24993): submit after search=Loading(query=zzzxqvzzqv)
+11-10 19:06:00.384 D/MR3Focus(24993): field focus=false hasFocus=false
+11-10 19:06:00.456 D/MR3Focus(24993): field focus=true hasFocus=true
+11-10 19:06:00.497 D/MR3Focus(24993): effect start search=Loading(query=zzzxqvzzqv)
+11-10 19:06:00.537 D/MR3Focus(24993): effect after frame search=Loading(query=zzzxqvzzqv)
+11-10 19:06:00.539 D/MR3Focus(24993): field focus=false hasFocus=false
+11-10 19:06:00.543 D/MR3Focus(24993): field focus=true hasFocus=true
+11-10 19:06:00.543 D/MR3Focus(24993): effect after clear search=Loading(query=zzzxqvzzqv)
+11-10 19:06:01.542 D/MR3Focus(24993): effect start search=NoMatches(query=zzzxqvzzqv)
+11-10 19:06:01.544 D/MR3Focus(24993): effect after frame search=NoMatches(query=zzzxqvzzqv)
+11-10 19:06:01.546 D/MR3Focus(24993): field focus=false hasFocus=false
+11-10 19:06:01.550 D/MR3Focus(24993): field focus=true hasFocus=true
+11-10 19:06:01.550 D/MR3Focus(24993): effect after clear search=NoMatches(query=zzzxqvzzqv)

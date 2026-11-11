@@ -80,6 +80,7 @@ class MainActivity : ComponentActivity(), ActivityVariantDelegate.Host {
     private var closeLocationSelectorAction: (() -> Unit)? = null
     private var pendingForegroundUpdate: LocationId? = null
     private var pendingForegroundLoadingObserved = false
+    private var pendingForegroundError by mutableStateOf<String?>(null)
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -123,22 +124,26 @@ class MainActivity : ComponentActivity(), ActivityVariantDelegate.Host {
                         val active = state.active?.takeIf {
                             it.location.id == waitingFor && it.origin == CatalogOrigin.LIVE && state.lastError == null
                         }
-                        if (active != null) lifecycleScope.launch {
-                            val locations = savedLocations.list() as? SavedLocationListResult.Locations ?: return@launch
-                            locations.values.asSequence().filter { it.location.id != waitingFor }.forEach { saved ->
-                                val id = saved.location.id
-                                val version = savedLocations.backgroundUpdateVersion(id)
-                                try {
-                                    savedLocations.updateSavedLocationIfCurrent(id, version) { location ->
-                                        liveCatalogRepository.load(location, DatasetId("forecast-44d"))
+                        if (active != null) {
+                            pendingForegroundError = null
+                            closeLocationSelectorAction?.invoke()
+                            lifecycleScope.launch {
+                                val locations = savedLocations.list() as? SavedLocationListResult.Locations ?: return@launch
+                                locations.values.asSequence().filter { it.location.id != waitingFor }.forEach { saved ->
+                                    val id = saved.location.id
+                                    val version = savedLocations.backgroundUpdateVersion(id)
+                                    try {
+                                        savedLocations.updateSavedLocationIfCurrent(id, version) { location ->
+                                            liveCatalogRepository.load(location, DatasetId("forecast-44d"))
+                                        }
+                                    } catch (cancelled: kotlinx.coroutines.CancellationException) {
+                                        throw cancelled
+                                    } catch (_: Exception) {
+                                        // Each location update is best effort; its previous catalog remains available.
                                     }
-                                } catch (cancelled: kotlinx.coroutines.CancellationException) {
-                                    throw cancelled
-                                } catch (_: Exception) {
-                                    // Each location update is best effort; its previous catalog remains available.
                                 }
                             }
-                        }
+                        } else pendingForegroundError = state.lastError ?: "Forecast unavailable."
                     }
                 }
             }
@@ -194,6 +199,7 @@ class MainActivity : ComponentActivity(), ActivityVariantDelegate.Host {
                             variantDelegate?.beforeOrdinaryAction(this@MainActivity)
                             pendingForegroundUpdate = null
                             pendingForegroundLoadingObserved = false
+                            pendingForegroundError = null
                             val result = activationCoordinator.requestTransientLive(location, name).await()
                             if (result is com.oxygen.weather.timeline.data.catalog.DebugActivationResult.Success) {
                                 catalogLocationSelectorOpen = false
@@ -203,9 +209,10 @@ class MainActivity : ComponentActivity(), ActivityVariantDelegate.Host {
                     preserveSubmittedSetWhileEditing = true,
                     resetSearchAfterResultSelection = true,
                     onCommittedSelection = { selected ->
-                    pendingForegroundUpdate = selected.location.id
-                    pendingForegroundLoadingObserved = false
-                    activationCoordinator.committedLocationSelection(selected.location, selected.candidate.name)
+                        pendingForegroundUpdate = selected.location.id
+                        pendingForegroundLoadingObserved = false
+                        pendingForegroundError = null
+                        activationCoordinator.committedLocationSelection(selected.location, selected.candidate.name)
                     },
                 )
             }
@@ -255,6 +262,7 @@ class MainActivity : ComponentActivity(), ActivityVariantDelegate.Host {
                                 pendingForegroundUpdate = if (activationCoordinator.isTransientSelection()) null
                                     else activationCoordinator.state.value.selectedLocation?.id
                                 pendingForegroundLoadingObserved = false
+                                pendingForegroundError = null
                                 activationCoordinator.refreshCurrent()
                             } },
                             omitOptionalCityLayers = forceSg2MissingOptionalLayer,
@@ -289,6 +297,7 @@ class MainActivity : ComponentActivity(), ActivityVariantDelegate.Host {
                                 pendingForegroundUpdate = if (activationCoordinator.isTransientSelection()) null
                                     else activationCoordinator.state.value.selectedLocation?.id
                                 pendingForegroundLoadingObserved = false
+                                pendingForegroundError = null
                                 activationCoordinator.refreshCurrent()
                                     } }) {
                                         Text("Retry forecast", color = Color.White)
@@ -302,6 +311,19 @@ class MainActivity : ComponentActivity(), ActivityVariantDelegate.Host {
                             controller = catalogSelector,
                             selectedInstant = matchingActive?.selectedInstant,
                             currentLocationName = activation.selectedLocationName,
+                            forecastError = pendingForegroundError,
+                            onRetryForecast = {
+                                lifecycleScope.launch {
+                                    val selectedId = activationCoordinator.state.value.selectedLocation?.id
+                                    if (selectedId != null) {
+                                        variantDelegate?.beforeOrdinaryAction(this@MainActivity)
+                                        pendingForegroundUpdate = selectedId
+                                        pendingForegroundLoadingObserved = false
+                                        pendingForegroundError = null
+                                        activationCoordinator.refreshCurrent()
+                                    }
+                                }
+                            },
                             loadSavedTemperature = { saved, selectedInstant ->
                                 val stored = catalogStorage.load(
                                     saved.location,

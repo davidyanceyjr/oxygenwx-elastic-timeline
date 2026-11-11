@@ -1,0 +1,243 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1920" height="1600" viewBox="0 0 1920 1600" role="img" aria-labelledby="title desc">
+  <title id="title">MR.3 saved-location and keyboard-aware search UI artwork board</title>
+  <desc id="desc">Product-owner-approved UI artwork for the visible search field above the on-screen keyboard, keyboard dismissal after search, and saved-location LIVE catalog handoff.</desc>
+  <defs>
+    <linearGradient id="header" x2="0" y2="1"><stop stop-color="#163651"/><stop offset="1" stop-color="#0e2236"/></linearGradient>
+    <linearGradient id="sceneVeil" x2="0" y2="1"><stop stop-color="#102743" stop-opacity=".82"/><stop offset=".48" stop-color="#102743" stop-opacity=".30"/><stop offset="1" stop-color="#081a2d" stop-opacity=".93"/></linearGradient>
+    <linearGradient id="keyboard" x2="0" y2="1"><stop stop-color="#303b40"/><stop offset="1" stop-color="#202b30"/></linearGradient>
+    <filter id="shadow" x="-15%" y="-12%" width="130%" height="130%"><feDropShadow dx="0" dy="5" stdDeviation="7" flood-color="#07111d" flood-opacity=".22"/></filter>
+    <marker id="arrow" markerWidth="12" markerHeight="12" refX="10" refY="6" orient="auto"><path d="M1 1 L11 6 L1 11 Z" fill="#3f7380"/></marker>
+    <clipPath id="currentClip"><rect x="0" y="0" width="250" height="514" rx="18"/></clipPath>
+    <clipPath id="targetClip"><rect x="0" y="0" width="250" height="514" rx="18"/></clipPath>
+    <style>
+      .board-title { font: 700 36px Inter, Roboto, Arial, sans-serif; fill: #f7fbff; }
+      .board-sub { font: 400 17px Inter, Roboto, Arial, sans-serif; fill: #c7d7e4; }
+      .section { font: 700 21px Inter, Roboto, Arial, sans-serif; fill: #17334b; }
+      .kicker { font: 700 13px Inter, Roboto, Arial, sans-serif; letter-spacing: 1.3px; fill: #547086; }
+      .note-head { font: 700 17px Inter, Roboto, Arial, sans-serif; fill: #17334b; }
+      .note { font: 400 15px Inter, Roboto, Arial, sans-serif; fill: #365066; }
+      .note-small { font: 400 13px Inter, Roboto, Arial, sans-serif; fill: #516a80; }
+      .phone-white { font: 500 12px Roboto, Arial, sans-serif; fill: #f6f8fc; }
+      .phone-muted { font: 400 8px Roboto, Arial, sans-serif; fill: #d5e1ed; }
+      .phone-small { font: 400 9px Roboto, Arial, sans-serif; fill: #e6edf5; }
+      .phone-head { font: 600 13px Roboto, Arial, sans-serif; fill: #fff; }
+      .phone-hero { font: 600 26px Roboto, Arial, sans-serif; fill: #fff; }
+      .screen-label { font: 700 14px Inter, Roboto, Arial, sans-serif; letter-spacing: .6px; fill: #176071; }
+      .pill { font: 700 12px Inter, Roboto, Arial, sans-serif; letter-spacing: .6px; fill: #15364a; }
+      .key { font: 400 11px Roboto, Arial, sans-serif; fill: #e7ebed; }
+      .tiny { font: 400 7px Roboto, Arial, sans-serif; fill: #dbe5ee; }
+      .line { fill: none; stroke: #3f7380; stroke-width: 3; marker-end: url(#arrow); }
+    </style>
+  </defs>
+
+  <rect width="1920" height="1500" fill="#e9eff4"/>
+  <rect width="1920" height="126" fill="url(#header)"/>
+  <text x="44" y="45" class="board-title">MR.3 — Location search &amp; saved-location return</text>
+  <text x="46" y="78" class="board-sub">UI artwork board · preserve the existing city scene and controls while the affected states remain visible</text>
+  <rect x="1598" y="34" width="276" height="40" rx="20" fill="#dceaf0"/>
+  <text x="1736" y="59" text-anchor="middle" class="pill">OWNER APPROVED · 2026-11-10</text>
+  <text x="46" y="108" class="board-sub">Search field stays above the system IME → Enter/Search hides the IME → saved-location View returns only after LIVE activation succeeds.</text>
+
+  <!-- Search field and results -->
+  <rect x="32" y="146" width="1856" height="690" rx="20" fill="#fff" stroke="#cbd8e2" stroke-width="2" filter="url(#shadow)"/>
+  <text x="58" y="182" class="kicker">A · SEARCH FIELD, IME, AND RESULTS</text>
+  <text x="58" y="211" class="section">Keep the same selector scene; make the query visible in both affected states</text>
+
+  <text x="72" y="245" class="screen-label">CURRENT · FIELD OBSCURED</text>
+  <g transform="translate(72 260)" filter="url(#shadow)">
+    <rect width="250" height="514" rx="18" fill="#091a2d"/>
+    <image href="MR.3-current-keyboard-obstruction-reference.png" x="0" y="0" width="250" height="514" preserveAspectRatio="xMidYMid slice" clip-path="url(#currentClip)"/>
+    <rect x="0" y="0" width="250" height="514" rx="18" fill="none" stroke="#19344c" stroke-width="3"/>
+  </g>
+  <text x="72" y="793" class="note-small">Installed: field hidden by IME.</text>
+
+  <text x="360" y="245" class="screen-label">TARGET · KEYBOARD OPEN</text>
+  <g transform="translate(360 260)" filter="url(#shadow)">
+    <g clip-path="url(#targetClip)">
+      <image href="../../app/src/main/res/drawable-nodpi/sg2_city_architecture.png" x="0" y="0" width="250" height="514" preserveAspectRatio="xMidYMid slice"/>
+      <rect width="250" height="514" fill="url(#sceneVeil)"/>
+      <rect width="250" height="24" fill="#102743" fill-opacity=".9"/>
+      <text x="12" y="16" class="phone-small">3:01</text><text x="194" y="16" class="phone-small">◆  ▰ 100%</text>
+      <path d="M38 99 C48 76 66 76 77 90 C89 60 116 61 126 88 C142 69 164 72 173 95 C186 92 194 98 196 106 C150 117 85 117 38 106Z" fill="#9db1c8" fill-opacity=".16"/>
+      <text x="125" y="143" text-anchor="middle" class="phone-head">Locations</text>
+      <text x="125" y="172" text-anchor="middle" class="phone-white">⌖  Florence</text>
+      <text x="125" y="209" text-anchor="middle" class="phone-hero">Florence</text>
+      <text x="125" y="226" text-anchor="middle" class="phone-small">Florence, Alabama, United States</text>
+      <text x="125" y="240" text-anchor="middle" class="phone-muted">America/Chicago · 34.80, −87.68</text>
+      <rect x="46" y="254" width="75" height="28" rx="14" fill="#112943" fill-opacity=".54" stroke="#b8ccdc" stroke-opacity=".56"/>
+      <text x="83" y="272" text-anchor="middle" class="phone-white">Remove</text>
+      <rect x="129" y="254" width="75" height="28" rx="14" fill="#82d8c9"/>
+      <text x="166" y="272" text-anchor="middle" style="font:700 12px Roboto,Arial,sans-serif;fill:#062f32">View</text>
+      <rect x="11" y="297" width="228" height="39" rx="19" fill="#8294a8" fill-opacity=".35" stroke="#d9e4ed" stroke-opacity=".75"/>
+      <circle cx="28" cy="316" r="6" fill="none" stroke="#edf5fb" stroke-width="2"/><path d="M32 320 L37 325" stroke="#edf5fb" stroke-width="2"/>
+      <text x="48" y="321" class="phone-white">Boston</text>
+      <text x="183" y="321" class="phone-white">×</text><text x="207" y="321" class="phone-small">Search</text>
+      <text x="125" y="347" text-anchor="middle" class="tiny">Query remains visible · typing has not submitted</text>
+      <rect x="0" y="357" width="250" height="157" fill="url(#keyboard)"/>
+      <rect x="0" y="357" width="250" height="26" fill="#222c31"/>
+      <text x="13" y="374" class="key">Boston</text><text x="91" y="374" class="key">Houston</text><text x="181" y="374" class="key">Boston’s</text>
+      <g fill="#465158" stroke="#657178" stroke-width=".5">
+        <rect x="8" y="390" width="20" height="25" rx="4"/><rect x="34" y="390" width="20" height="25" rx="4"/><rect x="60" y="390" width="20" height="25" rx="4"/><rect x="86" y="390" width="20" height="25" rx="4"/><rect x="112" y="390" width="20" height="25" rx="4"/><rect x="138" y="390" width="20" height="25" rx="4"/><rect x="164" y="390" width="20" height="25" rx="4"/><rect x="190" y="390" width="20" height="25" rx="4"/><rect x="216" y="390" width="20" height="25" rx="4"/>
+        <rect x="19" y="421" width="20" height="25" rx="4"/><rect x="45" y="421" width="20" height="25" rx="4"/><rect x="71" y="421" width="20" height="25" rx="4"/><rect x="97" y="421" width="20" height="25" rx="4"/><rect x="123" y="421" width="20" height="25" rx="4"/><rect x="149" y="421" width="20" height="25" rx="4"/><rect x="175" y="421" width="20" height="25" rx="4"/><rect x="201" y="421" width="30" height="25" rx="4"/>
+        <rect x="8" y="452" width="28" height="25" rx="4"/><rect x="42" y="452" width="20" height="25" rx="4"/><rect x="68" y="452" width="20" height="25" rx="4"/><rect x="94" y="452" width="20" height="25" rx="4"/><rect x="120" y="452" width="20" height="25" rx="4"/><rect x="146" y="452" width="20" height="25" rx="4"/><rect x="172" y="452" width="20" height="25" rx="4"/><rect x="198" y="452" width="38" height="25" rx="4"/>
+      </g>
+      <g class="key" text-anchor="middle">
+        <text x="18" y="407">q</text><text x="44" y="407">w</text><text x="70" y="407">e</text><text x="96" y="407">r</text><text x="122" y="407">t</text><text x="148" y="407">y</text><text x="174" y="407">u</text><text x="200" y="407">i</text><text x="226" y="407">o</text>
+        <text x="29" y="438">a</text><text x="55" y="438">s</text><text x="81" y="438">d</text><text x="107" y="438">f</text><text x="133" y="438">g</text><text x="159" y="438">h</text><text x="185" y="438">j</text><text x="216" y="438">k</text>
+        <text x="22" y="469">⇧</text><text x="52" y="469">z</text><text x="78" y="469">x</text><text x="104" y="469">c</text><text x="130" y="469">v</text><text x="156" y="469">b</text><text x="182" y="469">n</text><text x="217" y="469">⌫</text>
+      </g>
+      <rect x="202" y="482" width="38" height="25" rx="12" fill="#82d8c9"/><circle cx="218" cy="493" r="6" fill="none" stroke="#062f32" stroke-width="2"/><path d="M222 497 L228 503" stroke="#062f32" stroke-width="2"/>
+      <rect x="0" y="508" width="250" height="6" fill="#202b30"/><rect x="94" y="510" width="62" height="3" rx="2" fill="#e8edf1"/>
+    </g>
+    <rect width="250" height="514" rx="18" fill="none" stroke="#19344c" stroke-width="3"/>
+  </g>
+  <text x="360" y="793" class="note-small">Query stays visible above the IME.</text>
+
+  <text x="648" y="245" class="screen-label">TARGET · AFTER ENTER/SEARCH</text>
+  <g transform="translate(648 260)" filter="url(#shadow)">
+    <g clip-path="url(#targetClip)">
+      <image href="../../app/src/main/res/drawable-nodpi/sg2_city_architecture.png" x="0" y="0" width="250" height="514" preserveAspectRatio="xMidYMid slice"/>
+      <rect width="250" height="514" fill="url(#sceneVeil)"/>
+      <rect width="250" height="24" fill="#102743" fill-opacity=".9"/>
+      <text x="12" y="16" class="phone-small">3:01</text><text x="194" y="16" class="phone-small">◆  ▰ 100%</text>
+      <path d="M38 99 C48 76 66 76 77 90 C89 60 116 61 126 88 C142 69 164 72 173 95 C186 92 194 98 196 106 C150 117 85 117 38 106Z" fill="#9db1c8" fill-opacity=".16"/>
+      <text x="125" y="73" text-anchor="middle" class="phone-head">Locations</text>
+      <text x="125" y="96" text-anchor="middle" class="phone-small">Current: Florence</text>
+      <text x="125" y="139" text-anchor="middle" class="phone-hero">Boston</text>
+      <text x="125" y="157" text-anchor="middle" class="phone-small">Massachusetts · United States</text>
+      <text x="125" y="171" text-anchor="middle" class="phone-muted">America/New_York · place details</text>
+      <rect x="48" y="184" width="72" height="27" rx="14" fill="#172f48" fill-opacity=".65" stroke="#b9cddd" stroke-opacity=".7"/>
+      <text x="84" y="202" text-anchor="middle" class="phone-white">Save</text>
+      <rect x="129" y="184" width="72" height="27" rx="14" fill="#82d8c9"/>
+      <text x="165" y="202" text-anchor="middle" style="font:700 12px Roboto,Arial,sans-serif;fill:#062f32">View</text>
+      <rect x="11" y="257" width="228" height="39" rx="19" fill="#8294a8" fill-opacity=".35" stroke="#d9e4ed" stroke-opacity=".75"/>
+      <circle cx="28" cy="276" r="6" fill="none" stroke="#edf5fb" stroke-width="2"/><path d="M32 280 L37 285" stroke="#edf5fb" stroke-width="2"/>
+      <text x="48" y="281" class="phone-white">Boston</text><text x="183" y="281" class="phone-white">×</text><text x="207" y="281" class="phone-small">Search</text>
+      <text x="125" y="318" text-anchor="middle" class="phone-small">3 results for “Boston”</text>
+      <line x1="17" y1="362" x2="233" y2="362" stroke="#d9e6f5" stroke-width="1.2"/>
+      <g stroke="#d9e6f5" stroke-width="1"><line x1="49" y1="355" x2="49" y2="369"/><line x1="125" y1="355" x2="125" y2="369"/><line x1="201" y1="355" x2="201" y2="369"/></g>
+      <text x="49" y="394" text-anchor="middle" class="phone-small" fill="#82d8c9">BOS</text><text x="49" y="406" text-anchor="middle" class="tiny">Boston, MA</text>
+      <text x="125" y="394" text-anchor="middle" class="phone-small">BOS</text><text x="125" y="406" text-anchor="middle" class="tiny">Boston, UK</text>
+      <text x="201" y="394" text-anchor="middle" class="phone-small">BOS</text><text x="201" y="406" text-anchor="middle" class="tiny">Boston, IN</text>
+      <text x="125" y="456" text-anchor="middle" class="phone-muted">Search result focus stays explicit</text>
+      <rect x="94" y="500" width="62" height="3" rx="2" fill="#e8edf1"/>
+    </g>
+    <rect width="250" height="514" rx="18" fill="none" stroke="#19344c" stroke-width="3"/>
+  </g>
+  <text x="648" y="793" class="note-small">Query and results visible; IME hidden.</text>
+
+  <text x="928" y="245" class="screen-label">ART DIRECTION &amp; BOUNDARIES</text>
+  <rect x="928" y="260" width="924" height="514" rx="18" fill="#f6f9fb" stroke="#d5e0e8"/>
+  <text x="958" y="302" class="note-head">Keep the approved location-search language</text>
+  <text x="958" y="332" class="note">• Retain the full-screen city scene, dark overlay, white place/context text, and shared location rail.</text>
+  <text x="958" y="359" class="note">• Keep the existing rounded search field, clear action, Search action, and explicit Save / View controls.</text>
+  <text x="958" y="386" class="note">• Preserve green for the current saved place, gold for a focused result, and turquoise for the primary action.</text>
+  <text x="958" y="413" class="note">• Use the system IME as shown only to communicate placement; its key appearance is not being redesigned.</text>
+  <line x1="958" y1="439" x2="1818" y2="439" stroke="#d7e1e9"/>
+  <text x="958" y="474" class="note-head">While typing</text>
+  <text x="958" y="501" class="note">The field and current query remain fully visible above the IME. Editing alone does not submit</text>
+  <text x="958" y="524" class="note">or change the focused/selected place; allow the existing scene content to reflow as needed.</text>
+  <text x="958" y="562" class="note-head">After Enter/Search</text>
+  <text x="958" y="589" class="note">Dismiss the keyboard automatically, retain the query, and show the existing search state in the</text>
+  <text x="958" y="612" class="note">same selector: loading, matches, no matches, or failure. The WX.29 v2 board still governs</text>
+  <text x="958" y="635" class="note">status placement, saved-rail continuity, retry treatment, and result presentation.</text>
+  <text x="958" y="675" class="note-head">No automatic selection</text>
+  <text x="958" y="702" class="note">Submitting leaves Save / View as explicit user actions. No provider, persistence, weather, or</text>
+  <text x="958" y="725" class="note">device-location behavior changes in this slice. Sample place labels are illustrative only.</text>
+
+  <!-- Saved-location selection handoff -->
+  <rect x="32" y="856" width="1856" height="680" rx="20" fill="#fff" stroke="#cbd8e2" stroke-width="2" filter="url(#shadow)"/>
+  <text x="58" y="892" class="kicker">B · SAVED-LOCATION VIEW AND LIVE-CATALOG HANDOFF</text>
+  <text x="58" y="921" class="section">Keep the selector open while LIVE loads; dismiss only on successful activation</text>
+
+  <text x="70" y="956" class="screen-label">VIEW · LIVE LOAD PENDING</text>
+  <g transform="translate(72 968)" filter="url(#shadow)">
+    <g clip-path="url(#targetClip)">
+      <image href="../../app/src/main/res/drawable-nodpi/sg2_city_architecture.png" x="0" y="0" width="250" height="514" preserveAspectRatio="xMidYMid slice"/>
+      <rect width="250" height="514" fill="url(#sceneVeil)"/>
+      <rect width="250" height="24" fill="#102743" fill-opacity=".9"/>
+      <text x="12" y="16" class="phone-small">3:01</text><text x="194" y="16" class="phone-small">◆  ▰ 100%</text>
+      <text x="125" y="76" text-anchor="middle" class="phone-head">Locations</text>
+      <text x="125" y="104" text-anchor="middle" class="phone-white">⌖  Florence</text>
+      <text x="125" y="153" text-anchor="middle" class="phone-hero">Houston</text>
+      <text x="125" y="171" text-anchor="middle" class="phone-small">Texas · United States</text>
+      <text x="125" y="185" text-anchor="middle" class="phone-muted">America/Chicago · place details</text>
+      <rect x="47" y="198" width="75" height="28" rx="14" fill="#172f48" fill-opacity=".7" stroke="#b9cddd" stroke-opacity=".7"/>
+      <text x="84" y="216" text-anchor="middle" class="phone-white">Remove</text>
+      <rect x="130" y="198" width="75" height="28" rx="14" fill="#82d8c9"/>
+      <text x="167" y="216" text-anchor="middle" style="font:700 12px Roboto,Arial,sans-serif;fill:#062f32">View</text>
+      <text x="125" y="264" text-anchor="middle" class="phone-small">Houston selected.</text>
+      <text x="125" y="280" text-anchor="middle" class="phone-small">Loading its forecast catalog.</text>
+      <rect x="11" y="335" width="228" height="39" rx="19" fill="#8294a8" fill-opacity=".35" stroke="#d9e4ed" stroke-opacity=".75"/>
+      <circle cx="28" cy="354" r="6" fill="none" stroke="#edf5fb" stroke-width="2"/><path d="M32 358 L37 363" stroke="#edf5fb" stroke-width="2"/>
+      <text x="48" y="359" class="phone-muted">Search places</text><text x="207" y="359" class="phone-small">Search</text>
+      <line x1="18" y1="424" x2="232" y2="424" stroke="#d9e6f5" stroke-width="1.2"/>
+      <text x="55" y="453" text-anchor="middle" class="phone-small">BHM</text><text x="125" y="453" text-anchor="middle" class="phone-small" fill="#72f274">HOU</text><text x="195" y="453" text-anchor="middle" class="phone-small">ATL</text>
+      <rect x="94" y="500" width="62" height="3" rx="2" fill="#e8edf1"/>
+    </g>
+    <rect width="250" height="514" rx="18" fill="none" stroke="#19344c" stroke-width="3"/>
+  </g>
+  <text x="72" y="1498" class="note-small">Selector stays open during LIVE load.</text>
+
+  <path d="M343 1218 C380 1218 396 1218 426 1218" class="line"/>
+  <text x="354" y="1198" class="note-small">LIVE success</text>
+
+  <text x="432" y="956" class="screen-label">SUCCESS · MAIN WEATHER VIEW</text>
+  <g transform="translate(432 968)" filter="url(#shadow)">
+    <rect width="250" height="514" rx="18" fill="#091a2d"/>
+    <image href="MR.3-current-main-view-reference.png" x="0" y="0" width="250" height="514" preserveAspectRatio="xMidYMid slice" clip-path="url(#currentClip)"/>
+    <rect width="250" height="514" rx="18" fill="none" stroke="#19344c" stroke-width="3"/>
+  </g>
+  <text x="432" y="1498" class="note-small">Success shows the selected LIVE catalog.</text>
+
+  <rect x="709" y="1192" width="50" height="24" rx="12" fill="#e1ebf0"/>
+  <text x="734" y="1208" text-anchor="middle" class="pill">OR</text>
+
+  <text x="796" y="956" class="screen-label">FAILURE · STAYS OPEN</text>
+  <g transform="translate(796 968)" filter="url(#shadow)">
+    <g clip-path="url(#targetClip)">
+      <image href="../../app/src/main/res/drawable-nodpi/sg2_city_architecture.png" x="0" y="0" width="250" height="514" preserveAspectRatio="xMidYMid slice"/>
+      <rect width="250" height="514" fill="url(#sceneVeil)"/>
+      <rect width="250" height="24" fill="#102743" fill-opacity=".9"/>
+      <text x="12" y="16" class="phone-small">3:01</text><text x="194" y="16" class="phone-small">◆  ▰ 100%</text>
+      <text x="125" y="76" text-anchor="middle" class="phone-head">Locations</text>
+      <text x="125" y="104" text-anchor="middle" class="phone-white">⌖  Florence</text>
+      <text x="125" y="153" text-anchor="middle" class="phone-hero">Houston</text>
+      <text x="125" y="171" text-anchor="middle" class="phone-small">Texas · United States</text>
+      <text x="125" y="185" text-anchor="middle" class="phone-muted">America/Chicago · place details</text>
+      <rect x="47" y="198" width="75" height="28" rx="14" fill="#172f48" fill-opacity=".7" stroke="#b9cddd" stroke-opacity=".7"/>
+      <text x="84" y="216" text-anchor="middle" class="phone-white">Remove</text>
+      <rect x="130" y="198" width="75" height="28" rx="14" fill="#82d8c9"/>
+      <text x="167" y="216" text-anchor="middle" style="font:700 12px Roboto,Arial,sans-serif;fill:#062f32">View</text>
+      <text x="125" y="265" text-anchor="middle" style="font:600 11px Roboto,Arial,sans-serif;fill:#ffd0c7">Forecast unavailable</text>
+      <text x="125" y="285" text-anchor="middle" style="font:700 10px Roboto,Arial,sans-serif;fill:#82d8c9">Retry forecast</text>
+      <rect x="11" y="335" width="228" height="39" rx="19" fill="#8294a8" fill-opacity=".35" stroke="#d9e4ed" stroke-opacity=".75"/>
+      <circle cx="28" cy="354" r="6" fill="none" stroke="#edf5fb" stroke-width="2"/><path d="M32 358 L37 363" stroke="#edf5fb" stroke-width="2"/>
+      <text x="48" y="359" class="phone-muted">Search places</text><text x="207" y="359" class="phone-small">Search</text>
+      <line x1="18" y1="424" x2="232" y2="424" stroke="#d9e6f5" stroke-width="1.2"/>
+      <text x="55" y="453" text-anchor="middle" class="phone-small">BHM</text><text x="125" y="453" text-anchor="middle" class="phone-small" fill="#72f274">HOU</text><text x="195" y="453" text-anchor="middle" class="phone-small">ATL</text>
+      <rect x="94" y="500" width="62" height="3" rx="2" fill="#e8edf1"/>
+    </g>
+    <rect width="250" height="514" rx="18" fill="none" stroke="#19344c" stroke-width="3"/>
+  </g>
+  <text x="796" y="1498" class="note-small">Keep existing failure and retry available.</text>
+
+  <rect x="1098" y="968" width="754" height="514" rx="18" fill="#f6f9fb" stroke="#d5e0e8"/>
+  <text x="1128" y="1010" class="note-head">State transition cues</text>
+  <text x="1128" y="1042" class="note">Choose View to start selection and LIVE activation.</text>
+  <text x="1128" y="1068" class="note">While pending, keep the selector, chosen place, and</text>
+  <text x="1150" y="1091" class="note">loading status visible.</text>
+  <text x="1128" y="1123" class="note">LIVE success → close selector and show that location's</text>
+  <text x="1150" y="1146" class="note">main weather view.</text>
+  <text x="1128" y="1178" class="note">LIVE failure → keep selector open and preserve the</text>
+  <text x="1150" y="1201" class="note">existing failure feedback and recovery action.</text>
+  <line x1="1128" y1="1228" x2="1822" y2="1228" stroke="#d7e1e9"/>
+  <text x="1128" y="1262" class="note-head">Scope guard</text>
+  <text x="1128" y="1290" class="note">The temporary-result View path, selection persistence, selected</text>
+  <text x="1128" y="1313" class="note">forecast time, provider attribution, and timeline remain as they</text>
+  <text x="1128" y="1336" class="note">are. This artwork is a target, not installed acceptance evidence.</text>
+  <text x="1128" y="1380" class="note-small">The main-screen capture shows the currently installed Florence example;</text>
+  <text x="1128" y="1401" class="note-small">at target success, its selected location and LIVE values are dynamic.</text>
+
+  <text x="42" y="1572" class="note-small">References: connected Pixel 3 XL captures from 2026-11-10 · app 0.1.0-prototype · approved WX.29 UI states v2 · existing city-scene artwork · all sample places/results illustrative.</text>
+</svg>
