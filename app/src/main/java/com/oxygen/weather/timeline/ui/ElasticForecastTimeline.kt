@@ -231,6 +231,17 @@ fun ElasticForecastTimeline(
         val baseY = h * .60f
         val weekdayLabelProgress = (zoom / .5f).coerceIn(0f, 1f)
         val weekdayLabelY = baseY - 17.dp.toPx() - 15.dp.toPx() * weekdayLabelProgress
+        val selectedDayIndex = (if (zoom > .8f) focusDay else ElasticTimeAxis.dayIndex(selectedHour))
+            .coerceIn(0, source.days.lastIndex)
+        val hourlyWeekdayLabelVisible = zoom > .5f
+        val selectedWeekday = source.days[selectedDayIndex].date.dayOfWeek.name.take(3)
+        val focusedWeekdayPaint = Paint(Paint.ANTI_ALIAS_FLAG).apply {
+            textSize = 15.dp.toPx()
+            isFakeBoldText = true
+        }
+        val focusedWeekdayWidth = focusedWeekdayPaint.measureText(selectedWeekday)
+        val focusedWeekdayLeft = playhead.toFloat() - focusedWeekdayWidth / 2f
+        val focusedWeekdayRight = playhead.toFloat() + focusedWeekdayWidth / 2f
 
         drawRect(
             Brush.verticalGradient(
@@ -261,21 +272,37 @@ fun ElasticForecastTimeline(
             }
             if (startX >= -60f && startX <= w + 60f) {
                 val text = source.days[day].date.dayOfWeek.name.take(3)
-                val selectedDayIndex = if (zoom > .8f) focusDay
-                    else ElasticTimeAxis.dayIndex(selectedHour)
                 val selectedDay = day == selectedDayIndex
-                drawIntoCanvas { canvas ->
-                    val paint = Paint(Paint.ANTI_ALIAS_FLAG).apply {
-                        color = android.graphics.Color.argb(
-                            if (selectedDay) 245 else 175,
-                            244, 250, 255,
-                        )
-                        textAlign = Paint.Align.CENTER
-                        textSize = (if (selectedDay) 15.dp else 11.dp).toPx()
-                        isFakeBoldText = selectedDay
-                    }
-                    canvas.nativeCanvas.drawText(text, startX, weekdayLabelY, paint)
+                val paint = Paint(Paint.ANTI_ALIAS_FLAG).apply {
+                    color = android.graphics.Color.argb(
+                        if (selectedDay) 245 else 175,
+                        244, 250, 255,
+                    )
+                    textAlign = Paint.Align.CENTER
+                    textSize = (if (selectedDay) 15.dp else 11.dp).toPx()
+                    isFakeBoldText = selectedDay
                 }
+                val labelWidth = paint.measureText(text)
+                val labelLeft = startX - labelWidth / 2f
+                val labelRight = startX + labelWidth / 2f
+                val overlapsFocusedWeekday = hourlyWeekdayLabelVisible &&
+                    labelLeft < focusedWeekdayRight && labelRight > focusedWeekdayLeft
+                if (!(hourlyWeekdayLabelVisible && selectedDay) && !overlapsFocusedWeekday) {
+                    drawIntoCanvas { canvas ->
+                        canvas.nativeCanvas.drawText(text, startX, weekdayLabelY, paint)
+                    }
+                }
+            }
+        }
+        if (hourlyWeekdayLabelVisible) {
+            drawIntoCanvas { canvas ->
+                val paint = Paint(Paint.ANTI_ALIAS_FLAG).apply {
+                    color = android.graphics.Color.argb(245, 244, 250, 255)
+                    textAlign = Paint.Align.CENTER
+                    textSize = 15.dp.toPx()
+                    isFakeBoldText = true
+                }
+                canvas.nativeCanvas.drawText(selectedWeekday, playhead.toFloat(), weekdayLabelY, paint)
             }
         }
         if (zoom > .01f) {

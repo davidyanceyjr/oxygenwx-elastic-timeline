@@ -564,6 +564,16 @@ private fun CatalogForecastTimeline(
         val dateY = 30.dp.toPx()
         val weekdayLabelProgress = (animation / .5f).coerceIn(0f, 1f)
         val weekdayLabelY = dateY - 12.dp.toPx() * weekdayLabelProgress
+        val selectedLocalDate = view.selectedInstant.atZone(view.zone).toLocalDate()
+        val hourlyWeekdayLabelVisible = animation > .5f
+        val selectedWeekday = selectedLocalDate.dayOfWeek.name.take(3)
+        val focusedWeekdayPaint = Paint(Paint.ANTI_ALIAS_FLAG).apply {
+            textSize = 20.dp.toPx()
+            isFakeBoldText = true
+        }
+        val focusedWeekdayWidth = focusedWeekdayPaint.measureText(selectedWeekday)
+        val focusedWeekdayLeft = playhead.toFloat() - focusedWeekdayWidth / 2f
+        val focusedWeekdayRight = playhead.toFloat() + focusedWeekdayWidth / 2f
         val dailyIconY = 53.dp.toPx()
         val railY = 73.dp.toPx()
         val scale = pixelsPerSecond(animation)
@@ -583,17 +593,23 @@ private fun CatalogForecastTimeline(
                     Offset(startX, dateY + 18.dp.toPx()), stroke)
             }
             if (startX in -60f..(w + 60f)) {
-                val selectedDay = view.selectedInstant.atZone(view.zone).toLocalDate() == day.date
-                drawIntoCanvas { canvas ->
-                    val paint = Paint(Paint.ANTI_ALIAS_FLAG).apply {
-                        color = android.graphics.Color.argb(if (selectedDay) 245 else 175, 244, 250, 255)
-                        textAlign = Paint.Align.CENTER
-                        textSize = (if (selectedDay) 20.dp else 12.dp).toPx()
-                        isFakeBoldText = selectedDay
+                val selectedDay = selectedLocalDate == day.date
+                val dayLabel = day.date.dayOfWeek.name.take(3)
+                val paint = Paint(Paint.ANTI_ALIAS_FLAG).apply {
+                    color = android.graphics.Color.argb(if (selectedDay) 245 else 175, 244, 250, 255)
+                    textAlign = Paint.Align.CENTER
+                    textSize = (if (selectedDay) 20.dp else 12.dp).toPx()
+                    isFakeBoldText = selectedDay
+                }
+                val labelWidth = paint.measureText(dayLabel)
+                val labelLeft = startX - labelWidth / 2f
+                val labelRight = startX + labelWidth / 2f
+                val overlapsFocusedWeekday = hourlyWeekdayLabelVisible &&
+                    labelLeft < focusedWeekdayRight && labelRight > focusedWeekdayLeft
+                if (!(hourlyWeekdayLabelVisible && selectedDay) && !overlapsFocusedWeekday) {
+                    drawIntoCanvas { canvas ->
+                        canvas.nativeCanvas.drawText(dayLabel, startX, weekdayLabelY, paint)
                     }
-                    val dayLabel = day.date.dayOfWeek.name.take(3)
-                    canvas.nativeCanvas.drawText(dayLabel, startX,
-                        weekdayLabelY, paint)
                 }
             }
             if (noonX in -60f..(w + 60f)) {
@@ -628,6 +644,17 @@ private fun CatalogForecastTimeline(
                         native.drawText(high, left + markerWidth + gap, baseline, highPaint)
                     }
                 }
+            }
+        }
+        if (hourlyWeekdayLabelVisible) {
+            drawIntoCanvas { canvas ->
+                val paint = Paint(Paint.ANTI_ALIAS_FLAG).apply {
+                    color = android.graphics.Color.argb(245, 244, 250, 255)
+                    textAlign = Paint.Align.CENTER
+                    textSize = 20.dp.toPx()
+                    isFakeBoldText = true
+                }
+                canvas.nativeCanvas.drawText(selectedWeekday, playhead.toFloat(), weekdayLabelY, paint)
             }
         }
         if (animation > .01f) {

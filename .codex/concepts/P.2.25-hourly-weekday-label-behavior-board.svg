@@ -1,0 +1,60 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1440" height="920" viewBox="0 0 1440 920">
+<defs>
+  <linearGradient id="bg" x2="0" y2="1"><stop stop-color="#0b1b30"/><stop offset="1" stop-color="#1c3854"/></linearGradient>
+  <style>
+    .title{font:700 34px Arial,sans-serif;fill:#f5f8fc}.sub{font:19px Arial,sans-serif;fill:#c1cedb}
+    .head{font:700 21px Arial,sans-serif;fill:#f3f6fa}.body{font:17px Arial,sans-serif;fill:#d5e0ea}
+    .small{font:15px Arial,sans-serif;fill:#b5c5d4}.gold{fill:#f4d17c}.panel{fill:#10263d;stroke:#49647c;stroke-width:2}
+  </style>
+</defs>
+<rect width="1440" height="920" rx="28" fill="url(#bg)"/>
+<text x="64" y="70" class="title">P.2.25 · Hourly weekday label behavior</text>
+<text x="64" y="108" class="sub">Draft proposal · keep the selected local date visible and suppress only overlapping adjacent text</text>
+
+<rect x="64" y="150" width="1312" height="226" rx="18" class="panel"/>
+<text x="96" y="195" class="head">Selected instant determines the focused weekday</text>
+<rect x="108" y="230" width="292" height="100" rx="16" fill="#193650" stroke="#6c8297"/>
+<text x="254" y="269" text-anchor="middle" class="body">selected instant</text>
+<text x="254" y="300" text-anchor="middle" class="small">existing selection authority</text>
+<path d="M408 280h86m-12-12l12 12-12 12" fill="none" stroke="#90a7bd" stroke-width="3"/>
+<rect x="508" y="230" width="338" height="100" rx="16" fill="#193650" stroke="#6c8297"/>
+<text x="677" y="269" text-anchor="middle" class="body">existing local date context</text>
+<text x="677" y="300" text-anchor="middle" class="small">location zone or fixture date</text>
+<path d="M854 280h86m-12-12l12 12-12 12" fill="none" stroke="#90a7bd" stroke-width="3"/>
+<rect x="954" y="230" width="382" height="100" rx="16" fill="#193650" stroke="#f4d17c" stroke-width="2"/>
+<text x="1145" y="269" text-anchor="middle" class="body gold">TUE · centered over playhead</text>
+<text x="1145" y="300" text-anchor="middle" class="small">visible at every selected hour</text>
+
+<rect x="64" y="414" width="628" height="414" rx="18" class="panel"/>
+<text x="96" y="458" class="head">Hourly scale · scrub inside Tuesday</text>
+<text x="96" y="492" class="small">The label stays TUE while selected time moves.</text>
+<text x="470" y="566" text-anchor="middle" class="body gold">TUE</text>
+<text x="470" y="600" text-anchor="middle" class="small">selected local date</text>
+<line x1="132" y1="690" x2="628" y2="690" stroke="#a9bac9" stroke-width="3"/>
+<g stroke="#bbcad7" stroke-width="2">
+  <line x1="155" y1="679" x2="155" y2="701"/><line x1="254" y1="679" x2="254" y2="701"/>
+  <line x1="353" y1="679" x2="353" y2="701"/><line x1="470" y1="668" x2="470" y2="710" stroke="#f4d17c" stroke-width="4"/>
+  <line x1="569" y1="679" x2="569" y2="701"/><line x1="615" y1="679" x2="615" y2="701"/>
+</g>
+<line x1="470" y1="624" x2="470" y2="714" stroke="#f4d17c" stroke-width="3"/>
+<circle cx="470" cy="690" r="8" fill="#f4d17c"/>
+<text x="470" y="752" text-anchor="middle" class="body">fixed playhead · selected time unchanged</text>
+
+<rect x="724" y="414" width="652" height="414" rx="18" class="panel"/>
+<text x="756" y="458" class="head">Hourly scale · scrub across local midnight</text>
+<text x="756" y="492" class="small">Tue 11:59 PM selected; Wed 12:00 AM is one minute later.</text>
+<text x="1050" y="566" text-anchor="middle" class="body gold">TUE</text>
+<line x1="792" y1="690" x2="1312" y2="690" stroke="#a9bac9" stroke-width="3"/>
+<g stroke="#bbcad7" stroke-width="2">
+  <line x1="804" y1="679" x2="804" y2="701"/><line x1="903" y1="679" x2="903" y2="701"/>
+  <line x1="1002" y1="679" x2="1002" y2="701"/><line x1="1050" y1="668" x2="1050" y2="710" stroke="#f4d17c" stroke-width="4"/>
+  <line x1="1062" y1="668" x2="1062" y2="710"/><line x1="1099" y1="679" x2="1099" y2="701"/><line x1="1297" y1="679" x2="1297" y2="701"/>
+</g>
+<line x1="1050" y1="624" x2="1050" y2="714" stroke="#f4d17c" stroke-width="3"/>
+<circle cx="1050" cy="690" r="8" fill="#f4d17c"/>
+<line x1="1062" y1="587" x2="1062" y2="714" stroke="#91a9bd" stroke-width="2" stroke-dasharray="6 7"/>
+<text x="1198" y="752" text-anchor="middle" class="small">midnight tick retained · WED returns when clear</text>
+<text x="1050" y="790" text-anchor="middle" class="body">hide only overlapping WED text; keep the tick</text>
+
+<text x="64" y="878" class="small">Daily layout stays unchanged · other visible dates keep midnight labels · no selection or gesture changes</text>
+</svg>

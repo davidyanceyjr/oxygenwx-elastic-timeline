@@ -101,6 +101,8 @@ The single authoritative value is the **selected forecast moment**. UI position,
 
 **Bounded owner-approved update — P.2.24 (cycle 124, 2026-11-09):** On the active-catalog and fixture/debug surfaces, hourly precision uses a uniform 48 dp/hour scale and supported hourly symbols use 24 dp at their existing `:30` visual midpoints. Existing mapping, icon-free missing/unsupported samples, selected-time authority, daily layout, and gesture rules remain unchanged.
 
+**Bounded owner-approved update — P.2.25 (cycle 126, 2026-11-10):** On both timeline surfaces, steady hourly mode shows the selected local date's uppercase three-letter weekday centered above the fixed playhead, using the existing daily selected-label emphasis. Other visible dates keep weekday labels at local midnight; suppress the selected date's duplicate midnight text while retaining its boundary tick. Suppress another date's weekday text only while its centered text bounds overlap the focused label's bounds; retain its midnight tick and restore the text when the bounds separate. Daily labels and artwork, selected-time authority, the 48 dp/hour scale, hourly symbols, forecast facts, and gestures remain unchanged.
+
 - Under P.2.17, a timeline double-tap activates hourly navigation; under P.2.22, daily entry first selects the touched date's 7:00 AM local target, wrapping to the earliest in-catalog local 7:00 AM if needed. A stationary hold, with or without subsequent drag, does not activate hourly scale.
 - The entire tape transitions to **uniform hourly spacing**, at **48 dp per hour**, rather than expanding one isolated day.
 - Supported hourly weather symbols appear at their source hours' existing `:30` visual midpoints at 24 dp; missing or unsupported samples remain icon-free.
@@ -110,6 +112,8 @@ The single authoritative value is the **selected forecast moment**. UI position,
 - A haptic confirmation of entering precision is appropriate; it must not be the only indication of the change.
 
 **Acceptance:** there is no clock jump caused solely by scale animation or hourly-to-daily return. Releasing an hourly drag leaves hourly precision active. A main-area tap collapses to daily overview without changing selected time. A daily timeline double-tap selects 7:00 AM on the completing tap's date before entering hourly, wrapping an out-of-catalog target to the first in-catalog 7:00 AM; an hourly double-tap preserves the exact instant. A timeline single tap does nothing. Immediate daily drag and hourly drag retain their navigation meaning, and hold/hold-then-drag does not enter hourly scale.
+
+In steady hourly mode, the focused weekday follows the selected local date as it crosses midnight. The selected date appears once above the playhead even when its midnight is visible. Adjacent dates remain anchored to their midnight ticks; suppress only adjacent weekday text whose bounds overlap the focused label, keep its tick, and restore its label once the bounds clear.
 
 ### 4.4 Main atmospheric view — shortcut navigation
 
