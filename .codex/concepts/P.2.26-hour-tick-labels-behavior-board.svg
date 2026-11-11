@@ -1,0 +1,94 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1440" height="920" viewBox="0 0 1440 920" role="img" aria-labelledby="title desc">
+  <title id="title">P.2.26 Long-Tick Labels Behavior Board</title>
+  <desc id="desc">Daily mode stays unchanged. In hourly mode, labels sit below every existing longest tick, including 12 AM and 12 PM. Labels stay with their ticks while scrubbing, and the weekday changes at midnight.</desc>
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="0" y2="1"><stop stop-color="#101c30"/><stop offset="1" stop-color="#1b2d44"/></linearGradient>
+    <style>
+      .title{font:700 34px sans-serif;fill:#f4f8fc}.sub{font:16px sans-serif;fill:#b6cadc}.panel{fill:#f5f8fb;stroke:#c9d6e1;stroke-width:2}.h{font:700 20px sans-serif;fill:#18324a}.body{font:16px sans-serif;fill:#334e66}.small{font:14px sans-serif;fill:#49647b}.dow{font:700 18px sans-serif;fill:#173650;text-anchor:middle}.hour{font:700 16px sans-serif;fill:#f5f8fc;text-anchor:middle}.darkhour{font:700 16px sans-serif;fill:#173650;text-anchor:middle}.call{font:14px sans-serif;fill:#b9d0e2}.gold{fill:#ffe2a7}.tick{stroke:#59768e;stroke-width:3}.minor{stroke:#9db5c8;stroke-width:2}.flow{stroke:#78d7e8;stroke-width:3;fill:none;marker-end:url(#arrow)}
+    </style>
+    <marker id="arrow" markerWidth="10" markerHeight="10" refX="8" refY="3" orient="auto"><path d="M0,0 L0,6 L9,3 z" fill="#78d7e8"/></marker>
+  </defs>
+  <rect width="1440" height="920" fill="url(#bg)"/>
+  <text id="title" x="58" y="62" class="title">P.2.26 — Label every longest hourly tick</text>
+  <text x="60" y="94" class="sub">REVISED BEHAVIOR BOARD · LABEL EVERY EXISTING THREE-HOUR MARK · DISTINGUISH 12 AM AND 12 PM</text>
+
+  <g transform="translate(54 132)">
+    <rect width="314" height="464" rx="18" class="panel"/>
+    <text x="24" y="42" class="h">1 · Daily scale</text>
+    <text x="24" y="70" class="small">Existing daily behavior is unchanged.</text>
+    <text x="157" y="152" class="dow">WED</text>
+    <path d="M34 282 H280" class="minor" stroke-width="3"/>
+    <path d="M60 266 V300 M157 266 V300 M254 266 V300" class="minor" stroke-width="3"/>
+    <text x="60" y="242" class="small" text-anchor="middle">TUE</text>
+    <text x="157" y="242" class="small" text-anchor="middle">WED</text>
+    <text x="254" y="242" class="small" text-anchor="middle">THU</text>
+    <circle cx="157" cy="282" r="8" class="gold"/>
+    <text x="24" y="354" class="body">No hourly numerals in</text><text x="24" y="378" class="body">daily mode.</text>
+    <text x="24" y="422" class="small">Keep daily symbols and highs.</text>
+  </g>
+
+  <path d="M375 364 H401" class="flow"/>
+  <g transform="translate(416 132)">
+    <rect width="314" height="464" rx="18" class="panel"/>
+    <text x="24" y="42" class="h">2 · Hourly scale</text>
+    <text x="24" y="70" class="small">Every long tick gets a label.</text>
+    <text x="157" y="128" class="dow">WED</text>
+    <g transform="translate(22 163)">
+      <circle cx="50" cy="10" r="10" fill="#75cfe0"/><circle cx="110" cy="10" r="10" fill="#75cfe0"/><circle cx="170" cy="10" r="10" fill="#75cfe0"/><circle cx="230" cy="10" r="10" fill="#75cfe0"/>
+      <path d="M0 48 H270" class="minor" stroke-width="3"/>
+      <path d="M20 28 V66 M80 28 V66 M140 28 V66 M200 28 V66 M260 28 V66" class="tick"/>
+      <text x="20" y="94" class="small" text-anchor="middle" font-size="11px">12 AM</text>
+      <text x="80" y="94" class="darkhour">3</text>
+      <text x="140" y="94" class="darkhour">6</text>
+      <text x="200" y="94" class="darkhour">9</text>
+      <text x="260" y="94" class="small" text-anchor="middle" font-size="11px">12 PM</text>
+    </g>
+    <text x="24" y="350" class="body">All long ticks are labelled;</text><text x="24" y="374" class="body">shorter hour ticks stay blank.</text>
+    <text x="24" y="416" class="small">Weather symbols stay at :30.</text>
+    <text x="24" y="440" class="small">Focus time remains below the axis.</text>
+  </g>
+
+  <path d="M737 364 H763" class="flow"/>
+  <g transform="translate(778 132)">
+    <rect width="314" height="464" rx="18" class="panel"/>
+    <text x="24" y="42" class="h">3 · Scrub</text>
+    <text x="24" y="70" class="small">Labels travel with long ticks.</text>
+    <text x="157" y="128" class="dow">WED</text>
+    <g transform="translate(24 190)">
+      <path d="M0 44 H258" class="minor" stroke-width="3"/>
+      <path d="M16 28 V60 M76 34 V54 M136 34 V54 M196 28 V60 M256 34 V54" class="tick"/>
+      <text x="16" y="84" class="darkhour">6</text>
+      <text x="196" y="84" class="darkhour">9</text>
+      <circle cx="46" cy="4" r="8" fill="#75cfe0"/><circle cx="106" cy="4" r="8" fill="#75cfe0"/><circle cx="166" cy="4" r="8" fill="#75cfe0"/>
+      <path d="M152 -18 V65" stroke="#c99631" stroke-width="3"/><circle cx="152" cy="44" r="6" fill="#c99631"/>
+    </g>
+    <rect x="94" y="302" width="126" height="36" rx="18" fill="#1d3952"/>
+    <text x="157" y="326" class="hour" fill="#ffe2a7">7:38 AM</text>
+    <text x="24" y="374" class="body">6 and 9 remain anchored to</text><text x="24" y="398" class="body">their long ticks during scrubbing.</text>
+    <text x="24" y="438" class="small">Focused time stays exact.</text>
+  </g>
+
+  <path d="M1099 364 H1125" class="flow"/>
+  <g transform="translate(1140 132)">
+    <rect width="246" height="464" rx="18" class="panel"/>
+    <text x="22" y="42" class="h">4 · Midnight</text>
+    <text x="22" y="70" class="small">Weekday changes at 12.</text>
+    <text x="58" y="138" class="dow">WED</text><text x="184" y="138" class="dow">THU</text>
+    <path d="M26 264 H220" class="minor" stroke-width="3"/>
+    <path d="M36 242 V280 M82 248 V274 M128 242 V280 M174 248 V274 M220 242 V280" class="tick"/>
+    <text x="36" y="306" class="small" text-anchor="middle" font-size="11px">9 PM</text>
+    <text x="128" y="306" class="small" text-anchor="middle" font-size="11px">12 AM</text>
+    <text x="220" y="306" class="small" text-anchor="middle" font-size="11px">3 AM</text>
+    <path d="M128 174 V292" stroke="#89a5ba" stroke-dasharray="5 5" stroke-width="2"/>
+    <text x="22" y="366" class="body" font-size="15px">Midnight is explicit: 12 AM.</text>
+    <text x="22" y="392" class="body" font-size="15px">Noon is labelled 12 PM.</text>
+    <text x="22" y="432" class="small">Selection stays continuous.</text>
+  </g>
+
+  <rect x="54" y="632" width="1332" height="226" rx="18" fill="#0d1828" stroke="#29425a" stroke-width="2"/>
+  <text x="82" y="674" class="title" font-size="22">Preserve these invariants</text>
+  <text x="82" y="716" class="sub">• Label every existing longest tick on active-catalog and fixture/debug timelines.</text>
+  <text x="82" y="748" class="sub">• Keep 48 dp/hour, current tick cadence, 24 dp symbols, event mapping, and missing-value behavior.</text>
+  <text x="82" y="780" class="sub">• Keep :30 symbol positions, the weekday above symbols, and precise focus time below the axis.</text>
+  <text x="82" y="812" class="sub">• UI artwork uses the actual installed screen capture; installed acceptance is still required during execution.</text>
+</svg>

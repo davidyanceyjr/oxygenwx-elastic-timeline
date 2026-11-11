@@ -1,6 +1,7 @@
 package com.oxygen.weather.timeline.ui
 
 import android.graphics.Paint
+import android.graphics.Rect
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.Canvas
@@ -228,7 +229,7 @@ fun ElasticForecastTimeline(
         val dayFocus: Int? = null
         val pixelPerHour = compactDayPx / 24.0 + (expandedPx - compactDayPx / 24.0) * zoom
         val stroke = 1.dp.toPx()
-        val baseY = h * .60f
+        val baseY = h * .60f - 5.dp.toPx() * zoom
         val weekdayLabelProgress = (zoom / .5f).coerceIn(0f, 1f)
         val weekdayLabelY = baseY - 17.dp.toPx() - 15.dp.toPx() * weekdayLabelProgress
         val selectedDayIndex = (if (zoom > .8f) focusDay else ElasticTimeAxis.dayIndex(selectedHour))
@@ -307,6 +308,13 @@ fun ElasticForecastTimeline(
         }
         if (zoom > .01f) {
             // Keep the full fixture on one uniform hourly axis; only nearby marks render.
+            val hourLabelPaint = Paint(Paint.ANTI_ALIAS_FLAG).apply {
+                color = android.graphics.Color.argb((225 * zoom).roundToInt(), 238, 247, 255)
+                textSize = 16.dp.toPx()
+                textAlign = Paint.Align.CENTER
+            }
+            val hourLabelBounds = Rect()
+            val hourLabelTop = baseY + 10.dp.toPx()
             for (hour in 0..source.lastIndex) {
                 val sourceHour = source.hours[hour]
                 val midpointTime = sourceHour.time.plusMinutes(30)
@@ -318,22 +326,28 @@ fun ElasticForecastTimeline(
                 }
                 val x = mapHour(hour.toDouble())
                 if (x < -30f || x > w + 30f) continue
-                val isMajor = hour % 3 == 0
-                val selectedHourTick = hour == selectedHour.roundToInt()
+                val localHour = sourceHour.time.hour
+                val isMajor = localHour % 3 == 0
                 val alpha = (zoom * (if (isMajor) .82f else .48f)).coerceIn(0f, 1f)
                 drawLine(Color.White.copy(alpha = alpha), Offset(x, baseY - if (isMajor) 8.dp.toPx() else 3.dp.toPx()),
                     Offset(x, baseY + if (isMajor) 9.dp.toPx() else 5.dp.toPx()), stroke)
-                if (isMajor && !selectedHourTick && abs(hour - selectedHour) >= 2.0) {
-                    val displayHour = hour % 24
-                    val hourText = when (displayHour) { 0 -> "12a"; 12 -> "12p"; else ->
-                        "${displayHour % 12}${if (displayHour < 12) "a" else "p"}" }
-                    drawIntoCanvas { canvas ->
-                        val paint = Paint(Paint.ANTI_ALIAS_FLAG).apply {
-                            color = android.graphics.Color.argb((225 * zoom).roundToInt(), 238, 247, 255)
-                            textSize = 9.dp.toPx()
-                            textAlign = Paint.Align.CENTER
+                if (isMajor) {
+                    val hourText = when (localHour) {
+                        0 -> "12 AM"
+                        12 -> "12 PM"
+                        else -> (localHour % 12).toString()
+                    }
+                    hourLabelPaint.getTextBounds(hourText, 0, hourText.length, hourLabelBounds)
+                    val labelWidth = hourLabelPaint.measureText(hourText)
+                    val labelBaseline = hourLabelTop - hourLabelBounds.top
+                    val labelBottom = labelBaseline + hourLabelBounds.bottom
+                    val labelFits = x - stroke / 2f >= 0f && x + stroke / 2f <= w &&
+                        x - labelWidth / 2f >= 0f && x + labelWidth / 2f <= w &&
+                        hourLabelTop >= 0f && labelBottom <= h
+                    if (labelFits) {
+                        drawIntoCanvas { canvas ->
+                            canvas.nativeCanvas.drawText(hourText, x, labelBaseline, hourLabelPaint)
                         }
-                        canvas.nativeCanvas.drawText(hourText, x, baseY + 24.dp.toPx(), paint)
                     }
                 }
                 if (zoom > .5f && midpointX in -6f..(w + 6f)) {
@@ -355,7 +369,10 @@ fun ElasticForecastTimeline(
                     textSize = 13.dp.toPx()
                     isFakeBoldText = true
                 }
-                canvas.nativeCanvas.drawText(selectedTime, playhead.toFloat(), baseY + 25.dp.toPx(), paint)
+                val focusedTimeBounds = Rect()
+                paint.getTextBounds(selectedTime, 0, selectedTime.length, focusedTimeBounds)
+                val focusedTimeBaseline = h - 2.dp.toPx() - focusedTimeBounds.bottom
+                canvas.nativeCanvas.drawText(selectedTime, playhead.toFloat(), focusedTimeBaseline, paint)
             }
         }
         // A restrained axis dot marks the fixed selected position without a full-height line.

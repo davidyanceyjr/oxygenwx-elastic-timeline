@@ -1,0 +1,99 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1720" height="1060" viewBox="0 0 1720 1060" role="img" aria-labelledby="title desc">
+  <title id="title">P.2.27 Hour Label Size Behavior Board</title>
+  <desc id="desc">Daily appearance stays unchanged. Active-catalog labels double to 22 dp. Fixture/debug labels double to 18 dp, with its weekday, symbol and axis group raised about 5 dp within the same timeline band while the focused cue stays at the bottom.</desc>
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="0" y2="1"><stop stop-color="#101c30"/><stop offset="1" stop-color="#1b2d44"/></linearGradient>
+    <marker id="arrow" markerWidth="10" markerHeight="10" refX="8" refY="3" orient="auto"><path d="M0,0 L0,6 L9,3 z" fill="#79d7e7"/></marker>
+    <style>
+      .title{font:700 34px sans-serif;fill:#f4f8fc}.sub{font:16px sans-serif;fill:#b6cadc}.panel{fill:#f5f8fb;stroke:#c9d6e1;stroke-width:2}.h{font:700 21px sans-serif;fill:#18324a}.body{font:16px sans-serif;fill:#334e66}.small{font:14px sans-serif;fill:#49647b}.label{font:700 28px sans-serif;fill:#18324a;text-anchor:middle}.tiny{font:12px sans-serif;fill:#49647b;text-anchor:middle}.tick{stroke:#29475e;stroke-width:4}.minor{stroke:#9db5c8;stroke-width:2}.flow{stroke:#79d7e7;stroke-width:3;fill:none;marker-end:url(#arrow)}.gold{fill:#ffe2a7}.chip{fill:#18334b}.cue{font:700 15px sans-serif;fill:#ffe2a7;text-anchor:middle}
+    </style>
+  </defs>
+  <rect width="1720" height="1060" fill="url(#bg)"/>
+  <text id="title" x="54" y="62" class="title">P.2.27 — Double the hourly tick-label size</text>
+  <text x="56" y="94" class="sub">DRAFT BEHAVIOR BOARD · OWNER APPROVAL PENDING · TARGET BEHAVIOR ONLY</text>
+
+  <g transform="translate(50 130)">
+    <rect width="500" height="404" rx="18" class="panel"/>
+    <text x="24" y="42" class="h">1 · Daily scale stays unchanged</text>
+    <text x="24" y="70" class="small">No hourly labels are added in daily mode.</text>
+    <text x="250" y="132" class="label">WED</text>
+    <path d="M42 232 H458" class="minor" stroke-width="3"/>
+    <path d="M88 214 V250 M208 214 V250 M328 214 V250 M448 214 V250" class="tick"/>
+    <text x="88" y="196" class="tiny">TUE</text><text x="208" y="196" class="tiny">WED</text><text x="328" y="196" class="tiny">THU</text><text x="448" y="196" class="tiny">FRI</text>
+    <circle cx="208" cy="232" r="8" class="gold"/>
+    <text x="24" y="304" class="body">The existing daily symbols, selected day, and highs/lows</text>
+    <text x="24" y="330" class="body">keep their current positions and behavior.</text>
+    <text x="24" y="374" class="small">No visible hourly numerals in this state.</text>
+  </g>
+
+  <path d="M558 330 H580" class="flow"/>
+  <g transform="translate(590 130)">
+    <rect width="500" height="404" rx="18" class="panel"/>
+    <text x="24" y="42" class="h">2 · Active-catalog hourly · 22 dp</text>
+    <text x="24" y="70" class="small">Labels remain below the existing longest ticks.</text>
+    <path d="M40 205 H460" class="minor" stroke-width="3"/>
+    <path d="M80 168 V222 M180 184 V218 M280 168 V222 M380 184 V218 M460 168 V222" class="tick"/>
+    <text x="80" y="258" class="label">3</text><text x="280" y="258" class="label">6</text><text x="460" y="258" class="label">9</text>
+    <text x="24" y="310" class="body">Visible long ticks keep their cadence and label text.</text>
+    <text x="24" y="338" class="body">Selection readout remains minute precise.</text>
+    <text x="24" y="378" class="small">Noon and midnight use explicit 12 PM / 12 AM.</text>
+  </g>
+
+  <path d="M1098 330 H1120" class="flow"/>
+  <g transform="translate(1130 130)">
+    <rect width="540" height="404" rx="18" class="panel"/>
+    <text x="24" y="42" class="h">3 · Fixture/debug hourly · 18 dp</text>
+    <text x="24" y="70" class="small">Same band height; focused cue remains bottom-anchored.</text>
+    <rect x="34" y="106" width="472" height="226" rx="12" fill="#edf3f7" stroke="#b5c5d1" stroke-width="2"/>
+    <text x="270" y="136" class="tiny" style="font-weight:700">WED · weekday moves with the group</text>
+    <circle cx="130" cy="160" r="8" fill="#74cce0"/><circle cx="270" cy="160" r="8" fill="#74cce0"/><circle cx="410" cy="160" r="8" fill="#74cce0"/>
+    <path d="M54 184 H486" class="minor"/>
+    <path d="M130 170 V202 M270 170 V202 M410 170 V202" class="tick"/>
+    <text x="130" y="228" class="label" style="font-size:26px">3</text><text x="270" y="228" class="label" style="font-size:26px">6</text><text x="410" y="228" class="label" style="font-size:26px">9</text>
+    <text x="270" y="312" class="cue">6 AM</text>
+    <path d="M465 180 V150" class="flow"/><text x="458" y="142" class="tiny" text-anchor="end">about 5 dp up</text>
+    <text x="24" y="366" class="small">The plain gold cue stays below the label at a shared x-position.</text>
+  </g>
+
+  <g transform="translate(50 560)">
+    <rect width="1040" height="430" rx="18" class="panel"/>
+    <text x="26" y="46" class="h">4 · Scrub through noon and midnight</text>
+    <text x="26" y="76" class="small">The text stays attached to its tick; the selected instant remains authoritative.</text>
+    <g transform="translate(38 122)">
+      <text x="112" y="28" class="small" text-anchor="middle">NOON</text>
+      <path d="M24 120 H210" class="minor" stroke-width="3"/><path d="M58 98 V140 M118 88 V144 M178 98 V140" class="tick"/>
+      <text x="58" y="178" class="label" style="font-size:22px">9</text><text x="118" y="178" class="label" style="font-size:22px">12 PM</text><text x="178" y="178" class="label" style="font-size:22px">3</text>
+      <path d="M118 48 V150" stroke="#c99631" stroke-width="3"/><circle cx="118" cy="120" r="7" class="gold"/>
+      <text x="118" y="230" class="tiny">catalog time remains exact</text>
+    </g>
+    <g transform="translate(300 122)">
+      <text x="145" y="28" class="small" text-anchor="middle">LOCAL MIDNIGHT</text>
+      <text x="58" y="62" class="tiny">WED</text><text x="232" y="62" class="tiny">THU</text>
+      <path d="M24 120 H266" class="minor" stroke-width="3"/><path d="M58 98 V140 M145 88 V144 M232 98 V140" class="tick"/>
+      <text x="58" y="178" class="label" style="font-size:22px">9</text><text x="145" y="178" class="label" style="font-size:22px">12 AM</text><text x="232" y="178" class="label" style="font-size:22px">3</text>
+      <path d="M145 48 V150" stroke="#c99631" stroke-width="3"/><circle cx="145" cy="120" r="7" class="gold"/>
+      <text x="145" y="230" class="tiny">weekday changes; instant stays continuous</text>
+    </g>
+    <g transform="translate(690 126)">
+      <text x="24" y="28" class="h" style="font-size:18px">Preserve</text>
+      <text x="24" y="68" class="body">• 48 dp/hour and existing tick cadence</text>
+      <text x="24" y="102" class="body">• 24 dp symbols at their :30 centers</text>
+      <text x="24" y="136" class="body">• forecast facts, gestures, and mapping</text>
+      <text x="24" y="170" class="body">• fixture/debug nearest-hour cue format</text>
+      <text x="24" y="212" class="small">No new time control or screen-height change.</text>
+    </g>
+  </g>
+
+  <g transform="translate(1130 560)">
+    <rect width="540" height="430" rx="18" fill="#0d1828" stroke="#29425a" stroke-width="2"/>
+    <text x="26" y="46" class="title" style="font-size:22px">Scope and review boundary</text>
+    <text x="26" y="94" class="sub">• Double only the existing hourly label sizes.</text>
+    <text x="26" y="132" class="sub">• Raise the fixture/debug weekday, symbol, and axis</text>
+    <text x="44" y="158" class="sub">group about 5 dp inside the same 84 dp band.</text>
+    <text x="26" y="202" class="sub">• Keep the focused-time cue at the bottom.</text>
+    <text x="26" y="248" class="sub">• Daily view and overall screen height are unchanged.</text>
+    <text x="26" y="310" class="sub">This board is a target contract, not device evidence.</text>
+    <text x="26" y="344" class="sub">Installed captures and focused interactions are required</text>
+    <text x="26" y="370" class="sub">during execution before the slice can close.</text>
+  </g>
+</svg>

@@ -1,0 +1,49 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1600" height="1000" viewBox="0 0 1600 1000" role="img" aria-labelledby="title desc">
+  <title id="title">P.2.28 Catalog hourly label behavior</title>
+  <desc id="desc">Behavior flow for reducing active-catalog hourly tick labels to 18 dp while retaining selected-time behavior and leaving fixture/debug labels at 16 dp.</desc>
+  <defs>
+    <linearGradient id="bg" x2="0" y2="1"><stop stop-color="#101c30"/><stop offset="1" stop-color="#1b2d44"/></linearGradient>
+    <marker id="arrow" markerWidth="12" markerHeight="12" refX="10" refY="6" orient="auto"><path d="M0 0 L12 6 L0 12 Z" fill="#65cfe0"/></marker>
+    <style>
+      .title{font:700 34px sans-serif;fill:#f4f8fc}.sub{font:16px sans-serif;fill:#b6cadc}.card{fill:#f5f8fb;stroke:#a9bdcc;stroke-width:2}.head{font:700 22px sans-serif;fill:#18324a}.body{font:17px sans-serif;fill:#334e66}.tag{font:700 16px sans-serif;fill:#0d6373}.line{stroke:#65cfe0;stroke-width:4;fill:none;marker-end:url(#arrow)}.back{stroke:#8ba5b5;stroke-width:3;stroke-dasharray:9 8;fill:none;marker-end:url(#arrow)}.note{fill:#203952;stroke:#4b708c;stroke-width:2}.notehead{font:700 19px sans-serif;fill:#e9f1f7}.notebody{font:16px sans-serif;fill:#c5d5e0}
+    </style>
+  </defs>
+  <rect width="1600" height="1000" fill="url(#bg)"/>
+  <text id="title" x="50" y="58" class="title">P.2.28 — Catalog hourly label behavior</text>
+  <text x="52" y="90" class="sub">OWNER-DIRECTED 18 DP ACTIVE-CATALOG LABELS · FIXTURE/DEBUG STAYS 16 DP</text>
+
+  <rect x="45" y="160" width="350" height="190" rx="18" class="card"/>
+  <text x="70" y="204" class="head">Daily scale</text>
+  <text x="70" y="245" class="body">Existing daily layout</text>
+  <text x="70" y="276" class="body">No hourly tick labels</text>
+  <text x="70" y="318" class="tag">selected instant retained</text>
+
+  <rect x="625" y="160" width="390" height="190" rx="18" class="card"/>
+  <text x="650" y="204" class="head">Catalog hourly scale</text>
+  <text x="650" y="245" class="body">3 · 6 · 9 at 18 dp</text>
+  <text x="650" y="276" class="body">Below each longest tick</text>
+  <text x="650" y="318" class="tag">minute-precise readout</text>
+
+  <rect x="1225" y="160" width="330" height="190" rx="18" class="card"/>
+  <text x="1250" y="204" class="head">Noon / midnight</text>
+  <text x="1250" y="245" class="body">12 PM · 12 AM</text>
+  <text x="1250" y="276" class="body">same cadence and ticks</text>
+  <text x="1250" y="318" class="tag">selection stays continuous</text>
+
+  <path d="M395 255 H605" class="line"/>
+  <text x="500" y="225" class="sub" text-anchor="middle">existing double tap</text>
+  <path d="M1015 255 H1205" class="line"/>
+  <text x="1110" y="225" class="sub" text-anchor="middle">scrub through time</text>
+  <path d="M1385 350 C1385 470 830 470 820 365" class="back"/>
+  <text x="1090" y="454" class="sub" text-anchor="middle">hourly double tap returns to daily at the same instant</text>
+
+  <rect x="45" y="555" width="1510" height="150" rx="18" class="note"/>
+  <text x="75" y="598" class="notehead">During hourly scrubbing</text>
+  <text x="75" y="638" class="notebody">The axis moves beneath the fixed playhead. Each label stays attached to its tick. Active-catalog time remains minute precise.</text>
+  <text x="75" y="672" class="notebody">Intervening ticks remain blank. Labels, facts, gestures, 48 dp/hour spacing, and daily geometry are otherwise unchanged.</text>
+
+  <rect x="45" y="750" width="1510" height="175" rx="18" class="note"/>
+  <text x="75" y="793" class="notehead">Unaffected fixture/debug surface</text>
+  <text x="75" y="835" class="notebody">Retain 16 dp labels, its current same-band upward group shift, and bottom-anchored nearest-hour cue. No debug typography or layout change is included.</text>
+  <text x="75" y="875" class="notebody">Installed acceptance checks the catalog's 18 dp appearance, noon/midnight visibility, scrub attachment, daily reference, and debug 16 dp confirmation.</text>
+</svg>

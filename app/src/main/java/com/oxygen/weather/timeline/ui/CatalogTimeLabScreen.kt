@@ -1,6 +1,7 @@
 package com.oxygen.weather.timeline.ui
 
 import android.graphics.Paint
+import android.graphics.Rect
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.Canvas
@@ -86,6 +87,7 @@ import java.time.Instant
 import java.time.format.DateTimeFormatter
 import java.util.Locale
 import kotlin.math.abs
+import kotlin.math.roundToInt
 
 @Composable
 fun CatalogTimeLabScreen(
@@ -578,6 +580,13 @@ private fun CatalogForecastTimeline(
         val railY = 73.dp.toPx()
         val scale = pixelsPerSecond(animation)
         val stroke = 1.dp.toPx()
+        val hourLabelPaint = Paint(Paint.ANTI_ALIAS_FLAG).apply {
+            color = android.graphics.Color.argb((225 * animation).roundToInt(), 238, 247, 255)
+            textSize = 18.dp.toPx()
+            textAlign = Paint.Align.CENTER
+        }
+        val hourLabelBounds = Rect()
+        val hourLabelTop = railY + 11.dp.toPx()
         drawRect(Brush.verticalGradient(0f to Color.Transparent, 1f to Color(0xB7081628)))
         drawLine(Color(0x33D7EBF7), Offset(0f, railY), Offset(w, railY), stroke)
         fun xFor(instant: Instant): Float {
@@ -663,11 +672,31 @@ private fun CatalogForecastTimeline(
                 val tick = selectedHour.plusHours(offset.toLong()).toInstant()
                 if (tick < view.interval.startInclusive || tick > view.interval.endInclusive) continue
                 val x = xFor(tick)
+                val localHour = tick.atZone(view.zone).hour
+                val major = localHour % 3 == 0
                 if (x in -30f..(w + 30f)) {
-                    val major = tick.atZone(view.zone).hour % 3 == 0
                     drawLine(Color.White.copy(alpha = animation * if (major) .82f else .48f),
                         Offset(x, railY - if (major) 9.dp.toPx() else 3.dp.toPx()),
                         Offset(x, railY + if (major) 10.dp.toPx() else 5.dp.toPx()), stroke)
+                    if (major) {
+                        val hourText = when (localHour) {
+                            0 -> "12 AM"
+                            12 -> "12 PM"
+                            else -> (localHour % 12).toString()
+                        }
+                        hourLabelPaint.getTextBounds(hourText, 0, hourText.length, hourLabelBounds)
+                        val labelWidth = hourLabelPaint.measureText(hourText)
+                        val labelBaseline = hourLabelTop - hourLabelBounds.top
+                        val labelBottom = labelBaseline + hourLabelBounds.bottom
+                        val labelFits = x - stroke / 2f >= 0f && x + stroke / 2f <= w &&
+                            x - labelWidth / 2f >= 0f && x + labelWidth / 2f <= w &&
+                            hourLabelTop >= 0f && labelBottom <= h
+                        if (labelFits) {
+                            drawIntoCanvas { canvas ->
+                                canvas.nativeCanvas.drawText(hourText, x, labelBaseline, hourLabelPaint)
+                            }
+                        }
+                    }
                 }
                 val midpoint = tick.plusSeconds(1_800L)
                 if (midpoint >= view.interval.startInclusive && midpoint <= view.interval.endInclusive) {
