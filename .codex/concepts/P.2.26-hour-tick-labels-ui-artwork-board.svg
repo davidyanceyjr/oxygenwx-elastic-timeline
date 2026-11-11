@@ -1,0 +1,69 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="2340" height="1820" viewBox="0 0 2340 1820" role="img" aria-labelledby="title desc">
+  <title id="title">P.2.26 Long-Tick Labels UI Artwork Board</title>
+  <desc id="desc">A real Pixel 3 XL hourly screen capture with proposed 3, 6, and 9 labels overlaid below all visible longest ticks, plus an enlarged crop of the same screen.</desc>
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="0" y2="1"><stop stop-color="#101c30"/><stop offset="1" stop-color="#203954"/></linearGradient>
+    <filter id="labelShadow" x="-30%" y="-30%" width="160%" height="160%"><feGaussianBlur in="SourceAlpha" stdDeviation="3"/><feOffset dy="3"/><feComponentTransfer><feFuncA type="linear" slope="0.7"/></feComponentTransfer><feMerge><feMergeNode/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+    <clipPath id="axisZoom"><rect x="840" y="205" width="1440" height="680" rx="14"/></clipPath>
+    <style>
+      .title{font:700 34px sans-serif;fill:#f4f8fc}.sub{font:17px sans-serif;fill:#b6cadc}.panel{fill:#f6f9fc;stroke:#c6d4df;stroke-width:2}.h{font:700 23px sans-serif;fill:#19354e}.body{font:18px sans-serif;fill:#405970}.small{font:16px sans-serif;fill:#8fa9bd}.hour{font:700 52px Roboto,Arial,sans-serif;fill:#fff0bd;text-anchor:middle;stroke:#102237;stroke-width:6;paint-order:stroke;filter:url(#labelShadow)}.hourSmall{font:700 56px Roboto,Arial,sans-serif;fill:#fff0bd;text-anchor:middle;stroke:#102237;stroke-width:6;paint-order:stroke;filter:url(#labelShadow)}.call{font:18px sans-serif;fill:#405970}.chip{font:700 17px sans-serif;fill:#173650}
+    </style>
+  </defs>
+  <rect width="2340" height="1820" fill="url(#bg)"/>
+  <text id="title" x="60" y="64" class="title">P.2.26 — Label every longest hourly tick</text>
+  <text x="62" y="101" class="sub">REVISED UI ARTWORK · ACTUAL PIXEL 3 XL SCREEN CAPTURE · SELECTED 7:00 AM · WED</text>
+
+  <g>
+    <rect x="40" y="132" width="750" height="1648" rx="22" class="panel"/>
+    <text x="68" y="176" class="h">Installed screen · proposed labels overlaid</text>
+    <text x="68" y="204" class="small">Raw screen capture at left; 3, 6, and 9 are added.</text>
+    <image href="P.2.26-hour-tick-labels-device.png" x="66" y="224" width="690" height="1418" preserveAspectRatio="none"/>
+    <g transform="translate(66 224) scale(0.479167)">
+      <text x="48" y="2730" class="hourSmall">3</text>
+      <text x="552" y="2730" class="hourSmall">6</text>
+      <text x="1056" y="2730" class="hourSmall">9</text>
+    </g>
+    <text x="68" y="1684" class="small">Pixel 3 XL · status time 8:01 · selected focus 7:00 AM</text>
+    <text x="68" y="1714" class="small">WED stays above the icons; focused time stays below the axis.</text>
+  </g>
+
+  <g>
+    <rect x="820" y="132" width="1480" height="790" rx="22" class="panel"/>
+    <text x="850" y="176" class="h">Timeline detail · crop from the same installed screen</text>
+    <text x="850" y="204" class="small">The number sits just below the lower end of its longest tick.</text>
+    <g clip-path="url(#axisZoom)">
+      <image href="P.2.26-hour-tick-labels-device.png" x="840" y="-2075" width="1440" height="2960"/>
+      <text x="888" y="655" class="hour">3</text>
+      <text x="1392" y="655" class="hour">6</text>
+      <text x="1896" y="655" class="hour">9</text>
+    </g>
+  </g>
+
+  <g>
+    <rect x="820" y="956" width="700" height="824" rx="22" class="panel"/>
+    <text x="856" y="1008" class="h">Label rule</text>
+    <text x="856" y="1062" class="body">• Label every existing longest tick, spaced every 3 hours.</text>
+    <text x="856" y="1110" class="body">• Leave intervening hour and half-hour ticks blank.</text>
+    <text x="856" y="1158" class="body">• Write noon and midnight as 12 PM and 12 AM.</text>
+    <text x="856" y="1224" class="body">The current 8-hour view now shows 3, 6, and 9.</text>
+    <text x="856" y="1290" class="body">The exact focus pill still supplies minutes and AM/PM.</text>
+    <rect x="856" y="1364" width="604" height="196" rx="16" fill="#e7eff5"/>
+    <text x="884" y="1414" class="chip">VISIBLE IN THE CAPTURE</text>
+    <text x="884" y="1454" class="call">3 · 6 · 9 long ticks</text>
+    <text x="884" y="1488" class="call">All three receive labels.</text>
+    <text x="884" y="1532" class="call">Noon / midnight: 12 PM / 12 AM.</text>
+  </g>
+
+  <g>
+    <rect x="1540" y="956" width="760" height="824" rx="22" class="panel"/>
+    <text x="1576" y="1008" class="h">Keep the installed hierarchy</text>
+    <text x="1576" y="1062" class="body">• WED remains over the weather-symbol row.</text>
+    <text x="1576" y="1110" class="body">• Symbols remain at their established :30 positions.</text>
+    <text x="1576" y="1158" class="body">• Labels sit below long ticks, away from the icon row.</text>
+    <text x="1576" y="1206" class="body">• The selected-time pill remains below the axis.</text>
+    <text x="1576" y="1274" class="body">• Daily mode, tick cadence, scale, and gestures stay intact.</text>
+    <text x="1576" y="1370" class="small">Artwork-only overlay on a raw installed screenshot.</text>
+    <text x="1576" y="1402" class="small">The raw capture is included in this board package.</text>
+    <text x="1576" y="1434" class="small">Installed acceptance is still required during execution.</text>
+  </g>
+</svg>

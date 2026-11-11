@@ -1,6 +1,7 @@
 package com.oxygen.weather.timeline.ui
 
 import android.graphics.Paint
+import android.graphics.Rect
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.Canvas
@@ -86,6 +87,7 @@ import java.time.Instant
 import java.time.format.DateTimeFormatter
 import java.util.Locale
 import kotlin.math.abs
+import kotlin.math.roundToInt
 
 @Composable
 fun CatalogTimeLabScreen(
@@ -564,10 +566,27 @@ private fun CatalogForecastTimeline(
         val dateY = 30.dp.toPx()
         val weekdayLabelProgress = (animation / .5f).coerceIn(0f, 1f)
         val weekdayLabelY = dateY - 12.dp.toPx() * weekdayLabelProgress
+        val selectedLocalDate = view.selectedInstant.atZone(view.zone).toLocalDate()
+        val hourlyWeekdayLabelVisible = animation > .5f
+        val selectedWeekday = selectedLocalDate.dayOfWeek.name.take(3)
+        val focusedWeekdayPaint = Paint(Paint.ANTI_ALIAS_FLAG).apply {
+            textSize = 20.dp.toPx()
+            isFakeBoldText = true
+        }
+        val focusedWeekdayWidth = focusedWeekdayPaint.measureText(selectedWeekday)
+        val focusedWeekdayLeft = playhead.toFloat() - focusedWeekdayWidth / 2f
+        val focusedWeekdayRight = playhead.toFloat() + focusedWeekdayWidth / 2f
         val dailyIconY = 53.dp.toPx()
         val railY = 73.dp.toPx()
         val scale = pixelsPerSecond(animation)
         val stroke = 1.dp.toPx()
+        val hourLabelPaint = Paint(Paint.ANTI_ALIAS_FLAG).apply {
+            color = android.graphics.Color.argb((225 * animation).roundToInt(), 238, 247, 255)
+            textSize = 18.dp.toPx()
+            textAlign = Paint.Align.CENTER
+        }
+        val hourLabelBounds = Rect()
+        val hourLabelTop = railY + 11.dp.toPx()
         drawRect(Brush.verticalGradient(0f to Color.Transparent, 1f to Color(0xB7081628)))
         drawLine(Color(0x33D7EBF7), Offset(0f, railY), Offset(w, railY), stroke)
         fun xFor(instant: Instant): Float {
@@ -583,17 +602,23 @@ private fun CatalogForecastTimeline(
                     Offset(startX, dateY + 18.dp.toPx()), stroke)
             }
             if (startX in -60f..(w + 60f)) {
-                val selectedDay = view.selectedInstant.atZone(view.zone).toLocalDate() == day.date
-                drawIntoCanvas { canvas ->
-                    val paint = Paint(Paint.ANTI_ALIAS_FLAG).apply {
-                        color = android.graphics.Color.argb(if (selectedDay) 245 else 175, 244, 250, 255)
-                        textAlign = Paint.Align.CENTER
-                        textSize = (if (selectedDay) 20.dp else 12.dp).toPx()
-                        isFakeBoldText = selectedDay
+                val selectedDay = selectedLocalDate == day.date
+                val dayLabel = day.date.dayOfWeek.name.take(3)
+                val paint = Paint(Paint.ANTI_ALIAS_FLAG).apply {
+                    color = android.graphics.Color.argb(if (selectedDay) 245 else 175, 244, 250, 255)
+                    textAlign = Paint.Align.CENTER
+                    textSize = (if (selectedDay) 20.dp else 12.dp).toPx()
+                    isFakeBoldText = selectedDay
+                }
+                val labelWidth = paint.measureText(dayLabel)
+                val labelLeft = startX - labelWidth / 2f
+                val labelRight = startX + labelWidth / 2f
+                val overlapsFocusedWeekday = hourlyWeekdayLabelVisible &&
+                    labelLeft < focusedWeekdayRight && labelRight > focusedWeekdayLeft
+                if (!(hourlyWeekdayLabelVisible && selectedDay) && !overlapsFocusedWeekday) {
+                    drawIntoCanvas { canvas ->
+                        canvas.nativeCanvas.drawText(dayLabel, startX, weekdayLabelY, paint)
                     }
-                    val dayLabel = day.date.dayOfWeek.name.take(3)
-                    canvas.nativeCanvas.drawText(dayLabel, startX,
-                        weekdayLabelY, paint)
                 }
             }
             if (noonX in -60f..(w + 60f)) {
@@ -630,17 +655,48 @@ private fun CatalogForecastTimeline(
                 }
             }
         }
+        if (hourlyWeekdayLabelVisible) {
+            drawIntoCanvas { canvas ->
+                val paint = Paint(Paint.ANTI_ALIAS_FLAG).apply {
+                    color = android.graphics.Color.argb(245, 244, 250, 255)
+                    textAlign = Paint.Align.CENTER
+                    textSize = 20.dp.toPx()
+                    isFakeBoldText = true
+                }
+                canvas.nativeCanvas.drawText(selectedWeekday, playhead.toFloat(), weekdayLabelY, paint)
+            }
+        }
         if (animation > .01f) {
             val selectedHour = view.selectedInstant.atZone(view.zone).withMinute(0).withSecond(0).withNano(0)
             for (offset in -18..18) {
                 val tick = selectedHour.plusHours(offset.toLong()).toInstant()
                 if (tick < view.interval.startInclusive || tick > view.interval.endInclusive) continue
                 val x = xFor(tick)
+                val localHour = tick.atZone(view.zone).hour
+                val major = localHour % 3 == 0
                 if (x in -30f..(w + 30f)) {
-                    val major = tick.atZone(view.zone).hour % 3 == 0
                     drawLine(Color.White.copy(alpha = animation * if (major) .82f else .48f),
                         Offset(x, railY - if (major) 9.dp.toPx() else 3.dp.toPx()),
                         Offset(x, railY + if (major) 10.dp.toPx() else 5.dp.toPx()), stroke)
+                    if (major) {
+                        val hourText = when (localHour) {
+                            0 -> "12 AM"
+                            12 -> "12 PM"
+                            else -> (localHour % 12).toString()
+                        }
+                        hourLabelPaint.getTextBounds(hourText, 0, hourText.length, hourLabelBounds)
+                        val labelWidth = hourLabelPaint.measureText(hourText)
+                        val labelBaseline = hourLabelTop - hourLabelBounds.top
+                        val labelBottom = labelBaseline + hourLabelBounds.bottom
+                        val labelFits = x - stroke / 2f >= 0f && x + stroke / 2f <= w &&
+                            x - labelWidth / 2f >= 0f && x + labelWidth / 2f <= w &&
+                            hourLabelTop >= 0f && labelBottom <= h
+                        if (labelFits) {
+                            drawIntoCanvas { canvas ->
+                                canvas.nativeCanvas.drawText(hourText, x, labelBaseline, hourLabelPaint)
+                            }
+                        }
+                    }
                 }
                 val midpoint = tick.plusSeconds(1_800L)
                 if (midpoint >= view.interval.startInclusive && midpoint <= view.interval.endInclusive) {

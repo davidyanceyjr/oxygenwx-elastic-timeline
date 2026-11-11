@@ -1,0 +1,95 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="2200" height="1770" viewBox="0 0 2200 1770" role="img" aria-labelledby="title desc">
+  <title id="title">P.2.27 Hour Label Size UI Artwork Board · Owner-selected 20/16 dp</title>
+  <desc id="desc">Unmodified installed screenshots show the original small labels. Target vector diagrams show owner-selected 20 dp active-catalog labels, 16 dp fixture/debug labels, and the selected five dp upward group shift inside the same 84 dp band.</desc>
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="0" y2="1"><stop stop-color="#101c30"/><stop offset="1" stop-color="#1b2d44"/></linearGradient>
+    <filter id="labelShadow" x="-30%" y="-30%" width="160%" height="160%"><feGaussianBlur in="SourceAlpha" stdDeviation="2"/><feOffset dy="2"/><feComponentTransfer><feFuncA type="linear" slope="0.65"/></feComponentTransfer><feMerge><feMergeNode/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+    <marker id="arrow" markerWidth="10" markerHeight="10" refX="8" refY="3" orient="auto"><path d="M0,0 L0,6 L9,3 z" fill="#79d7e7"/></marker>
+    <style>
+      .title{font:700 34px sans-serif;fill:#f4f8fc}.sub{font:16px sans-serif;fill:#b6cadc}.panel{fill:#f5f8fb;stroke:#c9d6e1;stroke-width:2}.h{font:700 20px sans-serif;fill:#18324a}.body{font:16px sans-serif;fill:#334e66}.small{font:14px sans-serif;fill:#49647b}.gold{fill:#ffe2a7}.axis{stroke:#67859b;stroke-width:3}.tick{stroke:#25435b;stroke-width:5}.minor{stroke:#abc0cf;stroke-width:3}.hour20{font:700 70px Roboto,Arial,sans-serif;fill:#18324a;text-anchor:middle}.hour16{font:700 56px Roboto,Arial,sans-serif;fill:#18324a;text-anchor:middle}.chip{fill:#18334b}.cue{font:700 15px sans-serif;fill:#ffe2a7;text-anchor:middle}.tag{font:700 14px sans-serif;fill:#18324a}.arrow{stroke:#2e9bb1;stroke-width:4;fill:none;marker-end:url(#arrow)}.cap{font:700 13px sans-serif;fill:#f5f8fb}
+    </style>
+    <clipPath id="activeScreen"><rect x="60" y="204" width="460" height="946" rx="10"/></clipPath>
+    <clipPath id="debugScreen"><rect x="580" y="204" width="460" height="946" rx="10"/></clipPath>
+    <clipPath id="noonThumb"><rect x="70" y="1305" width="190" height="390" rx="8"/></clipPath>
+    <clipPath id="midnightThumb"><rect x="286" y="1305" width="190" height="390" rx="8"/></clipPath>
+    <clipPath id="dailyThumb"><rect x="502" y="1305" width="190" height="390" rx="8"/></clipPath>
+  </defs>
+  <rect width="2200" height="1770" fill="url(#bg)"/>
+  <text id="title" x="48" y="58" class="title">P.2.27 — Tune hourly label size</text>
+  <text x="50" y="90" class="sub">OWNER-SELECTED TARGETS 20 DP / 16 DP · APPROVED 2026-11-11 · RAW CAPTURES ARE CONTEXT</text>
+
+  <g>
+    <rect x="38" y="122" width="504" height="1065" rx="18" class="panel"/>
+    <text x="58" y="160" class="h">Installed context · active-catalog</text>
+    <text x="58" y="184" class="small">Before P.2.27 · existing small labels remain visible.</text>
+    <image href="P.2.27-hour-label-size-active-before.png" x="60" y="204" width="460" height="946" preserveAspectRatio="none" clip-path="url(#activeScreen)"/>
+    <text x="58" y="1170" class="small">Selected 7:00 AM · WED · current hourly scale</text>
+  </g>
+
+  <g>
+    <rect x="558" y="122" width="504" height="1065" rx="18" class="panel"/>
+    <text x="578" y="160" class="h">Installed context · fixture/debug</text>
+    <text x="578" y="184" class="small">Before P.2.27 · cue focused at 6 AM.</text>
+    <image href="P.2.27-hour-label-size-debug-near-6am-before.png" x="580" y="204" width="460" height="946" preserveAspectRatio="none" clip-path="url(#debugScreen)"/>
+    <text x="578" y="1170" class="small">Current 84 dp band · label and cue share an x-position</text>
+  </g>
+
+  <g>
+    <rect x="1078" y="122" width="1084" height="520" rx="18" class="panel"/>
+    <text x="1104" y="162" class="h">Active-catalog target · 20 dp labels</text>
+    <text x="1104" y="192" class="small">Centered below existing long ticks · tuned from 22 dp to the owner's smaller target</text>
+    <path d="M1160 368 H2080" class="axis"/>
+    <path d="M1270 306 V386 M1550 330 V386 M1830 306 V386 M2070 306 V386" class="tick"/>
+    <path d="M1410 348 V386 M1690 348 V386 M1970 348 V386" class="minor"/>
+    <text x="1270" y="448" class="hour20" filter="url(#labelShadow)">3</text>
+    <text x="1550" y="448" class="hour20" filter="url(#labelShadow)">6</text>
+    <text x="1830" y="448" class="hour20" filter="url(#labelShadow)">9</text>
+    <path d="M1280 500 H1990" class="axis"/>
+    <path d="M1390 456 V512 M1880 456 V512" class="tick"/>
+    <text x="1390" y="574" class="hour20" filter="url(#labelShadow)">12 AM</text>
+    <text x="1880" y="574" class="hour20" filter="url(#labelShadow)">12 PM</text>
+    <text x="1104" y="612" class="small">Explicit noon and midnight labels use the same 20 dp type size.</text>
+  </g>
+
+  <g>
+    <rect x="1078" y="660" width="1084" height="527" rx="18" class="panel"/>
+    <text x="1104" y="700" class="h">Fixture/debug target · 16 dp labels · same 84 dp band</text>
+    <text x="1104" y="730" class="small">Move weekday, symbols, and axis/labels upward about 5 dp; keep the cue anchored at the bottom.</text>
+    <rect x="1120" y="768" width="1000" height="294" rx="14" fill="#edf3f7" stroke="#aebfcb" stroke-width="2"/>
+    <text x="1620" y="814" class="tag" text-anchor="middle">WED</text>
+    <circle cx="1330" cy="898" r="12" fill="#7acfe0"/><circle cx="1620" cy="898" r="12" fill="#7acfe0"/><circle cx="1910" cy="898" r="12" fill="#7acfe0"/>
+    <path d="M1160 926 H2080" class="axis"/>
+    <path d="M1330 898 V957 M1620 898 V957 M1910 898 V957" class="tick"/>
+    <path d="M1475 926 V944 M1765 926 V944" class="minor"/>
+    <text x="1330" y="1006" class="hour16">3</text>
+    <text x="1620" y="1006" class="hour16">6</text>
+    <text x="1910" y="1006" class="hour16">9</text>
+    <text x="1620" y="1055" class="cue" style="font-size:45px">6 AM</text>
+    <path d="M2110 814 V780" class="arrow"/>
+    <text x="2096" y="764" class="small" text-anchor="end">group up ~5 dp</text>
+    <text x="1104" y="1100" class="small">Target view keeps the same band height; the plain gold cue stays bottom-anchored.</text>
+    <text x="1104" y="1128" class="small">At the shared x-position, the 16 dp label remains above the 13 dp cue.</text>
+    <text x="1104" y="1160" class="small">Illustrative layout diagram; not an installed screenshot.</text>
+  </g>
+
+  <g>
+    <rect x="38" y="1212" width="2124" height="512" rx="18" class="panel"/>
+    <text x="62" y="1252" class="h">Affected state references and preserved appearance</text>
+    <image href="P.2.27-hour-label-size-noon-before.png" x="70" y="1305" width="190" height="390" preserveAspectRatio="none" clip-path="url(#noonThumb)"/>
+    <image href="P.2.27-hour-label-size-midnight-before.png" x="286" y="1305" width="190" height="390" preserveAspectRatio="none" clip-path="url(#midnightThumb)"/>
+    <image href="P.2.27-hour-label-size-daily-before.png" x="502" y="1305" width="190" height="390" preserveAspectRatio="none" clip-path="url(#dailyThumb)"/>
+    <text x="165" y="1710" class="small" text-anchor="middle">Noon context</text>
+    <text x="381" y="1710" class="small" text-anchor="middle">Midnight context</text>
+    <text x="597" y="1710" class="small" text-anchor="middle">Daily reference</text>
+    <text x="760" y="1330" class="h">Keep these properties</text>
+    <text x="760" y="1372" class="body">• `12 PM` and `12 AM` stay explicit and fully visible.</text>
+    <text x="760" y="1410" class="body">• Daily mode stays free of hourly labels.</text>
+    <text x="760" y="1448" class="body">• Horizontal tick and symbol positions are unchanged.</text>
+    <text x="760" y="1486" class="body">• Cadence, 48 dp/hour, 24 dp symbols, and :30 alignment stay unchanged.</text>
+    <text x="760" y="1524" class="body">• Focused time, forecast facts, gestures, and screen height stay unchanged.</text>
+    <rect x="760" y="1570" width="1310" height="100" rx="14" fill="#e7eff5"/>
+    <text x="788" y="1608" class="tag">REVIEW NOTE</text>
+    <text x="788" y="1640" class="small">The screenshots are installed context; vector panels show the approved 20 dp / 16 dp targets.</text>
+    <text x="788" y="1664" class="small">P.2.27 still requires fresh installed screenshots and focused interaction checks after implementation.</text>
+  </g>
+</svg>

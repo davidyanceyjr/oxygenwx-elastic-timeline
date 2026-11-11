@@ -1,0 +1,53 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1600" height="1080" viewBox="0 0 1600 1080">
+<defs>
+  <linearGradient id="bg" x2="0" y2="1"><stop stop-color="#081a2e"/><stop offset="1" stop-color="#1b3854"/></linearGradient>
+  <style>
+    .title{font:700 34px Arial,sans-serif;fill:#f5f8fc}.sub{font:18px Arial,sans-serif;fill:#c0cedb}
+    .head{font:700 20px Arial,sans-serif;fill:#eff5fa}.body{font:17px Arial,sans-serif;fill:#d3e0eb}
+    .small{font:15px Arial,sans-serif;fill:#b4c5d5}.gold{fill:#f4d17c}.card{fill:#10253b;stroke:#48637c;stroke-width:2}
+    .axis{stroke:#a7b8c7;stroke-width:3}.tick{stroke:#b8c8d6;stroke-width:2}.event{fill:#65d4df;stroke:#d3fbff;stroke-width:2}
+  </style>
+</defs>
+<rect width="1600" height="1080" rx="28" fill="url(#bg)"/>
+<text x="64" y="66" class="title">P.2.25 · Hourly weekday label</text>
+<text x="64" y="102" class="sub">UI artwork draft · daily mode is the reference; hourly mode adds the selected local weekday above the playhead</text>
+
+<rect x="64" y="134" width="704" height="286" rx="18" class="card"/>
+<text x="92" y="174" class="head">Current daily · existing reference</text>
+<text x="92" y="204" class="small">Daily weekday labels remain unchanged.</text>
+<svg x="92" y="228" width="648" height="172" viewBox="0 2360 1440 382" preserveAspectRatio="xMidYMid meet">
+  <image href="P.2.25-daily-dow-reference.png" width="1440" height="2960"/>
+</svg>
+
+<rect x="800" y="134" width="736" height="286" rx="18" class="card"/>
+<text x="828" y="174" class="head">Current hourly · selected Tuesday 7:00 AM</text>
+<text x="828" y="204" class="small">Device capture: the selected date's midnight is outside this viewport.</text>
+<svg x="828" y="228" width="680" height="172" viewBox="0 2500 1440 382" preserveAspectRatio="xMidYMid meet">
+  <image href="P.2.25-hourly-dow-before.png" width="1440" height="2960"/>
+</svg>
+
+<rect x="64" y="454" width="704" height="520" rx="18" class="card"/>
+<text x="92" y="495" class="head">Proposed hourly · selected Tuesday 7:00 AM</text>
+<text x="92" y="526" class="small">TUE stays above the fixed playhead while selection moves within Tuesday.</text>
+<text x="416" y="612" text-anchor="middle" style="font:700 25px Arial,sans-serif;fill:#f4d17c">TUE</text>
+<line x1="142" y1="786" x2="690" y2="786" class="axis"/>
+<g class="tick"><line x1="160" y1="774" x2="160" y2="798"/><line x1="270" y1="774" x2="270" y2="798"/><line x1="380" y1="774" x2="380" y2="798"/><line x1="416" y1="764" x2="416" y2="808" stroke="#f4d17c" stroke-width="4"/><line x1="490" y1="774" x2="490" y2="798"/><line x1="600" y1="774" x2="600" y2="798"/><line x1="675" y1="774" x2="675" y2="798"/></g>
+<line x1="416" y1="654" x2="416" y2="806" stroke="#f4d17c" stroke-width="3"/><circle cx="416" cy="786" r="9" fill="#f4d17c"/>
+<g class="event"><circle cx="215" cy="720" r="14"/><circle cx="325" cy="720" r="14"/><circle cx="471" cy="720" r="14"/><circle cx="581" cy="720" r="14"/></g>
+<text x="416" y="848" text-anchor="middle" class="body">fixed playhead · hourly symbols remain at :30</text>
+<rect x="342" y="875" width="148" height="42" rx="21" fill="#203954"/><text x="416" y="903" text-anchor="middle" style="font:700 18px Arial,sans-serif;fill:#f8e2a7">7:00 AM</text>
+
+<rect x="800" y="454" width="736" height="520" rx="18" class="card"/>
+<text x="828" y="495" class="head">Proposed hourly · selected Tuesday 11:59 PM</text>
+<text x="828" y="526" class="small">WED text hides only while bounds overlap TUE; its tick stays and text returns when clear.</text>
+<text x="1132" y="612" text-anchor="middle" style="font:700 25px Arial,sans-serif;fill:#f4d17c">TUE</text>
+<line x1="866" y1="786" x2="1470" y2="786" class="axis"/>
+<g class="tick"><line x1="884" y1="774" x2="884" y2="798"/><line x1="994" y1="774" x2="994" y2="798"/><line x1="1104" y1="774" x2="1104" y2="798"/><line x1="1132" y1="764" x2="1132" y2="808" stroke="#f4d17c" stroke-width="4"/><line x1="1140" y1="764" x2="1140" y2="808"/><line x1="1178" y1="774" x2="1178" y2="798"/><line x1="1388" y1="774" x2="1388" y2="798"/></g>
+<line x1="1132" y1="654" x2="1132" y2="806" stroke="#f4d17c" stroke-width="3"/><circle cx="1132" cy="786" r="9" fill="#f4d17c"/>
+<line x1="1140" y1="630" x2="1140" y2="810" stroke="#91a9bd" stroke-width="2" stroke-dasharray="7 7"/>
+<circle cx="1178" cy="720" r="14" class="event"/>
+<text x="1278" y="848" text-anchor="middle" class="small">12:00 AM · local midnight tick retained</text>
+<rect x="1058" y="875" width="148" height="42" rx="21" fill="#203954"/><text x="1132" y="903" text-anchor="middle" style="font:700 18px Arial,sans-serif;fill:#f8e2a7">11:59 PM</text>
+
+<text x="64" y="1022" class="small">Daily artwork unchanged · one focused label for the selected date · other dates keep their midnight labels · artwork proposal, not installed acceptance</text>
+</svg>
