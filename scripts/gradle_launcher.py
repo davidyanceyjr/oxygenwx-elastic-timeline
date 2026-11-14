@@ -1,14 +1,27 @@
 #!/usr/bin/env python3
 """Launch the pinned Gradle wrapper with a compatible installed JDK."""
+import hashlib
 import os
-from pathlib import Path
 import re
 import shutil
 import subprocess
 import sys
+from pathlib import Path
 
 
 ROOT = Path(__file__).resolve().parents[1]
+WRAPPER_JAR = ROOT / "gradle/wrapper/gradle-wrapper.jar"
+EXPECTED_WRAPPER_BLOB = "e6441136f3d4ba8a0da8d277868979cfbc8ad796"
+
+
+def verified_wrapper_jar() -> Path:
+    if not WRAPPER_JAR.is_file():
+        raise RuntimeError("Tracked Gradle wrapper JAR is missing; restore gradle/wrapper/gradle-wrapper.jar from this repository.")
+    data = WRAPPER_JAR.read_bytes()
+    actual = hashlib.sha1(f"blob {len(data)}\0".encode() + data).hexdigest()
+    if actual != EXPECTED_WRAPPER_BLOB:
+        raise RuntimeError("Tracked Gradle wrapper JAR failed source-blob verification.")
+    return WRAPPER_JAR
 
 
 def java_major(executable: Path) -> int | None:
@@ -40,12 +53,13 @@ def compatible_java() -> Path:
 
 
 def main() -> int:
+    wrapper_jar = verified_wrapper_jar()
     java = compatible_java()
     env = os.environ.copy()
     env["JAVA_HOME"] = str(java.parent.parent)
     env["PATH"] = str(java.parent) + os.pathsep + env.get("PATH", "")
     command = [str(java), "-Dorg.gradle.appname=gradlew", "-classpath",
-               str(ROOT / "gradle/wrapper/gradle-wrapper.jar"),
+               str(wrapper_jar),
                "org.gradle.wrapper.GradleWrapperMain", *sys.argv[1:]]
     return subprocess.call(command, cwd=ROOT, env=env)
 

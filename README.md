@@ -1,6 +1,6 @@
 # Oxygen Time Lab — Elastic Forecast Timeline
 
-**The successor OxygenWX app, developed in stages from an installable, standalone Jetpack Compose prototype using the development scaffold and engineering conventions of the deprecated [oxygenWX application](https://github.com/davidyanceyjr/oxygenWX), pinned at commit `ec3f93976f037fbb206089d8b9d9fa1f6f93918b`.**
+**The successor OxygenWX app, developed in stages from an installable, standalone Jetpack Compose prototype using development conventions from the deprecated oxygenWX application at commit `ec3f93976f037fbb206089d8b9d9fa1f6f93918b`.**
 
 This repository is the successor product boundary, not a modification of the deprecated oxygenWX application's source tree. The current build remains a synthetic-data prototype that installs alongside it as `com.oxygen.weather.timeline`; it has no live provider, location selection, or real-data cache. Successor capabilities are staged through the WX roadmap. The deprecated application's production preferences, saved locations, providers, cache, and navigation are outside this repository's change boundary.
 
@@ -30,7 +30,7 @@ Matches the referenced project's Android scaffold:
 - Compose BOM `2026.09.00`, min SDK 26, target SDK 37
 - Python 3.10+ and an Internet connection on the first build
 
-**Binary wrapper note:** For portability of this source archive, `gradle-wrapper.jar` is bootstrapped *on first use* from the pinned oxygenWX commit and checked against its exact Git blob SHA-1 (`e6441136f3d4ba8a0da8d277868979cfbc8ad796`). The Gradle distribution has the upstream SHA-256 pin in `gradle/wrapper/gradle-wrapper.properties`. Once retrieved, Gradle handles its normal dependency resolution. No code in this archive requires access to your GitHub account.
+**Binary wrapper note:** `gradle/wrapper/gradle-wrapper.jar` is tracked in this repository and checked against its Git blob SHA-1 (`e6441136f3d4ba8a0da8d277868979cfbc8ad796`) before launch. The Gradle distribution has a SHA-256 pin in `gradle/wrapper/gradle-wrapper.properties`. The wrapper does not download files from the deprecated oxygenWX repository.
 
 ## Try the interaction
 

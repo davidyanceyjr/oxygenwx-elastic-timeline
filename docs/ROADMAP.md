@@ -1000,9 +1000,9 @@ The SG workstream follows the owner-directed pivot recorded above and is grounde
 
 ## OX — Scene Engine implementation intake
 
-**Owner sequencing decision (2026-11-14):** Record the known OX leaves now, before their boards exist. Keep OX-12A, OX-21, and OX-22; place OX-18 early after OX-04 and OX-06. The existing global `NEXT` is unchanged (none is designated in this roadmap at this review). All OX leaves are `PLANNED`; boards and exact cycle evidence paths are pending. This entry does not open a cycle, approve a board, or authorize implementation. The two Scene Engine drafts in `docs/` remain supporting proposals; the bounded leaf entries below provide the canonical ordering.
+**Owner sequencing decision (2026-11-14):** Record the known OX leaves now, before their boards exist. Keep OX-12A, OX-21, and OX-22; place OX-18 early after OX-04 and OX-06. At that review, no global `NEXT` was designated and all OX leaves were `PLANNED`. The owner subsequently selected OX-01 as the sole global `NEXT`; the remaining OX leaves stay `PLANNED`. Boards and exact cycle evidence paths are pending. This entry does not open a cycle, approve a board, or authorize implementation. The two Scene Engine drafts in `docs/` remain supporting proposals; the bounded leaf entries below provide the canonical ordering.
 
-### OX-01 — Baseline the current world — PLANNED
+### OX-01 — Baseline the current world — NEXT
 
 **Objective/scope:** Lock down what currently works before restructuring it: scene state, First City frame composition, scrubbing, astronomy cues, and accessibility. Reuse completed baseline records and isolate only the unmet Scene Engine questions. Scope is limited to this outcome; the boards may propose a split or a changed boundary before approval.
 **Depends on:** SG.9, SG.13, SG.8, MR.2, WX.25.

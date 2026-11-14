@@ -28,7 +28,7 @@ Every gesture and visual effect must preserve readable forecast facts, predictab
 
 ### 2.1 Source-of-truth boundary
 
-This is the experience specification for the **successor OxygenWX app** in this repository. The current app remains an isolated synthetic-data prototype while the approved WX roadmap stages successor capabilities. The deprecated [`oxygenWX`](https://github.com/davidyanceyjr/oxygenWX) application and its production files are outside this repository's change boundary; its four-page navigation is not the successor app's navigation contract.
+This is the experience specification for the **successor OxygenWX app** in this repository. The current app remains an isolated synthetic-data prototype while the approved WX roadmap stages successor capabilities. The deprecated oxygenWX application and its production files are outside this repository's change boundary; its four-page navigation is not the successor app's navigation contract.
 
 - The new project's `AGENTS.md`, `docs/SPECIFICATION.md`, `docs/ROADMAP.md`, `docs/UI_DEVELOPMENT_WORKFLOW.md`, and `.codex/` lifecycle remain binding during review.
 - This document supplies **adopted experience-level acceptance criteria** and future product direction. The adoption and baseline reconciliation are recorded in `.codex/history/022-experience-spec-adoption.md`.

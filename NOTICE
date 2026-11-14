@@ -1,7 +1,6 @@
 Oxygen Elastic Timeline Prototype
 
-Independent UI research scaffold following the public Oxygen Weather source tree:
-https://github.com/davidyanceyjr/oxygenWX
+Independent UI research scaffold following the former Oxygen Weather source tree.
 Pinned reference commit: ec3f93976f037fbb206089d8b9d9fa1f6f93918b
 
 This archive is an original isolated Compose experiment, not a copy of the full Oxygen Weather application.
