@@ -2,8 +2,8 @@
 
 **Status:** Proposed Scene Engine workstream intake; no slice is approved for execution.\
 **Repository:** https://github.com/davidyanceyjr/oxygenwx-elastic-timeline\
-**Source basis:** Scene Engine first-draft specification, original 20-slice roadmap, and repository `main` workflow authorities reviewed November 10, 2026.\
-**Principles:** “The default state is the world.” “If information can exist meaningfully in the scene, it should not permanently sit on top of the scene.”\
+**Source basis:** Scene Engine first-draft specification as reconciled by SE.0 and clarified by SE.1 on November 12, 2026; original 20-slice roadmap; repository `main` workflow authorities.\
+**Principles:** “The default state is the world.” Express information in the scene where it remains truthful, immediately readable when required, and accessible; use other text presentation where those conditions cannot be met.\
 **Goal:** Advance the functioning Oxygen weather/timeline application toward a reusable, evidence-faithful, interactive Scene Engine while preserving proven catalog, timeline, and First City behavior.
 
 ## 1. Authority and adoption boundary
@@ -35,13 +35,31 @@ Follow the controlling repository documents in their existing precedence: `AGENT
 - Scrubbing stability, cross-time continuity, and honest transitions are central, but tests, graphics abstractions, caches, or architecture redesign must be justified by observed requirements and owner-authorized scope.
 - Existing baseline/debug evidence and completed WX/ATM/DFM work must be checked before duplicate work is authorized. Do not reopen completed historical gates without changed inputs or contradictory evidence.
 
+**Candidate coverage:** The spec's [§36 candidate outcomes](Oxygen_Scene_Engine_Refactor_Spec.md#36-first-refactor-scope) are proposals for separate bounded slices, not one first-slice acceptance list. This map identifies where each candidate is considered; it does not approve implementation or require every candidate to be built.
+
+| §36 candidate | Proposed disposition |
+|---|---|
+| 1. Scene graph | OX-03 establishes scene decisions and OX-05 establishes depth ordering. A full shared runtime graph remains a later bounded decision if those contracts and OX-18 portability evidence show it is needed. |
+| 2. Depth ordering | OX-05. |
+| 3. Reusable elements | OX-06–OX-08, with portability checked by OX-18. |
+| 4. Semantic roles | OX-06; debug inspection follows in OX-16. |
+| 5. Interpretation/rendering separation | OX-02 and OX-03 extend the existing typed scene route. |
+| 6. Scene state/keyframes | OX-03 defines the decision boundary; OX-09 checks stable states; OX-17 evaluates whether additional keyframe or day-compilation structures are needed. Any restructuring requires a later bounded slice. |
+| 7. Clouds and precipitation | OX-07 and OX-08, preserving approved meaning and SG.4a cloud placement. |
+| 8. Deterministic generation | OX-09. |
+| 9. Compiled scene days | OX-17 measures the need; implementation is deferred pending its evidence and a separate bounded decision. |
+| 10. One interactive semantic element | OX-10 considers and, if approved, proves the selected first element. |
+| 11. Moon as candidate | OX-10 may select the Moon; OX-11 applies only if supported Moon inspection is selected and separately approved. |
+| 12. Time Lab layer inspection | OX-16. |
+| 13. Weather-event expansion | Deferred to a separate future slice only if a supported gap and owner-approved scope justify it. Completed SG.11 mapping is an input, not work to repeat. |
+
 ## 4. Proposed wave order (not a new scheduling mechanism)
 
 | Wave | Proposed leaf slices | Learning objective | Proceed when |
 |---|---|---|---|
 | A — Establish the seam | OX-01–OX-04 | Baseline current behavior and the actual selected-instant scene route | Source-backed boundaries and scoped preservation evidence exist |
 | B — Compose the world | OX-05–OX-09 | Depth, identity, reusable drawing, stable repeatability | Existing city can use proven, bounded contracts |
-| C — Explain the world | OX-10–OX-14 | Moon inspect, supported explanation, diegetic data, progressive disclosure | Essential values stay discoverable and correct |
+| C — Explain the world | OX-10–OX-14 | First inspect interaction, supported explanation, diegetic data, progressive disclosure | Essential values stay discoverable and correct |
 | D — Scene laboratory | OX-15–OX-17 | Transition evidence, debug inspection, performance measurements | Fixture/measurement evidence supports next decisions |
 | E — Portability | OX-18–OX-20 | Second-world proof, independence, future pack boundary | Two scenes share weather truth without duplicated interpretation |
 
@@ -132,9 +150,9 @@ Each entry uses the canonical leaf structure (**Objective/scope**, **Depends on*
 
 ### OX-07 — Extract one reusable cloud renderer — PLANNED
 
-**Objective/scope:** Reuse existing cloud drawing behavior behind the new scene contract; prove portability before extracting the whole renderer. Scope is limited to this outcome; the boards may propose a split or a changed boundary before approval.\
+**Objective/scope:** Reuse existing cloud drawing behavior behind the new scene contract; prove portability before extracting the whole renderer. Preserve SG.4a's approved top-33%-of-scene-viewport cloud boundary across affected cloud states and routes. Scope is limited to this outcome; the boards may propose a split or a changed boundary before approval.\
 **Depends on:** OX-05, OX-06.\
-**Exit:** One renderer used from the chosen scene path, with before/after visual evidence and scoped state evidence. Provide the scoped proof or explicit recorded disposition; visual claims require installed evidence when applicable.\
+**Exit:** One renderer used from the chosen scene path, with before/after visual evidence and scoped state evidence. In affected states and routes, every visible cloud pixel—including antialiased edges, shadows, blur, movement, and transition poses—remains within the top 33% of the atmospheric scene viewport, as approved by SG.4a. Provide the scoped proof or explicit recorded disposition; visual claims require installed evidence when applicable.\
 **Evidence:** **Future target, not created:** `.codex/test-artifacts/<cycle-id>/` and `.codex/history/<cycle-id>.md` (plus `.codex/history/plans/<cycle-id>.md` at closeout). Assign the exact independent cycle ID and final evidence paths at cycle planning.\
 **Slice board(s):** **Proposed, not yet created or approved:** behavior board target `.codex/concepts/OX-07-extract-one-reusable-cloud-renderer-behavior-board.md`; UI artwork board target `.codex/concepts/OX-07-extract-one-reusable-cloud-renderer-ui-board.svg`. Record owner approval, constraints, and input fingerprints in the bounded plan before activation.\
 **Repo anchors (review starting points):** `ui/AtmosphericScene.kt` (`drawCityCloudFields`, `drawCityCloudBank`, existing cloud drawing functions), `presentation/scene/FirstCityComposition.kt` (`CityCloudDecision`).\
@@ -169,21 +187,21 @@ Each entry uses the canonical leaf structure (**Objective/scope**, **Depends on*
 ### Wave C — Make the world explain itself
 
 
-### OX-10 — Moon: inspect the object — PLANNED
+### OX-10 — Select and prove a first inspectable scene element — PLANNED
 
-**Objective/scope:** Make the displayed Moon the first genuine scene-element interaction using the spec's Observe → Touch → Learn → Dismiss loop. Scope is limited to this outcome; the boards may propose a split or a changed boundary before approval.\
+**Objective/scope:** Evaluate the displayed Moon as a candidate first scene-element inspect interaction using the spec's Observe → Touch → Learn → Dismiss loop. The OX-10 boards select the Moon or another supported first element before implementation. Scope is limited to this outcome; the boards may propose a split or a changed boundary before approval.\
 **Depends on:** OX-06, OX-09, OX-04.\
-**Exit:** Moon tap and scoped reachable inspect interaction, correct data for selected instant, verified dismiss and scrub behavior. Provide the scoped proof or explicit recorded disposition; visual claims require installed evidence when applicable.\
+**Exit:** The approved first element, whether Moon or another supported object, has a scoped, reachable inspect interaction with supported selected-instant data and verified dismiss and scrub behavior. If the Moon is not selected, record that choice and revise Moon-specific follow-on dependencies through the normal roadmap process before they proceed. Provide the scoped proof or explicit recorded disposition; visual claims require installed evidence when applicable.\
 **Evidence:** **Future target, not created:** `.codex/test-artifacts/<cycle-id>/` and `.codex/history/<cycle-id>.md` (plus `.codex/history/plans/<cycle-id>.md` at closeout). Assign the exact independent cycle ID and final evidence paths at cycle planning.\
-**Slice board(s):** **Proposed, not yet created or approved:** behavior board target `.codex/concepts/OX-10-moon-inspect-the-object-behavior-board.md`; UI artwork board target `.codex/concepts/OX-10-moon-inspect-the-object-ui-board.svg`. Record owner approval, constraints, and input fingerprints in the bounded plan before activation.\
+**Slice board(s):** **Proposed, not yet created or approved:** behavior board target `.codex/concepts/OX-10-first-inspectable-element-behavior-board.md`; UI artwork board target `.codex/concepts/OX-10-first-inspectable-element-ui-board.svg`. Record owner approval, constraints, and input fingerprints in the bounded plan before activation.\
 **Repo anchors (review starting points):** `presentation/scene/FirstCityComposition.kt` (`CityCueDecision`), `presentation/scene/FirstCityTheme.kt` (`lunarPosition`, `lunarScale`), `presentation/scene/SemanticScenePlan.kt` (`LunarDayFacts`), `ui/AtmosphericScene.kt` (`drawCityTimeCue`), `ui/CatalogTimeLabScreen.kt`.\
-**Behavior board intake:** Under which visible/occluded/absent states can the Moon be selected? How is its selected-instant identity retained through scrubbing?\
-**UI board intake / preservation check:** What is the hit target, affordance, inspect presentation, dismiss gesture, and accessible equivalent?
+**Behavior board intake:** Which source-supported element is selected first? If it is the Moon, under which visible/occluded/absent states can it be selected, and how is its selected-instant identity retained through scrubbing?\
+**UI board intake / preservation check:** For the selected element, what is the hit target, affordance, inspect presentation, dismiss gesture, and accessible equivalent?
 
 
 ### OX-11 — Moon: explain only supported facts — PLANNED
 
-**Objective/scope:** Extend Moon inspection with phase, illumination, rise/set, and optional trajectory **only where the available model actually supports them**. Scope is limited to this outcome; the boards may propose a split or a changed boundary before approval.\
+**Objective/scope:** If OX-10 selects and proves Moon inspection, extend it with phase, illumination, rise/set, and optional trajectory **only where the available model actually supports them**. Otherwise defer this candidate until a separate Moon interaction is approved. Scope is limited to this outcome; the boards may propose a split or a changed boundary before approval.\
 **Depends on:** OX-10.\
 **Exit:** Data-support inventory, verified supported/unsupported states, no fabricated altitude/azimuth/illumination fields. Provide the scoped proof or explicit recorded disposition; visual claims require installed evidence when applicable.\
 **Evidence:** **Future target, not created:** `.codex/test-artifacts/<cycle-id>/` and `.codex/history/<cycle-id>.md` (plus `.codex/history/plans/<cycle-id>.md` at closeout). Assign the exact independent cycle ID and final evidence paths at cycle planning.\
@@ -248,7 +266,7 @@ Each entry uses the canonical leaf structure (**Objective/scope**, **Depends on*
 
 **Objective/scope:** Give reviewers visibility into semantic role, depth group, element bounds, and hit targets in a debug-only inspection surface. Scope is limited to this outcome; the boards may propose a split or a changed boundary before approval.\
 **Depends on:** OX-05, OX-06, OX-10.\
-**Exit:** Can identify at least a cloud, Moon, and one foreground object; inspection does not alter normal output. Provide the scoped proof or explicit recorded disposition; visual claims require installed evidence when applicable.\
+**Exit:** Can identify at least a cloud, the OX-10 first inspectable element, and one foreground object; inspection does not alter normal output. Provide the scoped proof or explicit recorded disposition; visual claims require installed evidence when applicable.\
 **Evidence:** **Future target, not created:** `.codex/test-artifacts/<cycle-id>/` and `.codex/history/<cycle-id>.md` (plus `.codex/history/plans/<cycle-id>.md` at closeout). Assign the exact independent cycle ID and final evidence paths at cycle planning.\
 **Slice board(s):** **Proposed, not yet created or approved:** behavior board target `.codex/concepts/OX-16-time-lab-inspect-layers-and-element-bounds-behavior-board.md`; UI artwork board target `.codex/concepts/OX-16-time-lab-inspect-layers-and-element-bounds-ui-board.svg`. Record owner approval, constraints, and input fingerprints in the bounded plan before activation.\
 **Repo anchors (review starting points):** `presentation/scene/FirstCityComposition.kt`, `ui/AtmosphericScene.kt`, `ui/CatalogTimeLabScreen.kt`.\
@@ -334,6 +352,6 @@ During `BOARDS`, commission the behavior board (observable invariants, ambiguiti
 
 ## 8. Definition of progress
 
-**First City remains correct → scene authority is explicit → bounded reusable depth/elements → stable scrub behavior → supported Moon inspect → source-backed measurements inside the world → Time Lab evidence → a second world proves portability.**
+**First City remains correct → scene authority is explicit → bounded reusable depth/elements → stable scrub behavior → a supported first inspect interaction → source-backed measurements inside the world → Time Lab evidence → a second world proves portability.**
 
 Progress is demonstrated through each approved slice's exit and actual evidence, not abstractions, roadmap status alone, passing builds alone, hypothetical tests, or unverifiable visual claims. **The existing Oxygen workflow governs the entire implementation process.**

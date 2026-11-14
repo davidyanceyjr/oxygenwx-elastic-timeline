@@ -1,0 +1,79 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1920" height="1080" viewBox="0 0 1920 1080">
+  <rect width="1920" height="1080" fill="#111d29"/>
+  <style>
+    text { font-family: 'DejaVu Sans', sans-serif; fill: #edf5fa; }
+    .title { font-size: 38px; font-weight: bold; }
+    .sub { font-size: 20px; fill: #a9c4d4; }
+    .head { font-size: 25px; font-weight: bold; fill: #69d5df; }
+    .body { font-size: 20px; }
+    .small { font-size: 17px; fill: #bdd1dc; }
+    .card { fill: #203240; stroke: #446272; stroke-width: 2; rx: 16; }
+  </style>
+  <text x="48" y="65" class="title">SE.0 · Scene Engine specification reconciliation</text>
+  <text x="48" y="101" class="sub">Draft behavior/content board · documentation only · owner review</text>
+  <rect x="48" y="126" width="1824" height="110" class="card"/>
+  <text x="72" y="162" class="head">Owner direction already recorded</text>
+  <text x="72" y="194" class="body">The unnamed default scene’s current mechanics are the first refactor’s behavior baseline; architecture may change.</text>
+  <text x="72" y="221" class="body">MR.2’s exact readout layout is not permanent. Readout redesign is outside the first engine slice.</text>
+
+  <rect x="48" y="260" width="588" height="304" class="card"/>
+  <text x="72" y="302" class="head">1 · Text and interaction</text>
+  <text x="72" y="342" class="body">Scene is the primary visual field.</text>
+  <text x="72" y="377" class="body">Critical forecast facts remain immediately</text>
+  <text x="72" y="405" class="body">readable as text and accessible.</text>
+  <text x="72" y="445" class="body">Scene-embedded text may qualify; artwork</text>
+  <text x="72" y="473" class="body">and inspect-only values do not replace it.</text>
+  <text x="72" y="526" class="small">Draft §§1–3, 20–21, 38</text>
+
+  <rect x="666" y="260" width="588" height="304" class="card"/>
+  <text x="690" y="302" class="head">2 · Time and transitions</text>
+  <text x="690" y="342" class="body">Visual palette, light, and cloud pose may</text>
+  <text x="690" y="370" class="body">interpolate during scrubbing.</text>
+  <text x="690" y="410" class="body">Selected time, supplied values, categorical</text>
+  <text x="690" y="438" class="body">changes, support, and source times stay</text>
+  <text x="690" y="466" class="body">discrete. No exact event-minute claim.</text>
+  <text x="690" y="526" class="small">Draft §§2, 12–16</text>
+
+  <rect x="1284" y="260" width="588" height="304" class="card"/>
+  <text x="1308" y="302" class="head">3 · Catalog support</text>
+  <text x="1308" y="342" class="body">44 local dates do not guarantee 1,056</text>
+  <text x="1308" y="370" class="body">hourly records.</text>
+  <text x="1308" y="410" class="body">DST, partial coverage, provider gaps, and</text>
+  <text x="1308" y="438" class="body">independent field support stay explicit.</text>
+  <text x="1308" y="478" class="body">Missing never becomes numeric zero.</text>
+  <text x="1308" y="526" class="small">Draft §§14–16</text>
+
+  <rect x="48" y="588" width="588" height="304" class="card"/>
+  <text x="72" y="630" class="head">4 · Missing and carried scene</text>
+  <text x="72" y="670" class="body">Only eligible absent interior hours may</text>
+  <text x="72" y="698" class="body">show the prior condition and scene.</text>
+  <text x="72" y="738" class="body">Show original source time and selected-</text>
+  <text x="72" y="766" class="body">hour unavailability. No trailing carry or</text>
+  <text x="72" y="794" class="body">cross-date claim; final supplied point has</text>
+  <text x="72" y="822" class="body">its own same-date boundary rule.</text>
+  <text x="72" y="860" class="small">Draft §§12–16, 20–22</text>
+
+  <rect x="666" y="588" width="588" height="304" class="card"/>
+  <text x="690" y="630" class="head">5 · Sun and Moon</text>
+  <text x="690" y="670" class="body">Supplied rise/set instants support horizon</text>
+  <text x="690" y="698" class="body">crossings; daily lunar phase supports stage.</text>
+  <text x="690" y="738" class="body">Intermediate paths and cue size are</text>
+  <text x="690" y="766" class="body">illustrative. No measured position,</text>
+  <text x="690" y="794" class="body">orientation, illumination, or twilight</text>
+  <text x="690" y="822" class="body">claim from current inputs.</text>
+  <text x="690" y="860" class="small">Draft §§2, 18, 22</text>
+
+  <rect x="1284" y="588" width="588" height="304" class="card"/>
+  <text x="1308" y="630" class="head">6 · Default scene baseline</text>
+  <text x="1308" y="670" class="body">Preserve selected-time, source-support,</text>
+  <text x="1308" y="698" class="body">weather-meaning, cloud-region, gesture,</text>
+  <text x="1308" y="726" class="body">and readability behavior.</text>
+  <text x="1308" y="766" class="body">“FirstCityTheme” is internal. Observatory,</text>
+  <text x="1308" y="794" class="body">packs, and another default remain future</text>
+  <text x="1308" y="822" class="body">proposals.</text>
+  <text x="1308" y="860" class="small">Draft §§10–11, 36</text>
+
+  <text x="48" y="950" class="head">SE.0 boundary</text>
+  <text x="48" y="986" class="body">Reconcile wording and authority links only. No app, UI, new provider data, engine activation, or readout redesign.</text>
+  <text x="48" y="1036" class="small">Full acceptance wording: .codex/concepts/SE.0-scene-spec-reconciliation-behavior-board.md</text>
+</svg>

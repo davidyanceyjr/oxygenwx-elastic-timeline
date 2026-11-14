@@ -6,6 +6,8 @@ This document defines how roadmaps order and close work in Oxygen Time Lab. It a
 
 The roadmap is the ordered, durable list of bounded work slices. A roadmap slice states the outcome and the evidence required to close it. It does not replace the active cycle plan, implementation notes, or history:
 
+**Owner workflow decision (2026-11-14):** Record a known slice and its actual dependencies in the canonical roadmap before its boards exist when that gives the work an ordered implementation path. A proposed initial bounded plan draft may be prepared from known scope and outstanding questions before board creation; include any boards already available and mark the others pending. The required board package remains a gate for finalizing and activating the plan, not for recording the slice or its unfinalized draft. A roadmap entry or draft plan does not claim board approval or authorize implementation.
+
 - A **slice ID** (such as `P.2.9`) identifies a stable roadmap outcome. Keep it unchanged when ordering or inserting other slices.
 - A **cycle ID** (such as `021-p2-acceptance-closure`) identifies one unique, chronological bounded execution. It is independent of the slice ID and roadmap position; never derive it from the slice number.
 - Each cycle names the one or more slices it addresses. A later bounded attempt at the same slice receives a new cycle ID; an inserted or split slice gets its own slice ID and receives a cycle ID only when work is planned.
@@ -101,7 +103,7 @@ Use a heading with a stable identifier, concise name, and status, followed by th
 **Depends on:** A slice ID, or `None`.
 **Exit:** Observable conditions that must all be met to call this slice done.
 **Evidence:** Exact target artifact directory and history file; for completed work, link the existing records.
-**Slice board(s):** Path(s) to the objective-specific behavior board and, for UI-related work, UI artwork board; a combined board is acceptable when it clearly covers both.
+**Slice board(s):** Approved board path(s) when available; otherwise mark the objective-specific behavior board and, for UI-related work, UI artwork board as pending, with proposed targets if known. A combined board is acceptable when it clearly covers both.
 ```
 
 Every slice plan on every project roadmap requires an objective-specific
@@ -118,9 +120,12 @@ constraints, and how they govern scope and acceptance.
 Reviewing flow and artwork together exposes missing states, transitions, and
 visual intent before implementation begins.
 
-A plan may be drafted while its board is pending, but it is not final or ready
-for activation until the approved board and approval record are present. Mark
-the missing board as a blocker in the draft; do not treat a prompt, artifact
+A slice may be recorded in the roadmap and an initial plan may be drafted while
+boards are pending. Use the draft to record known dependencies, scope, proposed
+approach, open questions, and the board work needed to resolve them. The plan
+is not final or ready for activation until the approved board package and
+approval record are present. Mark missing boards as pending gates in the draft;
+do not treat a prompt, artifact
 target path, existing implementation, or installed screenshot as the board or
 its approval. This gate applies to every new or unfinished slice; it does not
 retroactively reopen completed historical slices.
