@@ -1081,7 +1081,7 @@ The SG workstream follows the owner-directed pivot recorded above and is grounde
 
 **Objective/scope:** Reuse existing cloud drawing behavior behind the new scene contract; prove portability before extracting the whole renderer. Scope is limited to this outcome; the boards may propose a split or a changed boundary before approval.
 **Depends on:** OX-05, OX-06, OX-18.
-**Exit:** One renderer used from the chosen scene path, with before/after visual evidence and scoped state evidence. Provide the scoped proof or explicit recorded disposition; visual claims require installed evidence when applicable.
+**Exit:** One renderer used from the chosen scene path, with before/after visual evidence and scoped state evidence. In affected states and routes, all visible cloud output, including edges, blur, shadows, movement, and transitions, remains within the top 33% of the atmospheric scene viewport under the existing SG.4a rule. Provide the scoped proof or explicit recorded disposition; visual claims require installed evidence when applicable.
 **Evidence:** Future cycle-specific `.codex/test-artifacts/<cycle-id>/` and `.codex/history/<cycle-id>.md`; exact paths assigned when a cycle is planned.
 **Slice board(s):** Objective-specific behavior board pending; UI artwork board pending. No board approval or activation is claimed.
 
@@ -1163,7 +1163,7 @@ The SG workstream follows the owner-directed pivot recorded above and is grounde
 
 **Objective/scope:** Turn the existing fixture and Time Lab infrastructure into repeatable scene-transition tests, beginning with a few high-value pairs. Scope is limited to this outcome; the boards may propose a split or a changed boundary before approval.
 **Depends on:** OX-09, OX-10.
-**Exit:** Repeatable clear→cloudy, cloudy→rain, day→night, and moon-obscured scenarios (or documented subset with a follow-on slice). Provide the scoped proof or explicit recorded disposition; visual claims require installed evidence when applicable.
+**Exit:** Repeatable clear→cloudy, cloudy→rain, day→night, and moon-obscured scenarios. A smaller, nonempty required set is permitted only if the approved behavior board identifies it before execution and a concrete roadmap follow-up is recorded for each omitted scenario before closeout. Provide the scoped proof or explicit recorded disposition; visual claims require installed evidence when applicable.
 **Evidence:** Future cycle-specific `.codex/test-artifacts/<cycle-id>/` and `.codex/history/<cycle-id>.md`; exact paths assigned when a cycle is planned.
 **Slice board(s):** Objective-specific behavior board pending; UI artwork board pending. No board approval or activation is claimed.
 
@@ -1205,4 +1205,4 @@ The SG workstream follows the owner-directed pivot recorded above and is grounde
 **Depends on:** OX-21, OX-07, OX-08, OX-09.
 **Exit:** Installed approved daytime, nighttime, rain, snow and unavailable states plus directly affected scrub/inspect checks; exact forecast access and DEMO DATA truth remain.
 **Evidence:** Future cycle-specific `.codex/test-artifacts/<cycle-id>/` and `.codex/history/<cycle-id>.md`; exact paths assigned when a cycle is planned.
-**Slice board(s):** Objective-specific behavior board pending; UI artwork board pending. No board approval or activation is claimed.
+**Slice board(s):** Objective-specific behavior board pending; UI artwork board pending. Before plan finalization, the approved boards must record whether the park replaces First City as the normal entry scene or remains a selectable world, and define the affected visual states. No board approval or activation is claimed.
