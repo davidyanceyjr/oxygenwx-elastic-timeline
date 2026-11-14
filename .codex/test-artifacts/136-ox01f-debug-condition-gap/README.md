@@ -1,0 +1,23 @@
+# OX-01f installed debug condition correction
+
+Date: 2026-11-14. Device: Pixel 3 XL `8AKY0M32X`, portrait 1440×2960 px, density 560, font scale 1.0. Location: saved Florence `geonames:4062577`, `America/Chicago`. Debug replay source date: 2026-10-28. The app labels this material `DEMO DATA` and `REPLAY · captured from SIMULATED`.
+
+## Implementation and route
+
+The SG.11 storm replay `sg11-storm-fallback-typed-v2` now explicitly supplies `PARTLY_CLOUDY` and typed `PARTLY_SUNNY_CLOUDY` at local 3 PM and 4 PM. Seven prior storm facts remain. The picker validates and rewrites stale stored replay content. A distinct debug replay, `ox01f-condition-unavailable-typed-v1`, retains the supplied-empty 3 PM condition for diagnostic inspection. The picker exposes separate exact-time buttons for both routes. `CatalogTimelinePresenter` prefers the supported representative condition fact when it carries a typed event, and diagnostics use the visible selected event's source time. The debug overlay reads its assignment from that source time during sub-hour selections.
+
+Build and install: `python scripts/dev.py build` → `BUILD SUCCESSFUL in 1m 3s`; `python scripts/dev.py run --serial 8AKY0M32X` → `BUILD SUCCESSFUL in 1s`, install `Success`. After adding the diagnostic route to the debug intent allowlist, `python scripts/dev.py run --serial 8AKY0M32X` → `BUILD SUCCESSFUL in 7s`, install `Success`. The picker was opened through an authorized debug activation intent, and its replay list showed `ox01f-condition-unavailable-typed-v1`, confirming preparation. Direct activation used `adb shell am start -n com.oxygen.weather.timeline/.MainActivity -a com.oxygen.weather.timeline.DEBUG_ACTIVATE_CATALOG` with version 1, saved location, `REPLAY`, matching dataset/replay ID, and the exact selected UTC instant. Each capture used `python scripts/dev.py screenshot --serial 8AKY0M32X --output <path>` and `adb shell uiautomator dump` with a paired XML pull.
+
+| Selected local instant | Installed image and UI hierarchy | Observed result |
+| --- | --- | --- |
+| 3:00:00 PM CDT (`20:00:00Z`) | [PNG](1500.png), [XML](1500.xml) | Overlay, center text, and symbol semantics all say `PARTLY_SUNNY_CLOUDY` / “Partly sunny and cloudy”; no unavailable claim. Timeline semantics select 3:00 PM and use the 3 PM fact. |
+| 3:30:00 PM CDT (`20:30:00Z`) | [PNG](1530.png), [XML](1530.xml) | The exact midpoint still shows the same 3 PM event in overlay and center; semantics disclose scene, condition event, temperature, chance, and wind from 3 PM while retaining selected 3:30 PM. |
+| 3:30:15 PM CDT (`20:30:15Z`) | [PNG](153015.png), [XML](153015.xml) | Overlay and center retain the matching event and symbol; semantics attribute the condition event and other independently supported displayed points to 4 PM, retaining exact selected 3:30:15 PM. This is the representative-cell handoff, not a reported event minute. |
+| 4:00:00 PM CDT (`21:00:00Z`) | [PNG](1600.png), [XML](1600.xml) | Overlay, center, and symbol semantics agree on the supplied 4 PM event. Timeline semantics select 4:00 PM and report the 4 PM fact sample. |
+| Separate unavailable diagnostic, 3:00 PM CDT | [PNG](unavailable-diagnostic.png), [XML](unavailable-diagnostic.xml) | Overlay says `CONDITION_UNAVAILABLE` / “No supplied weather event”; center and symbol semantics say “Condition unavailable.” The route is a distinct replay ID. |
+
+Focused hourly interaction: from the storm replay's 3 PM selection, two taps on the daily timeline entered hourly scale at 7 AM under the existing daily-entry rule. `adb shell input swipe 1300 2660 100 2660 900` followed by `adb shell input swipe 950 2660 660 2660 750` moved the exact selection to 3:32:05 PM CDT. [PNG](hourly-scrub.png) and [XML](hourly-scrub.xml) show the hourly tape, the same event in overlay and center, and a 4 PM source-time disclosure. The selected instant changed by the scrub, not a scale-animation jump.
+
+## Scope and limits
+
+The installed checks establish the named Florence debug states and one focused scrub on Pixel 3 XL. They do not establish app-wide event or provider behavior, broad device layouts, TalkBack speech/traversal, RTL, or a performance matrix. The debug symbol-review overlay retains its existing placement and can visually overlap the central decorative symbol; the event name and critical forecast values remained legible in the captured states. No automated tests, lint, contract, or broad system checks were run. The existing fixture test assertions were updated for the changed replay contract but were not executed, per owner test authorization rules.

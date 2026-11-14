@@ -252,7 +252,7 @@ The completed WX entries below record the successor catalog, location, startup, 
 **Result:** The cycle 064 verification mismatch was resolved by aligning the stale legacy test expectation to the existing projection output; no production behavior changed.
 **Evidence:** Cycle 065 (`065-wx24-legacy-label-test-alignment`): `.codex/test-artifacts/065-wx24-legacy-label-test-alignment/README.md`; closeout `.codex/history/065-wx24-legacy-label-test-alignment.md`; archived plan `.codex/history/plans/065-wx24-legacy-label-test-alignment.md`.
 
-### WX.25 — Bind the immersive timeline and forecast browser to 44 days — DONE (cycle 071)
+### WX.25 — Bind the immersive timeline and forecast browser to 44 days — DONE
 
 **Objective/scope:** Connect `TimeLabScreen`, its visual tape, accessible forecast browser, and atmospheric projection to the active canonical catalog/time axis for 30 historical plus 14 forecast dates. Retain the current full-screen scene and gestures; display historical/forecast meaning, provenance, freshness, current missing data and selected time without source-based presentation branches. This slice integrates supported visual facts; it does **not** duplicate existing `ATM.8`–`ATM.10` scene-polish outcomes or implement official alerts.
 **Depends on:** WX.22, WX.23, and WX.24.
@@ -1002,13 +1002,29 @@ The SG workstream follows the owner-directed pivot recorded above and is grounde
 
 **Owner sequencing decision (2026-11-14):** Record the known OX leaves now, before their boards exist. Keep OX-12A, OX-21, and OX-22; place OX-18 early after OX-04 and OX-06. At that review, no global `NEXT` was designated and all OX leaves were `PLANNED`. The owner subsequently selected OX-01 as the sole global `NEXT`; the remaining OX leaves stay `PLANNED`. Boards and exact cycle evidence paths are pending. This entry does not open a cycle, approve a board, or authorize implementation. The two Scene Engine drafts in `docs/` remain supporting proposals; the bounded leaf entries below provide the canonical ordering.
 
-### OX-01 — Baseline the current world — NEXT
+### OX-01 — Baseline the current world — DONE
 
 **Objective/scope:** Lock down what currently works before restructuring it: scene state, First City frame composition, scrubbing, astronomy cues, and accessibility. Reuse completed baseline records and isolate only the unmet Scene Engine questions. Scope is limited to this outcome; the boards may propose a split or a changed boundary before approval.
 **Depends on:** SG.9, SG.13, SG.8, MR.2, WX.25.
 **Exit:** Representative snapshot/transition reference set and a written keep/change inventory; existing scoped evidence or explicitly authorized checks and documented gaps. Provide the scoped proof or explicit recorded disposition; visual claims require installed evidence when applicable.
-**Evidence:** Future cycle-specific `.codex/test-artifacts/<cycle-id>/` and `.codex/history/<cycle-id>.md`; exact paths assigned when a cycle is planned.
-**Slice board(s):** Objective-specific behavior board pending; UI artwork board only if final scope changes visible output. No board approval or activation is claimed.
+**Evidence:** Cycle 134: `.codex/test-artifacts/134-ox01-current-world-baseline/README.md`, `reference-set.md`, and `keep-change-inventory.md`; closeout `.codex/history/134-ox01-current-world-baseline.md`. Cycle 135 adds a dated debug-fixture correction and installed scrub finding; cycle 134's archived history remains unchanged. Spoken-accessibility and other scoped gaps remain explicit.
+**Slice board(s):** Product-owner-approved 2026-11-14 behavior board `.codex/concepts/OX-01-baseline-the-current-world-behavior-board.svg` (PNG review image, editable DOT, and Markdown companion); no additional constraints stated. It governs baseline observations, evidence classification, and the keep/change inventory. UI artwork is inapplicable to this documentation-only scope; a visible-change proposal would require an approved UI artwork board before activation. Approval and fingerprints are recorded in cycle 134's plan.
+
+### OX-01R — Correct the debug-fixture baseline — DONE
+
+**Objective/scope:** Correct OX-01's fixture-coverage and disagreement inventory using the existing SG.11 debug replay and a focused current-build installed check of the unavailable state and scrub. Preserve cycle 134 history; add dated follow-up evidence and update only its evidence index, reference set, inventory, and this roadmap result. No app behavior or artwork changes.
+**Depends on:** OX-01, SG.11e, MR.2.
+**Exit:** Exact current debug catalog/selected instants, installed screenshots and interaction observations, fixture reachability, and a corrected evidence classification are recorded with limitations. The older SG.11 mismatch is cited and its current status is verified or explicitly unresolved.
+**Evidence:** Cycle 135 installed captures and exact observations `.codex/test-artifacts/135-ox01r-debug-baseline-correction/README.md`; closeout `.codex/history/135-ox01r-debug-baseline-correction.md`. The matched-location capture confirms the current event-overlay/center-readout disagreement; no app fix is claimed.
+**Slice board(s):** Reuses OX-01's product-owner-approved behavior board `.codex/concepts/OX-01-baseline-the-current-world-behavior-board.svg` and its approved package for the same scene/selection/evidence questions. No UI artwork board is required because this is evidence correction only. The owner selected the focused current-route capture on 2026-11-14.
+
+### OX-01f — Resolve the debug condition gap — DONE
+
+**Objective/scope:** Resolve the installed OX-01R finding in the SG.11 storm/fallback debug replay: the supplied-empty 3:00 PM condition yields an unavailable event overlay while the center can display the 4:00 PM condition during the same selected hour. Establish an owner-approved condition and support rule for the 3:00–4:00 PM interval, then make the fixture, selected-event overlay, center readout, symbol, scene, and condition semantics agree without changing the exact selected instant or independently supported temperature and other facts. Keep OX-02's renderer-reachability trace separate.
+**Depends on:** OX-01R, SG.11e.
+**Exit:** The approved behavior and UI artwork boards define the supported condition, source time, and appearance at 3:00 PM, during the interval, and at 4:00 PM. The installed debug replay shows consistent condition claims, symbol, scene, and semantics throughout the interval, with exact selected time and independent fact support preserved. Record the scoped verification and any remaining unavailable diagnostic route.
+**Evidence:** Cycle 136 installed state and interaction record `.codex/test-artifacts/136-ox01f-debug-condition-gap/README.md`, with paired PNG/XML captures; closeout `.codex/history/136-ox01f-debug-condition-gap.md` and archived plan `.codex/history/plans/136-ox01f-debug-condition-gap.md`.
+**Slice board(s):** Product-owner-approved 2026-11-14 behavior board `.codex/concepts/OX-01f-condition-gap-behavior-board.md` and UI artwork board `.codex/concepts/OX-01f-condition-gap-ui-artwork-board.svg`; refreshed approval fingerprints are in cycle 136's plan. The owner selected the existing event label and a matching typed 4 PM event after the initial review.
 
 ### OX-02 — Trace the selected-instant pipeline — PLANNED
 

@@ -72,6 +72,8 @@ class DebugCatalogActivity : ComponentActivity() {
     private var visibilityWindFixtureLocationId by mutableStateOf<com.oxygen.weather.timeline.data.catalog.LocationId?>(null)
     private var stormFallbackFixtureReady by mutableStateOf(false)
     private var stormFallbackFixtureLocationId by mutableStateOf<com.oxygen.weather.timeline.data.catalog.LocationId?>(null)
+    private var unavailableFixtureReady by mutableStateOf(false)
+    private var unavailableFixtureLocationId by mutableStateOf<com.oxygen.weather.timeline.data.catalog.LocationId?>(null)
     private var additionalEventsFixtureReady by mutableStateOf(false)
     private var additionalEventsFixtureLocationId by mutableStateOf<com.oxygen.weather.timeline.data.catalog.LocationId?>(null)
     private var showAuthoredLibrary by mutableStateOf(false)
@@ -258,11 +260,15 @@ class DebugCatalogActivity : ComponentActivity() {
                         WeatherCondition.RAIN !in fact.conditions
                 } == true
             }
-            val unavailableTime = date.atTime(8 + DebugSg11StormFallbackCatalogFixture.unavailableIndex, 0)
-                .atZone(location.timeZone).toInstant()
-            val unavailable = recording.catalog.facts.firstOrNull { it.validTime == unavailableTime }
-            return stormStatesMatch && unavailable?.events?.isEmpty() == true &&
-                unavailable.primaryEventIndex == null && unavailable.conditions.isEmpty()
+            val handoffMatches = (0..1).all { offset ->
+                val time = date.atTime(8 + DebugSg11StormFallbackCatalogFixture.handoffIndex + offset, 0)
+                    .atZone(location.timeZone).toInstant()
+                recording.catalog.facts.firstOrNull { it.validTime == time }?.let { fact ->
+                    fact.events == listOf(DebugSg11StormFallbackCatalogFixture.handoffEvent) &&
+                        fact.primaryEventIndex == 0 && fact.conditions == setOf(WeatherCondition.PARTLY_CLOUDY)
+                } == true
+            }
+            return stormStatesMatch && handoffMatches
         }
         val existing = storage.load(location, CatalogStorageNamespace.REPLAY, id)
         val current = (existing as? StoredCatalogResult.Found)?.recording
@@ -271,10 +277,36 @@ class DebugCatalogActivity : ComponentActivity() {
         }
         val reloaded = storage.load(location, CatalogStorageNamespace.REPLAY, id)
         check(reloaded is StoredCatalogResult.Found && matches(reloaded.recording)) {
-            "The Storm and fallback recording did not preserve its typed facts and empty state through version-5 reload"
+            "The Storm and fallback recording did not preserve its typed facts through version-5 reload"
         }
         stormFallbackFixtureReady = true
         stormFallbackFixtureLocationId = location.id
+        replayIds = storage.history(location.id, CatalogStorageNamespace.REPLAY)
+            .map { it.datasetId }.distinct().sorted()
+    }
+
+    private suspend fun prepareOx01fUnavailableReplay(location: CatalogLocation) {
+        val id = DatasetId(OX01F_UNAVAILABLE_REPLAY_ID)
+        fun matches(recording: CatalogRecording): Boolean {
+            val date = DebugSg11StormFallbackCatalogFixture.asOf.atZone(location.timeZone).toLocalDate()
+            val time = date.atTime(8 + DebugSg11StormFallbackCatalogFixture.handoffIndex, 0)
+                .atZone(location.timeZone).toInstant()
+            return recording.catalog.facts.firstOrNull { it.validTime == time }?.let { fact ->
+                fact.events.isEmpty() && fact.primaryEventIndex == null && fact.conditions.isEmpty()
+            } == true
+        }
+        val existing = storage.load(location, CatalogStorageNamespace.REPLAY, id)
+        val current = (existing as? StoredCatalogResult.Found)?.recording
+        if (current == null || current.catalog.asOf != DebugSg11StormFallbackCatalogFixture.asOf || !matches(current)) {
+            storage.save(CatalogStorageNamespace.REPLAY,
+                DebugSg11StormFallbackCatalogFixture.unavailableRecording(location))
+        }
+        val reloaded = storage.load(location, CatalogStorageNamespace.REPLAY, id)
+        check(reloaded is StoredCatalogResult.Found && matches(reloaded.recording)) {
+            "The OX-01f unavailable diagnostic did not preserve its empty condition through reload"
+        }
+        unavailableFixtureReady = true
+        unavailableFixtureLocationId = location.id
         replayIds = storage.history(location.id, CatalogStorageNamespace.REPLAY)
             .map { it.datasetId }.distinct().sorted()
     }
@@ -322,6 +354,7 @@ class DebugCatalogActivity : ComponentActivity() {
                         prepareSg11SnowMixedReplay(it.location)
                         prepareSg11VisibilityWindReplay(it.location)
                         prepareSg11StormFallbackReplay(it.location)
+                        prepareOx01fUnavailableReplay(it.location)
                         prepareSg11AdditionalEventsReplay(it.location)
                         fixtureReady = true
                         fixtureStatus = "SG.4 canonical gap replay ready"
@@ -522,13 +555,27 @@ class DebugCatalogActivity : ComponentActivity() {
                                         routeActivation(location, CatalogOrigin.REPLAY, SG11_STORM_FALLBACK_REPLAY_ID, instant)
                                     }) { Text("Inspect ${id.name} · ${8 + index}:00") }
                                 }
-                                val unavailableIndex = DebugSg11StormFallbackCatalogFixture.unavailableIndex
-                                val unavailableInstant = date.atTime(8 + unavailableIndex, 0)
-                                    .atZone(location.timeZone).toInstant()
+                                val handoffIndex = DebugSg11StormFallbackCatalogFixture.handoffIndex
+                                (0..1).forEach { offset ->
+                                    val instant = date.atTime(8 + handoffIndex + offset, 0)
+                                        .atZone(location.timeZone).toInstant()
+                                    OutlinedButton(onClick = {
+                                        routeActivation(location, CatalogOrigin.REPLAY, SG11_STORM_FALLBACK_REPLAY_ID,
+                                            instant)
+                                    }) { Text("Inspect PARTLY_SUNNY_CLOUDY · ${8 + handoffIndex + offset}:00") }
+                                }
+                            }
+                        }
+                        if (selectedReplay == OX01F_UNAVAILABLE_REPLAY_ID && unavailableFixtureReady &&
+                            selectedLocation?.location?.id == unavailableFixtureLocationId) {
+                            val location = selectedLocation?.location
+                            if (location != null) {
+                                val date = DebugSg11StormFallbackCatalogFixture.asOf.atZone(location.timeZone).toLocalDate()
+                                val hour = 8 + DebugSg11StormFallbackCatalogFixture.handoffIndex
+                                val instant = date.atTime(hour, 0).atZone(location.timeZone).toInstant()
                                 OutlinedButton(onClick = {
-                                    routeActivation(location, CatalogOrigin.REPLAY, SG11_STORM_FALLBACK_REPLAY_ID,
-                                        unavailableInstant)
-                                }) { Text("Inspect CONDITION_UNAVAILABLE · ${8 + unavailableIndex}:00") }
+                                    routeActivation(location, CatalogOrigin.REPLAY, OX01F_UNAVAILABLE_REPLAY_ID, instant)
+                                }) { Text("Inspect diagnostic CONDITION_UNAVAILABLE · $hour:00") }
                             }
                         }
                         if (selectedReplay == SG11_ADDITIONAL_EVENTS_REPLAY_ID && additionalEventsFixtureReady &&
@@ -687,7 +734,8 @@ class DebugCatalogActivity : ComponentActivity() {
         const val SG11_RAIN_ICE_REPLAY_ID = "sg11-rain-ice-typed-v2"
                         const val SG11_SNOW_MIXED_REPLAY_ID = "sg11-snow-mixed-typed-v2"
                         const val SG11_VISIBILITY_WIND_REPLAY_ID = "sg11-visibility-wind-typed-v2"
-                        const val SG11_STORM_FALLBACK_REPLAY_ID = "sg11-storm-fallback-typed-v2"
+        const val SG11_STORM_FALLBACK_REPLAY_ID = "sg11-storm-fallback-typed-v2"
+        const val OX01F_UNAVAILABLE_REPLAY_ID = "ox01f-condition-unavailable-typed-v1"
         const val SG11_ADDITIONAL_EVENTS_REPLAY_ID = "sg11-additional-events-typed-v2"
         const val CHICAGO_REPLAY_AS_OF = "2026-10-28T12:00:00Z"
     }

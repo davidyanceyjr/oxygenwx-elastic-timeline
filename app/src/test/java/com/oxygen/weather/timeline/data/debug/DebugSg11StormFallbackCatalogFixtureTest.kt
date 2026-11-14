@@ -16,11 +16,15 @@ import org.junit.Assert.assertTrue
 import org.junit.Test
 
 class DebugSg11StormFallbackCatalogFixtureTest {
-    @Test fun `storm identities and unavailable state survive version 5 without storing fallback event`() = runBlocking {
+    @Test fun `storm identities and separate unavailable state survive version 5`() = runBlocking {
         val location = CatalogLocation(LocationId("chicago"), GeoCoordinates(41.8781, -87.6298),
             ZoneId.of("America/Chicago"))
         val recording = DebugSg11StormFallbackCatalogFixture.recording(location)
-        val reviewFacts = recording.catalog.facts.filter { it.events.isNotEmpty() }
+        val date = DebugSg11StormFallbackCatalogFixture.asOf.atZone(location.timeZone).toLocalDate()
+        val reviewFacts = DebugSg11StormFallbackCatalogFixture.ids.indices.map { index ->
+            val time = date.atTime(8 + index, 0).atZone(location.timeZone).toInstant()
+            recording.catalog.facts.single { it.validTime == time }
+        }
 
         assertEquals(DebugSg11StormFallbackCatalogFixture.ids, reviewFacts.map { it.events.single().id })
         assertEquals(DebugSg11StormFallbackCatalogFixture.ids.map { it.name },
@@ -45,17 +49,21 @@ class DebugSg11StormFallbackCatalogFixtureTest {
             assertNull(reviewFacts[index].events.single().descriptionSource)
         }
 
-        val date = DebugSg11StormFallbackCatalogFixture.asOf.atZone(location.timeZone).toLocalDate()
-        val unavailableTime = date.atTime(8 + DebugSg11StormFallbackCatalogFixture.unavailableIndex, 0)
+        val handoffTime = date.atTime(8 + DebugSg11StormFallbackCatalogFixture.handoffIndex, 0)
             .atZone(location.timeZone).toInstant()
-        val unavailable = recording.catalog.facts.single { it.validTime == unavailableTime }
+        val handoff = recording.catalog.facts.single { it.validTime == handoffTime }
+        assertEquals(listOf(DebugSg11StormFallbackCatalogFixture.handoffEvent), handoff.events)
+        assertEquals(setOf(WeatherCondition.PARTLY_CLOUDY), handoff.conditions)
+
+        val diagnostic = DebugSg11StormFallbackCatalogFixture.unavailableRecording(location)
+        val unavailable = diagnostic.catalog.facts.single { it.validTime == handoffTime }
         assertTrue(unavailable.events.isEmpty())
         assertNull(unavailable.primaryEventIndex)
         assertTrue(unavailable.conditions.isEmpty())
 
-        val encoded = RecordedCatalogCodec.encode(recording)
+        val encoded = RecordedCatalogCodec.encode(diagnostic)
         val decoded = RecordedCatalogCodec.decode(encoded) as RecordingDecodeResult.Success
-        assertEquals(recording.catalog, decoded.recording.catalog)
-        assertTrue(decoded.recording.catalog.facts.single { it.validTime == unavailableTime }.events.isEmpty())
+        assertEquals(diagnostic.catalog, decoded.recording.catalog)
+        assertTrue(decoded.recording.catalog.facts.single { it.validTime == handoffTime }.events.isEmpty())
     }
 }

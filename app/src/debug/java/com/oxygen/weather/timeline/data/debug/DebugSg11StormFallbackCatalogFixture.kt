@@ -12,7 +12,7 @@ import com.oxygen.weather.timeline.data.catalog.WeatherEventFact
 import com.oxygen.weather.timeline.data.catalog.WeatherEventId
 import java.time.Instant
 
-/** Seven typed Storm facts and one empty-event state for installed SG.11e review. */
+/** Seven typed Storm facts followed by supported partly cloudy handoff facts. */
 internal object DebugSg11StormFallbackCatalogFixture {
     val ids = listOf(
         WeatherEventId.THUNDERSTORM,
@@ -36,8 +36,9 @@ internal object DebugSg11StormFallbackCatalogFixture {
         WeatherEventFact(WeatherEventId.TROPICAL_CYCLONE, provider = "oxygen-debug-sg11"),
         WeatherEventFact(WeatherEventId.TORNADO_FUNNEL, provider = "oxygen-debug-sg11"),
     )
-    val stateCount: Int get() = ids.size + 1
-    val unavailableIndex: Int get() = ids.size
+    val handoffIndex: Int get() = ids.size
+    val handoffEvent = WeatherEventFact(WeatherEventId.PARTLY_SUNNY_CLOUDY, provider = "oxygen-debug-ox01f")
+    val stateCount: Int get() = ids.size + 2
     val asOf: Instant = Instant.parse(DebugCatalogActivity.CHICAGO_REPLAY_AS_OF)
 
     suspend fun recording(location: CatalogLocation): CatalogRecording {
@@ -52,13 +53,15 @@ internal object DebugSg11StormFallbackCatalogFixture {
         val instants = (0 until stateCount).map { index -> date.atTime(8 + index, 0).atZone(location.timeZone).toInstant() }
         require(instants.all { time -> baseline.catalog.facts.any { it.validTime == time } })
         val eventByTime = ids.indices.associate { instants[it] to expectedEvents[it] }
-        val unavailableTime = instants[unavailableIndex]
+        val handoffTimes = instants.drop(handoffIndex).toSet()
         val facts = baseline.catalog.facts.map { fact ->
             when {
                 fact.validTime in eventByTime -> fact.withEvents(
                     listOf(requireNotNull(eventByTime[fact.validTime])), 0, setOf(WeatherCondition.STORM),
                 )
-                fact.validTime == unavailableTime -> fact.withEvents(emptyList(), null, emptySet())
+                fact.validTime in handoffTimes -> fact.withEvents(
+                    listOf(handoffEvent), 0, setOf(WeatherCondition.PARTLY_CLOUDY),
+                )
                 else -> fact
             }
         }
@@ -66,5 +69,18 @@ internal object DebugSg11StormFallbackCatalogFixture {
         val catalog = CanonicalCatalog(source.location, source.datasetId, source.provenance, source.asOf,
             facts, source.productSegments, source.dailySummaries)
         return baseline.copy(catalog = catalog)
+    }
+
+    suspend fun unavailableRecording(location: CatalogLocation): CatalogRecording {
+        val supported = recording(location)
+        val time = asOf.atZone(location.timeZone).toLocalDate().atTime(8 + handoffIndex, 0)
+            .atZone(location.timeZone).toInstant()
+        val source = supported.catalog
+        val facts = source.facts.map { fact ->
+            if (fact.validTime == time) fact.withEvents(emptyList(), null, emptySet()) else fact
+        }
+        return supported.copy(catalog = CanonicalCatalog(source.location,
+            DatasetId(DebugCatalogActivity.OX01F_UNAVAILABLE_REPLAY_ID), source.provenance, source.asOf,
+            facts, source.productSegments, source.dailySummaries))
     }
 }

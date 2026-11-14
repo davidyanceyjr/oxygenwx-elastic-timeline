@@ -144,6 +144,7 @@ data class CatalogTimelineView(
     val localHour: Double,
     val loading: Boolean,
     val error: String?,
+    val conditionEventSourceTime: Instant? = null,
 )
 
 /** Facts and the single catalog composition share the authoritative selected instant. */
@@ -162,6 +163,7 @@ data class CatalogDiagnosticPresentation(
     val symbolId: WeatherSymbolId? = null,
     val symbolName: String? = null,
     val sourceCode: Int? = null,
+    val eventSourceTime: Instant? = null,
 )
 
 /** Construct once per published dataset; selected projections remain cheap during scrubbing. */
@@ -245,7 +247,10 @@ class CatalogTimelinePresenter(private val active: ActiveCatalogSelection) {
     }
 
     private fun diagnostics(state: CatalogActivationState, selected: Instant, timeline: CatalogTimelineView): CatalogDiagnosticPresentation {
-        val eventSource = window.typedEventFactAt(selected)
+        val eventSource = timeline.conditionEventSourceTime?.let { time ->
+            window.days.firstOrNull { selected.atZone(zone).toLocalDate() == it.date }
+                ?.facts?.firstOrNull { it.validTime == time }
+        }
         val projected = CanonicalForecastProjection.project(catalog, window, selected, ForecastDisplayUnits.IMPERIAL,
             SelectedEventEvidence(eventSource, eventSource?.validTime, carried = false))
         val sample = projected.factSample
@@ -287,7 +292,8 @@ class CatalogTimelinePresenter(private val active: ActiveCatalogSelection) {
         }.let { fields -> when { sample == null -> listOf("unavailable"); fields.isEmpty() -> listOf("none"); else -> fields } }
         return CatalogDiagnosticPresentation(catalogLines, selectionLines, missing,
             timeline.weatherSymbolId, timeline.weatherSymbolName,
-            projected.selectedEvent?.sourceCode ?: window.typedEventFactAt(selected)?.sourceWeatherCode ?: sample?.facts?.sourceWeatherCode)
+            projected.selectedEvent?.sourceCode ?: eventSource?.sourceWeatherCode ?: sample?.facts?.sourceWeatherCode,
+            eventSource?.validTime)
     }
 
     private fun sampleInterval(facts: com.oxygen.weather.timeline.data.catalog.CanonicalWeatherFacts, field: CatalogField) = when (field) {
@@ -318,7 +324,8 @@ class CatalogTimelinePresenter(private val active: ActiveCatalogSelection) {
             window.days.firstOrNull { selected.atZone(zone).toLocalDate() == it.date }
                 ?.facts?.firstOrNull { it.validTime == time }
         }
-        val sourceFact = window.typedEventFactAt(selected) ?: conditionSourceFact
+        val sourceFact = conditionSourceFact?.takeIf { it.events.isNotEmpty() }
+            ?: window.typedEventFactAt(selected) ?: conditionSourceFact
         val projected = CanonicalForecastProjection.project(catalog, window, selected, ForecastDisplayUnits.IMPERIAL,
             SelectedEventEvidence(sourceFact, sourceFact?.validTime,
                 sourceFact === conditionSourceFact && conditionEvidence?.evidence == SceneEvidence.EXPECTED_MISSING))
@@ -448,6 +455,7 @@ class CatalogTimelinePresenter(private val active: ActiveCatalogSelection) {
             localHour = local.hour + local.minute / 60.0,
             loading = state.loading,
             error = state.lastError,
+            conditionEventSourceTime = projected.selectedEvent?.sourceTime,
         )
     }
 

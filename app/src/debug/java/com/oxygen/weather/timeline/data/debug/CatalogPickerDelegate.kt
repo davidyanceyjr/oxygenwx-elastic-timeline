@@ -156,6 +156,7 @@ class CatalogPickerDelegate : ActivityVariantDelegate {
             DebugCatalogActivity.SG11_SNOW_MIXED_REPLAY_ID,
             DebugCatalogActivity.SG11_VISIBILITY_WIND_REPLAY_ID,
             DebugCatalogActivity.SG11_STORM_FALLBACK_REPLAY_ID,
+            DebugCatalogActivity.OX01F_UNAVAILABLE_REPLAY_ID,
             DebugCatalogActivity.SG11_ADDITIONAL_EVENTS_REPLAY_ID,
         )
         if (sourceDetail == null && !overlayVisible && !symbolReview) return
@@ -202,7 +203,7 @@ class CatalogPickerDelegate : ActivityVariantDelegate {
             if (symbolReview) {
                 val symbol = diagnostics.symbolId ?: WeatherSymbolId.CONDITION_UNAVAILABLE
                 val selectedFact = host.activationCoordinator.state.value.active?.let { active ->
-                    active.recording.catalog.facts.firstOrNull { it.validTime == active.selectedInstant }
+                    active.recording.catalog.facts.firstOrNull { it.validTime == diagnostics.eventSourceTime }
                 }
                 val selectedEvent = selectedFact?.let {
                     com.oxygen.weather.timeline.data.catalog.WeatherEventPriority.select(it.events, it.primaryEventIndex)
@@ -688,6 +689,7 @@ internal suspend fun processCatalogActivationRequest(
             DebugCatalogActivity.SG4_GAP_REPLAY_ID, DebugCatalogActivity.SG11_SKY_REPLAY_ID,
             DebugCatalogActivity.SG11_RAIN_ICE_REPLAY_ID, DebugCatalogActivity.SG11_SNOW_MIXED_REPLAY_ID,
             DebugCatalogActivity.SG11_VISIBILITY_WIND_REPLAY_ID, DebugCatalogActivity.SG11_STORM_FALLBACK_REPLAY_ID,
+            DebugCatalogActivity.OX01F_UNAVAILABLE_REPLAY_ID,
             DebugCatalogActivity.SG11_ADDITIONAL_EVENTS_REPLAY_ID,
         )
     require(selectedInstant == null || simulatedWindowEndProbe || replayTimeInspection) {

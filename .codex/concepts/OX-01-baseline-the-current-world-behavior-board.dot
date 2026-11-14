@@ -1,0 +1,31 @@
+digraph OX01 {
+  graph [bgcolor="#102233", pad="0.35", nodesep="0.42", ranksep="0.62", splines=ortho, fontname="DejaVu Sans", label="OX-01  |  BASELINE THE CURRENT WORLD\nBehavior board • PRODUCT-OWNER APPROVED • 2026-11-14", labelloc=t, fontsize=22, fontcolor="#edf4f7"];
+  node [shape=box, style="rounded,filled", color="#64869a", fillcolor="#294d65", fontcolor="#edf4f7", fontname="DejaVu Sans", fontsize=12, margin="0.18,0.14"];
+  edge [color="#83c9bf", fontcolor="#d7e9e8", fontname="DejaVu Sans", fontsize=10, arrowsize=0.8, penwidth=1.5];
+
+  input [label="CATALOG + SELECTED INSTANT\nSupported source facts, source time, availability\nSelected timestamp remains authoritative", fillcolor="#24536a"];
+  plan [label="TYPED SCENE DECISION\nExisting semantic scene state / composition\nRecord actual route and source boundaries"];
+  frame [label="CURRENT FIRST CITY FRAME\nSky, clouds, weather effects, city, celestial cues\nForecast facts remain readable as text"];
+  inspect [label="REPRESENTATIVE BASELINE SET\nStill states + selected-time transitions\nNormal, boundary, and unavailable states where evidenced", fillcolor="#38556b"];
+  inventory [label="KEEP / CHANGE / UNKNOWN INVENTORY\nKeep observed invariants with evidence links\nMark proposed future changes and unresolved gaps", fillcolor="#3b5b58"];
+  exit [label="OX-01 EXIT\nSnapshot / transition references + inventory\nScoped proof or explicit disposition for each gap", fillcolor="#315a52"];
+
+  input -> plan [label="project at exact time"];
+  plan -> frame [label="render supported meaning"];
+  frame -> inspect [label="capture and compare"];
+  inspect -> inventory [label="classify findings"];
+  inventory -> exit [label="record evidence"];
+
+  scrub [label="SCRUBBING CONTRACT\nDay/hour selection and scene update follow same instant\nZoom/animation does not move selected time", fillcolor="#71542e", color="#edc477"];
+  astro [label="ASTRONOMY CUES\nRecord Sun / Moon cues and phase or rise/set states\nDistinguish supplied facts from visual inference", fillcolor="#71542e", color="#edc477"];
+  access [label="ACCESSIBLE MEANING\nText and semantics carry important forecast facts\nRecord scoped current-state evidence and gaps", fillcolor="#71542e", color="#edc477"];
+  evidence [label="EVIDENCE RULE\nReuse completed scoped records first\nNew checks only when explicitly authorized\nInstalled captures required for visual claims", fillcolor="#4c3f5f", color="#ad91c4"];
+  boundary [label="BOUNDARY\nBaseline and documentation only\nNo renderer refactor, new artwork, or app behavior change\nA visible-change proposal needs a UI artwork board", fillcolor="#4c3f5f", color="#ad91c4"];
+
+  {rank=same; scrub; astro; access;}
+  scrub -> inspect [style=dashed, color="#edc477"];
+  astro -> inspect [style=dashed, color="#edc477"];
+  access -> inspect [style=dashed, color="#edc477"];
+  evidence -> inventory [style=dashed, color="#ad91c4"];
+  boundary -> exit [style=dashed, color="#ad91c4"];
+}

@@ -1,0 +1,39 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="540" viewBox="0 0 1200 540" role="img" aria-labelledby="title desc">
+  <title id="title">OX-01f condition display artwork proposal</title>
+  <desc id="desc">Three intended debug timeline states, showing the partly sunny and cloudy typed event at 3 PM, 3:30 PM, and 4 PM with consistent center condition, symbol, overlay, and source time.</desc>
+  <rect width="1200" height="540" fill="#e9edf2"/>
+  <text x="34" y="42" font-family="sans-serif" font-size="26" font-weight="700" fill="#16283e">OX-01f · Storm replay condition handoff</text>
+  <text x="34" y="70" font-family="sans-serif" font-size="15" fill="#40546a">Approved behavior and copy; preserve the app’s existing typography, spacing, and sky artwork.</text>
+  <g font-family="sans-serif" fill="#f5f8ff">
+    <g transform="translate(34,92)">
+      <rect width="352" height="414" rx="22" fill="#23466a"/>
+      <text x="24" y="42" font-size="18">Selected · 3:00 PM</text>
+      <text x="24" y="111" font-size="27" font-weight="700">☀  Partly sunny and cloudy</text>
+      <text x="24" y="149" font-size="15">Condition source · 3:00 PM</text>
+      <rect x="20" y="203" width="312" height="104" rx="12" fill="#173550"/>
+      <text x="35" y="237" font-size="16">Overlay · PARTLY_SUNNY_CLOUDY</text>
+      <text x="35" y="267" font-size="15">Scene · partly cloudy</text>
+      <text x="24" y="360" font-size="15">3 PM condition owns display</text>
+    </g>
+    <g transform="translate(424,92)">
+      <rect width="352" height="414" rx="22" fill="#23466a"/>
+      <text x="24" y="42" font-size="18">Selected · 3:30 PM</text>
+      <text x="24" y="111" font-size="27" font-weight="700">☀  Partly sunny and cloudy</text>
+      <text x="24" y="149" font-size="15">Condition source · 3:00 PM</text>
+      <rect x="20" y="203" width="312" height="104" rx="12" fill="#173550"/>
+      <text x="35" y="237" font-size="16">Overlay · PARTLY_SUNNY_CLOUDY</text>
+      <text x="35" y="267" font-size="15">Scene · partly cloudy</text>
+      <text x="24" y="360" font-size="15">Exact midpoint belongs to 3 PM</text>
+    </g>
+    <g transform="translate(814,92)">
+      <rect width="352" height="414" rx="22" fill="#23466a"/>
+      <text x="24" y="42" font-size="18">Selected · 4:00 PM</text>
+      <text x="24" y="111" font-size="27" font-weight="700">☀  Partly sunny and cloudy</text>
+      <text x="24" y="149" font-size="15">Condition source · 4:00 PM</text>
+      <rect x="20" y="203" width="312" height="104" rx="12" fill="#173550"/>
+      <text x="35" y="237" font-size="16">Overlay · PARTLY_SUNNY_CLOUDY</text>
+      <text x="35" y="267" font-size="15">Scene · partly cloudy</text>
+      <text x="24" y="360" font-size="15">4 PM source also owns after 3:30</text>
+    </g>
+  </g>
+</svg>
