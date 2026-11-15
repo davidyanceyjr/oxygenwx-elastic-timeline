@@ -1,0 +1,43 @@
+digraph OX02 {
+  graph [bgcolor="#102233", pad="0.35", nodesep="0.42", ranksep="0.62", splines=ortho, fontname="DejaVu Sans", label="OX-02  |  TRACE THE SELECTED-INSTANT PIPELINE\nBehavior board • DRAFT • OWNER REVIEW PENDING", labelloc=t, fontsize=22, fontcolor="#edf4f7"];
+  node [shape=box, style="rounded,filled", color="#64869a", fillcolor="#294d65", fontcolor="#edf4f7", fontname="DejaVu Sans", fontsize=12, margin="0.18,0.14"];
+  edge [color="#83c9bf", fontcolor="#d7e9e8", fontname="DejaVu Sans", fontsize=10, arrowsize=0.8, penwidth=1.5];
+
+  selected [label="ACTIVE CATALOG + SELECTED INSTANT\nSelected instant is read from catalog state", fillcolor="#24536a"];
+  presenter [label="CatalogTimelinePresenter.scenePresentation(state)\nResolve selected instant once\nEvaluate SceneReading + compose FirstCityComposition"];
+  typed [label="CatalogTimelineScenePresentation\nTimeline, reading, composition, diagnostics\nBuilt from the same selected instant", fillcolor="#38556b"];
+  selector [shape=diamond, label="ACTIVE CATALOG PRESENTATION\ncomposition retained?\notherwise use reading", fillcolor="#4d4a63", color="#ad91c4", margin="0.24,0.16"];
+
+  composition [label="PRIMARY · COMPOSITION\nRetained when no weather state OR\ntimeline.scene is present\nStatic caller / state trace verified", fillcolor="#315a52", color="#83c9bf"];
+  reading [label="FALLBACK · SCENE READING\nUsed when composition is filtered out\nand reading is present\nStatic debug path verified; runtime unverified", fillcolor="#71542e", color="#edc477"];
+  view_only [label="SEPARATE VIEW-ONLY OVERLOAD\nCatalogTimeLabScreen(view, …)\nPasses null reading + composition\nNo production caller found", fillcolor="#4c3f5f", color="#ad91c4"];
+  state_selector [shape=diamond, label="VIEW-ONLY CONTENT\nview.scene present?", fillcolor="#4d4a63", color="#ad91c4", margin="0.24,0.16"];
+  state [label="STATE-ONLY ROUTE\nSelected from the separate view-only overload\nProduction reachability unverified", fillcolor="#71542e", color="#edc477"];
+  none [label="NO SCENE CALL · VIEW-ONLY\nview.scene is absent\nAppearance is outside this trace", fillcolor="#4c3f5f", color="#ad91c4"];
+  frame [label="CATALOG SCENE RENDERER\nSelected composition / reading / state overload\nKeep caller, trigger, source, and reachability evidence", fillcolor="#315a52"];
+
+  selected -> presenter [label="project the selected instant"];
+  presenter -> typed [label="one typed presentation"];
+  typed -> selector [label="MainActivity → CatalogTimeLabScreen"];
+  selector -> composition [label="composition retained"];
+  selector -> reading [label="composition filtered · reading present"];
+  view_only -> state_selector [label="separate caller / overload"];
+  state_selector -> state [label="view.scene present"];
+  state_selector -> none [label="otherwise"];
+  composition -> frame;
+  reading -> frame;
+  state -> frame;
+
+  preview [label="SEPARATE PREVIEW ENTRY POINTS\nMainActivity fixture branches + TimeLabScreen\nAtmosphericScene(input = …)\nStatic callers verified; not catalog fallbacks", fillcolor="#4c3f5f", color="#ad91c4"];
+  preview_out [label="FIXTURE / TIME LAB PREVIEW\nOutside catalog route selection", fillcolor="#4c3f5f", color="#ad91c4"];
+  preview -> preview_out [style=dashed, color="#ad91c4", fontcolor="#d8c9e7", label="direct preview call"];
+
+  scope [label="OX-02 SCOPE\nSource-backed flow + per-fallback reachability record\nStatic and runtime evidence stay distinct", fillcolor="#38556b"];
+  boundary [label="BOUNDARY\nNo visible change, fallback removal, or consolidation\nUnknown route stays recorded\nOX-02A owns any later consolidation + parity evidence", fillcolor="#4c3f5f", color="#ad91c4"];
+  exit [label="OX-02 EXIT\nClassify composition, reading, state, and preview routes\nRecord caller, trigger, source, and verified / unverified reachability", fillcolor="#315a52"];
+
+  frame -> scope [label="trace source route"];
+  preview_out -> scope [style=dashed, color="#ad91c4", label="classify separately"];
+  scope -> boundary;
+  boundary -> exit;
+}

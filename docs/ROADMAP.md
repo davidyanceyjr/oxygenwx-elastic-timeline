@@ -1014,6 +1014,8 @@ The SG workstream follows the owner-directed pivot recorded above and is grounde
 
 **Owner sequencing decision (2026-11-14):** Record the known OX leaves now, before their boards exist. Keep OX-12A, OX-21, and OX-22; place OX-18 early after OX-04 and OX-06. At that review, no global `NEXT` was designated and all OX leaves were `PLANNED`. The owner subsequently selected OX-01 as the sole global `NEXT`; the remaining OX leaves stay `PLANNED`. Boards and exact cycle evidence paths are pending. This entry does not open a cycle, approve a board, or authorize implementation. The two Scene Engine drafts in `docs/` remain supporting proposals; the bounded leaf entries below provide the canonical ordering.
 
+**Owner sequencing update (2026-11-14):** After OX-01f closed, the owner continued with OX-02 by requesting its behavior board. OX-02 is the sole global `NEXT` for cycle 138 board preparation; OX-02A and the other OX leaves remain `PLANNED`. This selection does not approve the board or activate implementation.
+
 ### OX-01 — Baseline the current world — DONE
 
 **Objective/scope:** Lock down what currently works before restructuring it: scene state, First City frame composition, scrubbing, astronomy cues, and accessibility. Reuse completed baseline records and isolate only the unmet Scene Engine questions. Scope is limited to this outcome; the boards may propose a split or a changed boundary before approval.
@@ -1038,22 +1040,22 @@ The SG workstream follows the owner-directed pivot recorded above and is grounde
 **Evidence:** Cycle 136 installed state and interaction record `.codex/test-artifacts/136-ox01f-debug-condition-gap/README.md`, with paired PNG/XML captures; closeout `.codex/history/136-ox01f-debug-condition-gap.md` and archived plan `.codex/history/plans/136-ox01f-debug-condition-gap.md`.
 **Slice board(s):** Product-owner-approved 2026-11-14 behavior board `.codex/concepts/OX-01f-condition-gap-behavior-board.md` and UI artwork board `.codex/concepts/OX-01f-condition-gap-ui-artwork-board.svg`; refreshed approval fingerprints are in cycle 136's plan. The owner selected the existing event label and a matching typed 4 PM event after the initial review.
 
-### OX-02 — Trace the selected-instant pipeline — PLANNED
+### OX-02 — Trace the selected-instant pipeline — DONE
 
 **Objective/scope:** Trace catalog facts to the visible frame. Classify the composition overload as primary catalog renderer, reading/state overloads as catalog fallbacks, and fixture/Time Lab renderers as previews. Establish each fallback's actual reachability from caller and state evidence; retain fallbacks until a separate consolidation slice has parity evidence.
 **Depends on:** OX-01.
 **Exit:** Source-backed selected-instant flow and a per-fallback record of caller, triggering state, source location, and verified or unverified reachability. Preview routes are classified separately. No fallback removal or consolidation.
-**Evidence:** Future cycle-specific `.codex/test-artifacts/<cycle-id>/` and `.codex/history/<cycle-id>.md`; exact paths assigned when a cycle is planned.
-**Slice board(s):** Objective-specific behavior board pending; UI artwork board only if final scope changes visible output. No board approval or activation is claimed.
+**Evidence:** Cycle 138 source-trace evidence is recorded in `.codex/test-artifacts/138-ox02-selected-instant-pipeline/README.md` with the result-derived route-board package (`selected-instant-pipeline-result-board.dot`, `.svg`, and `.png`). Cycle closeout: `.codex/history/138-ox02-selected-instant-pipeline.md`; archived plan: `.codex/history/plans/138-ox02-selected-instant-pipeline.md`.
+**Slice board(s):** Product-owner-approved 2026-11-14 behavior board `.codex/concepts/OX-02-selected-instant-pipeline-behavior-board.svg` with PNG preview, editable Graphviz source, and Markdown companion; package fingerprints are recorded in cycle 138's plan. It governs the selected-instant handoff, primary composition route, reading fallback, separate state-only overload, preview separation, reachability confidence, and no fallback removal. UI artwork is not applicable to this read-only trace scope; a scope change affecting visible output would require a UI artwork board before plan finalization. No additional constraints were stated.
 
-**Read-only source reachability record (2026-11-14):**
+**Read-only source reachability record (initial trace 2026-11-14; source anchors rechecked 2026-11-15):**
 
 | Route | Caller and triggering state | Source location | Reachability |
 |---|---|---|---|
-| Composition (primary catalog) | `MainActivity` supplies `CatalogTimelineScenePresentation`; `CatalogTimeLabScreen` selects composition when it is retained. | `MainActivity.kt:241–247`; `CatalogTimeLabScreen.kt:105–119, 181–186`; `CatalogTimelinePresentation.kt:234–244` | Verified by static caller/state trace. |
-| Reading fallback | The same catalog screen selects `SceneReading` when composition is filtered out. The filter excludes a weather-bearing composition if `timeline.scene == null`; the debug-only `sg2_null_weather` intent extra can force that null. | `CatalogTimeLabScreen.kt:115–119, 186–193`; `MainActivity.kt:156, 241–247, 382`; `CatalogTimelinePresentation.kt:447, 511–512` | Verified static debug path; runtime exercise unverified. |
-| State-only fallback | The catalog screen selects `view.scene` only if both composition and reading are null. Its view-only overload passes both as null, but no production caller of that overload was found in `app/src/main/java` during this trace. | `CatalogTimeLabScreen.kt:93–103, 193–200`; `CatalogTimelinePresentation.kt:447` | Public overload exists; production reachability unverified. |
-| Fixture / Time Lab previews | Debug fixture branches and `TimeLabScreen` call `AtmosphericScene(input)`; they do not enter the catalog fallback branches. | `MainActivity.kt:219–230, 399, 433`; `TimeLabScreen.kt:137`; `AtmosphericScene.kt:44–52` | Verified static preview callers. |
+| Composition (primary catalog) | `MainActivity` supplies `CatalogTimelineScenePresentation`; `CatalogTimeLabScreen` selects composition when it is retained. | `MainActivity.kt:240–248`; `CatalogTimeLabScreen.kt:104–120, 181–185`; `CatalogTimelinePresentation.kt:236–246`; `AtmosphericScene.kt:71–155` | Verified by static caller/state trace. |
+| Reading fallback | The same catalog screen selects `SceneReading` when composition is filtered out. The filter excludes a weather-bearing composition if `timeline.scene == null`; the debug-only `sg2_null_weather` intent extra can force that null. | `CatalogTimeLabScreen.kt:104–120, 186–192`; `MainActivity.kt:156, 240–247, 382`; `CatalogTimelinePresentation.kt:151–156, 236–245` | Verified static debug path; runtime exercise unverified. |
+| State-only fallback | The catalog screen selects `view.scene` only if both composition and reading are null. Its view-only overload passes both as null, but no production caller of that overload was found in `app/src/main/java` during this trace. | `CatalogTimeLabScreen.kt:93–103, 193–200`; `CatalogTimelinePresentation.kt:115–148, 454` | Public overload exists; production reachability unverified. |
+| Fixture / Time Lab previews | Debug fixture branches and `TimeLabScreen` call `AtmosphericScene(input)`; they do not enter the catalog fallback branches. | `MainActivity.kt:219–230, 385–413, 415–433`; `TimeLabScreen.kt:134–142`; `AtmosphericScene.kt:42–52` | Verified static preview callers. |
 
 **Ordered follow-up:** OX-02A records the separate consolidation scope. OX-02 itself removes no fallback.
 
