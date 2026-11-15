@@ -65,7 +65,6 @@ import com.oxygen.weather.timeline.data.catalog.SavedLocation
 import java.time.Duration
 import java.time.LocalDateTime
 import kotlin.math.abs
-import kotlin.math.floor
 import kotlin.math.roundToInt
 
 /** Experimental one-screen UI; sample forecast and independent package ID. */
@@ -108,9 +107,7 @@ fun TimeLabScreen(
     }
     val hourOfDay = if (precisionMode) selectedHour % 24.0 else 12.0
 
-    fun leavePrecision(wasPrecisionGesture: Boolean) {
-        selectedHour = if (wasPrecisionGesture) selectedHour
-            else (floor(selectedHour / 24.0) * 24.0 + 12.0)
+    fun leavePrecision() {
         selectedHour = selectedHour.coerceIn(0.0, forecastSource.lastIndex.toDouble())
         precisionMode = false
     }
@@ -128,7 +125,7 @@ fun TimeLabScreen(
     val latestReturnToNow by rememberUpdatedState<() -> Unit> { returnToNow() }
     val latestShiftDay by rememberUpdatedState<(Int) -> Unit> { days -> shiftDay(days) }
     val latestExitPrecision by rememberUpdatedState<() -> Unit> {
-        if (precisionMode) leavePrecision(true)
+        if (precisionMode) leavePrecision()
     }
 
     BoxWithConstraints(Modifier.fillMaxSize().background(Color(0xFF11263D))) {
@@ -305,7 +302,7 @@ fun TimeLabScreen(
                     if (precisionMode) focusDay = ElasticTimeAxis.dayIndex(it).coerceIn(0, forecastSource.days.lastIndex)
                 },
                 onTogglePrecision = {
-                    if (precisionMode) leavePrecision(true)
+                    if (precisionMode) leavePrecision()
                     else {
                         focusDay = ElasticTimeAxis.dayIndex(selectedHour).coerceIn(0, forecastSource.days.lastIndex)
                         precisionMode = true
@@ -320,9 +317,9 @@ fun TimeLabScreen(
                 },
                 onBrowseForecasts = { forecastBrowserOpen = true },
                 onGestureEnded = { wasPrecision ->
-                    // Precision remains active after release. Daily drags settle at noon;
-                    // single timeline taps are no-ops.
-                    if (!wasPrecision && !precisionMode) leavePrecision(false)
+                    // Precision remains active after hourly release. Daily release keeps the
+                    // selected fractional hour; single timeline taps are no-ops.
+                    if (!wasPrecision && !precisionMode) leavePrecision()
                 },
             )
         }

@@ -532,10 +532,6 @@ private fun CatalogForecastTimeline(
                                 }
                             } else {
                                 doubleTapDetector.clear()
-                                if (!hourly) {
-                                    val targetDate = gestureSelection.atZone(view.zone).toLocalDate()
-                                    latestSelect(InstantTimeAxis.dailyOverviewAnchor(targetDate, view.zone))
-                                }
                             }
                             break
                         }

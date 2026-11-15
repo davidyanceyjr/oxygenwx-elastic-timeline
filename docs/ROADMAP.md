@@ -555,6 +555,18 @@ The completed WX entries below record the successor catalog, location, startup, 
 **Evidence:** `.codex/test-artifacts/129-p2-catalog-hour-label-size/README.md`; `.codex/history/129-p2-catalog-hour-label-size.md`.
 **Slice board(s):** Product owner directed 18 dp active-catalog labels and retained 16 dp fixture/debug labels on 2026-11-11. Cycle 129 records the objective-specific behavior board `.codex/concepts/P.2.28-catalog-hour-label-size-behavior-board.md` and UI artwork board `.codex/concepts/P.2.28-catalog-hour-label-size-ui-artwork-board.md`, including their approval and package fingerprints. The prior installed 20 dp capture is context only; new installed evidence is required for the exit.
 
+## TL — Timeline selection behavior
+
+**Owner sequencing decision (2026-11-14):** The owner selected a bounded change to daily scrub-release selection as the next timeline outcome. TL-01f was the sole `NEXT`; the Scene Engine roadmap remains `PLANNED`. At planning time, the existing noon-release rule remained authoritative until TL-01f was implemented and the controlling specifications were updated; cycle 137 records that completed change.
+
+### TL-01f — Preserve the precise selected time on daily scrub release — DONE
+
+**Objective/scope:** On the active-catalog and fixture/debug timeline surfaces, daily drag release preserves the exact selected forecast instant reached by scrubbing (for example, 2:37 PM local) instead of resetting selection to 12:00 PM on the target date. Update `docs/SPECIFICATION.md` and `docs/OXYGEN_EXPERIENCE_SPECIFICATION.md` to state the approved release behavior. Keep daily representative artwork such as event symbols and highs at its existing noon coordinate; preserve exact selected-time authority, daily-to-hourly entry, hourly scrubbing, scale transitions, in-window gaps, and communicated clamping only for targets outside the catalog interval. No unrelated gesture or artwork redesign.
+**Depends on:** P.2.17, P.2.22, and WX.25.
+**Exit:** On installed active-catalog and fixture/debug surfaces, releasing a daily scrub at an in-window instant such as 2:37 PM leaves that exact instant selected and does not move it to noon. The visible focused-time cue and selected-time forecast context remain tied to the retained instant; the daily summary and its noon-positioned representative artwork remain semantically clear. A true out-of-catalog target still clamps to the nearest catalog boundary, communicated through the existing selected-time cue and context. Daily double-tap entry, hourly scrubbing, scale-only transitions, gesture ownership, responsiveness, and readability retain their existing behavior. Record actual affected-state screenshots and focused interaction observations.
+**Evidence:** `.codex/test-artifacts/137-tl01f-daily-scrub-release/README.md`; `.codex/history/137-tl01f-daily-scrub-release.md`.
+**Slice board(s):** Product-owner-approved behavior board package on 2026-11-14: `.codex/concepts/TL-01f-daily-scrub-release-behavior-board.md`, `.codex/concepts/TL-01f-daily-scrub-release-behavior-board.svg`, and `.codex/concepts/TL-01f-daily-scrub-release-behavior-board.png`. Approval covers exact selected-instant retention after daily release, the noon representative-artwork coordinate, and existing true catalog-boundary handling on active-catalog and fixture/debug surfaces. No additional constraints. UI artwork board is inapplicable per owner direction: behavior only, with no UI or artwork change. Cycle 137 records approval and package fingerprints.
+
 ## ATM — Living atmosphere engine
 
 ### ATM.0 — Capture installed pre-engine atmosphere baseline — DONE

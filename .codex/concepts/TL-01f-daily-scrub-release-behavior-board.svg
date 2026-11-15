@@ -1,0 +1,85 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1600" height="1040" viewBox="0 0 1600 1040" role="img" aria-labelledby="title desc">
+  <title id="title">TL-01f daily scrub release behavior</title>
+  <desc id="desc">A behavior flow: when a daily timeline scrub reaches an in-window instant such as 2:37 PM, release ends the drag and retains that exact instant. Noon remains the daily representative artwork coordinate, and only out-of-catalog targets clamp.</desc>
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="0" y2="1"><stop stop-color="#0b1929"/><stop offset="1" stop-color="#1a2c40"/></linearGradient>
+    <style>
+      .title{font:700 32px system-ui,sans-serif;fill:#eff5fa}.sub{font:16px system-ui,sans-serif;fill:#b5c6d4}.head{font:700 21px system-ui,sans-serif;fill:#f4f8fb}.body{font:17px system-ui,sans-serif;fill:#dce6ed}.small{font:15px system-ui,sans-serif;fill:#aec0ce}.tiny{font:14px system-ui,sans-serif;fill:#aec0ce}.panel{fill:#13263a;stroke:#506980;stroke-width:2}.state{fill:#17334a;stroke:#7dbbd0;stroke-width:2}.target{fill:#263e55;stroke:#f2cd77;stroke-width:3}.pill{fill:#30465d}.rail{stroke:#9cb0c0;stroke-width:3}.tick{stroke:#758da1;stroke-width:2}.play{stroke:#f4d17b;stroke-width:4}.flow{stroke:#75c8df;stroke-width:4;fill:none;marker-end:url(#arrow)}.warn{stroke:#efb66b;stroke-width:3;fill:none;marker-end:url(#amber)}.badge{fill:#30465d}.gold{fill:#f2cd77}.teal{fill:#75c8df}
+    </style>
+    <marker id="arrow" markerWidth="12" markerHeight="12" refX="10" refY="6" orient="auto"><path d="M0 0L12 6L0 12Z" fill="#75c8df"/></marker>
+    <marker id="amber" markerWidth="12" markerHeight="12" refX="10" refY="6" orient="auto"><path d="M0 0L12 6L0 12Z" fill="#efb66b"/></marker>
+  </defs>
+  <rect width="1600" height="1040" fill="url(#bg)"/>
+  <text x="54" y="58" class="title">TL-01f · Preserve the selected time on release</text>
+  <text x="56" y="88" class="sub">BEHAVIOR BOARD · OWNER-APPROVED 2026-11-14 · BEHAVIOR ONLY · NO UI OR ARTWORK CHANGE</text>
+
+  <rect x="48" y="118" width="1504" height="112" rx="18" class="panel"/>
+  <text x="76" y="157" class="head">SLICE SUMMARY</text>
+  <text x="76" y="190" class="body">An in-window daily scrub release retains the exact selected instant: 2:37 PM stays 2:37 PM.</text>
+  <rect x="1224" y="139" width="292" height="66" rx="16" class="target"/>
+  <text x="1370" y="181" text-anchor="middle" class="head">2:37 PM → 2:37 PM</text>
+
+  <rect x="48" y="264" width="470" height="400" rx="20" class="panel"/>
+  <rect x="565" y="264" width="470" height="400" rx="20" class="panel"/>
+  <rect x="1082" y="264" width="470" height="400" rx="20" class="panel"/>
+  <text x="78" y="306" class="head">1 · DAILY SCRUB</text>
+  <text x="595" y="306" class="head">2 · RELEASE</text>
+  <text x="1112" y="306" class="head">3 · SELECTION RETAINED</text>
+
+  <text x="78" y="344" class="small">Tape moves; the selected instant follows it.</text>
+  <text x="78" y="379" class="body">Wednesday · 2:37 PM local</text>
+  <line x1="90" y1="469" x2="476" y2="469" class="rail"/>
+  <g class="tick"><path d="M116 455v28M204 449v40M292 455v28M380 449v40M464 455v28"/></g>
+  <text x="116" y="430" text-anchor="middle" class="small">TUE</text>
+  <text x="292" y="430" text-anchor="middle" class="small">WED</text>
+  <text x="464" y="430" text-anchor="middle" class="small">THU</text>
+  <path d="M292 442v56" class="play"/>
+  <rect x="229" y="520" width="126" height="44" rx="22" class="badge"/>
+  <text x="292" y="549" text-anchor="middle" class="body">2:37 PM</text>
+  <text x="78" y="612" class="small">Exact in-window instant under the playhead.</text>
+
+  <rect x="605" y="347" width="390" height="166" rx="16" class="state"/>
+  <text x="633" y="389" class="head">Pointer-up ends the drag</text>
+  <text x="633" y="429" class="body">Keep the current selected Instant.</text>
+  <text x="633" y="464" class="small">Do not reselect from date alone.</text>
+  <text x="633" y="490" class="small">Do not snap the selection to noon.</text>
+  <rect x="663" y="547" width="274" height="55" rx="16" class="target"/>
+  <text x="800" y="582" text-anchor="middle" class="head">Noon reset: removed</text>
+
+  <line x1="522" y1="470" x2="552" y2="470" class="flow"/>
+  <line x1="1039" y1="470" x2="1069" y2="470" class="flow"/>
+
+  <text x="1112" y="344" class="small">After release, the same instant remains selected.</text>
+  <text x="1112" y="379" class="body">Wednesday · 2:37 PM local</text>
+  <line x1="1124" y1="469" x2="1510" y2="469" class="rail"/>
+  <g class="tick"><path d="M1150 455v28M1238 449v40M1326 455v28M1414 449v40M1498 455v28"/></g>
+  <text x="1150" y="430" text-anchor="middle" class="small">TUE</text>
+  <text x="1326" y="430" text-anchor="middle" class="small">WED</text>
+  <text x="1498" y="430" text-anchor="middle" class="small">THU</text>
+  <path d="M1326 442v56" class="play"/>
+  <rect x="1263" y="520" width="126" height="44" rx="22" class="badge"/>
+  <text x="1326" y="549" text-anchor="middle" class="body">2:37 PM</text>
+  <text x="1112" y="612" class="small">Selected-time facts remain tied to this instant.</text>
+
+  <rect x="48" y="702" width="720" height="250" rx="20" class="panel"/>
+  <rect x="800" y="702" width="752" height="250" rx="20" class="panel"/>
+  <text x="78" y="745" class="head">BOUNDARY RULE</text>
+  <rect x="78" y="773" width="305" height="124" rx="15" class="state"/>
+  <text x="102" y="811" class="body">Inside catalog</text>
+  <text x="102" y="846" class="small">Retain exact instant, even</text>
+  <text x="102" y="871" class="small">when some facts are missing.</text>
+  <path d="M399 835h72" class="warn"/>
+  <rect x="491" y="773" width="245" height="124" rx="15" class="pill"/>
+  <text x="515" y="811" class="body">Outside catalog</text>
+  <text x="515" y="846" class="small">Existing nearest-boundary</text>
+  <text x="515" y="871" class="small">clamp + adjustment notice.</text>
+
+  <text x="830" y="745" class="head">KEEP THESE BEHAVIORS</text>
+  <text x="830" y="787" class="small">• Noon remains the representative coordinate for daily symbols and highs.</text>
+  <text x="830" y="819" class="small">• Daily double-tap still enters hourly at 7:00 AM local under P.2.22.</text>
+  <text x="830" y="851" class="small">• Hourly release and scale-only transitions keep their exact selection.</text>
+  <text x="830" y="883" class="small">• Fixture/debug may show its nearest-hour cue; fractional selection stays exact.</text>
+  <text x="830" y="915" class="tiny">No new controls, labels, layout, artwork, or gesture changes.</text>
+
+  <text x="52" y="994" class="sub">Apply to active-catalog and fixture/debug timelines. Selected Instant remains authoritative; local labels follow the existing timezone rules.</text>
+</svg>
