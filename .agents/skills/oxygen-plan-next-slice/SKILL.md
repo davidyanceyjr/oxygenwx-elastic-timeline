@@ -41,6 +41,14 @@ cycle.
    plan. Record each path, approval, constraints, and relation to scope and
    acceptance in the cycle manifest. A prompt, target path, existing screen, or
    screenshot alone is not an approved board.
+   Author behavior boards in Graphviz DOT; retain the `.dot` source and render
+   both SVG and PNG files with `dot -Tsvg` and `dot -Tpng`. UI artwork boards
+   may use SVG or PNG to suit the artwork; keep both when they have distinct
+   source and review roles. Before asking for approval, show the rendered board
+   with `feh` on the shared X display by setting `DISPLAY=:0` explicitly, for
+   example `DISPLAY=:0 feh --auto-zoom path/to/board.svg`. Use the same display
+   path for other non-terminal visual artifacts created for user review. After
+   any board edit, regenerate affected renders and show the updated visual.
    After the owner approves, use `python scripts/codex_cycle.py approve-board`
    with every file in the approved package, the slice ID, board kind, approver,
    and date. This records content fingerprints; it does not create or imply

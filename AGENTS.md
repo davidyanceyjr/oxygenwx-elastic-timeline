@@ -46,6 +46,14 @@ Before app implementation or behavior changes:
 6. Preserve actual evidence under `.codex/test-artifacts/<cycle-id>/`.
 7. Inspect `git diff --check` and the final diff, then close completed work into `.codex/history/` with exact verification results and limitations.
 
+For board artifact formats and display, follow the board policy in
+`docs/ROADMAP_SPECIFICATION.md`: behavior boards use Graphviz DOT source and
+retain SVG and PNG renders; UI artwork boards use SVG or PNG, keeping both when
+they have distinct source and review roles. Show non-terminal visual artifacts
+to the user with `DISPLAY=:0 feh --auto-zoom path/to/board.svg` before
+requesting board approval. This display does not replace installed visual
+acceptance evidence.
+
 Cycle lifecycle states are `IDLE`, `PLANNED`, `ACTIVE`, and `PAUSED`; stages
 are `SLICE`, `BOARDS`, `DRAFT`, `REVIEW`, `EXECUTE`, and `CLOSEOUT`. Only one
 roster slice may be `ACTIVE` at a time. Close each slice only on its exit or

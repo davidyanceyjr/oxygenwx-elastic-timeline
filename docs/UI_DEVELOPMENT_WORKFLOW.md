@@ -23,7 +23,7 @@ dependencies, and roadmap status.
 
 ## Available implementation review tools
 
-The current development setup has an X window display and a Pixel test device. Check that the display is available with `test -n "$DISPLAY"`; check that Android devices are connected and authorized with `adb devices -l`. Device availability can change between sessions, so confirm it before planning installed review.
+The current development setup has X display `:0` and a Pixel test device. Show non-terminal visual artifacts to the user with `feh`, setting the display explicitly, for example `DISPLAY=:0 feh --auto-zoom path/to/board.svg` or `DISPLAY=:0 feh --auto-zoom path/to/image.png`; do not rely on `$DISPLAY` being set. Check that Android devices are connected and authorized with `adb devices -l`. Device availability can change between sessions, so confirm it before planning installed review.
 
 Debug builds include three synthetic forecast profiles for implementation review: a short rain event, a clear-to-storm progression, and an extended cold/cloud/wind/snow progression. They are isolated from the normal sample forecast and are not included in release builds. Build and install the debug app with `python3 scripts/dev.py run`, then open the debug profile picker on the connected device:
 

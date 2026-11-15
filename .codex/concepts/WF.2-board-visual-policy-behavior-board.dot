@@ -1,0 +1,57 @@
+digraph WF2 {
+  graph [
+    rankdir=TB,
+    bgcolor="#101e2b",
+    pad="0.28",
+    nodesep="0.38",
+    ranksep="0.46",
+    splines=polyline,
+    fontname="DejaVu Sans",
+    label="WF.2  |  BEHAVIOR + UI BOARD ARTIFACT POLICY",
+    labelloc=t,
+    fontsize=19,
+    fontcolor="#edf4f7"
+  ];
+  node [
+    shape=box,
+    style="rounded,filled",
+    fillcolor="#203950",
+    color="#64869a",
+    penwidth=1.5,
+    fontname="DejaVu Sans",
+    fontsize=11,
+    fontcolor="#edf4f7",
+    margin="0.20,0.13"
+  ];
+  edge [
+    color="#83c9bf",
+    penwidth=1.7,
+    arrowsize=0.8,
+    fontname="DejaVu Sans",
+    fontsize=10,
+    fontcolor="#edf4f7"
+  ];
+
+  start [label="A slice enters board preparation", fillcolor="#24536a"];
+  behavior [label="Every slice needs a behavior board\nAuthor and retain a Graphviz .dot source"];
+  render [label="Render both behavior-board formats\ndot -Tsvg → .svg\ndot -Tpng → .png"];
+  visual_work [shape=diamond, style=filled, fillcolor="#294d65", label="Does the slice change\napp UI or visual output?", margin="0.14,0.10"];
+  ui_board [label="Also create a UI artwork board\nUse SVG for vector artwork or PNG for raster / screenshots\nKeep both when they serve distinct source and review roles"];
+  no_ui_board [label="No UI artwork board for this slice\nwhen app UI and visual output do not change"];
+  display [label="Present non-terminal visuals to the user\nUse feh on X display :0\nDISPLAY=:0 feh --auto-zoom <board.svg or board.png>", fillcolor="#294d65"];
+  review [label="Product owner reviews the rendered board package", fillcolor="#71542e", color="#edc477"];
+  revise [label="Revise source or artwork, render again,\nand show the updated visual", fillcolor="#71542e", color="#edc477"];
+  approve [label="After approval, record exact board paths,\napprover, date, and file fingerprints", fillcolor="#245247", color="#7ad3b8"];
+  gate [label="Only then finalize and activate the plan\nRequired boards remain a gate", fillcolor="#24536a"];
+
+  start -> behavior -> render -> visual_work;
+  visual_work -> ui_board [label="yes"];
+  visual_work -> no_ui_board [label="no"];
+  ui_board -> display;
+  no_ui_board -> display;
+  display -> review;
+  review -> revise [label="changes requested"];
+  revise -> display [label="redisplay"];
+  review -> approve [label="approved"];
+  approve -> gate;
+}

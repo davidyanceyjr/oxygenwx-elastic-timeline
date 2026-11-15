@@ -120,6 +120,35 @@ constraints, and how they govern scope and acceptance.
 Reviewing flow and artwork together exposes missing states, transitions, and
 visual intent before implementation begins.
 
+### Board artifact formats and visual review
+
+- Author every behavior board in Graphviz DOT and retain the `.dot` source plus
+  both `.svg` and `.png` renders. For example:
+
+  ```bash
+  dot -Tsvg path/to/board.dot -o path/to/board.svg
+  dot -Tpng path/to/board.dot -o path/to/board.png
+  ```
+
+- UI artwork boards may use SVG or PNG according to the artwork. Keep both
+  when they serve distinct source and review roles, such as an editable SVG
+  and a separate PNG rendering. A screenshot by itself still does not satisfy
+  the UI artwork board or approval requirement.
+- Before requesting owner approval, show the rendered board with `feh` on the
+  shared X display `:0`. Set `DISPLAY=:0` explicitly instead of relying on the
+  shell's default display environment. For example:
+
+  ```bash
+  DISPLAY=:0 feh --auto-zoom path/to/board.svg
+  ```
+
+  Use the PNG path when presenting a PNG board. Re-display updated artwork
+  after changes and include the exact approved source and rendered files in
+  the fingerprinted board package.
+- Use the same `feh` display path for other non-terminal visual artifacts
+  created for user review. Displaying an image does not replace installed
+  screenshots or interaction evidence required for app visual acceptance.
+
 A slice may be recorded in the roadmap and an initial plan may be drafted while
 boards are pending. Use the draft to record known dependencies, scope, proposed
 approach, open questions, and the board work needed to resolve them. The plan

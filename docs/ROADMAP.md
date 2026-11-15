@@ -949,6 +949,16 @@ The SG workstream follows the owner-directed pivot recorded above and is grounde
 **Evidence:** Cycle 117 targets `.codex/test-artifacts/117-wf1-task-scoped-context/README.md`, `.codex/history/117-wf1-task-scoped-context.md`, and `.codex/history/plans/117-wf1-task-scoped-context.md`.
 **Slice board(s):** Product owner approved the behavior board `.codex/concepts/WF.1-task-scoped-context-behavior-board.svg` on 2026-11-07 as shown, with no additional constraints (editable `.dot`, PNG preview, and detailed `.md` alongside). It governs the lifecycle, skill mapping, multi-slice cycle target, and pause/resume checkpoints. No UI artwork board applies.
 
+**Owner sequencing decision (2026-11-15):** The owner requested a workflow policy for creating and presenting behavior and UI boards. WF.2 is the sole `NEXT` item; unfinished Scene Engine work remains `PLANNED`.
+
+### WF.2 — Standardize behavior and UI board visuals — DONE
+
+**Objective/scope:** Define the project workflow for visual board artifacts. Behavior boards use Graphviz DOT source and are rendered to SVG and PNG. UI artwork boards use SVG or PNG based on the artwork; keep both when they have distinct source and review roles. Use `feh` on X display `:0` to present non-terminal visual artifacts to the user. Update the project instructions, roadmap board-package authority, planning skill, and UI development workflow. Workflow documentation only; no app UI or product behavior changes.
+**Depends on:** None.
+**Exit:** The board policy consistently specifies Graphviz DOT plus SVG/PNG outputs for behavior boards, SVG or PNG artwork for UI boards, and presentation of non-terminal visual artifacts through `feh` at X display `:0`. The planning workflow names the exact source and rendered files and shows the review artifact before requesting owner approval. All targeted workflow documents agree, `python scripts/dev.py workflow` passes, and `git diff --check` passes. No app tests or visual acceptance are in scope.
+**Evidence:** `.codex/test-artifacts/139-wf2-board-visual-policy/README.md`, `.codex/history/139-wf2-board-visual-policy.md`, and `.codex/history/plans/139-wf2-board-visual-policy.md`.
+**Slice board(s):** Product owner approved the behavior board `.codex/concepts/WF.2-board-visual-policy-behavior-board.svg` on 2026-11-15, with editable Graphviz source `.codex/concepts/WF.2-board-visual-policy-behavior-board.dot` and PNG render `.codex/concepts/WF.2-board-visual-policy-behavior-board.png`. It governs DOT-to-SVG/PNG behavior boards, SVG or PNG UI artwork with both kept when they serve distinct roles, and presentation of non-terminal visuals through `feh` on X display `:0` before approval. No UI artwork board applies because this slice changes workflow documentation, not product UI or visual output.
+
 ## MR — Main weather readout
 
 ### MR.1 — Refactor the main weather readout — DONE
