@@ -25,8 +25,10 @@ import com.oxygen.weather.timeline.presentation.SkyFrame
 import com.oxygen.weather.timeline.data.PrecipitationAmount
 import com.oxygen.weather.timeline.data.SkyCondition
 import com.oxygen.weather.timeline.presentation.scene.CityTreatment
+import com.oxygen.weather.timeline.presentation.scene.CityCloudDecision
 import com.oxygen.weather.timeline.presentation.scene.CityCloudAppearance
 import com.oxygen.weather.timeline.presentation.scene.CityPrecipitation
+import com.oxygen.weather.timeline.presentation.scene.FirstCityDepthGroup
 import com.oxygen.weather.timeline.presentation.scene.FirstCityComposition
 import com.oxygen.weather.timeline.presentation.scene.FirstCityLayer
 import com.oxygen.weather.timeline.presentation.scene.FirstCityTheme
@@ -98,7 +100,24 @@ fun CatalogAtmosphericScene(
                                 1f to Color.Transparent,
                             ))
                         }
-                        drawCityDiffuseLight(composition.cue.position, composition.treatment, cloudiness)
+                    }
+                }
+                FirstCityLayer.STARS -> drawCityStars(composition.treatment)
+                FirstCityLayer.TIME_CUE -> if (composition.cue.visible) {
+                    drawCityTimeCue(composition.cue, composition.treatment)
+                }
+                FirstCityLayer.LUNAR_CUE -> if (composition.moonCue.visible) {
+                    drawCityTimeCue(composition.moonCue, composition.treatment)
+                }
+                FirstCityLayer.BACKGROUND_CLOUDS -> drawCityDepthCloudLayer(
+                    clouds = composition.clouds,
+                    depth = FirstCityDepthGroup.BACKGROUND,
+                    reducedMotion = reducedMotion,
+                )
+                FirstCityLayer.BACKGROUND_ARCHITECTURE -> {
+                    composition.sky?.let { sky ->
+                        val cloudiness = composition.clouds.coverFraction
+                        val storm = composition.precipitation == CityPrecipitation.STORM
                         drawLandscape(
                             hazeStrength = 0f,
                             horizon = sceneHorizonColor(sky.condition, sky.daylight, cloudiness, storm),
@@ -106,36 +125,25 @@ fun CatalogAtmosphericScene(
                             isStorm = storm,
                         )
                     }
+                    drawAlignedLayer(architecture)
                 }
-                FirstCityLayer.BACKGROUND_ARCHITECTURE -> drawAlignedLayer(architecture)
-                FirstCityLayer.LUNAR_CUE -> if (composition.moonCue.visible) {
-                    drawCityTimeCue(composition.moonCue, composition.treatment)
-                }
-                FirstCityLayer.CLOUDS -> clipRect(
-                    left = 0f,
-                    top = 0f,
-                    right = size.width,
-                    bottom = size.height * CLOUD_REGION_FRACTION,
-                ) {
-                    val clouds = composition.clouds
-                    drawCityCloudFields(
-                        cloudiness = clouds.coverFraction?.toFloat()?.coerceIn(0f, 1f) ?: 0f,
-                        daylight = clouds.daylight,
-                        localHour = clouds.localHour,
-                        isRain = clouds.appearance == CityCloudAppearance.RAIN,
-                        isSnow = clouds.appearance == CityCloudAppearance.SNOW,
-                        isStorm = clouds.appearance == CityCloudAppearance.STORM,
-                        reducedMotion = reducedMotion,
+                FirstCityLayer.ATMOSPHERE -> composition.sky?.let { sky ->
+                    drawCityDiffuseLight(
+                        composition.cue.position,
+                        composition.treatment,
+                        composition.clouds.coverFraction,
                     )
                 }
+                FirstCityLayer.MIDDLE_GROUND_CLOUDS -> drawCityDepthCloudLayer(
+                    clouds = composition.clouds,
+                    depth = FirstCityDepthGroup.MIDDLE_GROUND,
+                    reducedMotion = reducedMotion,
+                )
                 FirstCityLayer.FOREGROUND_ARCHITECTURE -> drawCityForegroundLayer(architecture)
                 FirstCityLayer.CANOPY -> drawAlignedLayer(canopy)
                 FirstCityLayer.TIME_WASH -> drawCityTimeWash(composition.treatment)
                 FirstCityLayer.READOUT_QUIET_ZONE -> drawCityReadoutQuietZone()
                 FirstCityLayer.WINDOW_LIGHTS -> if (!omitOptionalCityLayers) drawCityWindowLights()
-                FirstCityLayer.TIME_CUE -> {
-                    if (composition.cue.visible) drawCityTimeCue(composition.cue, composition.treatment)
-                }
                 FirstCityLayer.PRECIPITATION -> {
                     drawRect(
                         brush = Brush.verticalGradient(
@@ -296,6 +304,92 @@ private fun DrawScope.drawCityDiffuseLight(
         radius = spread,
         center = center,
     )
+}
+
+/** Minimal decorative marks belong to the far Background, behind both celestial cues. */
+private fun DrawScope.drawCityStars(treatment: CityTreatment) {
+    val visibility = when (treatment) {
+        CityTreatment.NIGHT -> .78f
+        CityTreatment.DUSK -> .48f
+        CityTreatment.MORNING -> .30f
+        CityTreatment.DAY -> .22f
+        CityTreatment.UNAVAILABLE -> .28f
+    }
+    val stars = listOf(
+        .08f to .075f, .15f to .19f, .22f to .105f, .31f to .16f,
+        .39f to .07f, .47f to .20f, .55f to .11f, .64f to .17f,
+        .72f to .08f, .81f to .19f, .89f to .105f, .96f to .16f,
+    )
+    stars.forEachIndexed { index, (x, y) ->
+        val alpha = visibility * (.48f + (index % 3) * .14f)
+        val radius = size.width * (.0018f + (index % 3) * .00045f)
+        drawCircle(
+            color = Color(0xFFE5F0FC).copy(alpha = alpha),
+            radius = radius,
+            center = Offset(size.width * x, size.height * y),
+        )
+    }
+}
+
+/**
+ * Draws one of the two owner-directed cloud depths from the same typed cloud decision.
+ * The rain and snow poses use overlapping small-to-medium clusters within the top third.
+ */
+private fun DrawScope.drawCityDepthCloudLayer(
+    clouds: CityCloudDecision,
+    depth: FirstCityDepthGroup,
+    reducedMotion: Boolean,
+) {
+    if (size.width <= 0f) return
+    val cloudiness = clouds.coverFraction?.toFloat()?.coerceIn(0f, 1f) ?: 0f
+    if (cloudiness <= .01f) return
+
+    val background = depth == FirstCityDepthGroup.BACKGROUND
+    val yFraction = if (background) .012f else .076f
+    val heightFraction = if (background) .15f else .16f
+    val widthFraction = when (clouds.appearance) {
+        CityCloudAppearance.STORM -> .40f
+        CityCloudAppearance.RAIN, CityCloudAppearance.SNOW -> .34f
+        CityCloudAppearance.GENERAL -> .32f
+    }
+    val xFractions = when (clouds.appearance) {
+        CityCloudAppearance.STORM -> listOf(-.05f, .28f, .61f)
+        CityCloudAppearance.RAIN, CityCloudAppearance.SNOW -> listOf(-.04f, .21f, .46f, .71f)
+        CityCloudAppearance.GENERAL -> listOf(-.025f, .23f, .485f, .74f)
+    }
+    val day = clouds.daylight.toFloat().coerceIn(0f, 1f)
+    val skyTint = if (clouds.appearance == CityCloudAppearance.STORM) {
+        Color(0xFF4E6075)
+    } else {
+        lerp(Color(0xFF7189A5), Color(0xFFE0EAF1), day)
+    }
+    val tint = if (background) {
+        lerp(skyTint, Color(0xFFD4E1EB), .18f)
+    } else {
+        lerp(skyTint, Color(0xFF344B60), .27f)
+    }
+    val alpha = when (clouds.appearance) {
+        CityCloudAppearance.RAIN, CityCloudAppearance.SNOW -> if (background) .70f else .78f
+        CityCloudAppearance.STORM -> if (background) .56f else .68f
+        CityCloudAppearance.GENERAL -> (cloudiness * if (background) .42f else .50f)
+            .coerceIn(0f, .58f)
+    }
+    val hour = if (reducedMotion) 12.0 else clouds.localHour.takeIf(Double::isFinite) ?: 12.0
+    val drift = (.025 * sin(((hour - 6.0) / 12.0) * PI)).toFloat()
+
+    clipRect(left = 0f, top = 0f, right = size.width, bottom = size.height * CLOUD_REGION_FRACTION) {
+        xFractions.forEachIndexed { index, x ->
+            val sizeVariation = if (index % 2 == 0) 1f else .92f
+            drawCityCloudBank(
+                x = size.width * (x + drift),
+                y = size.height * yFraction,
+                width = size.width * widthFraction * sizeVariation,
+                height = size.height * heightFraction,
+                color = tint.copy(alpha = alpha * (if (index == 0 || index == xFractions.lastIndex) .90f else 1f)),
+                mirrored = index % 2 == 1,
+            )
+        }
+    }
 }
 
 /** Selected-time storyboard, bounded to 06:00–18:00 with no loops or wall-clock drift. */

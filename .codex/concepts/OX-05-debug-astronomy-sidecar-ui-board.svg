@@ -1,0 +1,103 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1760" height="1260" viewBox="0 0 1760 1260" role="img" aria-labelledby="title desc">
+  <title id="title">OX-05 revised UI artwork board: deterministic debug astronomy fixture</title>
+  <desc id="desc">Owner-review draft. Shows the debug fixture route and two primary First City states: a clear Sun and Moon overlap, and a moderate-rain scene with clouds and Foreground precipitation over buildings. Authored event data is labeled synthetic and is not astronomical data or installed evidence.</desc>
+  <defs>
+    <linearGradient id="page" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#f7f9fb"/><stop offset="1" stop-color="#e5ecf1"/></linearGradient>
+    <linearGradient id="clearSky" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#284966"/><stop offset=".7" stop-color="#7190a2"/><stop offset="1" stop-color="#b6b09e"/></linearGradient>
+    <linearGradient id="rainSky" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#263c52"/><stop offset=".68" stop-color="#637d8a"/><stop offset="1" stop-color="#9b9d96"/></linearGradient>
+    <linearGradient id="panel" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#203c54"/><stop offset="1" stop-color="#11283d"/></linearGradient>
+    <clipPath id="clipClear"><rect x="66" y="342" width="760" height="420" rx="13"/></clipPath>
+    <clipPath id="clipRain"><rect x="934" y="342" width="760" height="420" rx="13"/></clipPath>
+  </defs>
+  <rect width="1760" height="1260" fill="url(#page)"/>
+  <text x="36" y="48" font-family="DejaVu Sans, sans-serif" font-size="29" font-weight="700" fill="#1e3448">OX-05 · deterministic review fixture / revised UI target</text>
+  <text x="36" y="79" font-family="DejaVu Sans, sans-serif" font-size="15" fill="#526b7e">UI artwork board · cycle 144 · DRAFT FOR OWNER APPROVAL · schematic, not installed evidence</text>
+
+  <rect x="36" y="103" width="1688" height="104" rx="15" fill="#d9e6ed" stroke="#b7cbd7"/>
+  <text x="58" y="132" font-family="DejaVu Sans, sans-serif" font-size="13" font-weight="700" fill="#29475d">DEBUG ROUTE</text>
+  <text x="205" y="132" font-family="DejaVu Sans, sans-serif" font-size="15" fill="#314e63">#DEBUG → DebugCatalogActivity → Load OX-05 review fixture → primary CatalogTimeLabScreen</text>
+  <text x="205" y="158" font-family="DejaVu Sans, sans-serif" font-size="13" fill="#526b7e">Fixed SIMULATED catalog · works without saved user locations · no network · normal live catalog remains unchanged</text>
+  <rect x="1278" y="116" width="414" height="32" rx="16" fill="#fff3d7"/>
+  <text x="1294" y="137" font-family="DejaVu Sans, sans-serif" font-size="12" font-weight="700" fill="#176f7c">DEMO DATA · OX-05 AUTHORED SYNTHETIC ASTRONOMY FIXTURE</text>
+  <text x="1278" y="176" font-family="DejaVu Sans, sans-serif" font-size="12" fill="#526b7e">Event values are rendering inputs, not forecast or astronomy claims.</text>
+
+  <!-- State A: clear Sun and Moon overlap -->
+  <rect x="36" y="229" width="828" height="829" rx="18" fill="#fff" stroke="#8faec0" stroke-width="2"/>
+  <text x="60" y="265" font-family="DejaVu Sans, sans-serif" font-size="18" font-weight="700" fill="#203a50">01 · CELESTIAL OVERLAP / CLEAR SAMPLE</text>
+  <text x="60" y="291" font-family="DejaVu Sans, sans-serif" font-size="13" fill="#60788a">Selected Oct 28, 2026 · 12:00 PM CDT · 2026-10-28T17:00Z</text>
+  <g clip-path="url(#clipClear)">
+    <rect x="66" y="342" width="760" height="420" fill="url(#clearSky)"/>
+    <g fill="#e3edf0" opacity=".82">
+      <circle cx="103" cy="383" r="2"/><circle cx="169" cy="423" r="1.6"/><circle cx="238" cy="376" r="1.4"/>
+      <circle cx="720" cy="394" r="1.8"/><circle cx="653" cy="442" r="1.4"/><circle cx="785" cy="477" r="1.4"/>
+      <path d="M326 380v9m-4.5-4.5h9M577 373v8m-4-4h8" stroke="#e3edf0" stroke-width="1.2"/>
+    </g>
+    <circle cx="446" cy="418" r="34" fill="#f6ad48" opacity=".98"/>
+    <circle cx="446" cy="418" r="19" fill="#ffe1a1"/>
+    <circle cx="490" cy="421" r="34" fill="#e7e7de"/>
+    <circle cx="478" cy="411" r="30" fill="#f2f4ed" opacity=".62"/>
+    <path d="M66 640 L66 616 L110 616 L110 585 L153 585 L153 620 L196 620 L196 571 L242 571 L242 626 L286 626 L286 594 L331 594 L331 632 L377 632 L377 574 L425 574 L425 617 L469 617 L469 588 L510 588 L510 630 L554 630 L554 577 L604 577 L604 614 L650 614 L650 565 L700 565 L700 625 L747 625 L747 589 L792 589 L792 619 L826 619 L826 762 L66 762Z" fill="#496575"/>
+    <path d="M66 681 L826 681 L826 762 L66 762Z" fill="#314d5d" opacity=".75"/>
+    <g fill="#e3b86f" opacity=".84"><rect x="127" y="635" width="8" height="13"/><rect x="210" y="636" width="8" height="13"/><rect x="308" y="640" width="8" height="13"/><rect x="445" y="636" width="8" height="13"/><rect x="583" y="633" width="8" height="13"/><rect x="733" y="639" width="8" height="13"/></g>
+    <path d="M96 744h700" stroke="#bfd1d7" stroke-width="1" opacity=".38"/>
+  </g>
+  <path d="M448 464 C440 489 413 507 365 520" fill="none" stroke="#f0ad43" stroke-width="1.5"/>
+  <text x="77" y="524" font-family="DejaVu Sans, sans-serif" font-size="12" font-weight="700" fill="#fff4de">SUN paints first</text>
+  <path d="M493 459 C512 483 539 500 592 511" fill="none" stroke="#f2f4ed" stroke-width="1.5"/>
+  <text x="594" y="515" font-family="DejaVu Sans, sans-serif" font-size="12" font-weight="700" fill="#f4f6ef">MOON paints in front</text>
+  <rect x="60" y="786" width="780" height="105" rx="12" fill="#edf3f6"/>
+  <text x="80" y="813" font-family="DejaVu Sans, sans-serif" font-size="13" font-weight="700" fill="#29475d">AUTHORED EVENT INPUTS · OCT 28</text>
+  <text x="80" y="838" font-family="DejaVu Sans, sans-serif" font-size="13" fill="#405a6e">Sunrise 06:00 · Sunset 18:00 · Moonrise 04:30 · Moonset 17:30 · Phase 0.50</text>
+  <text x="80" y="863" font-family="DejaVu Sans, sans-serif" font-size="12" fill="#62788a">Sun center (.500, .180) · Moon center (.558, .187) · deliberate partial overlap</text>
+  <rect x="60" y="911" width="780" height="45" rx="9" fill="url(#panel)"/>
+  <text x="80" y="940" font-family="DejaVu Sans, sans-serif" font-size="12" fill="#f0f5f7">Existing forecast readout and timeline remain visible and unchanged.</text>
+  <line x1="86" y1="1001" x2="814" y2="1001" stroke="#a7b9c3" stroke-width="3"/>
+  <line x1="86" y1="1001" x2="436" y2="1001" stroke="#24b6bd" stroke-width="5"/>
+  <circle cx="436" cy="1001" r="8" fill="#f4bf62" stroke="#fff" stroke-width="2"/>
+  <text x="60" y="1032" font-family="DejaVu Sans, sans-serif" font-size="11" fill="#64798a">Existing catalog time tape · exact selected instant remains authoritative</text>
+
+  <!-- State B: moderate rain with cloud and foreground precipitation -->
+  <rect x="896" y="229" width="828" height="829" rx="18" fill="#fff" stroke="#8faec0" stroke-width="2"/>
+  <text x="920" y="265" font-family="DejaVu Sans, sans-serif" font-size="18" font-weight="700" fill="#203a50">02 · MODERATE RAIN / FOREGROUND FIELD</text>
+  <text x="920" y="291" font-family="DejaVu Sans, sans-serif" font-size="13" fill="#60788a">Selected Oct 29, 2026 · 12:00 PM CDT · 2026-10-29T17:00Z</text>
+  <g clip-path="url(#clipRain)">
+    <rect x="934" y="342" width="760" height="420" fill="url(#rainSky)"/>
+    <g fill="#e2e6e4" opacity=".91">
+      <ellipse cx="1010" cy="414" rx="92" ry="31"/><ellipse cx="1101" cy="400" rx="84" ry="37"/><ellipse cx="1173" cy="420" rx="79" ry="29"/>
+      <ellipse cx="1246" cy="409" rx="87" ry="32"/><ellipse cx="1336" cy="395" rx="93" ry="38"/><ellipse cx="1422" cy="417" rx="84" ry="31"/>
+      <ellipse cx="1510" cy="405" rx="89" ry="34"/><ellipse cx="1600" cy="416" rx="91" ry="30"/><ellipse cx="1680" cy="400" rx="75" ry="37"/>
+    </g>
+    <g fill="#aebdc2" opacity=".75">
+      <ellipse cx="1047" cy="448" rx="96" ry="28"/><ellipse cx="1175" cy="445" rx="82" ry="31"/>
+      <ellipse cx="1322" cy="448" rx="103" ry="28"/><ellipse cx="1460" cy="443" rx="91" ry="32"/>
+      <ellipse cx="1603" cy="448" rx="108" ry="27"/>
+    </g>
+    <circle cx="1358" cy="421" r="30" fill="#e7e7de" opacity=".74"/>
+    <path d="M934 640 L934 616 L978 616 L978 585 L1021 585 L1021 620 L1064 620 L1064 571 L1110 571 L1110 626 L1154 626 L1154 594 L1199 594 L1199 632 L1245 632 L1245 574 L1293 574 L1293 617 L1337 617 L1337 588 L1378 588 L1378 630 L1422 630 L1422 577 L1472 577 L1472 614 L1518 614 L1518 565 L1568 565 L1568 625 L1615 625 L1615 589 L1660 589 L1660 619 L1694 619 L1694 762 L934 762Z" fill="#425d6b"/>
+    <path d="M934 681 L1694 681 L1694 762 L934 762Z" fill="#293f50" opacity=".76"/>
+    <g stroke="#c6e5ed" stroke-width="2" opacity=".93">
+      <path d="M981 475l-8 23m38-14-8 23m60-31-8 23m48-13-8 23m56-32-8 23m67-15-8 23m56-32-8 23m55-13-8 23m62-31-8 23m54-14-8 23m69-32-8 23m50-12-8 23m54-31-8 23m45-12-8 23"/>
+      <path d="M1008 557l-8 23m69-15-8 23m53-31-8 23m72-15-8 23m61-31-8 23m66-13-8 23m60-31-8 23m52-13-8 23m77-31-8 23m55-15-8 23m62-31-8 23m59-13-8 23m58-31-8 23"/>
+      <path d="M971 645l-8 23m53-14-8 23m81-32-8 23m58-12-8 23m73-31-8 23m53-14-8 23m77-31-8 23m66-13-8 23m55-31-8 23m73-14-8 23m63-32-8 23m59-13-8 23m47-31-8 23"/>
+    </g>
+    <g fill="#e3b86f" opacity=".8"><rect x="995" y="635" width="8" height="13"/><rect x="1083" y="636" width="8" height="13"/><rect x="1181" y="640" width="8" height="13"/><rect x="1322" y="636" width="8" height="13"/><rect x="1453" y="633" width="8" height="13"/><rect x="1633" y="639" width="8" height="13"/></g>
+  </g>
+  <text x="944" y="512" font-family="DejaVu Sans, sans-serif" font-size="11" font-weight="700" fill="#fff">SUN cue follows existing RAIN suppression</text>
+  <text x="944" y="532" font-family="DejaVu Sans, sans-serif" font-size="11" fill="#eff3f3">Synthetic solar/lunar event inputs are present; nearer clouds may cover Moon.</text>
+  <rect x="920" y="786" width="780" height="105" rx="12" fill="#edf3f6"/>
+  <text x="940" y="813" font-family="DejaVu Sans, sans-serif" font-size="13" font-weight="700" fill="#29475d">WEATHER INPUTS · OCT 29</text>
+  <text x="940" y="838" font-family="DejaVu Sans, sans-serif" font-size="13" fill="#405a6e">RAIN · cloud cover 88% · Background + Middle-Ground cloud clusters</text>
+  <text x="940" y="863" font-family="DejaVu Sans, sans-serif" font-size="12" fill="#62788a">One Foreground rain field crosses near buildings · no amount/rate claim</text>
+  <rect x="920" y="911" width="780" height="45" rx="9" fill="url(#panel)"/>
+  <text x="940" y="940" font-family="DejaVu Sans, sans-serif" font-size="12" fill="#f0f5f7">Same timeline and forecast readout · only selected forecast time changes.</text>
+  <line x1="946" y1="1001" x2="1674" y2="1001" stroke="#a7b9c3" stroke-width="3"/>
+  <line x1="946" y1="1001" x2="1296" y2="1001" stroke="#24b6bd" stroke-width="5"/>
+  <circle cx="1296" cy="1001" r="8" fill="#f4bf62" stroke="#fff" stroke-width="2"/>
+  <text x="920" y="1032" font-family="DejaVu Sans, sans-serif" font-size="11" fill="#64798a">Existing catalog time tape · exact selected instant remains authoritative</text>
+
+  <rect x="36" y="1081" width="1688" height="137" rx="15" fill="#e4ebf0" stroke="#c1d0d9"/>
+  <text x="60" y="1113" font-family="DejaVu Sans, sans-serif" font-size="13" font-weight="700" fill="#29475d">PRESERVED DEPTH CONTRACT</text>
+  <text x="60" y="1142" font-family="DejaVu Sans, sans-serif" font-size="14" fill="#40596d">Background: outer space → stars → Sun → Moon → nearer clouds · Middle-Ground: atmosphere → clouds · Foreground: near buildings → canopy → single rain field</text>
+  <text x="60" y="1172" font-family="DejaVu Sans, sans-serif" font-size="13" fill="#536c80">Authored astronomy stays in a debug-only sidecar; ProviderDailySummary and the live/provider path keep their current meanings.</text>
+  <text x="60" y="1197" font-family="DejaVu Sans, sans-serif" font-size="12" fill="#64798a">Schematic target only. Installed captures on the primary route are required before claiming OX-05 visual acceptance.</text>
+</svg>

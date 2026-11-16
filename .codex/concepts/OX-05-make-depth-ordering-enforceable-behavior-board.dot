@@ -1,0 +1,63 @@
+digraph OX05DepthOrdering {
+  graph [
+    rankdir=TB,
+    bgcolor="#eef2f5",
+    pad="0.32",
+    nodesep="0.32",
+    ranksep="0.48",
+    splines=polyline,
+    fontname="DejaVu Sans",
+    fontsize=20,
+    labelloc=t,
+    label="OX-05  |  MAKE FIRST CITY DEPTH ORDER ENFORCEABLE\nBehavior board • cycle 144 • see cycle plan for approval status and fingerprints"
+  ];
+  node [shape=box, style="rounded,filled", fontname="DejaVu Sans", fontsize=12,
+        color="#547186", fontcolor="#233c50", penwidth=1.2, margin="0.18,0.12"];
+  edge [fontname="DejaVu Sans", fontsize=10, color="#477b78", fontcolor="#3b6867", penwidth=1.2, arrowsize=0.75];
+
+  input [fillcolor="#d8e9f1", label="ACTIVE CATALOG • ONE SELECTED INSTANT\nOX-03 supplies one First City composition decision set.\nOX-04 evidence, support, and source-time semantics remain unchanged."];
+  render [fillcolor="#e1edf0", label="EXISTING FIRST CITY RENDER PATH\nFirstCityComposition.layerOrder is consumed by the catalog renderer.\nThe reading fallback preserves the same city draw sequence."];
+  input -> render [label="compose once; preserve selected time"];
+
+  subgraph cluster_stack {
+    label="PROPOSED VIEW INTO THE WORLD • Background sublayers, then Middle-Ground sublayers, then Foreground sublayers";
+    color="#9cb4c2";
+    style="rounded,filled";
+    fillcolor="#e6edf2";
+    fontname="DejaVu Sans";
+    fontsize=13;
+    margin=16;
+
+    background [fillcolor="#d8e9f1", label="BACKGROUND • far world layers\nOUTER_SPACE → STARS → TIME_CUE (SUN) → LUNAR_CUE (MOON)\nThen BACKGROUND_CLOUDS → BACKGROUND_ARCHITECTURE\nSun is farther than Moon; only the outer-space backdrop and stars sit behind the celestial field"];
+    midground [fillcolor="#f4e8ce", label="MIDDLE-GROUND • nearer world layers\nATMOSPHERE → MIDGROUND_CLOUDS\nCloud cover may use overlapping clusters at Background and Middle-Ground depths; nearer clouds may cover the Sun and Moon"];
+    foreground [fillcolor="#dcebe4", label="FOREGROUND\nFOREGROUND_ARCHITECTURE → CANOPY → WINDOW_LIGHTS\nPrecipitation depth is owner choice; either placement follows both celestial cues"];
+    background -> midground [label="absolute order"];
+    midground -> foreground [label="absolute order"];
+    { rank=same; background; midground; foreground; }
+  }
+  render -> background [label="classify every physical layer"];
+
+  pass [shape=note, fillcolor="#eee8f5", color="#9985ad",
+        label="NAMED COMPOSITING PASSES\nTIME_WASH and READOUT_QUIET_ZONE stay explicit passes, outside the physical depth groups.\nPreserve their existing coverage and placement relative to the city layers; they do not reorder physical objects."];
+  foreground -> pass [style=dashed, color="#8d79a0", label="separate pass semantics"];
+
+  celestial [shape=note, style="filled", fillcolor="#e9e2f2", color="#9b88ae",
+        label="OWNER DIRECTION • CELESTIAL DEPTH\nOuter space and stars form the backdrop; TIME_CUE (Sun) precedes LUNAR_CUE (Moon) inside Background.\nThe Moon may overlap the Sun. Atmosphere and closer cloud/world layers draw after both and may occlude them."];
+  rain [shape=box, style="rounded,filled", fillcolor="#fff2d8", color="#d2a34f",
+        label="OWNER CHOICE • SINGLE PRECIPITATION FIELD / NEAR BUILDING\nModerate rain may fill the sky and span the scene with one field.\nA. Middle-Ground: near buildings occlude the field.\nB. Foreground: the field draws over near buildings (candidate current sequence); add no near/far split."];
+  { rank=same; celestial; rain; }
+  midground -> celestial [style=dashed, color="#806e98", label="recorded owner direction"];
+  foreground -> rain [style=dashed, color="#b38c4b", label="confirm or revise field depth"];
+
+  invariants [fillcolor="#e8eef2", label="PRESERVED INVARIANTS\nBackground < Middle-Ground < Foreground; no lower physical group paints above a higher group.\nInside Background: outer-space/stars → Sun → Moon → nearer background clouds/architecture. The Moon may overlay the Sun; all nearer atmosphere and world layers can occlude both. Keep local painter order inside each group. Preserve cloud-origin rain when visible clouds exist; preserve the no-cloud carried-rain field.\nNo change to weather evidence, exact selected instant, cue art, forecast text, or timeline behavior."];
+  celestial -> invariants [label="owner-directed overlap target"];
+  rain -> invariants [label="selected overlap target"];
+  pass -> invariants [label="pass contract"];
+
+  exit [fillcolor="#dcebe4", color="#5f9380", label="OX-05 EXIT\nOrdering assertions plus visually checked overlap cases; no cross-depth inversion.\nModerate-rain comparison: overlapping small-to-medium cloud clusters across Background and Middle-Ground, plus one scene-wide field; review Sun/Moon occlusion and near-building depth.\nInstalled visual evidence is still required for visual acceptance."];
+  invariants -> exit;
+
+  boundary [shape=note, fillcolor="#f0edf3", color="#a79ab3",
+            label="BOUNDARY\nFirst City only. No semantic element registry (OX-06), second world, renderer extraction, new weather interpretation, or scene redesign.\nBoth boards are proposals; approval and package fingerprints will be recorded in cycle 144."];
+  exit -> boundary [style=dashed, color="#92869e", arrowhead=none];
+}

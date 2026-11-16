@@ -238,11 +238,13 @@ class MainActivity : ComponentActivity(), ActivityVariantDelegate.Host {
                             showDebugLocationLauncher = isDebuggable,
                         )
                         matchingActive != null && presenter != null -> run {
-                            val scenePresentation = presenter.scenePresentation(activation).let { presentation ->
-                                if (forceSg2NullWeather) presentation.copy(
-                                    timeline = presentation.timeline.copy(scene = null),
-                                ) else presentation
-                            }
+                            val basePresentation = presenter.scenePresentation(activation)
+                            val variantPresentation = variantDelegate?.catalogScenePresentation(
+                                this@MainActivity, matchingActive, basePresentation,
+                            ) ?: basePresentation
+                            val scenePresentation = if (forceSg2NullWeather) variantPresentation.copy(
+                                timeline = variantPresentation.timeline.copy(scene = null),
+                            ) else variantPresentation
                             CatalogTimeLabScreen(
                             presentation = scenePresentation,
                             onSelectInstant = activationCoordinator::selectInstant,

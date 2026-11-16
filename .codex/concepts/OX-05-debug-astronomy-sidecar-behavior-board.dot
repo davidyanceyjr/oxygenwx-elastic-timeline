@@ -1,0 +1,36 @@
+digraph OX05DebugAstronomySidecar {
+  graph [rankdir=TB, bgcolor="#eef2f5", pad="0.3", nodesep="0.32", ranksep="0.46",
+    splines=polyline, fontname="DejaVu Sans", fontsize=18, labelloc=t,
+    label="OX-05  |  DETERMINISTIC DEBUG ASTRONOMY SIDECAR\nRevised behavior board • cycle 144 • DRAFT FOR OWNER REVIEW"];
+  node [shape=box, style="rounded,filled", fontname="DejaVu Sans", fontsize=11,
+    color="#547186", fontcolor="#233c50", penwidth=1.2, margin="0.16,0.10"];
+  edge [fontname="DejaVu Sans", fontsize=9, color="#477b78", fontcolor="#3b6867", penwidth=1.15, arrowsize=0.72];
+
+  route [fillcolor="#d8e9f1", label="DEBUG-ONLY PRIMARY ROUTE\n#DEBUG → DebugCatalogActivity → Load OX-05 review fixture\nNo saved user location or network request"];
+  catalog [fillcolor="#e1edf0", label="FIXED SIMULATED CATALOG\nLocation debug:ox05-depth-review-chicago • America/Chicago\nSIMULATED namespace • dataset ox05-depth-review-synthetic-astronomy-v1\nFixed asOf 2026-10-28T12:00Z"];
+  sidecar [shape=note, fillcolor="#fff0d6", color="#d2a34f", label="DEBUG ASTRONOMY SIDECAR\nOrigin: AUTHORED_SYNTHETIC_REVIEW_INPUT\n2026-10-28 and 2026-10-29:\nSun 06:00–18:00 CDT • Moon 04:30–17:30 CDT • phase 0.50\nNot provider values or astronomical claims"];
+  route -> catalog [label="activate fixed recording"];
+  route -> sidecar [label="select by fixture dataset ID"];
+
+  presentation [fillcolor="#e6e9f2", label="DEBUG VARIANT PRESENTATION HOOK\nDefault no-op in the release variant. For this dataset only, copy the evaluated SceneReading;\napply solar events, daylight phase, lunar day/events from the sidecar; recompute FirstCityComposition.\nPreserve timeline, selected instant, weather fields, and diagnostics."];
+  catalog -> presentation [label="primary CatalogTimeLabScreen reading"];
+  sidecar -> presentation [label="explicit synthetic inputs"];
+
+  clear [fillcolor="#dcebe4", label="SAMPLE A • CELESTIAL OVERLAP\n2026-10-28T17:00Z = 12:00 CDT • CLEAR • cloud cover 0%\nSun center (0.500, 0.180); Moon center ≈ (0.558, 0.187)\nMoon paints after Sun inside Background"];
+  rain [fillcolor="#d8e9f1", label="SAMPLE B • MODERATE-RAIN DEPTH\n2026-10-29T17:00Z = 12:00 CDT • RAIN • cloud cover 88%\nSame solar/lunar sidecar facts remain present. Existing rain rule suppresses Sun;\nnearer clouds may cover Moon; one Foreground rain field crosses near buildings."];
+  presentation -> clear [label="selected local date chooses sidecar row"];
+  presentation -> rain [label="selected local date chooses sidecar row"];
+
+  stack [fillcolor="#e8eef2", label="PRESERVED PHYSICAL ORDER\nBackground: outer space → stars → Sun → Moon → Background clouds → distant architecture\nMiddle-Ground: atmosphere → Middle-Ground clouds\nForeground: near architecture → canopy → window lights → single precipitation field\nTIME_WASH and READOUT_QUIET_ZONE remain separate named passes"];
+  clear -> stack [label="Sun/Moon overlap and occlusion"];
+  rain -> stack [label="cloud and near-building overlap"];
+
+  truth [shape=note, fillcolor="#f1edf5", color="#9985ad", label="DATA-TRUTH BOUNDARY\nDo not populate CanonicalCatalog.dailySummaries or ProviderDailySummary with authored events.\nLeave provider mapper, catalog codec, live path, and non-fixture datasets unchanged.\nDEMO DATA label names this as an authored synthetic review fixture."];
+  stack -> truth;
+
+  exit [fillcolor="#dcebe4", color="#5f9380", label="REVISED OX-05 EXIT\nFocused ordering and fixture-projection proof; installed primary-route captures at both exact instants;\nno cross-depth inversion. Preserve OX-03/OX-04 semantics, exact time selection, forecast text,\nand gesture ownership. Store evidence under cycle 144."];
+  truth -> exit;
+
+  boundary [shape=note, fillcolor="#f0edf3", color="#a79ab3", label="SCOPE BOUNDARY\nThe fixed fixture route and sidecar exist only for deterministic OX-05 review.\nNo canonical daily-event schema change, astronomy calculation, weather inference, OX-06 registry,\nrenderer extraction, production route change, or deprecated oxygenWX work.\nPending owner approval; no implementation authorization yet."];
+  exit -> boundary [style=dashed, color="#92869e", arrowhead=none];
+}

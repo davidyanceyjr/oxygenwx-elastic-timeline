@@ -959,16 +959,6 @@ The SG workstream follows the owner-directed pivot recorded above and is grounde
 **Evidence:** `.codex/test-artifacts/139-wf2-board-visual-policy/README.md`, `.codex/history/139-wf2-board-visual-policy.md`, and `.codex/history/plans/139-wf2-board-visual-policy.md`.
 **Slice board(s):** Product owner approved the behavior board `.codex/concepts/WF.2-board-visual-policy-behavior-board.svg` on 2026-11-15, with editable Graphviz source `.codex/concepts/WF.2-board-visual-policy-behavior-board.dot` and PNG render `.codex/concepts/WF.2-board-visual-policy-behavior-board.png`. It governs DOT-to-SVG/PNG behavior boards, SVG or PNG UI artwork with both kept when they serve distinct roles, and presentation of non-terminal visuals through `feh` on X display `:0` before approval. No UI artwork board applies because this slice changes workflow documentation, not product UI or visual output.
 
-**Owner sequencing decision (2026-11-16):** The owner requested safeguards against cycle, slice, and plan collisions while Cycle 143 remains PLANNED for OX-04. Keep OX-04 the sole NEXT item; WF.3 is recorded as PLANNED pending its objective-specific behavior board. This entry does not alter Cycle 143, approve WF.3 scope, or authorize implementation.
-
-### WF.3 — Reject cycle, slice, and plan collisions — PLANNED
-
-**Objective/scope:** Strengthen the cycle tracker so a stale or orphaned plan cannot silently compete with the current cycle, a cycle ID cannot be reused through a misnamed plan record, and a roadmap slice cannot appear in multiple concurrently open plans. Preserve stable historical slice reuse and closed-plan readability. Workflow tooling only; no app or product behavior changes.
-**Depends on:** WF.1 and WF.2.
-**Exit:** `python scripts/dev.py workflow` and cycle-start validation identify duplicate cycle IDs across plan headers/manifests and archive records, orphaned nonterminal plans, duplicate open-plan ownership, and overlapping slices before a cycle is created or advanced. Valid closed history remains accepted, collision failures leave records unchanged, and scoped workflow evidence plus `git diff --check` are recorded.
-**Evidence:** Future cycle-specific `.codex/test-artifacts/<cycle-id>/README.md`, `.codex/history/<cycle-id>.md`, and `.codex/history/plans/<cycle-id>.md`; exact paths assigned when planned.
-**Slice board(s):** Objective-specific behavior board pending; no UI artwork board applies because this slice changes workflow tooling without changing product UI or visual output. No board approval, plan finalization, or implementation is claimed.
-
 ## MR — Main weather readout
 
 ### MR.1 — Refactor the main weather readout — DONE
@@ -1046,6 +1036,8 @@ The SG workstream follows the owner-directed pivot recorded above and is grounde
 
 **Owner board approval (2026-11-16):** The product owner approved cycle 143's OX-04 behavior and UI artwork board packages. Their complete paths and SHA-256 fingerprints are recorded in `.codex/plans/143-ox04-scene-truth.md`. The behavior board governs selected evidence, support, source time, and probability semantics; the artwork board shows the existing First City supplied, carried, and unknown states. The schematic artwork is not installed acceptance evidence. Approval clears the board gate but does not activate the plan or authorize implementation.
 
+**Owner sequencing update (2026-11-16):** After OX-04 closed, the owner selected OX-05 as the sole global `NEXT` for cycle 144 board preparation. Both objective-specific boards are pending; selection does not approve either board, finalize a plan, or authorize implementation.
+
 ### OX-01 — Baseline the current world — DONE
 
 **Objective/scope:** Lock down what currently works before restructuring it: scene state, First City frame composition, scrubbing, astronomy cues, and accessibility. Reuse completed baseline records and isolate only the unmet Scene Engine questions. Scope is limited to this outcome; the boards may propose a split or a changed boundary before approval.
@@ -1122,13 +1114,17 @@ The SG workstream follows the owner-directed pivot recorded above and is grounde
 **Evidence:** Cycle 143 targets `.codex/test-artifacts/143-ox04-scene-truth/README.md` and `.codex/history/143-ox04-scene-truth.md`; archived plan target `.codex/history/plans/143-ox04-scene-truth.md`.
 **Slice board(s):** Product-owner-approved 2026-11-16 behavior package `.codex/concepts/OX-04-scene-truth-behavior-board.dot`, `.svg`, `.png`, and `.md`; UI artwork package `.codex/concepts/OX-04-first-city-unknown-state-ui-artwork-board.svg`, `.png`, and `.md` is required for the visible unknown-state acceptance. Cycle 143's plan records approval and fingerprints. These boards govern the evidence contract and schematic First City states; the artwork is not installed evidence. Approval does not activate the plan or authorize implementation.
 
-### OX-05 — Make depth ordering enforceable — PLANNED
+### OX-05 — Make depth ordering enforceable — DONE
 
-**Objective/scope:** Prove the spec's absolute Background → Midground → Foreground rule in the existing city, while retaining local element order and special effects semantics. Scope is limited to this outcome; the boards may propose a split or a changed boundary before approval.
+**Objective/scope:** Prove the spec's absolute Background → Middle-Ground → Foreground rule in the existing city, retaining ordered sublayers within each group and preserving special effects semantics. The scene is a 2D view into the world selected by the current theme. Use a deterministic debug-only synthetic astronomy fixture to present the approved celestial and moderate-rain overlaps on the installed primary catalog composition. Its authored astronomy sidecar and presentation adapter are restricted to the exact debug dataset and stay outside canonical/provider recording semantics. Scope is limited to this outcome.
+**Owner depth direction (2026-11-16, cycle 144 board review):** Outer space and stars form the far Background; the Sun precedes the Moon within Background, and the Moon may appear in front of the Sun. Nearer atmosphere and cloud/world layers may occlude the celestial field. The view follows Background → Middle-Ground → Foreground, with ordered sublayers within each group. This direction is recorded in the product-owner-approved boards; cycle 144 records the package fingerprints.
+**Owner rain-art direction (2026-11-16, cycle 144 board review):** For moderate rain, a cloud-filled sky and the single rain field spanning the scene are appropriate. The OX-05 comparison varies only whether near buildings occlude that field.
+**Owner cloud-art direction (2026-11-16, cycle 144 board review):** Moderate-rain cloud cover is composed of overlapping small-to-medium clouds. Cloud layers may occupy both Background and Middle-Ground; the cloud cover spans the scene above the rain field.
+**Owner precipitation-depth selection (2026-11-16, cycle 144):** The owner selected option B: the single scene-wide precipitation field occupies Foreground and crosses in front of near buildings. Do not split it into near and distant particles.
 **Depends on:** OX-03.
-**Exit:** Ordering assertions and visually checked overlap cases; no cross-depth inversion. Provide the scoped proof or explicit recorded disposition; visual claims require installed evidence when applicable.
-**Evidence:** Future cycle-specific `.codex/test-artifacts/<cycle-id>/` and `.codex/history/<cycle-id>.md`; exact paths assigned when a cycle is planned.
-**Slice board(s):** Objective-specific behavior board pending; UI artwork board pending. No board approval or activation is claimed.
+**Exit:** Focused ordering and fixture-projection assertions pass. On the installed primary catalog composition, capture the approved celestial-overlap state and moderate-rain state from the deterministic debug fixture, with its synthetic provenance label visible; no cross-depth inversion. The moderate-rain state shows overlapping small-to-medium cloud clusters across Background and Middle-Ground and a single scene-wide precipitation field in Foreground that draws in front of near buildings. Provide scoped proof or an explicit recorded disposition. Visual claims require installed evidence.
+**Evidence:** Cycle 144 targets `.codex/test-artifacts/144-ox05-depth-ordering/README.md`, `.codex/history/144-ox05-depth-ordering.md`, and archived plan `.codex/history/plans/144-ox05-depth-ordering.md`.
+**Slice board(s):** Product-owner-approved 2026-11-16 revised behavior package `.codex/concepts/OX-05-debug-astronomy-sidecar-behavior-board.dot`, `.svg`, `.png`, and `.md`; revised UI artwork package `.codex/concepts/OX-05-debug-astronomy-sidecar-ui-board.svg`, `.png`, and `.md`. The approved revision specifies the fixed debug-only fixture, authored-synthetic astronomy sidecar provenance, primary-route adapter and label, the exact celestial and moderate-rain review states, and the owner-directed world-layer order. Cycle 144 records the complete package fingerprints. The owner-selected option B remains: the single field is in Foreground and crosses in front of near buildings. The board package guides scope and acceptance; installed screenshots are still required for visual acceptance.
 
 ### OX-06 — Give scene elements semantic identity — PLANNED
 

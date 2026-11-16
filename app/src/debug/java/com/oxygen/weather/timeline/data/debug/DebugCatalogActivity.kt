@@ -76,6 +76,8 @@ class DebugCatalogActivity : ComponentActivity() {
     private var unavailableFixtureLocationId by mutableStateOf<com.oxygen.weather.timeline.data.catalog.LocationId?>(null)
     private var additionalEventsFixtureReady by mutableStateOf(false)
     private var additionalEventsFixtureLocationId by mutableStateOf<com.oxygen.weather.timeline.data.catalog.LocationId?>(null)
+    private var ox05ReviewLoading by mutableStateOf(false)
+    private var ox05ReviewStatus by mutableStateOf("Fixed synthetic Chicago review fixture")
     private var showAuthoredLibrary by mutableStateOf(false)
     private var authoredPreviewError by mutableStateOf<String?>(null)
     private var reloadJob: Job? = null
@@ -405,6 +407,13 @@ class DebugCatalogActivity : ComponentActivity() {
                 Text("Debug dataset picker", style = MaterialTheme.typography.headlineSmall)
                 OutlinedButton(onClick = { showAuthoredLibrary = true }) { Text("Catalog library and editor") }
                 Text("Catalog activation and 44-date timeline review")
+                OutlinedButton(
+                    enabled = !ox05ReviewLoading && !relay.activation.loading,
+                    onClick = { loadOx05ReviewFixture() },
+                ) {
+                    Text(if (ox05ReviewLoading) "Preparing OX-05 review fixture…" else "Load OX-05 review fixture")
+                }
+                Text(ox05ReviewStatus)
                 val current = relay.activation.active
                 if (current != null) Text(
                     "Active catalog: ${current.origin} · ${current.location.id.value} · ${current.datasetId.value} · " +
@@ -698,6 +707,47 @@ class DebugCatalogActivity : ComponentActivity() {
     private fun routePickerAgain() = startActivity(Intent(this, DebugCatalogActivity::class.java)
         .putExtra(EXTRA_DEBUG_SESSION, true))
 
+    private fun loadOx05ReviewFixture() {
+        if (ox05ReviewLoading) return
+        lifecycleScope.launch {
+            ox05ReviewLoading = true
+            ox05ReviewStatus = "Preparing deterministic SIMULATED recording…"
+            try {
+                val recording = DebugOx05DepthOrderingFixture.recording()
+                storage.save(DebugOx05DepthOrderingFixture.storageNamespace, recording)
+                val stored = storage.load(
+                    DebugOx05DepthOrderingFixture.location,
+                    DebugOx05DepthOrderingFixture.storageNamespace,
+                    DebugOx05DepthOrderingFixture.datasetId,
+                )
+                check(stored is StoredCatalogResult.Found &&
+                    DebugOx05DepthOrderingFixture.matchesReviewContract(stored.recording)
+                ) {
+                    "The OX-05 review recording did not validate after storage"
+                }
+                routeOx05ReviewFixture()
+            } catch (cancelled: kotlinx.coroutines.CancellationException) {
+                throw cancelled
+            } catch (error: Exception) {
+                ox05ReviewStatus = "OX-05 fixture unavailable · ${error.message ?: "catalog validation failed"}"
+            } finally {
+                ox05ReviewLoading = false
+            }
+        }
+    }
+
+    private fun routeOx05ReviewFixture() {
+        startActivity(
+            Intent(this, MainActivity::class.java)
+                .setAction(ACTION_ACTIVATE_OX05_DEPTH_REVIEW)
+                .putExtra(EXTRA_VERSION, CONTRACT_VERSION)
+                .putExtra(EXTRA_DATASET_ID, DebugOx05DepthOrderingFixture.DATASET_ID)
+                .putExtra(EXTRA_SELECTED_INSTANT, DebugOx05DepthOrderingFixture.CELESTIAL_OVERLAP_INSTANT)
+                .addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_SINGLE_TOP),
+        )
+        finish()
+    }
+
     private fun openLocationSelector() = startActivity(Intent(this, MainActivity::class.java)
         .putExtra("location_selector", true).addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_SINGLE_TOP))
 
@@ -715,6 +765,7 @@ class DebugCatalogActivity : ComponentActivity() {
 
         const val ACTION_ACTIVATE_CATALOG = CatalogPickerDelegate.ACTION_ACTIVATE_CATALOG
         const val ACTION_SELECT_CATALOG_INSTANT = CatalogPickerDelegate.ACTION_SELECT_CATALOG_INSTANT
+        const val ACTION_ACTIVATE_OX05_DEPTH_REVIEW = CatalogPickerDelegate.ACTION_ACTIVATE_OX05_DEPTH_REVIEW
         const val CONTRACT_VERSION = CatalogPickerDelegate.CONTRACT_VERSION
         const val EXTRA_VERSION = CatalogPickerDelegate.EXTRA_VERSION
         const val EXTRA_LOCATION_ID = CatalogPickerDelegate.EXTRA_LOCATION_ID

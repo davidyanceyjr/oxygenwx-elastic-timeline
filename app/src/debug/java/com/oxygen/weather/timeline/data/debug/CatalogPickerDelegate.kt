@@ -38,7 +38,9 @@ import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
 import com.oxygen.weather.timeline.ActivityVariantDelegate
+import com.oxygen.weather.timeline.data.catalog.ActiveCatalogSelection
 import com.oxygen.weather.timeline.presentation.CatalogDiagnosticPresentation
+import com.oxygen.weather.timeline.presentation.CatalogTimelineScenePresentation
 import com.oxygen.weather.timeline.presentation.symbol.WeatherSymbolIcon
 import com.oxygen.weather.timeline.presentation.symbol.WeatherSymbolId
 import com.oxygen.weather.timeline.data.catalog.CatalogActivationCoordinator
@@ -109,6 +111,17 @@ class CatalogPickerDelegate : ActivityVariantDelegate {
         publishRelay(state)
     }
 
+    override fun catalogScenePresentation(
+        host: ActivityVariantDelegate.Host,
+        active: ActiveCatalogSelection,
+        presentation: CatalogTimelineScenePresentation,
+    ): CatalogTimelineScenePresentation = DebugOx05AstronomySidecar.apply(
+        active.datasetId,
+        active.origin,
+        active.location.timeZone,
+        presentation,
+    )
+
     private fun publishRelay(state: CatalogActivationState) {
         val activation = if (previewFailureShownInLibrary) state.copy(lastError = null) else state
         DebugCatalogRelay.publish(activation, if (previewFailureShownInLibrary) null else requestError)
@@ -143,13 +156,16 @@ class CatalogPickerDelegate : ActivityVariantDelegate {
 
     @Composable
     override fun MainScreenOverlay(host: ActivityVariantDelegate.Host, diagnostics: CatalogDiagnosticPresentation) {
-        val activeOrigin = host.activationCoordinator.state.value.active?.origin
-        val sourceDetail = when (activeOrigin) {
-            CatalogOrigin.SIMULATED -> "SIMULATED source"
-            CatalogOrigin.REPLAY -> "REPLAY · captured from SIMULATED"
+        val active = host.activationCoordinator.state.value.active
+        val activeDatasetId = active?.datasetId?.value
+        val ox05Review = active?.origin == CatalogOrigin.SIMULATED &&
+            activeDatasetId == DebugOx05DepthOrderingFixture.DATASET_ID
+        val sourceDetail = when {
+            ox05Review -> DebugOx05AstronomySidecar.LABEL.removePrefix("DEMO DATA · ")
+            active?.origin == CatalogOrigin.SIMULATED -> "SIMULATED source"
+            active?.origin == CatalogOrigin.REPLAY -> "REPLAY · captured from SIMULATED"
             else -> null
         }
-        val activeDatasetId = host.activationCoordinator.state.value.active?.datasetId?.value
         val symbolReview = activeDatasetId in setOf(
             DebugCatalogActivity.SG11_SKY_REPLAY_ID,
             DebugCatalogActivity.SG11_RAIN_ICE_REPLAY_ID,
@@ -171,32 +187,45 @@ class CatalogPickerDelegate : ActivityVariantDelegate {
                     shape = RoundedCornerShape(14.dp),
                     tonalElevation = 3.dp,
                 ) {
-                    Row(
-                        modifier = Modifier.fillMaxWidth().padding(horizontal = 10.dp, vertical = 7.dp),
-                        verticalAlignment = Alignment.CenterVertically,
-                        horizontalArrangement = Arrangement.SpaceBetween,
-                    ) {
-                        Surface(
-                            color = Color(0xFFFFF4D8),
-                            shape = RoundedCornerShape(50),
-                        ) {
-                            Text(
-                                "DEMO DATA",
-                                modifier = Modifier.padding(horizontal = 12.dp, vertical = 5.dp),
-                                color = Color(0xFF166F7B),
-                                fontWeight = FontWeight.Bold,
-                                style = MaterialTheme.typography.labelSmall,
-                                maxLines = 1,
-                            )
-                        }
+                    if (ox05Review) {
                         Text(
-                            sourceDetail,
-                            modifier = Modifier.weight(1f).padding(start = 10.dp),
-                            color = Color(0xFF4C687A),
+                            DebugOx05AstronomySidecar.LABEL,
+                            modifier = Modifier.fillMaxWidth().padding(horizontal = 12.dp, vertical = 8.dp)
+                                .testTag("ox05AstronomyDemoLabel"),
+                            color = Color(0xFF166F7B),
+                            fontWeight = FontWeight.Bold,
                             style = MaterialTheme.typography.labelSmall,
-                            textAlign = TextAlign.End,
+                            textAlign = TextAlign.Center,
                             maxLines = 2,
                         )
+                    } else {
+                        Row(
+                            modifier = Modifier.fillMaxWidth().padding(horizontal = 10.dp, vertical = 7.dp),
+                            verticalAlignment = Alignment.CenterVertically,
+                            horizontalArrangement = Arrangement.SpaceBetween,
+                        ) {
+                            Surface(
+                                color = Color(0xFFFFF4D8),
+                                shape = RoundedCornerShape(50),
+                            ) {
+                                Text(
+                                    "DEMO DATA",
+                                    modifier = Modifier.padding(horizontal = 12.dp, vertical = 5.dp),
+                                    color = Color(0xFF166F7B),
+                                    fontWeight = FontWeight.Bold,
+                                    style = MaterialTheme.typography.labelSmall,
+                                    maxLines = 1,
+                                )
+                            }
+                            Text(
+                                sourceDetail,
+                                modifier = Modifier.weight(1f).padding(start = 10.dp),
+                                color = Color(0xFF4C687A),
+                                style = MaterialTheme.typography.labelSmall,
+                                textAlign = TextAlign.End,
+                                maxLines = 2,
+                            )
+                        }
                     }
                 }
             }
@@ -365,7 +394,8 @@ class CatalogPickerDelegate : ActivityVariantDelegate {
     )
 
     private fun hasCatalogRequest(intent: Intent): Boolean =
-        intent.action == ACTION_ACTIVATE_CATALOG || intent.action == ACTION_SELECT_CATALOG_INSTANT || intent.hasExtra(EXTRA_VERSION) ||
+        intent.action == ACTION_ACTIVATE_CATALOG || intent.action == ACTION_SELECT_CATALOG_INSTANT ||
+            intent.action == ACTION_ACTIVATE_OX05_DEPTH_REVIEW || intent.hasExtra(EXTRA_VERSION) ||
             intent.hasExtra(EXTRA_LOCATION_ID) || intent.hasExtra(EXTRA_ORIGIN) ||
             intent.hasExtra(EXTRA_DATASET_ID) || intent.hasExtra(EXTRA_REPLAY_ID)
 
@@ -409,6 +439,29 @@ class CatalogPickerDelegate : ActivityVariantDelegate {
                         host.activationCoordinator.selectInstant(instant, active.viewGeneration)
                         publishRelay(host.activationCoordinator.state.value)
                         return@work false
+                    }
+                    if (request.action == ACTION_ACTIVATE_OX05_DEPTH_REVIEW) {
+                        require(request.getIntExtra(EXTRA_VERSION, -1) == CONTRACT_VERSION) {
+                            "Unsupported OX-05 review fixture request version"
+                        }
+                        require(request.getStringExtra(EXTRA_DATASET_ID) == DebugOx05DepthOrderingFixture.DATASET_ID) {
+                            "Unsupported OX-05 review fixture dataset"
+                        }
+                        val selectedInstant = Instant.parse(request.getStringExtra(EXTRA_SELECTED_INSTANT)
+                            ?: error("Missing OX-05 review selection"))
+                        require(selectedInstant == DebugOx05DepthOrderingFixture.celestialOverlapInstant) {
+                            "The OX-05 fixture route must start at its approved celestial-overlap instant"
+                        }
+                        check(isCurrentSessionRequest()) { "Debug session ended before the OX-05 fixture was activated" }
+                        val activated = activateCatalogForRequest(
+                            coordinator = host.activationCoordinator,
+                            participant = participant,
+                            request = DebugOx05DepthOrderingFixture.activationRequest(),
+                            selectedInstant = selectedInstant,
+                            stillCurrent = isCurrentSessionRequest,
+                        )
+                        publishRelay(host.activationCoordinator.state.value)
+                        return@work activated
                     }
                     processCatalogActivationRequest(
                         coordinator = host.activationCoordinator,
@@ -460,7 +513,10 @@ class CatalogPickerDelegate : ActivityVariantDelegate {
                         showPicker(host, openAuthoredLibrary = true, previewError = requestError)
                     } else showPicker(host)
                 },
-                showPickerAfterSuccess = { !request.getBooleanExtra(EXTRA_SAVED_PREVIEW, false) },
+                showPickerAfterSuccess = {
+                    !request.getBooleanExtra(EXTRA_SAVED_PREVIEW, false) &&
+                        request.action != ACTION_ACTIVATE_OX05_DEPTH_REVIEW
+                },
                 stillCurrent = isCurrentSessionRequest,
                 reportFailure = { error ->
                     requestError = error.message ?: "Debug activation request was rejected"
@@ -549,6 +605,7 @@ class CatalogPickerDelegate : ActivityVariantDelegate {
     companion object {
         const val ACTION_ACTIVATE_CATALOG = "com.oxygen.weather.timeline.DEBUG_ACTIVATE_CATALOG"
         const val ACTION_SELECT_CATALOG_INSTANT = "com.oxygen.weather.timeline.DEBUG_SELECT_CATALOG_INSTANT"
+        const val ACTION_ACTIVATE_OX05_DEPTH_REVIEW = "com.oxygen.weather.timeline.DEBUG_ACTIVATE_OX05_DEPTH_REVIEW"
         const val CONTRACT_VERSION = 1
         const val EXTRA_VERSION = "debug_catalog_version"
         const val EXTRA_LOCATION_ID = "debug_catalog_location_id"

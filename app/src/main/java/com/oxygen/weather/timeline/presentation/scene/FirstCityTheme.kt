@@ -16,19 +16,34 @@ object FirstCityTheme {
     const val worldHeight = 1536
     const val scaling = "Fit world width; preserve aspect and anchor at bottom; allow open sky above"
 
+    /** First City physical layers; group and local order are the renderer's depth contract. */
     val layers = listOf(
-        CityLayer("world", "Compose city world or existing weather backdrop", backToFrontOrder = 0, required = true,
-            fallback = "Neutral blue-gray gradient when weather state is unavailable"),
-        CityLayer("architecture", "sg2_city_architecture", backToFrontOrder = 1, required = true,
-            fallback = "Unresolved required layer; do not substitute weather art"),
-        CityLayer("canopy", "sg2_city_canopy", backToFrontOrder = 2, required = true,
-            fallback = "Unresolved required layer; do not substitute weather art"),
-        CityLayer("window_lights", "Compose clipped window details", backToFrontOrder = 3, required = false,
-            fallback = "Omit light details"),
-        CityLayer("time_cue", "selected-local-time sun/moon cue", backToFrontOrder = 4, required = true,
-            fallback = "Keep geometry and palette; omit the cue"),
-        CityLayer("precipitation", "existing rain/snow drawing slots", backToFrontOrder = 5, required = false,
-            fallback = "Omit precipitation marks when weather state is unavailable"),
+        CityLayer(
+            FirstCityLayer.SKY, "world", "Compose city world or existing weather backdrop", true,
+            "Neutral blue-gray gradient when weather state is unavailable",
+        ),
+        CityLayer(FirstCityLayer.STARS, "stars", "Minimal Background star field", false,
+            "Omit decorative stars"),
+        CityLayer(FirstCityLayer.TIME_CUE, "time_cue", "Selected-local-time Sun cue", false,
+            "Keep geometry and palette; omit the cue"),
+        CityLayer(FirstCityLayer.LUNAR_CUE, "lunar_cue", "Provider-bounded Moon cue", false,
+            "Keep geometry and palette; omit the cue"),
+        CityLayer(FirstCityLayer.BACKGROUND_CLOUDS, "background_clouds", "Background cloud clusters", false,
+            "Omit clouds when no visible cloud decision exists"),
+        CityLayer(FirstCityLayer.BACKGROUND_ARCHITECTURE, "background_architecture", "City world and distant skyline", true,
+            "Unresolved required layer; do not substitute weather art"),
+        CityLayer(FirstCityLayer.ATMOSPHERE, "atmosphere", "Existing diffuse atmospheric light", false,
+            "Omit the diffuse light when no sky decision exists"),
+        CityLayer(FirstCityLayer.MIDDLE_GROUND_CLOUDS, "middle_ground_clouds", "Middle-Ground cloud clusters", false,
+            "Omit clouds when no visible cloud decision exists"),
+        CityLayer(FirstCityLayer.FOREGROUND_ARCHITECTURE, "foreground_architecture", "Pixel-aligned near city", true,
+            "Unresolved required layer; do not substitute weather art"),
+        CityLayer(FirstCityLayer.CANOPY, "canopy", "sg2_city_canopy", true,
+            "Unresolved required layer; do not substitute weather art"),
+        CityLayer(FirstCityLayer.WINDOW_LIGHTS, "window_lights", "Compose clipped window details", false,
+            "Omit light details"),
+        CityLayer(FirstCityLayer.PRECIPITATION, "precipitation", "Existing single rain/snow field", false,
+            "Omit precipitation marks when weather state is unavailable"),
     )
 
     /** Resolve catalog values, support, solar position, and the established layer order once. */
@@ -96,21 +111,25 @@ object FirstCityTheme {
             visible = moonPosition != null,
         )
         val hasWeatherState = sky != null || clouds.visible || precipitation != CityPrecipitation.NONE
-        val layerOrder = buildList {
+        val visibleLayers = buildSet {
             add(FirstCityLayer.SKY)
+            add(FirstCityLayer.STARS)
             add(FirstCityLayer.BACKGROUND_ARCHITECTURE)
-            if (moonCue.visible) add(FirstCityLayer.LUNAR_CUE)
-            if (clouds.visible) add(FirstCityLayer.CLOUDS)
+            add(FirstCityLayer.ATMOSPHERE)
             add(FirstCityLayer.FOREGROUND_ARCHITECTURE)
             add(FirstCityLayer.CANOPY)
-            add(FirstCityLayer.TIME_WASH)
-            add(FirstCityLayer.READOUT_QUIET_ZONE)
+            if (cue.visible) add(FirstCityLayer.TIME_CUE)
+            if (moonCue.visible) add(FirstCityLayer.LUNAR_CUE)
+            if (clouds.visible) {
+                add(FirstCityLayer.BACKGROUND_CLOUDS)
+                add(FirstCityLayer.MIDDLE_GROUND_CLOUDS)
+            }
             if (treatment == CityTreatment.DUSK || treatment == CityTreatment.NIGHT) {
                 add(FirstCityLayer.WINDOW_LIGHTS)
             }
-            if (cue.visible) add(FirstCityLayer.TIME_CUE)
             if (hasWeatherState) add(FirstCityLayer.PRECIPITATION)
         }
+        val layerOrder = orderedLayerSequence(visibleLayers)
         return FirstCityComposition(
             selectedInstant = reading.selectedInstant,
             treatment = treatment,
@@ -122,6 +141,24 @@ object FirstCityTheme {
             hasWeatherState = hasWeatherState,
             layerOrder = layerOrder,
         )
+    }
+
+    private fun orderedLayerSequence(visibleLayers: Set<FirstCityLayer>): List<FirstCityLayer> {
+        val physicalLayers = layers
+            .filter { it.layer in visibleLayers }
+            .sortedWith(
+                compareBy<CityLayer> { it.depthGroup.backToFrontOrder }
+                    .thenBy { it.localOrder },
+            )
+        return buildList {
+            physicalLayers.forEach { layer ->
+                add(layer.layer)
+                if (layer.layer == FirstCityLayer.CANOPY) {
+                    add(FirstCityLayer.TIME_WASH)
+                    add(FirstCityLayer.READOUT_QUIET_ZONE)
+                }
+            }
+        }
     }
 
     fun treatment(reading: SceneReading, zone: ZoneId): CityTreatment {
@@ -215,11 +252,19 @@ object FirstCityTheme {
 }
 
 data class CityLayer(
+    val layer: FirstCityLayer,
     val name: String,
     val asset: String,
-    val backToFrontOrder: Int,
     val required: Boolean,
     val fallback: String,
-)
+    val depthGroup: FirstCityDepthGroup = requireNotNull(layer.depthGroup),
+    val localOrder: Int = requireNotNull(layer.localOrder),
+) {
+    init {
+        require(layer.depthGroup == depthGroup && layer.localOrder == localOrder) {
+            "City layer metadata must match its First City depth contract"
+        }
+    }
+}
 
 enum class CityTreatment { MORNING, DAY, DUSK, NIGHT, UNAVAILABLE }

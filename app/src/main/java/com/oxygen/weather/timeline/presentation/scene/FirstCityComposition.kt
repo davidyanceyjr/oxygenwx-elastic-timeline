@@ -32,18 +32,31 @@ data class CityCloudDecision(
 
 enum class CityPrecipitation { NONE, RAIN, SNOW, STORM }
 
-enum class FirstCityLayer {
-    SKY,
-    BACKGROUND_ARCHITECTURE,
-    LUNAR_CUE,
-    CLOUDS,
-    FOREGROUND_ARCHITECTURE,
-    CANOPY,
-    TIME_WASH,
-    READOUT_QUIET_ZONE,
-    WINDOW_LIGHTS,
-    TIME_CUE,
-    PRECIPITATION,
+enum class FirstCityDepthGroup(val backToFrontOrder: Int) {
+    BACKGROUND(0),
+    MIDDLE_GROUND(1),
+    FOREGROUND(2),
+}
+
+/** Physical layers carry an absolute group and a stable local order. Null group marks a pass. */
+enum class FirstCityLayer(
+    val depthGroup: FirstCityDepthGroup?,
+    val localOrder: Int?,
+) {
+    SKY(FirstCityDepthGroup.BACKGROUND, 0),
+    STARS(FirstCityDepthGroup.BACKGROUND, 1),
+    TIME_CUE(FirstCityDepthGroup.BACKGROUND, 2),
+    LUNAR_CUE(FirstCityDepthGroup.BACKGROUND, 3),
+    BACKGROUND_CLOUDS(FirstCityDepthGroup.BACKGROUND, 4),
+    BACKGROUND_ARCHITECTURE(FirstCityDepthGroup.BACKGROUND, 5),
+    ATMOSPHERE(FirstCityDepthGroup.MIDDLE_GROUND, 0),
+    MIDDLE_GROUND_CLOUDS(FirstCityDepthGroup.MIDDLE_GROUND, 1),
+    FOREGROUND_ARCHITECTURE(FirstCityDepthGroup.FOREGROUND, 0),
+    CANOPY(FirstCityDepthGroup.FOREGROUND, 1),
+    WINDOW_LIGHTS(FirstCityDepthGroup.FOREGROUND, 2),
+    PRECIPITATION(FirstCityDepthGroup.FOREGROUND, 3),
+    TIME_WASH(null, null),
+    READOUT_QUIET_ZONE(null, null),
 }
 
 /** Small renderer contract for the catalog path; all weather choices are already resolved. */

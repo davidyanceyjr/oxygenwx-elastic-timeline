@@ -6,9 +6,11 @@ import androidx.compose.runtime.Composable
 import androidx.lifecycle.LifecycleCoroutineScope
 import com.oxygen.weather.timeline.data.catalog.CatalogActivationCoordinator
 import com.oxygen.weather.timeline.data.catalog.CatalogActivationState
+import com.oxygen.weather.timeline.data.catalog.ActiveCatalogSelection
 import com.oxygen.weather.timeline.data.catalog.PlaceSearcher
 import com.oxygen.weather.timeline.data.catalog.SavedLocationRepository
 import com.oxygen.weather.timeline.presentation.CatalogDiagnosticPresentation
+import com.oxygen.weather.timeline.presentation.CatalogTimelineScenePresentation
 import java.util.ServiceLoader
 
 /** Optional build-variant behavior. Release has no provider; debug behavior stays out of main DEX. */
@@ -16,6 +18,11 @@ interface ActivityVariantDelegate {
     fun onMainActivityCreated(host: Host, intent: Intent): Boolean = false
     fun onMainActivityNewIntent(host: Host, intent: Intent): Boolean = false
     fun onCatalogActivationState(host: Host, state: CatalogActivationState) = Unit
+    fun catalogScenePresentation(
+        host: Host,
+        active: ActiveCatalogSelection,
+        presentation: CatalogTimelineScenePresentation,
+    ): CatalogTimelineScenePresentation = presentation
     fun createFixturePlaceSearcher(host: Host): PlaceSearcher? = null
     fun openCatalogPicker(host: Host): Boolean = false
     fun onSearchSubmission(host: Host, query: String): Boolean = false
