@@ -959,6 +959,16 @@ The SG workstream follows the owner-directed pivot recorded above and is grounde
 **Evidence:** `.codex/test-artifacts/139-wf2-board-visual-policy/README.md`, `.codex/history/139-wf2-board-visual-policy.md`, and `.codex/history/plans/139-wf2-board-visual-policy.md`.
 **Slice board(s):** Product owner approved the behavior board `.codex/concepts/WF.2-board-visual-policy-behavior-board.svg` on 2026-11-15, with editable Graphviz source `.codex/concepts/WF.2-board-visual-policy-behavior-board.dot` and PNG render `.codex/concepts/WF.2-board-visual-policy-behavior-board.png`. It governs DOT-to-SVG/PNG behavior boards, SVG or PNG UI artwork with both kept when they serve distinct roles, and presentation of non-terminal visuals through `feh` on X display `:0` before approval. No UI artwork board applies because this slice changes workflow documentation, not product UI or visual output.
 
+**Owner sequencing decision (2026-11-16):** The owner requested safeguards against cycle, slice, and plan collisions while Cycle 143 remains PLANNED for OX-04. Keep OX-04 the sole NEXT item; WF.3 is recorded as PLANNED pending its objective-specific behavior board. This entry does not alter Cycle 143, approve WF.3 scope, or authorize implementation.
+
+### WF.3 — Reject cycle, slice, and plan collisions — PLANNED
+
+**Objective/scope:** Strengthen the cycle tracker so a stale or orphaned plan cannot silently compete with the current cycle, a cycle ID cannot be reused through a misnamed plan record, and a roadmap slice cannot appear in multiple concurrently open plans. Preserve stable historical slice reuse and closed-plan readability. Workflow tooling only; no app or product behavior changes.
+**Depends on:** WF.1 and WF.2.
+**Exit:** `python scripts/dev.py workflow` and cycle-start validation identify duplicate cycle IDs across plan headers/manifests and archive records, orphaned nonterminal plans, duplicate open-plan ownership, and overlapping slices before a cycle is created or advanced. Valid closed history remains accepted, collision failures leave records unchanged, and scoped workflow evidence plus `git diff --check` are recorded.
+**Evidence:** Future cycle-specific `.codex/test-artifacts/<cycle-id>/README.md`, `.codex/history/<cycle-id>.md`, and `.codex/history/plans/<cycle-id>.md`; exact paths assigned when planned.
+**Slice board(s):** Objective-specific behavior board pending; no UI artwork board applies because this slice changes workflow tooling without changing product UI or visual output. No board approval, plan finalization, or implementation is claimed.
+
 ## MR — Main weather readout
 
 ### MR.1 — Refactor the main weather readout — DONE
@@ -1032,6 +1042,10 @@ The SG workstream follows the owner-directed pivot recorded above and is grounde
 
 **Owner board approval (2026-11-15):** At the owner's direction, the Markdown guide labels and all behavior/UI source-render headers now point readers to the cycle plan and roadmap for current approval status and package fingerprints. The product owner reapproved both complete packages on 2026-11-15. Cycle 142 records their refreshed SHA-256 fingerprints. These label updates do not alter the boards' behavior contract, visual targets, constraints, scope, or acceptance. Approval clears the board gate but does not authorize implementation or activate the plan.
 
+**Owner sequencing update (2026-11-16):** After OX-03 closed, the owner requested approval-board preparation for OX-04. OX-04 is the sole global `NEXT` for cycle 143 planning and board review. This selection does not approve either board, finalize a plan, or authorize implementation.
+
+**Owner board approval (2026-11-16):** The product owner approved cycle 143's OX-04 behavior and UI artwork board packages. Their complete paths and SHA-256 fingerprints are recorded in `.codex/plans/143-ox04-scene-truth.md`. The behavior board governs selected evidence, support, source time, and probability semantics; the artwork board shows the existing First City supplied, carried, and unknown states. The schematic artwork is not installed acceptance evidence. Approval clears the board gate but does not activate the plan or authorize implementation.
+
 ### OX-01 — Baseline the current world — DONE
 
 **Objective/scope:** Lock down what currently works before restructuring it: scene state, First City frame composition, scrubbing, astronomy cues, and accessibility. Reuse completed baseline records and isolate only the unmet Scene Engine questions. Scope is limited to this outcome; the boards may propose a split or a changed boundary before approval.
@@ -1100,13 +1114,13 @@ The SG workstream follows the owner-directed pivot recorded above and is grounde
 **Evidence:** Cycle 142 targets `.codex/test-artifacts/142-ox03-scene-decision-contract/README.md` and `.codex/history/142-ox03-scene-decision-contract.md`; archived plan target `.codex/history/plans/142-ox03-scene-decision-contract.md`.
 **Slice board(s):** After installed evidence exposed carried rain with no visible cloud decision, the product owner selected the conditional rain-origin rule on 2026-11-15. The revised behavior package `.codex/concepts/OX-03-single-scene-decision-contract-behavior-board.dot`, `.svg`, `.png`, and `.md`, and UI artwork package `.codex/concepts/OX-03-first-city-composition-contract-ui-artwork-board.svg`, `.png`, and `.md`, were re-reviewed and reapproved on 2026-11-15; cycle 142 records each current package fingerprint. Cloud-origin placement applies when visible cloud decisions already exist. Eligible carried rain without visible clouds preserves the existing no-cloud scene and rain-field origin, without inferred clouds. Both routes use the same First City composition decisions and preserve exact selected time, independent facts, and source-time disclosure. Sun/Moon cue styling stays at baseline and outside review; retaining the fixed lunar crescent does not approve it as phase artwork. These decisions are an upstream seam for the proposed Scene Engine direction and Living Urban Park concept; approval does not adopt the draft spec, approve park artwork/readouts, or determine product role. Board approval does not activate the plan or authorize implementation.
 
-### OX-04 — Protect scene truth and unknown states — PLANNED
+### OX-04 — Protect scene truth and unknown states — DONE
 
 **Objective/scope:** Prevent absent, stale, unsupported, or probability-only data from being rendered as confidently observed weather. This concerns faithful evidence propagation, not independent meteorological plausibility validation. Scope is limited to this outcome; the boards may propose a split or a changed boundary before approval.
 **Depends on:** OX-03.
 **Exit:** Evidence matrix with fixture-backed evidence (with tests only if authorized) and at least one visible unknown-state check. Provide the scoped proof or explicit recorded disposition; visual claims require installed evidence when applicable.
-**Evidence:** Future cycle-specific `.codex/test-artifacts/<cycle-id>/` and `.codex/history/<cycle-id>.md`; exact paths assigned when a cycle is planned.
-**Slice board(s):** Objective-specific behavior board pending; UI artwork board only if final scope changes visible output. No board approval or activation is claimed.
+**Evidence:** Cycle 143 targets `.codex/test-artifacts/143-ox04-scene-truth/README.md` and `.codex/history/143-ox04-scene-truth.md`; archived plan target `.codex/history/plans/143-ox04-scene-truth.md`.
+**Slice board(s):** Product-owner-approved 2026-11-16 behavior package `.codex/concepts/OX-04-scene-truth-behavior-board.dot`, `.svg`, `.png`, and `.md`; UI artwork package `.codex/concepts/OX-04-first-city-unknown-state-ui-artwork-board.svg`, `.png`, and `.md` is required for the visible unknown-state acceptance. Cycle 143's plan records approval and fingerprints. These boards govern the evidence contract and schematic First City states; the artwork is not installed evidence. Approval does not activate the plan or authorize implementation.
 
 ### OX-05 — Make depth ordering enforceable — PLANNED
 

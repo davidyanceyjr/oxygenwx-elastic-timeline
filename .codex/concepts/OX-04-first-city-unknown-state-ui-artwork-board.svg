@@ -1,0 +1,116 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1760" height="1020" viewBox="0 0 1760 1020" role="img" aria-labelledby="title desc">
+  <title id="title">OX-04 First City evidence states UI artwork board</title>
+  <desc id="desc">A schematic review board showing supported rain, an eligible carried rain condition with its older source time, and an unavailable condition with temperature and precipitation chance still visible but no condition-derived weather marks. The examples are targets, not installed screenshots.</desc>
+  <defs>
+    <linearGradient id="page" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#f6f8fa"/><stop offset="1" stop-color="#e8edf2"/></linearGradient>
+    <linearGradient id="skyRain" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#405c78"/><stop offset=".72" stop-color="#71879a"/><stop offset="1" stop-color="#9c9c8a"/></linearGradient>
+    <linearGradient id="skyNeutral" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#416b8a"/><stop offset=".73" stop-color="#81a0ad"/><stop offset="1" stop-color="#b2ad98"/></linearGradient>
+    <linearGradient id="screen" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#172f46"/><stop offset="1" stop-color="#233b4e"/></linearGradient>
+    <clipPath id="scene1"><rect x="0" y="0" width="472" height="210" rx="12"/></clipPath>
+    <clipPath id="scene2"><rect x="0" y="0" width="472" height="210" rx="12"/></clipPath>
+    <clipPath id="scene3"><rect x="0" y="0" width="472" height="210" rx="12"/></clipPath>
+    <g id="city">
+      <path d="M0 150 Q70 127 142 149 T282 145 T472 147 L472 210 L0 210Z" fill="#627976"/>
+      <path d="M0 171 40 151 73 163 107 129 144 162 178 143 216 174 252 151 291 169 328 135 365 165 401 145 439 163 472 149 472 210 0 210Z" fill="#263f51"/>
+      <path d="M32 175V122h44v53M112 176V105h56v71M228 176V127h45v49M315 174V112h55v62M395 175V130h45v45" fill="#344f60"/>
+      <path d="M42 133h10v12H42zM124 118h10v12h-10zM143 118h10v12h-10zM241 139h10v12h-10zM328 125h10v12h-10zM344 125h10v12h-10zM407 140h10v12h-10z" fill="#e2c995" opacity=".58"/>
+      <path d="M0 190 Q105 178 236 192 T472 188 V210 H0Z" fill="#172f43" opacity=".76"/>
+    </g>
+    <g id="clouds" fill="#465a6d">
+      <path d="M72 60c2-17 15-28 32-28 13 0 25 7 30 19 7-14 20-22 36-22 21 0 37 15 39 36 15 2 26 13 26 27H66c-12-11-8-27 6-32Z" opacity=".93"/>
+      <path d="M195 78c2-13 12-22 25-22 10 0 18 5 22 14 5-10 15-16 27-16 15 0 27 11 29 27 11 1 19 9 19 20H188c-8-8-5-20 7-23Z" fill="#5d6d7b" opacity=".94"/>
+    </g>
+    <g id="rain" stroke="#d9e6ed" stroke-width="3" stroke-linecap="round" opacity=".86">
+      <path d="M92 105l-7 17M122 105l-7 17M152 105l-7 17M182 105l-7 17M212 105l-7 17M242 105l-7 17M272 105l-7 17M302 105l-7 17M332 105l-7 17M362 105l-7 17M107 124l-7 17M137 124l-7 17M167 124l-7 17M197 124l-7 17M227 124l-7 17M257 124l-7 17M287 124l-7 17M317 124l-7 17M347 124l-7 17M377 124l-7 17M92 153l-7 17M122 153l-7 17M152 153l-7 17M182 153l-7 17M212 153l-7 17M242 153l-7 17M272 153l-7 17M302 153l-7 17M332 153l-7 17M362 153l-7 17"/>
+    </g>
+    <g id="sun"><circle cx="411" cy="48" r="15" fill="#f3d88f" opacity=".96"/><circle cx="411" cy="48" r="27" fill="#f3d88f" opacity=".16"/></g>
+  </defs>
+
+  <rect width="1760" height="1020" fill="url(#page)"/>
+  <text x="36" y="48" font-family="sans-serif" font-size="30" font-weight="700" fill="#172a3c">OX-04 · First City evidence states</text>
+  <text x="36" y="79" font-family="sans-serif" font-size="15" fill="#40566b">UI artwork board · approved 2026-11-16 · approval and fingerprints in cycle 143 plan · schematic target, not installed evidence</text>
+  <rect x="36" y="98" width="1688" height="89" rx="13" fill="#d7e3eb"/>
+  <text x="56" y="127" font-family="sans-serif" font-size="14" font-weight="700" fill="#273f53">VISUAL OBJECTIVE</text>
+  <text x="230" y="126" font-family="sans-serif" font-size="14" fill="#273f53">Keep the current First City layout while showing supported, carried, and unavailable evidence honestly.</text>
+  <text x="230" y="150" font-family="sans-serif" font-size="13" fill="#40566b">Older source time stays distinct from selected time. In the isolated unknown state, keep independent facts visible and show no condition-derived weather marks.</text>
+  <text x="230" y="172" font-family="sans-serif" font-size="13" font-weight="700" fill="#31566c">Precipitation chance remains a probability; it is not a measured rain amount or rate.</text>
+
+  <!-- Supported condition -->
+  <g font-family="sans-serif" transform="translate(36,214)">
+    <rect width="536" height="684" rx="18" fill="#fff" stroke="#9eb4c2" stroke-width="2"/>
+    <text x="20" y="34" font-size="15" font-weight="700" fill="#20384e">01 · SUPPLIED RAIN</text>
+    <text x="20" y="57" font-size="12" fill="#52677b">sg4-canonical-gaps-v8 · selected 10:30 AM CDT</text>
+    <rect x="20" y="75" width="496" height="380" rx="18" fill="url(#screen)" stroke="#46677d" stroke-width="2"/>
+    <g transform="translate(32,87)" clip-path="url(#scene1)">
+      <rect width="472" height="210" fill="url(#skyRain)"/>
+      <use href="#clouds"/>
+      <use href="#city"/>
+      <use href="#rain"/>
+    </g>
+    <text x="268" y="325" text-anchor="middle" font-size="12" fill="#e6edf4">SELECTED · 10:30 AM CDT</text>
+    <text x="268" y="353" text-anchor="middle" font-size="19" font-weight="600" fill="#ffffff">Rain · 57°F</text>
+    <text x="268" y="378" text-anchor="middle" font-size="13" fill="#dce7ee">Precipitation chance · 75%</text>
+    <line x1="48" y1="403" x2="488" y2="403" stroke="#8ba1b2" stroke-width="1"/>
+    <line x1="268" y1="396" x2="268" y2="410" stroke="#f5f8ff" stroke-width="2"/>
+    <text x="268" y="436" text-anchor="middle" font-size="10" fill="#e6edf4">TIMELINE · SELECTED INSTANT</text>
+    <text x="20" y="493" font-size="13" font-weight="700" fill="#31566c">KEEP THE SUPPLIED CONDITION MAPPING</text>
+    <text x="20" y="520" font-size="12" fill="#52677b">Existing rain/cloud composition stays intact. The scene is</text>
+    <text x="20" y="540" font-size="12" fill="#52677b">illustrative; chance is still shown as a chance, not a rate.</text>
+    <text x="20" y="586" font-size="11" fill="#697e8f">Reference values come from prior-cycle installed evidence.</text>
+    <text x="20" y="606" font-size="11" fill="#697e8f">This panel is a target drawing, not a device capture.</text>
+  </g>
+
+  <!-- Carried condition -->
+  <g font-family="sans-serif" transform="translate(612,214)">
+    <rect width="536" height="684" rx="18" fill="#fff" stroke="#c7a45d" stroke-width="2"/>
+    <text x="20" y="34" font-size="15" font-weight="700" fill="#775a2d">02 · ELIGIBLE CARRIED RAIN</text>
+    <text x="20" y="57" font-size="12" fill="#52677b">Selected 11:30 AM CDT · condition source 10:00 AM CDT</text>
+    <rect x="20" y="75" width="496" height="380" rx="18" fill="url(#screen)" stroke="#46677d" stroke-width="2"/>
+    <g transform="translate(32,87)" clip-path="url(#scene2)">
+      <rect width="472" height="210" fill="url(#skyNeutral)"/>
+      <use href="#city"/>
+      <g transform="translate(0,25)"><use href="#rain"/></g>
+    </g>
+    <text x="268" y="315" text-anchor="middle" font-size="11" fill="#e6edf4">SELECTED · 11:30 AM CDT</text>
+    <text x="268" y="340" text-anchor="middle" font-size="16" font-weight="600" fill="#ffffff">Condition from 10:00 AM CDT</text>
+    <text x="268" y="366" text-anchor="middle" font-size="12" fill="#dce7ee">Selected hour unavailable · Rain depiction retained</text>
+    <line x1="48" y1="403" x2="488" y2="403" stroke="#8ba1b2" stroke-width="1"/>
+    <line x1="268" y1="396" x2="268" y2="410" stroke="#f5f8ff" stroke-width="2"/>
+    <text x="268" y="436" text-anchor="middle" font-size="10" fill="#e6edf4">TIMELINE · 11:30 AM SELECTED</text>
+    <text x="20" y="493" font-size="13" font-weight="700" fill="#775a2d">KEEP BOTH TIMES DISTINCT</text>
+    <text x="20" y="520" font-size="12" fill="#52677b">Show the eligible prior condition only with its original</text>
+    <text x="20" y="540" font-size="12" fill="#52677b">source time. Do not move selection back to 10:00 AM.</text>
+    <text x="20" y="586" font-size="11" fill="#697e8f">No visible cloud decision: preserve the existing rain field.</text>
+    <text x="20" y="606" font-size="11" fill="#697e8f">Prior-cycle behavior is reference, not OX-04 acceptance.</text>
+  </g>
+
+  <!-- Unknown condition with supported independent values -->
+  <g font-family="sans-serif" transform="translate(1188,214)">
+    <rect width="536" height="684" rx="18" fill="#fff" stroke="#9eb4c2" stroke-width="2"/>
+    <text x="20" y="34" font-size="15" font-weight="700" fill="#20384e">03 · CONDITION UNAVAILABLE</text>
+    <text x="20" y="57" font-size="12" fill="#52677b">ox01f-condition-unavailable-typed-v1 · 3:00 PM CDT</text>
+    <rect x="20" y="75" width="496" height="380" rx="18" fill="url(#screen)" stroke="#46677d" stroke-width="2"/>
+    <g transform="translate(32,87)" clip-path="url(#scene3)">
+      <rect width="472" height="210" fill="url(#skyNeutral)"/>
+      <use href="#sun"/>
+      <use href="#city"/>
+      <!-- No weather marks: this example has no separately supported scene-driving weather field. -->
+    </g>
+    <text x="268" y="315" text-anchor="middle" font-size="12" fill="#e6edf4">SELECTED · 3:00 PM CDT</text>
+    <text x="268" y="340" text-anchor="middle" font-size="17" font-weight="600" fill="#ffffff">Condition unavailable</text>
+    <text x="268" y="366" text-anchor="middle" font-size="13" fill="#dce7ee">48°F · Precipitation chance 25%</text>
+    <line x1="48" y1="403" x2="488" y2="403" stroke="#8ba1b2" stroke-width="1"/>
+    <line x1="268" y1="396" x2="268" y2="410" stroke="#f5f8ff" stroke-width="2"/>
+    <text x="268" y="436" text-anchor="middle" font-size="10" fill="#e6edf4">TIMELINE · SELECTED INSTANT</text>
+    <text x="20" y="493" font-size="13" font-weight="700" fill="#31566c">SHOW UNKNOWN WITHOUT HIDING FACTS</text>
+    <text x="20" y="520" font-size="12" fill="#52677b">No condition-derived clouds or rain. The time cue,</text>
+    <text x="20" y="540" font-size="12" fill="#52677b">temperature, and chance remain visible and separate.</text>
+    <text x="20" y="586" font-size="11" fill="#697e8f">25% is probability, not a measured rain amount or rate.</text>
+    <text x="20" y="606" font-size="11" fill="#697e8f">Use existing unavailable-condition wording; no new UI.</text>
+  </g>
+
+  <rect x="36" y="920" width="1688" height="70" rx="13" fill="#d7e3eb"/>
+  <text x="56" y="947" font-family="sans-serif" font-size="13" font-weight="700" fill="#273f53">VISUAL CONSTRAINTS</text>
+  <text x="220" y="946" font-family="sans-serif" font-size="12" fill="#40566b">Keep current First City styling, facts, and timeline. Add no controls, cards, clear-weather substitute, or new scene treatment.</text>
+  <text x="220" y="970" font-family="sans-serif" font-size="12" fill="#40566b">The unknown example isolates condition + probability evidence; independently supplied cloud or precipitation fields keep their own existing semantics.</text>
+</svg>

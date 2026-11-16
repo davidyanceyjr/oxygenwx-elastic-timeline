@@ -1,0 +1,70 @@
+digraph OX04 {
+  graph [
+    bgcolor="#edf1f5",
+    pad="0.35",
+    nodesep="0.38",
+    ranksep="0.55",
+    splines=polyline,
+    fontname="DejaVu Sans",
+    label="OX-04  |  PROTECT SCENE TRUTH AND UNKNOWN STATES\nBehavior board • approved 2026-11-16 • approval and fingerprints in cycle 143 plan",
+    labelloc=t,
+    fontsize=22,
+    fontcolor="#172a3c"
+  ];
+  node [shape=box, style="rounded,filled", color="#728b9e", fillcolor="#ffffff", fontcolor="#20384b", fontname="DejaVu Sans", fontsize=11, margin="0.19,0.13"];
+  edge [color="#438078", fontcolor="#355f5d", fontname="DejaVu Sans", fontsize=9, arrowsize=0.75, penwidth=1.35];
+
+  selected [label="ACTIVE CATALOG · ONE SELECTED INSTANT\nThe exact selected instant remains authoritative\nfor reading, composition, foreground, and timeline", fillcolor="#dceaf0", color="#477287"];
+  reading [label="TYPED SceneReading\nEach weather field carries its own value, support/evidence,\nexpected slot, and source-valid time", fillcolor="#dcebe4", color="#548674"];
+  classify [shape=diamond, label="CONDITION EVIDENCE\nfor this selected slot?", fillcolor="#efe8f4", color="#9075a3", margin="0.22,0.12"];
+
+  supplied [label="SUPPLIED · SUPPORTED CATEGORY\nUse the established category-to-scene mapping.\nDo not re-audit supplied weather for plausibility.", fillcolor="#e2f0e8", color="#548674"];
+  carried [label="EXPECTED MISSING · EXISTING ELIGIBLE CARRY\nOnly the existing field-specific carry rule may expose\nthe earlier supplied condition at this selected slot.", fillcolor="#fff0d8", color="#c39445"];
+  disclose [label="OLDER EVIDENCE STAYS DISTINCT\nKeep selectedInstant fixed; retain the original\nsourceValidTime and visible source-time disclosure.", fillcolor="#fff7e8", color="#c39445"];
+  unavailable [label="EMPTY · UNSUPPORTED · NOT ELIGIBLE TO CARRY\nMake no condition-derived weather claim.\nDo not substitute CLEAR, dry, zero, or another category.", fillcolor="#f5e9e6", color="#a86e65"];
+
+  independent [label="INDEPENDENT WEATHER TRACKS\nCloud cover, precipitation amount/rate, snowfall, and\nother fields retain their own support and source times.", fillcolor="#e6eef4", color="#66849a"];
+  probability [label="PROBABILITY_ONLY\nKeep precipitation chance as a chance. It is not a\ncondition, measured amount, or rainfall rate.", fillcolor="#f0ecdf", color="#a38b4f"];
+  field_rule [label="FIELD-SPECIFIC SEMANTICS\nPreserve only supplied supported values and their\nexisting scene roles; do not infer a missing field.", fillcolor="#e6eef4", color="#66849a"];
+
+  composition [label="FirstCityComposition\nOne set of typed scene decisions from the same reading\nCondition, clouds, precipitation, time cues, and layers", fillcolor="#dceaf0", color="#477287"];
+  renderer [label="ACTIVE CATALOG FIRST CITY\nThe renderer draws composition decisions; it does not\nupgrade missing or probability-only evidence into weather.", fillcolor="#dcebe4", color="#548674"];
+  foreground [label="FORECAST FOREGROUND + TIMELINE\nShow unavailable condition explicitly. Preserve separately\nsupported facts, source-time disclosure, and exact selection.", fillcolor="#dceaf0", color="#477287"];
+
+  matrix [label="EVIDENCE MATRIX\nFor each fixture-backed state, record input evidence → scene claim →\nforeground wording/source time → installed result and limitation.", fillcolor="#e9e2f0", color="#9075a3"];
+  unknown [label="VISIBLE UNKNOWN-STATE CHECK\nWith condition unavailable and only independent facts\n(such as temperature and precipitation chance), show no\ncondition-derived weather marks and keep those facts visible.", fillcolor="#f5e9e6", color="#a86e65"];
+  exit [label="OX-04 EXIT\nEvidence matrix with fixture-backed evidence plus at least one\nvisible unknown-state check; record pass, fail, or not run.\nVisual claims require installed evidence.", fillcolor="#dcebe4", color="#548674"];
+  boundary [label="BOUNDARY\nNo meteorological plausibility correction; no invented field,\nzero, or catalog-age threshold; no provider/schema change.\nState-only and fixture/Time Lab preview routes stay separate.\nTests only if separately authorized.", fillcolor="#e7e7ed", color="#847c98"];
+
+  selected -> reading [label="evaluate once"];
+  reading -> classify [label="condition track"];
+  reading -> independent [label="other field tracks", style=dashed, color="#66849a", fontcolor="#66849a"];
+  reading -> probability [label="chance track", style=dashed, color="#a38b4f", fontcolor="#8f7843"];
+  classify -> supplied [label="SUPPLIED"];
+  classify -> carried [label="eligible prior value"];
+  classify -> unavailable [label="EMPTY / unsupported / gap"];
+  carried -> disclose;
+  supplied -> composition [label="existing mapping"];
+  disclose -> composition [label="older value only"];
+  unavailable -> composition [label="no condition claim"];
+  independent -> field_rule;
+  probability -> field_rule [label="chance stays chance"];
+  field_rule -> composition [label="supported fields only"];
+  composition -> renderer;
+  renderer -> foreground [label="same selected instant"];
+  renderer -> unknown [label="inspect unknown state"];
+  reading -> matrix [style=dashed, color="#9075a3"];
+  foreground -> matrix [style=dashed, color="#9075a3"];
+  unknown -> exit;
+  matrix -> exit;
+  boundary -> exit [style=dashed, color="#847c98"];
+
+  {rank=same; selected; boundary;}
+  {rank=same; reading; classify;}
+  {rank=same; supplied; carried; unavailable; independent; probability;}
+  {rank=same; disclose; field_rule;}
+  {rank=same; composition;}
+  {rank=same; renderer;}
+  {rank=same; foreground; unknown; matrix;}
+  {rank=same; exit;}
+}
