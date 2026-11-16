@@ -1,0 +1,49 @@
+digraph OX03 {
+  graph [bgcolor="#102233", pad="0.35", nodesep="0.42", ranksep="0.60", splines=polyline, fontname="DejaVu Sans", label="OX-03  |  ESTABLISH A SINGLE SCENE DECISION CONTRACT\nBehavior board • approval status and fingerprints: cycle 142 plan and roadmap", labelloc=t, fontsize=22, fontcolor="#edf4f7"];
+  node [shape=box, style="rounded,filled", color="#64869a", fillcolor="#294d65", fontcolor="#edf4f7", fontname="DejaVu Sans", fontsize=11, margin="0.18,0.13"];
+  edge [color="#83c9bf", fontcolor="#d7e9e8", fontname="DejaVu Sans", fontsize=9, arrowsize=0.75, penwidth=1.4];
+
+  selected [label="ACTIVE CATALOG + SELECTED INSTANT\nOne authoritative instant is used for reading, composition,\nforecast readout, and timeline selection", fillcolor="#24536a"];
+  reading [label="TYPED SceneReading\nSupplied values keep their field evidence and source times\nIndependent facts remain independently supported", fillcolor="#315a52", color="#83c9bf"];
+  presentation [label="CatalogTimelinePresenter.scenePresentation(state)\nEvaluates the selected instant once; creates the reading\nand the matching FirstCityComposition", fillcolor="#294d65"];
+  route [shape=diamond, label="ACTIVE CATALOG\nSCENE ROUTE", fillcolor="#4d4a63", color="#ad91c4", margin="0.22,0.12"];
+  primary [label="PRIMARY COMPOSITION ROUTE\nUse the composition already produced\nfrom this reading and selected instant", fillcolor="#315a52", color="#83c9bf"];
+  fallback [label="ACTIVE CATALOG READING FALLBACK\nUse the same reading and zone to obtain\nthe FirstCityComposition decision", fillcolor="#71542e", color="#edc477"];
+  resolver [label="ONE FIRST-CITY DECISION BOUNDARY\nFirstCityTheme.compose(reading, zone)\nMaps weather evidence and time inputs into typed decisions", fillcolor="#315a52", color="#83c9bf"];
+  composition [label="FirstCityComposition\nSky · clouds · precipitation · cues · treatment · layer order\nAll tied to reading.selectedInstant", fillcolor="#24536a"];
+  renderer [label="ONE CATALOG SCENE RENDERER\nCatalogAtmosphericScene(composition)\nDraws the decisions it receives; does not reinterpret\nSceneReading or SceneVisualState weather semantics", fillcolor="#315a52", color="#83c9bf"];
+  frame [label="FIRST CITY SCENE\nReading fallback matches the established composition output\nfor the same input and selected instant", fillcolor="#315a52", color="#83c9bf"];
+  foreground [label="FORECAST FOREGROUND + TIMELINE\nRemain tied to the same selected instant\nIndependent facts and source-time disclosure stay unchanged", fillcolor="#38556b"];
+
+  evidence [label="WEATHER-EVIDENCE INVARIANTS\nSUPPORTED: visualize supplied values faithfully\nMISSING / EMPTY: do not imply a supplied condition\nELIGIBLE CARRIED: preserve its original source time\nNo plausibility correction or new weather inference", fillcolor="#4c3f5f", color="#ad91c4"];
+  acceptance [label="OX-03 ACCEPTANCE\nSource-of-truth decisions are made at the reading → composition boundary\nBoth active routes match for covered First City states\nWith visible cloud decisions, rain begins at the cloud base\nWithout visible clouds, preserve the no-cloud rain baseline\nScoped code proof and installed visuals where the plan requires them", fillcolor="#315a52", color="#83c9bf"];
+  outside [label="BOUNDARIES / DOWNSTREAM DESIGN CONTEXT\nThe proposed Living Urban Park scene-engine concept motivates this shared decision seam; OX-03 keeps the current First City baseline\nCloud-origin rain is the correction only where visible cloud decisions already exist; no-cloud carried rain keeps the established field origin\nNo cloud cover is inferred; no rain support or coverage rule changes\nSun/Moon cue appearance is outside review; the fixed lunar shadow is not approved as phase artwork\nPark artwork, in-scene readouts, adoption of the draft spec, and default-vs-selectable choice are not approved here\nView-only state renderer stays separate while reachability is unverified; Fixture / Time Lab previews stay separate\nUnknown-state policy, depth ordering, and reusable world support remain later slices", fillcolor="#4c3f5f", color="#ad91c4"];
+  scope [label="BOUNDARY\nNo timeline, forecast fact, selection, or layout redesign\nNo app-wide accessibility or system acceptance", fillcolor="#4c3f5f", color="#ad91c4"];
+
+  selected -> presentation [label="resolve once"];
+  presentation -> reading;
+  presentation -> route;
+  route -> primary [label="composition available"];
+  route -> fallback [label="composition filtered; reading remains"];
+  primary -> composition;
+  fallback -> resolver;
+  reading -> resolver [style=dashed, color="#83c9bf", fontcolor="#83c9bf", label="same reading / zone"];
+  resolver -> composition;
+  composition -> renderer;
+  renderer -> frame;
+  selected -> foreground [style=dashed, color="#ad91c4", fontcolor="#d8c9e7", label="same instant"];
+  reading -> evidence [style=dashed, color="#ad91c4"];
+  evidence -> resolver [style=dashed, color="#ad91c4", fontcolor="#d8c9e7", label="preserve evidence meaning"];
+  frame -> acceptance;
+  foreground -> acceptance;
+  outside -> scope [style=dashed, color="#ad91c4"];
+  acceptance -> scope [style=dashed, color="#ad91c4"];
+
+  {rank=same; selected; outside;}
+  {rank=same; reading; route;}
+  {rank=same; primary; fallback;}
+  {rank=same; resolver; composition;}
+  {rank=same; renderer; evidence;}
+  {rank=same; frame; foreground;}
+  {rank=same; acceptance; scope;}
+}

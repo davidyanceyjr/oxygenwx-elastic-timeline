@@ -82,6 +82,7 @@ import com.oxygen.weather.timeline.presentation.symbol.WeatherSymbolId
 import com.oxygen.weather.timeline.presentation.symbol.WeatherSymbolIcon
 import com.oxygen.weather.timeline.presentation.symbol.drawWeatherSymbol
 import com.oxygen.weather.timeline.presentation.scene.FirstCityComposition
+import com.oxygen.weather.timeline.presentation.scene.FirstCityTheme
 import com.oxygen.weather.timeline.presentation.scene.SceneReading
 import java.time.Instant
 import java.time.format.DateTimeFormatter
@@ -185,9 +186,7 @@ private fun CatalogTimeLabScreenContent(
             )
         } else if (sceneReading != null) {
             CatalogAtmosphericScene(
-                reading = sceneReading,
-                zone = view.zone,
-                state = view.scene,
+                composition = FirstCityTheme.compose(sceneReading, view.zone),
                 omitOptionalCityLayers = omitOptionalCityLayers,
             )
         } else if (view.scene != null) {

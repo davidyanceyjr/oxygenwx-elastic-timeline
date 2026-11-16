@@ -38,6 +38,9 @@ import kotlin.math.PI
 import kotlin.math.sin
 
 private const val CLOUD_REGION_FRACTION = .33f
+private const val CITY_RAIN_CLOUD_BASE_FRACTION = .24f
+private const val CITY_RAIN_FIELD_BOTTOM_FRACTION = .87f
+private const val CITY_RAIN_DEFAULT_START_FRACTION = .52f
 
 /** Decorative-only rendering. Legible forecast facts are supplied by UI text above this layer. */
 @Composable
@@ -142,7 +145,9 @@ fun CatalogAtmosphericScene(
                         ),
                     )
                     when (composition.precipitation) {
-                        CityPrecipitation.RAIN -> drawCityRainField()
+                        CityPrecipitation.RAIN -> drawCityRainField(
+                            startsAtCloudBase = composition.clouds.visible,
+                        )
                         CityPrecipitation.SNOW -> drawCitySnowField()
                         CityPrecipitation.NONE, CityPrecipitation.STORM -> Unit
                     }
@@ -363,10 +368,16 @@ private fun DrawScope.drawCityCloudBank(
     drawPath(bank, color)
 }
 
-private fun DrawScope.drawCityRainField() {
+private fun DrawScope.drawCityRainField(startsAtCloudBase: Boolean = false) {
+    // Composition rain starts at the existing visible rain-cloud bank's lower edge.
+    // Without supported visible clouds, preserve the established field placement.
+    val originFraction = if (startsAtCloudBase) CITY_RAIN_CLOUD_BASE_FRACTION
+    else CITY_RAIN_DEFAULT_START_FRACTION
+    val fieldSpread = CITY_RAIN_FIELD_BOTTOM_FRACTION - originFraction
     repeat(1800) { i ->
         val x = ((i * 83L + i * i * 29L + 19) % 991) / 991f * size.width
-        val y = size.height * (.52f + ((i * 127L + i * i * 43L + 53) % 997) / 997f * .35f)
+        val y = size.height * (originFraction +
+            ((i * 127L + i * i * 43L + 53) % 997) / 997f * fieldSpread)
         val quiet = inPrecipitationQuietZone(x, y)
         val length = size.height * (.003f + (i % 7) * .00065f)
         drawLine(Color(0xFFE4F3FF).copy(alpha = (.23f + (i % 5) * .075f) *

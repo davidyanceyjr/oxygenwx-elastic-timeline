@@ -1,0 +1,216 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1760" height="1190" viewBox="0 0 1760 1190" role="img" aria-labelledby="title desc">
+  <title id="title">OX-03 First City route parity and conditional cloud-origin rain artwork board</title>
+  <desc id="desc">A schematic OX-03 artwork target comparing the existing First City composition route with the active catalog reading fallback. When rain has visible cloud decisions, streaks originate at cloud base. Eligible carried rain without visible clouds preserves the existing no-cloud composition and rain-field origin. No cloud layer is inferred. Sun and Moon cue styling are outside review; the fixed crescent is not approved as phase artwork. The proposed Living Urban Park scene-engine concept is downstream design context, not this slice's artwork target.</desc>
+  <defs>
+    <linearGradient id="skyRain" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#425f7c"/>
+      <stop offset="0.68" stop-color="#71869a"/>
+      <stop offset="1" stop-color="#a2a38f"/>
+    </linearGradient>
+    <linearGradient id="skyQuiet" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#416b8a"/>
+      <stop offset="0.72" stop-color="#81a0ad"/>
+      <stop offset="1" stop-color="#b4ad91"/>
+    </linearGradient>
+    <linearGradient id="screen" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#142c43"/>
+      <stop offset="1" stop-color="#223b4e"/>
+    </linearGradient>
+    <clipPath id="cityClip"><rect x="0" y="0" width="220" height="153" rx="12"/></clipPath>
+    <g id="cityBase">
+      <path d="M0 111 Q38 91 74 111 T146 106 T220 109 L220 153 L0 153Z" fill="#586f70"/>
+      <path d="M0 124 18 111 30 118 48 94 63 117 78 103 95 126 111 112 126 125 147 100 165 121 184 106 201 119 220 109 220 153 0 153Z" fill="#263e50"/>
+      <path d="M19 126 V92 H40 V126 M67 127 V82 H91 V127 M145 124 V88 H170 V124 M185 126 V96 H204 V126" fill="#334f61" opacity=".94"/>
+      <path d="M26 100h6v7h-6zM74 91h6v7h-6zM82 91h5v7h-5zM152 96h6v7h-6zM191 103h6v7h-6z" fill="#e1c995" opacity=".58"/>
+      <path d="M0 135 Q54 128 108 137 T220 134 V153 H0Z" fill="#172e42" opacity=".72"/>
+    </g>
+    <g id="rainClouds" transform="translate(0,-20)">
+      <path d="M34 45c1-11 10-19 22-19 9 0 16 5 20 12 4-9 13-15 24-15 14 0 25 10 26 24 11 1 19 9 19 19H29c-8-8-6-18 5-21Z" fill="#425466" opacity=".88"/>
+      <path d="M68 53c2-8 8-13 16-13 6 0 11 3 14 8 3-7 10-11 17-11 11 0 19 8 19 18 8 1 13 7 13 14H64c-6-5-4-13 4-16Z" fill="#56677a" opacity=".9"/>
+    </g>
+    <g id="rainMarks" stroke="#d5e3eb" stroke-width="2.2" stroke-linecap="round" opacity=".8">
+      <path d="M52 49l-5 13 M72 50l-5 14 M92 49l-5 13 M112 51l-5 14 M132 52l-5 13 M62 51l-5 13 M82 52l-5 13 M102 50l-5 13 M122 52l-5 13 M142 51l-5 13"/>
+    </g>
+    <g id="rainMarksExistingOrigin" stroke="#d5e3eb" stroke-width="2.2" stroke-linecap="round" opacity=".8">
+      <path d="M52 82l-5 13 M72 83l-5 14 M92 82l-5 13 M112 84l-5 14 M132 85l-5 13 M62 84l-5 13 M82 85l-5 13 M102 83l-5 13 M122 85l-5 13 M142 84l-5 13"/>
+    </g>
+    <g id="sunCue">
+      <circle cx="176" cy="34" r="11" fill="#f4d58a" opacity=".95"/>
+      <circle cx="176" cy="34" r="18" fill="#f4d58a" opacity=".12"/>
+    </g>
+    <g id="screenFrame">
+      <rect width="252" height="211" rx="18" fill="url(#screen)" stroke="#46677d" stroke-width="2"/>
+      <rect x="10" y="10" width="232" height="153" rx="12" fill="#34536b"/>
+    </g>
+  </defs>
+
+  <rect width="1760" height="1160" fill="#e9edf2"/>
+  <text x="36" y="45" font-family="sans-serif" font-size="28" font-weight="700" fill="#16283e">OX-03 · First City scene decision contract</text>
+  <text x="36" y="75" font-family="sans-serif" font-size="15" fill="#40546a">UI artwork board · approval status and fingerprints: cycle 142 plan and roadmap · schematic target, not an installed screenshot</text>
+  <rect x="36" y="94" width="1688" height="73" rx="12" fill="#d5e1e9"/>
+  <text x="55" y="118" font-family="sans-serif" font-size="14" font-weight="700" fill="#243d52">VISUAL OBJECTIVE</text>
+  <text x="224" y="118" font-family="sans-serif" font-size="14" fill="#243d52">For the same SceneReading and selected instant, both active catalog routes draw the same FirstCityComposition.</text>
+  <text x="224" y="138" font-family="sans-serif" font-size="13" fill="#40546a">Preserve the composition; the reading fallback adopts the same decisions and rain treatment.</text>
+  <text x="224" y="158" font-family="sans-serif" font-size="13" font-weight="700" fill="#31566c">Visible clouds: rain starts at cloud base. No visible cloud decision: keep the existing no-cloud rain origin.</text>
+
+  <g font-family="sans-serif">
+    <text x="40" y="183" font-size="16" font-weight="700" fill="#31566c">COMPOSITION ROUTE · EXISTING ROUTE</text>
+    <text x="1010" y="183" font-size="16" font-weight="700" fill="#775a2d">READING FALLBACK · TARGET AFTER OX-03</text>
+    <text x="860" y="183" text-anchor="middle" font-size="13" font-weight="700" fill="#39766f">MATCH</text>
+
+    <!-- Supported supplied rain -->
+    <g transform="translate(34,199)">
+      <rect width="806" height="258" rx="18" fill="#fff" stroke="#b7c6d1" stroke-width="2"/>
+      <text x="18" y="27" font-size="15" font-weight="700" fill="#20384e">01 · SUPPLIED RAIN</text>
+      <text x="18" y="48" font-size="12" fill="#52677b">Selected instant 3:00 PM · supplied condition example</text>
+      <g transform="translate(18,61) scale(.9)">
+        <use href="#screenFrame"/>
+        <g clip-path="url(#cityClip)" transform="translate(16,10)">
+          <rect width="220" height="153" fill="url(#skyRain)"/>
+          <use href="#rainClouds"/>
+          <use href="#cityBase"/>
+          <use href="#rainMarks"/>
+        </g>
+        <text x="126" y="184" text-anchor="middle" font-size="10" fill="#e6edf4">FORECAST READOUT UNCHANGED</text>
+        <line x1="20" y1="196" x2="232" y2="196" stroke="#a9bac9" stroke-width="1"/>
+        <line x1="126" y1="190" x2="126" y2="202" stroke="#f5f8ff" stroke-width="2"/>
+        <text x="126" y="210" text-anchor="middle" font-size="8" fill="#e6edf4">TIMELINE · SAME SELECTION</text>
+      </g>
+      <text x="300" y="104" font-size="13" font-weight="700" fill="#31566c">KEEP THE COMPOSITION; CONNECT RAIN TO CLOUDS</text>
+      <text x="300" y="128" font-size="12" fill="#52677b">Supported rain keeps its existing treatment, but</text>
+      <text x="300" y="146" font-size="12" fill="#52677b">streaks begin at the visible cloud base and fall</text>
+      <text x="300" y="164" font-size="12" fill="#52677b">down. OX-02A found this route's marks were missing.</text>
+      <text x="300" y="202" font-size="11" fill="#697e8f">One explicit origin-placement correction.</text>
+      <text x="300" y="220" font-size="11" fill="#697e8f">Values and timeline selection remain unchanged.</text>
+    </g>
+    <text x="880" y="330" text-anchor="middle" font-size="26" font-weight="700" fill="#39766f">=</text>
+    <g transform="translate(920,199)">
+      <rect width="806" height="258" rx="18" fill="#fff" stroke="#c7a45d" stroke-width="2"/>
+      <text x="18" y="27" font-size="15" font-weight="700" fill="#775a2d">01 · SAME COMPOSITION DECISIONS</text>
+      <text x="18" y="48" font-size="12" fill="#52677b">Selected instant 3:00 PM · same supplied reading and zone</text>
+      <g transform="translate(18,61) scale(.9)">
+        <use href="#screenFrame"/>
+        <g clip-path="url(#cityClip)" transform="translate(16,10)">
+          <rect width="220" height="153" fill="url(#skyRain)"/>
+          <use href="#rainClouds"/>
+          <use href="#cityBase"/>
+          <use href="#rainMarks"/>
+        </g>
+        <text x="126" y="184" text-anchor="middle" font-size="10" fill="#e6edf4">FORECAST READOUT UNCHANGED</text>
+        <line x1="20" y1="196" x2="232" y2="196" stroke="#a9bac9" stroke-width="1"/>
+        <line x1="126" y1="190" x2="126" y2="202" stroke="#f5f8ff" stroke-width="2"/>
+        <text x="126" y="210" text-anchor="middle" font-size="8" fill="#e6edf4">TIMELINE · SAME SELECTION</text>
+      </g>
+      <text x="300" y="104" font-size="13" font-weight="700" fill="#31566c">READING FALLBACK USES FirstCityComposition</text>
+      <text x="300" y="128" font-size="12" fill="#52677b">The same cloud and rain decisions reach one</text>
+      <text x="300" y="146" font-size="12" fill="#52677b">composition renderer. Rain streaks start at the</text>
+      <text x="300" y="164" font-size="12" fill="#52677b">visible cloud base instead of detached mid-sky.</text>
+      <text x="300" y="202" font-size="11" fill="#697e8f">Target parity, not a claim of current behavior.</text>
+    </g>
+
+    <!-- Missing condition -->
+    <g transform="translate(34,472)">
+      <rect width="806" height="258" rx="18" fill="#fff" stroke="#b7c6d1" stroke-width="2"/>
+      <text x="18" y="27" font-size="15" font-weight="700" fill="#20384e">02 · CONDITION UNAVAILABLE</text>
+      <text x="18" y="48" font-size="12" fill="#52677b">Selected instant 3:00 PM · no supplied condition claim</text>
+      <g transform="translate(18,61) scale(.9)">
+        <use href="#screenFrame"/>
+        <g clip-path="url(#cityClip)" transform="translate(16,10)">
+          <rect width="220" height="153" fill="url(#skyQuiet)"/>
+          <use href="#sunCue"/>
+          <use href="#cityBase"/>
+        </g>
+        <text x="126" y="184" text-anchor="middle" font-size="10" fill="#e6edf4">INDEPENDENT FACTS UNCHANGED</text>
+        <line x1="20" y1="196" x2="232" y2="196" stroke="#a9bac9" stroke-width="1"/>
+        <line x1="126" y1="190" x2="126" y2="202" stroke="#f5f8ff" stroke-width="2"/>
+        <text x="126" y="210" text-anchor="middle" font-size="8" fill="#e6edf4">TIMELINE · SAME SELECTION</text>
+      </g>
+      <text x="300" y="104" font-size="13" font-weight="700" fill="#31566c">NO CONDITION-DERIVED WEATHER CLAIM</text>
+      <text x="300" y="128" font-size="12" fill="#52677b">This example has no condition or separate cloud-cover</text>
+      <text x="300" y="146" font-size="12" fill="#52677b">input, so no weather marks appear. Separate facts</text>
+      <text x="300" y="164" font-size="12" fill="#52677b">remain in their existing foreground presentation.</text>
+      <text x="300" y="202" font-size="11" fill="#697e8f">No new missing-data policy is proposed here.</text>
+    </g>
+    <text x="880" y="603" text-anchor="middle" font-size="26" font-weight="700" fill="#39766f">=</text>
+    <g transform="translate(920,472)">
+      <rect width="806" height="258" rx="18" fill="#fff" stroke="#c7a45d" stroke-width="2"/>
+      <text x="18" y="27" font-size="15" font-weight="700" fill="#775a2d">02 · SAME COMPOSITION DECISIONS</text>
+      <text x="18" y="48" font-size="12" fill="#52677b">Same reading evidence · independent fields unchanged</text>
+      <g transform="translate(18,61) scale(.9)">
+        <use href="#screenFrame"/>
+        <g clip-path="url(#cityClip)" transform="translate(16,10)">
+          <rect width="220" height="153" fill="url(#skyQuiet)"/>
+          <use href="#sunCue"/>
+          <use href="#cityBase"/>
+        </g>
+        <text x="126" y="184" text-anchor="middle" font-size="10" fill="#e6edf4">INDEPENDENT FACTS UNCHANGED</text>
+        <line x1="20" y1="196" x2="232" y2="196" stroke="#a9bac9" stroke-width="1"/>
+        <line x1="126" y1="190" x2="126" y2="202" stroke="#f5f8ff" stroke-width="2"/>
+        <text x="126" y="210" text-anchor="middle" font-size="8" fill="#e6edf4">TIMELINE · SAME SELECTION</text>
+      </g>
+      <text x="300" y="104" font-size="13" font-weight="700" fill="#31566c">NO NEW INTERPRETATION IN THE RENDERER</text>
+      <text x="300" y="128" font-size="12" fill="#52677b">The fallback uses the composition's unavailable</text>
+      <text x="300" y="146" font-size="12" fill="#52677b">condition result while preserving any separately</text>
+      <text x="300" y="164" font-size="12" fill="#52677b">supported facts outside the scene.</text>
+      <text x="300" y="202" font-size="11" fill="#697e8f">Exact selected instant stays unchanged.</text>
+    </g>
+
+    <!-- Carried condition -->
+    <g transform="translate(34,745)">
+      <rect width="806" height="258" rx="18" fill="#fff" stroke="#b7c6d1" stroke-width="2"/>
+      <text x="18" y="27" font-size="15" font-weight="700" fill="#20384e">03 · CARRIED RAIN · NO VISIBLE CLOUDS</text>
+      <text x="18" y="48" font-size="12" fill="#52677b">Selected 3:00 PM · source-valid time 2:00 PM</text>
+      <g transform="translate(18,61) scale(.9)">
+        <use href="#screenFrame"/>
+        <g clip-path="url(#cityClip)" transform="translate(16,10)">
+          <rect width="220" height="153" fill="url(#skyRain)"/>
+          <use href="#cityBase"/>
+          <use href="#rainMarksExistingOrigin"/>
+        </g>
+        <text x="126" y="177" text-anchor="middle" font-size="9" fill="#e6edf4">SELECTED · 3:00 PM</text>
+        <text x="126" y="190" text-anchor="middle" font-size="9" fill="#e6edf4">CONDITION SOURCE · 2:00 PM</text>
+        <line x1="20" y1="200" x2="232" y2="200" stroke="#a9bac9" stroke-width="1"/>
+        <line x1="126" y1="194" x2="126" y2="206" stroke="#f5f8ff" stroke-width="2"/>
+        <text x="126" y="214" text-anchor="middle" font-size="8" fill="#e6edf4">TIMELINE · 3:00 PM</text>
+      </g>
+      <text x="300" y="104" font-size="13" font-weight="700" fill="#31566c">KEEP THE EXISTING NO-CLOUD SCENE</text>
+      <text x="300" y="128" font-size="12" fill="#52677b">No visible cloud decision exists here. Preserve</text>
+      <text x="300" y="146" font-size="12" fill="#52677b">the established rain-field origin; do not infer</text>
+      <text x="300" y="164" font-size="12" fill="#52677b">clouds or suppress the carried rain depiction.</text>
+      <text x="300" y="202" font-size="11" fill="#697e8f">Selected 3 PM; condition source remains 2 PM.</text>
+    </g>
+    <text x="880" y="876" text-anchor="middle" font-size="26" font-weight="700" fill="#39766f">=</text>
+    <g transform="translate(920,745)">
+      <rect width="806" height="258" rx="18" fill="#fff" stroke="#c7a45d" stroke-width="2"/>
+      <text x="18" y="27" font-size="15" font-weight="700" fill="#775a2d">03 · SAME NO-CLOUD COMPOSITION</text>
+      <text x="18" y="48" font-size="12" fill="#52677b">Same selected instant · same source-valid-time disclosure</text>
+      <g transform="translate(18,61) scale(.9)">
+        <use href="#screenFrame"/>
+        <g clip-path="url(#cityClip)" transform="translate(16,10)">
+          <rect width="220" height="153" fill="url(#skyRain)"/>
+          <use href="#cityBase"/>
+          <use href="#rainMarksExistingOrigin"/>
+        </g>
+        <text x="126" y="177" text-anchor="middle" font-size="9" fill="#e6edf4">SELECTED · 3:00 PM</text>
+        <text x="126" y="190" text-anchor="middle" font-size="9" fill="#e6edf4">CONDITION SOURCE · 2:00 PM</text>
+        <line x1="20" y1="200" x2="232" y2="200" stroke="#a9bac9" stroke-width="1"/>
+        <line x1="126" y1="194" x2="126" y2="206" stroke="#f5f8ff" stroke-width="2"/>
+        <text x="126" y="214" text-anchor="middle" font-size="8" fill="#e6edf4">TIMELINE · 3:00 PM</text>
+      </g>
+      <text x="300" y="104" font-size="13" font-weight="700" fill="#31566c">MATCH THE CARRIED READING</text>
+      <text x="300" y="128" font-size="12" fill="#52677b">Keep the selected-time rain condition and the</text>
+      <text x="300" y="146" font-size="12" fill="#52677b">10:00 AM source disclosure. No cloud decision</text>
+      <text x="300" y="164" font-size="12" fill="#52677b">means no clouds; retain the existing rain origin.</text>
+      <text x="300" y="202" font-size="11" fill="#697e8f">Timeline and selected instant remain at 3 PM.</text>
+    </g>
+  </g>
+
+  <rect x="36" y="1020" width="1688" height="150" rx="14" fill="#dbe5ea"/>
+  <text x="55" y="1047" font-family="sans-serif" font-size="13" font-weight="700" fill="#243d52">VISUAL CONSTRAINTS</text>
+  <text x="205" y="1047" font-family="sans-serif" font-size="12" fill="#40546a">Keep the existing First City sky, city layers, condition depiction, forecast readout, and timeline. Add no product-visible controls, cards, labels, or new scene styling.</text>
+  <text x="205" y="1070" font-family="sans-serif" font-size="12" fill="#40546a">The panels show route parity targets, not current fallback output. Exact selected time and carried source-time disclosure remain distinct.</text>
+  <text x="205" y="1093" font-family="sans-serif" font-size="12" fill="#40546a">Scene geometry, city, weather, and time labels are schematic placeholders. The board is not installed visual acceptance evidence.</text>
+  <text x="205" y="1116" font-family="sans-serif" font-size="12" fill="#40546a">The proposed Living Urban Park scene-engine concept motivates this shared boundary; its art and in-scene readouts are future design work.</text>
+  <text x="205" y="1134" font-family="sans-serif" font-size="12" fill="#40546a">This approval does not adopt the draft spec or decide the park's product role; Sun/Moon cue styling is outside OX-03 review.</text>
+  <text x="205" y="1152" font-family="sans-serif" font-size="12" font-weight="700" fill="#31566c">Cloud-origin rain is corrected only when visible cloud decisions exist; no-cloud carried rain keeps its established origin. The fixed crescent remains baseline.</text>
+</svg>
