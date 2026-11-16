@@ -1,0 +1,49 @@
+digraph OX02A {
+  graph [bgcolor="#102233", pad="0.35", nodesep="0.38", ranksep="0.58", splines=ortho, fontname="DejaVu Sans", label="OX-02A  |  CONSOLIDATE CATALOG RENDERER FALLBACKS\nBehavior board • DRAFT • OWNER REVIEW PENDING", labelloc=t, fontsize=22, fontcolor="#edf4f7"];
+  node [shape=box, style="rounded,filled", color="#64869a", fillcolor="#294d65", fontcolor="#edf4f7", fontname="DejaVu Sans", fontsize=11, margin="0.16,0.12"];
+  edge [color="#83c9bf", fontcolor="#d7e9e8", fontname="DejaVu Sans", fontsize=9, arrowsize=0.75, penwidth=1.4];
+
+  input [label="ACTIVE CATALOG + SELECTED INSTANT\nOne authoritative selected instant", fillcolor="#24536a"];
+  presentation [label="MAINACTIVITY → PRESENTATION OVERLOAD\nTimeline, SceneReading, FirstCityComposition\nconstructed from the same selected instant"];
+  precedence [shape=diamond, label="COMPOSITION\nRETAINED?\n!hasWeatherState OR\ntimeline.scene != null", fillcolor="#4d4a63", color="#ad91c4", margin="0.2,0.12"];
+  composition [label="PRIMARY CATALOG ROUTE\nComposition renderer\nKEEP as primary", fillcolor="#315a52", color="#83c9bf"];
+  reading [label="READING FALLBACK\nComposition filtered; reading present\nsg2_null_weather is a static debug trigger\nRuntime exercise unverified", fillcolor="#71542e", color="#edc477"];
+
+  view [label="SEPARATE VIEW-ONLY OVERLOAD\nCatalogTimeLabScreen(view, …)\nPasses null reading + composition", fillcolor="#4c3f5f", color="#ad91c4"];
+  state_gate [shape=diamond, label="view.scene\npresent?", fillcolor="#4d4a63", color="#ad91c4", margin="0.18,0.1"];
+  state_route [label="STATE-ONLY RENDERER\nNo production scene caller found\nReachability unverified", fillcolor="#71542e", color="#edc477"];
+  no_scene [label="NO CATALOG SCENE CALL\nview.scene == null\nUI foreground still renders", fillcolor="#38556b"];
+  test_caller [label="KNOWN ANDROID TEST CALLER\nCatalogForecastBrowserErrorAccessibilityTest\npasses view with scene == null\nTest source only; test not run", fillcolor="#38556b"];
+
+  parity [label="ROUTE PARITY GATE BEFORE ANY CONSOLIDATION\nCompare at the same exact selected instant:\nSUPPORTED · MISSING · ELIGIBLE CARRIED facts\ncondition + independent facts + source-valid time/disclosure\naffected scene state + visible readout + timeline selection\nUse scoped installed captures and direct interaction checks", fillcolor="#38556b"];
+  reading_decision [label="READING ROUTE DISPOSITION\nConsolidate into composition only if parity passes\nOtherwise keep the reading route\nUnverified means keep", fillcolor="#315a52", color="#83c9bf"];
+  state_decision [label="STATE-ONLY DISPOSITION\nKeep while caller / trigger / appearance is unverified\nDo not remove it because production search found no caller\nRecord any real caller and its state before deciding", fillcolor="#315a52", color="#83c9bf"];
+
+  previews [label="SEPARATE FIXTURE / TIME LAB PREVIEWS\nRemain outside catalog route selection\nNo change in OX-02A", fillcolor="#4c3f5f", color="#ad91c4"];
+  exit [label="OX-02A EXIT\nFor reading + state-only routes: caller, trigger, source,\nreachability confidence, and keep / consolidate disposition\nPreserve composition-first behavior and preview separation\nRecord scoped results and limits", fillcolor="#315a52"];
+  scope [label="SCOPE LIMIT\nNo route is removed on static inference alone\nThe board is a proposal, not runtime or visual evidence\nNo broad accessibility / system acceptance", fillcolor="#4c3f5f", color="#ad91c4"];
+
+  input -> presentation [label="resolve once"];
+  presentation -> precedence;
+  precedence -> composition [label="yes"];
+  precedence -> reading [label="no; reading present"];
+  view -> state_gate;
+  state_gate -> state_route [label="yes"];
+  state_gate -> no_scene [label="no"];
+  test_caller -> view [label="view.scene == null"];
+
+  composition -> parity [label="reference route"];
+  reading -> parity [label="candidate route"];
+  state_route -> parity [style=dashed, color="#edc477", fontcolor="#edc477", label="only after a real caller / trigger is evidenced"];
+  parity -> reading_decision;
+  parity -> state_decision [style=dashed, color="#edc477", fontcolor="#edc477", label="if reachable"];
+  no_scene -> state_decision [style=dashed, color="#ad91c4", fontcolor="#d8c9e7", label="not the state-only renderer"];
+  previews -> scope [style=dashed, color="#ad91c4"];
+  reading_decision -> exit;
+  state_decision -> exit;
+  scope -> exit [style=dashed, color="#ad91c4"];
+
+  {rank=same; input; view; test_caller; previews;}
+  {rank=same; composition; reading; state_route; no_scene;}
+  {rank=same; parity; scope;}
+}

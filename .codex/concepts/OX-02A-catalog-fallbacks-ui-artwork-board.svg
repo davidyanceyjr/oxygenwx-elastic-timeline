@@ -1,0 +1,215 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1660" height="1120" viewBox="0 0 1660 1120" role="img" aria-labelledby="title desc">
+  <title id="title">OX-02A catalog fallback UI artwork board</title>
+  <desc id="desc">A schematic parity target showing composition and reading route appearances side by side for supported, missing, and carried forecast conditions, plus the unverified view-only branches and slice boundaries.</desc>
+  <defs>
+    <linearGradient id="sky" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#264e70"/>
+      <stop offset="0.7" stop-color="#66899a"/>
+      <stop offset="1" stop-color="#9c9b87"/>
+    </linearGradient>
+    <linearGradient id="darkSky" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#192d43"/>
+      <stop offset="1" stop-color="#34495a"/>
+    </linearGradient>
+  </defs>
+  <rect width="1660" height="1120" fill="#e9edf2"/>
+  <text x="34" y="44" font-family="sans-serif" font-size="27" font-weight="700" fill="#16283e">OX-02A · Catalog renderer parity artwork</text>
+  <text x="34" y="74" font-family="sans-serif" font-size="15" fill="#40546a">Draft for owner review · schematic target, not an installed screenshot · preserve the existing foreground, timeline, and scene treatment</text>
+  <rect x="34" y="91" width="1592" height="42" rx="10" fill="#d5e1e9"/>
+  <text x="52" y="117" font-family="sans-serif" font-size="14" font-weight="700" fill="#243d52">PARITY RULE</text>
+  <text x="154" y="117" font-family="sans-serif" font-size="14" fill="#243d52">For the same selected instant and inputs, a reading route being consolidated must match the composition route’s supported facts, source-time disclosure, scene state, and timeline selection.</text>
+
+  <!-- Three comparison columns -->
+  <g font-family="sans-serif">
+    <g transform="translate(28,151)">
+      <rect width="520" height="530" rx="18" fill="#ffffff" stroke="#b7c6d1" stroke-width="2"/>
+      <text x="20" y="34" font-size="18" font-weight="700" fill="#20384e">01 · SUPPORTED CONDITION</text>
+      <text x="20" y="58" font-size="13" fill="#52677b">Selected 3:00 PM · example values only</text>
+      <g transform="translate(18,78)">
+        <text x="108" y="15" text-anchor="middle" font-size="12" font-weight="700" fill="#31566c">REFERENCE · COMPOSITION</text>
+        <rect y="27" width="218" height="328" rx="16" fill="#10263d" stroke="#31566c" stroke-width="2"/>
+        <rect x="4" y="31" width="210" height="236" rx="12" fill="url(#sky)"/>
+        <circle cx="175" cy="82" r="23" fill="#f4d58a" opacity="0.92"/>
+        <path d="M4 216 Q42 189 82 214 T160 210 T214 217 L214 267 L4 267Z" fill="#516b68"/>
+        <path d="M4 239 L35 222 52 232 69 211 90 238 111 224 130 243 151 216 169 237 186 221 214 240 214 267 4 267Z" fill="#243c4d"/>
+        <text x="109" y="63" text-anchor="middle" font-size="12" fill="#f5f8ff">Chicago · 3:00 PM</text>
+        <text x="109" y="136" text-anchor="middle" font-size="15" font-weight="700" fill="#f5f8ff">Cloudy</text>
+        <text x="109" y="174" text-anchor="middle" font-size="31" font-weight="700" fill="#ffffff">72°</text>
+        <text x="109" y="197" text-anchor="middle" font-size="10" fill="#f5f8ff">SUPPLIED CONDITION</text>
+        <text x="109" y="287" text-anchor="middle" font-size="11" fill="#e6edf4">Selected · 3:00 PM</text>
+        <text x="109" y="303" text-anchor="middle" font-size="10" fill="#e6edf4">Fact source · 3:00 PM</text>
+        <line x1="17" y1="327" x2="201" y2="327" stroke="#a9bac9" stroke-width="1"/>
+        <line x1="109" y1="317" x2="109" y2="339" stroke="#f5f8ff" stroke-width="2"/>
+        <text x="109" y="350" text-anchor="middle" font-size="9" fill="#e6edf4">TIMELINE · SAME SELECTION</text>
+      </g>
+      <text x="260" y="96" font-size="20" font-weight="700" fill="#39766f">=</text>
+      <g transform="translate(282,78)">
+        <text x="108" y="15" text-anchor="middle" font-size="12" font-weight="700" fill="#775a2d">CANDIDATE · READING</text>
+        <rect y="27" width="218" height="328" rx="16" fill="#10263d" stroke="#c7a45d" stroke-width="2"/>
+        <rect x="4" y="31" width="210" height="236" rx="12" fill="url(#sky)"/>
+        <circle cx="175" cy="82" r="23" fill="#f4d58a" opacity="0.92"/>
+        <path d="M4 216 Q42 189 82 214 T160 210 T214 217 L214 267 L4 267Z" fill="#516b68"/>
+        <path d="M4 239 L35 222 52 232 69 211 90 238 111 224 130 243 151 216 169 237 186 221 214 240 214 267 4 267Z" fill="#243c4d"/>
+        <text x="109" y="63" text-anchor="middle" font-size="12" fill="#f5f8ff">Chicago · 3:00 PM</text>
+        <text x="109" y="136" text-anchor="middle" font-size="15" font-weight="700" fill="#f5f8ff">Cloudy</text>
+        <text x="109" y="174" text-anchor="middle" font-size="31" font-weight="700" fill="#ffffff">72°</text>
+        <text x="109" y="197" text-anchor="middle" font-size="10" fill="#f5f8ff">SUPPLIED CONDITION</text>
+        <text x="109" y="287" text-anchor="middle" font-size="11" fill="#e6edf4">Selected · 3:00 PM</text>
+        <text x="109" y="303" text-anchor="middle" font-size="10" fill="#e6edf4">Fact source · 3:00 PM</text>
+        <line x1="17" y1="327" x2="201" y2="327" stroke="#a9bac9" stroke-width="1"/>
+        <line x1="109" y1="317" x2="109" y2="339" stroke="#f5f8ff" stroke-width="2"/>
+        <text x="109" y="350" text-anchor="middle" font-size="9" fill="#e6edf4">TIMELINE · SAME SELECTION</text>
+      </g>
+      <text x="20" y="459" font-size="13" font-weight="700" fill="#31566c">MATCH</text>
+      <text x="20" y="481" font-size="12" fill="#52677b">Condition, symbol, independent values, scene, and selection stay tied</text>
+      <text x="20" y="499" font-size="12" fill="#52677b">to the same supplied sample.</text>
+      <text x="20" y="518" font-size="11" fill="#697e8f">Illustrative labels and values only; not a fixture assertion.</text>
+    </g>
+
+    <g transform="translate(570,151)">
+      <rect width="520" height="530" rx="18" fill="#ffffff" stroke="#b7c6d1" stroke-width="2"/>
+      <text x="20" y="34" font-size="18" font-weight="700" fill="#20384e">02 · MISSING CONDITION</text>
+      <text x="20" y="58" font-size="13" fill="#52677b">Selected 3:00 PM · condition unavailable</text>
+      <g transform="translate(18,78)">
+        <text x="108" y="15" text-anchor="middle" font-size="12" font-weight="700" fill="#31566c">REFERENCE · COMPOSITION</text>
+        <rect y="27" width="218" height="328" rx="16" fill="#10263d" stroke="#31566c" stroke-width="2"/>
+        <rect x="4" y="31" width="210" height="236" rx="12" fill="url(#darkSky)"/>
+        <path d="M4 216 Q42 189 82 214 T160 210 T214 217 L214 267 L4 267Z" fill="#394e5d"/>
+        <path d="M4 239 L35 222 52 232 69 211 90 238 111 224 130 243 151 216 169 237 186 221 214 240 214 267 4 267Z" fill="#23394a"/>
+        <text x="109" y="63" text-anchor="middle" font-size="12" fill="#f5f8ff">Chicago · 3:00 PM</text>
+        <circle cx="109" cy="119" r="20" fill="#1e374e" stroke="#b9cad6" stroke-width="1.5" stroke-dasharray="4 4"/>
+        <text x="109" y="125" text-anchor="middle" font-size="17" fill="#d9e3eb">—</text>
+        <text x="109" y="158" text-anchor="middle" font-size="12" font-weight="700" fill="#f5f8ff">Condition unavailable</text>
+        <text x="109" y="194" text-anchor="middle" font-size="29" font-weight="700" fill="#ffffff">72°</text>
+        <text x="109" y="214" text-anchor="middle" font-size="10" fill="#d8e2eb">INDEPENDENT FACT</text>
+        <text x="109" y="287" text-anchor="middle" font-size="11" fill="#e6edf4">Selected · 3:00 PM</text>
+        <text x="109" y="303" text-anchor="middle" font-size="10" fill="#e6edf4">No condition source claim</text>
+        <line x1="17" y1="327" x2="201" y2="327" stroke="#a9bac9" stroke-width="1"/>
+        <line x1="109" y1="317" x2="109" y2="339" stroke="#f5f8ff" stroke-width="2"/>
+        <text x="109" y="350" text-anchor="middle" font-size="9" fill="#e6edf4">TIMELINE · SAME SELECTION</text>
+      </g>
+      <text x="260" y="96" font-size="20" font-weight="700" fill="#39766f">=</text>
+      <g transform="translate(282,78)">
+        <text x="108" y="15" text-anchor="middle" font-size="12" font-weight="700" fill="#775a2d">CANDIDATE · READING</text>
+        <rect y="27" width="218" height="328" rx="16" fill="#10263d" stroke="#c7a45d" stroke-width="2"/>
+        <rect x="4" y="31" width="210" height="236" rx="12" fill="url(#darkSky)"/>
+        <path d="M4 216 Q42 189 82 214 T160 210 T214 217 L214 267 L4 267Z" fill="#394e5d"/>
+        <path d="M4 239 L35 222 52 232 69 211 90 238 111 224 130 243 151 216 169 237 186 221 214 240 214 267 4 267Z" fill="#23394a"/>
+        <text x="109" y="63" text-anchor="middle" font-size="12" fill="#f5f8ff">Chicago · 3:00 PM</text>
+        <circle cx="109" cy="119" r="20" fill="#1e374e" stroke="#b9cad6" stroke-width="1.5" stroke-dasharray="4 4"/>
+        <text x="109" y="125" text-anchor="middle" font-size="17" fill="#d9e3eb">—</text>
+        <text x="109" y="158" text-anchor="middle" font-size="12" font-weight="700" fill="#f5f8ff">Condition unavailable</text>
+        <text x="109" y="194" text-anchor="middle" font-size="29" font-weight="700" fill="#ffffff">72°</text>
+        <text x="109" y="214" text-anchor="middle" font-size="10" fill="#d8e2eb">INDEPENDENT FACT</text>
+        <text x="109" y="287" text-anchor="middle" font-size="11" fill="#e6edf4">Selected · 3:00 PM</text>
+        <text x="109" y="303" text-anchor="middle" font-size="10" fill="#e6edf4">No condition source claim</text>
+        <line x1="17" y1="327" x2="201" y2="327" stroke="#a9bac9" stroke-width="1"/>
+        <line x1="109" y1="317" x2="109" y2="339" stroke="#f5f8ff" stroke-width="2"/>
+        <text x="109" y="350" text-anchor="middle" font-size="9" fill="#e6edf4">TIMELINE · SAME SELECTION</text>
+      </g>
+      <text x="20" y="459" font-size="13" font-weight="700" fill="#31566c">MATCH WITHOUT A CONDITION CLAIM</text>
+      <text x="20" y="481" font-size="12" fill="#52677b">Retain independent values; do not add a weather symbol or claim.</text>
+      <text x="20" y="499" font-size="12" fill="#52677b">Scene details follow the supported reading; no runtime claim.</text>
+      <text x="20" y="518" font-size="11" fill="#697e8f">Illustrative values only; inspect actual scene output during execution.</text>
+    </g>
+
+    <g transform="translate(1112,151)">
+      <rect width="520" height="530" rx="18" fill="#ffffff" stroke="#b7c6d1" stroke-width="2"/>
+      <text x="20" y="34" font-size="18" font-weight="700" fill="#20384e">03 · ELIGIBLE CARRIED CONDITION</text>
+      <text x="20" y="58" font-size="13" fill="#52677b">Selected 3:30 PM · prior sample 3:00 PM</text>
+      <g transform="translate(18,78)">
+        <text x="108" y="15" text-anchor="middle" font-size="12" font-weight="700" fill="#31566c">REFERENCE · COMPOSITION</text>
+        <rect y="27" width="218" height="328" rx="16" fill="#10263d" stroke="#31566c" stroke-width="2"/>
+        <rect x="4" y="31" width="210" height="236" rx="12" fill="url(#sky)"/>
+        <path d="M64 113 C68 101 84 98 93 106 C101 89 127 92 132 108 C149 105 158 119 151 131 L67 131 C57 128 57 118 64 113Z" fill="#e4edf2" opacity="0.88"/>
+        <path d="M4 216 Q42 189 82 214 T160 210 T214 217 L214 267 L4 267Z" fill="#516b68"/>
+        <path d="M4 239 L35 222 52 232 69 211 90 238 111 224 130 243 151 216 169 237 186 221 214 240 214 267 4 267Z" fill="#243c4d"/>
+        <text x="109" y="63" text-anchor="middle" font-size="12" fill="#f5f8ff">Chicago · 3:30 PM</text>
+        <text x="109" y="159" text-anchor="middle" font-size="15" font-weight="700" fill="#f5f8ff">Cloudy</text>
+        <text x="109" y="194" text-anchor="middle" font-size="29" font-weight="700" fill="#ffffff">72°</text>
+        <text x="109" y="217" text-anchor="middle" font-size="10" fill="#f5f8ff">Condition source · 3:00 PM</text>
+        <text x="109" y="287" text-anchor="middle" font-size="11" fill="#e6edf4">Selected · 3:30 PM</text>
+        <text x="109" y="303" text-anchor="middle" font-size="10" fill="#e6edf4">Fact source remains distinct</text>
+        <line x1="17" y1="327" x2="201" y2="327" stroke="#a9bac9" stroke-width="1"/>
+        <line x1="109" y1="317" x2="109" y2="339" stroke="#f5f8ff" stroke-width="2"/>
+        <text x="109" y="350" text-anchor="middle" font-size="9" fill="#e6edf4">TIMELINE · SELECTED 3:30 PM</text>
+      </g>
+      <text x="260" y="96" font-size="20" font-weight="700" fill="#39766f">=</text>
+      <g transform="translate(282,78)">
+        <text x="108" y="15" text-anchor="middle" font-size="12" font-weight="700" fill="#775a2d">CANDIDATE · READING</text>
+        <rect y="27" width="218" height="328" rx="16" fill="#10263d" stroke="#c7a45d" stroke-width="2"/>
+        <rect x="4" y="31" width="210" height="236" rx="12" fill="url(#sky)"/>
+        <path d="M64 113 C68 101 84 98 93 106 C101 89 127 92 132 108 C149 105 158 119 151 131 L67 131 C57 128 57 118 64 113Z" fill="#e4edf2" opacity="0.88"/>
+        <path d="M4 216 Q42 189 82 214 T160 210 T214 217 L214 267 L4 267Z" fill="#516b68"/>
+        <path d="M4 239 L35 222 52 232 69 211 90 238 111 224 130 243 151 216 169 237 186 221 214 240 214 267 4 267Z" fill="#243c4d"/>
+        <text x="109" y="63" text-anchor="middle" font-size="12" fill="#f5f8ff">Chicago · 3:30 PM</text>
+        <text x="109" y="159" text-anchor="middle" font-size="15" font-weight="700" fill="#f5f8ff">Cloudy</text>
+        <text x="109" y="194" text-anchor="middle" font-size="29" font-weight="700" fill="#ffffff">72°</text>
+        <text x="109" y="217" text-anchor="middle" font-size="10" fill="#f5f8ff">Condition source · 3:00 PM</text>
+        <text x="109" y="287" text-anchor="middle" font-size="11" fill="#e6edf4">Selected · 3:30 PM</text>
+        <text x="109" y="303" text-anchor="middle" font-size="10" fill="#e6edf4">Fact source remains distinct</text>
+        <line x1="17" y1="327" x2="201" y2="327" stroke="#a9bac9" stroke-width="1"/>
+        <line x1="109" y1="317" x2="109" y2="339" stroke="#f5f8ff" stroke-width="2"/>
+        <text x="109" y="350" text-anchor="middle" font-size="9" fill="#e6edf4">TIMELINE · SELECTED 3:30 PM</text>
+      </g>
+      <text x="20" y="459" font-size="13" font-weight="700" fill="#31566c">MATCH WITH SOURCE DISCLOSURE</text>
+      <text x="20" y="481" font-size="12" fill="#52677b">Keep selection at 3:30 PM; disclose the carried condition’s source</text>
+      <text x="20" y="499" font-size="12" fill="#52677b">as 3:00 PM. This is not a measured transition minute.</text>
+      <text x="20" y="518" font-size="11" fill="#697e8f">Illustrative values only; no runtime evidence is claimed.</text>
+    </g>
+  </g>
+
+  <!-- View-only route notes -->
+  <g font-family="sans-serif">
+    <g transform="translate(28,704)">
+      <rect width="520" height="331" rx="18" fill="#fff" stroke="#b7c6d1" stroke-width="2"/>
+      <text x="20" y="34" font-size="17" font-weight="700" fill="#20384e">VIEW-ONLY · scene = null</text>
+      <text x="20" y="57" font-size="12" fill="#52677b">Known Android test input · no atmospheric renderer call on this branch</text>
+      <rect x="20" y="77" width="215" height="180" rx="14" fill="#11263d"/>
+      <text x="127" y="113" text-anchor="middle" font-size="11" fill="#e5edf4">plain scene field</text>
+      <text x="127" y="154" text-anchor="middle" font-size="14" font-weight="700" fill="#fff">selected facts remain</text>
+      <text x="127" y="180" text-anchor="middle" font-size="12" fill="#dbe5ec">timeline and foreground UI</text>
+      <line x1="42" y1="224" x2="213" y2="224" stroke="#9fb3c2"/>
+      <line x1="127" y1="214" x2="127" y2="236" stroke="#fff" stroke-width="2"/>
+      <text x="258" y="99" font-size="13" font-weight="700" fill="#31566c">SOURCE-ONLY FACT</text>
+      <text x="258" y="124" font-size="12" fill="#52677b">The test source passes `scene = null`.</text>
+      <text x="258" y="147" font-size="12" fill="#52677b">It identifies the no-scene branch;</text>
+      <text x="258" y="170" font-size="12" fill="#52677b">it does not exercise state-only rendering.</text>
+      <rect x="20" y="278" width="480" height="32" rx="8" fill="#e6edf2"/>
+      <text x="32" y="299" font-size="11" fill="#40546a">Android test caller found; test not run · no production scene caller found</text>
+    </g>
+
+    <g transform="translate(570,704)">
+      <rect width="520" height="331" rx="18" fill="#fff" stroke="#c7a45d" stroke-width="2"/>
+      <text x="20" y="34" font-size="17" font-weight="700" fill="#20384e">STATE-ONLY · scene present</text>
+      <text x="20" y="57" font-size="12" fill="#52677b">Reachability and resulting appearance are unverified</text>
+      <rect x="20" y="77" width="480" height="114" rx="14" fill="#f3e8cf" stroke="#c7a45d" stroke-dasharray="6 4"/>
+      <text x="260" y="113" text-anchor="middle" font-size="13" font-weight="700" fill="#775a2d">KEEP THE CURRENT ROUTE WHILE UNVERIFIED</text>
+      <text x="260" y="139" text-anchor="middle" font-size="12" fill="#604d2c">No production scene caller or scene-present test caller was found.</text>
+      <text x="260" y="163" text-anchor="middle" font-size="12" fill="#604d2c">Do not invent a parity claim or remove this branch by absence alone.</text>
+      <text x="20" y="222" font-size="13" font-weight="700" fill="#31566c">Before a disposition changes</text>
+      <text x="20" y="246" font-size="12" fill="#52677b">Record an actual caller + trigger, then compare the same selected instant,</text>
+      <text x="20" y="267" font-size="12" fill="#52677b">source facts, scene output, and visible disclosures with installed evidence.</text>
+      <text x="20" y="304" font-size="11" fill="#697e8f">This artwork leaves the state-present visual target open until reachable input exists.</text>
+    </g>
+
+    <g transform="translate(1112,704)">
+      <rect width="520" height="331" rx="18" fill="#fff" stroke="#b7c6d1" stroke-width="2"/>
+      <text x="20" y="34" font-size="17" font-weight="700" fill="#20384e">SCOPE &amp; ACCEPTANCE</text>
+      <circle cx="27" cy="75" r="4" fill="#39766f"/>
+      <text x="42" y="80" font-size="12" fill="#40546a">Composition stays the primary catalog renderer.</text>
+      <circle cx="27" cy="108" r="4" fill="#39766f"/>
+      <text x="42" y="113" font-size="12" fill="#40546a">Reading route consolidates only after supported, missing,</text>
+      <text x="42" y="132" font-size="12" fill="#40546a">and carried-state parity plus direct interactions pass.</text>
+      <circle cx="27" cy="161" r="4" fill="#c09542"/>
+      <text x="42" y="166" font-size="12" fill="#40546a">Unverified state-only route remains until evidence supports</text>
+      <text x="42" y="185" font-size="12" fill="#40546a">a keep/consolidate decision.</text>
+      <circle cx="27" cy="214" r="4" fill="#8b79a2"/>
+      <text x="42" y="219" font-size="12" fill="#40546a">Fixture / Time Lab previews stay separate and unchanged.</text>
+      <rect x="20" y="252" width="480" height="54" rx="9" fill="#e6edf2"/>
+      <text x="34" y="275" font-size="11" font-weight="700" fill="#40546a">BOARD SKETCH ≠ INSTALLED EVIDENCE</text>
+      <text x="34" y="293" font-size="11" fill="#52677b">No runtime checks, captures, or app acceptance are claimed here.</text>
+    </g>
+  </g>
+  <text x="34" y="1081" font-family="sans-serif" font-size="12" fill="#5a6e80">Values and condition names in the comparison panels are schematic placeholders. Artwork approval sets the parity target; later installed evidence must use actual catalog states and disclose their actual source times.</text>
+</svg>

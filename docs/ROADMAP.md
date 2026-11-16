@@ -1026,6 +1026,8 @@ The SG workstream follows the owner-directed pivot recorded above and is grounde
 
 **Owner sequencing update (2026-11-14):** After OX-01f closed, the owner continued with OX-02 by requesting its behavior board. OX-02 is the sole global `NEXT` for cycle 138 board preparation; OX-02A and the other OX leaves remain `PLANNED`. This selection does not approve the board or activate implementation.
 
+**Owner sequencing update (2026-11-15):** After OX-02 and WF.2 closed, the owner selected OX-02A as the sole global `NEXT`. Cycle 140 prepared its behavior and UI artwork boards; the product owner approved both packages on 2026-11-15. Final plan review advanced the cycle to `REVIEW`; at that point it remained unactivated, and board approval alone did not authorize fallback removal or implementation. The owner later requested execution and selected evidence-only closeout after the supported-rain comparison.
+
 ### OX-01 — Baseline the current world — DONE
 
 **Objective/scope:** Lock down what currently works before restructuring it: scene state, First City frame composition, scrubbing, astronomy cues, and accessibility. Reuse completed baseline records and isolate only the unmet Scene Engine questions. Scope is limited to this outcome; the boards may propose a split or a changed boundary before approval.
@@ -1069,13 +1071,22 @@ The SG workstream follows the owner-directed pivot recorded above and is grounde
 
 **Ordered follow-up:** OX-02A records the separate consolidation scope. OX-02 itself removes no fallback.
 
-### OX-02A — Consolidate catalog renderer fallbacks — PLANNED
+### OX-02A — Consolidate catalog renderer fallbacks — DONE
 
 **Objective/scope:** Resolve the reading and state-only catalog renderer fallbacks identified by OX-02. Use OX-02's caller and triggering-state record to decide which routes remain necessary, then consolidate only routes whose replacement preserves their observed behavior. Keep the composition renderer as the primary catalog route and keep fixture/Time Lab previews outside this slice. Do not remove an unverified route merely because no production caller was found.
 **Depends on:** OX-02.
 **Exit:** For each reading and state-only route, record its actual caller, triggering state, and keep/consolidate disposition. Before any removal, show parity at the same selected instant for supported, missing, and carried facts, source-valid time and disclosure, and the affected scene states; include scoped installed captures and direct interaction checks for visible changes. Record any unexercised route as unverified and retain it or give an evidence-backed reason for its disposition. Preserve the primary catalog renderer and separate preview entry points. Scoped verification results and limitations are explicit; no app-wide system acceptance is claimed.
-**Evidence:** Future cycle-specific `.codex/test-artifacts/<cycle-id>/` and `.codex/history/<cycle-id>.md`; exact paths assigned when a cycle is planned.
-**Slice board(s):** Objective-specific behavior board and UI artwork board pending. The board package must map each caller/state to its proposed route and show affected visual states. No board approval, cycle activation, or renderer removal is claimed.
+**Cycle 140 outcome (2026-11-15):** The owner selected evidence-only closeout after matched installed captures showed rain streaks on the composition route but not the reading fallback at the same supported-rain instant. Keep both fallback routes; the scene-present state-only route remains unverified. No renderer changes or parity claim. Missing/carried comparisons and reading-route interaction were not performed.
+**Evidence:** Cycle 140 targets `.codex/test-artifacts/140-ox02a-catalog-renderer-fallbacks/README.md` and `.codex/history/140-ox02a-catalog-renderer-fallbacks.md`.
+**Slice board(s):** Product-owner-approved behavior package `.codex/concepts/OX-02A-catalog-fallbacks-behavior-board.dot`, `.svg`, `.png`, and `.md`, and UI artwork package `.codex/concepts/OX-02A-catalog-fallbacks-ui-artwork-board.svg`, `.png`, and `.md` (approved 2026-11-15; cycle 140 records file fingerprints). The packages map caller/state to route disposition and show supported, missing, carried, view-only no-scene, and unverified state-only visual states. Approval does not activate the cycle or authorize renderer removal.
+
+### OX-02A-TESTS — Run focused catalog fallback acceptance checks — DONE
+
+**Objective/scope:** Test duplicate of OX-02A using the connected device and `#DEBUG` build. Complete the OX-02A supported, missing, and eligible carried reading-fallback comparisons, including selected-time facts, source-time disclosure, scene output, and reading-route timeline interaction. Reuse existing debug replay catalogs; a test-only catalog may be added under the debug source set if an existing fixture cannot represent an acceptance state. Do not change production renderer behavior or claim app-wide acceptance.
+**Depends on:** OX-02A.
+**Exit:** On the connected Pixel 3 XL debug build, capture composition and reading routes at matched instants for supported rain, an unavailable condition with any supplied independent facts, and an eligible carried condition with its original source-valid time and disclosure. Record the exact catalog, selected instant, supplied facts, route trigger, visible scene/condition, selected-time readout, and capture paths. Perform a direct reading-route timeline selection check and record whether the selected instant remains correct. Recheck state-only route callers; retain that route and mark scene-present runtime appearance unverified if no actual debug caller exists. Record every mismatch and limitation; do not consolidate renderers or change production code in this test slice.
+**Evidence:** `.codex/test-artifacts/141-ox02a-tests/README.md`; `.codex/history/141-ox02a-tests.md`; archived plan `.codex/history/plans/141-ox02a-tests.md`.
+**Slice board(s):** Reuse the product-owner-approved OX-02A behavior and UI artwork packages from cycle 140 unchanged: `.codex/concepts/OX-02A-catalog-fallbacks-behavior-board.dot`, `.svg`, `.png`, and `.md`; `.codex/concepts/OX-02A-catalog-fallbacks-ui-artwork-board.svg`, `.png`, and `.md`. Their recorded 2026-11-15 approvals and fingerprints govern the duplicate route/state acceptance. No new visible output is proposed.
 
 ### OX-03 — Establish a single scene decision contract — PLANNED
 
