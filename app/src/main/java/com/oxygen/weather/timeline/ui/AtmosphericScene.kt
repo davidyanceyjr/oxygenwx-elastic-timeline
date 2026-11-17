@@ -32,6 +32,7 @@ import com.oxygen.weather.timeline.presentation.scene.FirstCityDepthGroup
 import com.oxygen.weather.timeline.presentation.scene.FirstCityComposition
 import com.oxygen.weather.timeline.presentation.scene.FirstCityLayer
 import com.oxygen.weather.timeline.presentation.scene.FirstCityTheme
+import com.oxygen.weather.timeline.presentation.scene.MinimalOpenLandscapeComposition
 import com.oxygen.weather.timeline.presentation.scene.SceneReading
 import java.time.ZoneId
 import com.oxygen.weather.timeline.R
@@ -161,6 +162,47 @@ fun CatalogAtmosphericScene(
                     }
                 }
             }
+        }
+    }
+}
+
+/** Minimal open-landscape renderer; weather decisions remain owned by presentation. */
+@Composable
+fun CatalogOpenLandscapeScene(
+    composition: MinimalOpenLandscapeComposition,
+    modifier: Modifier = Modifier,
+) {
+    val weather = composition.weatherDecision
+    val reducedMotion = !ValueAnimator.areAnimatorsEnabled()
+    Canvas(modifier.fillMaxSize()) {
+        val sky = weather.sky
+        if (sky == null) {
+            drawRect(
+                brush = Brush.verticalGradient(
+                    0f to Color(0xFF52697B),
+                    .58f to Color(0xFF647B89),
+                    1f to Color(0xFF82918A),
+                ),
+            )
+        } else {
+            val cloudiness = weather.clouds.coverFraction
+            val storm = weather.precipitation == CityPrecipitation.STORM
+            drawSkyPalette(sky.condition, sky.daylight, cloudiness, storm)
+            if (weather.precipitation == CityPrecipitation.RAIN) {
+                drawRect(Brush.verticalGradient(
+                    0f to Color(0xFF4B6072), .55f to Color(0xFF5F7385),
+                    1f to Color.Transparent,
+                ))
+            }
+        }
+        if (weather.clouds.visible) drawOpenLandscapeClouds(weather.clouds, reducedMotion)
+        drawOpenLandscapeTerrain()
+        drawOpenLandscapeTreeGroup(centerX = .20f, scale = 1f)
+        drawOpenLandscapeTreeGroup(centerX = .78f, scale = .92f)
+        when (weather.precipitation) {
+            CityPrecipitation.RAIN -> drawCityRainField(startsAtCloudBase = weather.clouds.visible)
+            CityPrecipitation.SNOW -> drawCitySnowField()
+            CityPrecipitation.NONE, CityPrecipitation.STORM -> Unit
         }
     }
 }
@@ -460,6 +502,82 @@ private fun DrawScope.drawCityCloudBank(
         close()
     }
     drawPath(bank, color)
+}
+
+private fun DrawScope.drawOpenLandscapeClouds(clouds: CityCloudDecision, reducedMotion: Boolean) {
+    val cover = clouds.coverFraction?.toFloat()?.coerceIn(0f, 1f) ?: return
+    if (cover <= .01f || size.width <= 0f) return
+    val day = clouds.daylight.toFloat().coerceIn(0f, 1f)
+    val base = if (clouds.appearance == CityCloudAppearance.STORM) Color(0xFF4E6075)
+    else lerp(Color(0xFF7189A5), Color(0xFFE0EAF1), day)
+    val alpha = when (clouds.appearance) {
+        CityCloudAppearance.RAIN, CityCloudAppearance.SNOW -> .78f
+        CityCloudAppearance.STORM -> .66f
+        CityCloudAppearance.GENERAL -> (cover * .62f).coerceIn(.18f, .58f)
+    }
+    val drift = if (reducedMotion) 0f else
+        (.018f * sin(((clouds.localHour - 6.0) / 12.0) * PI)).toFloat()
+    val banks = listOf(-.015f, .235f, .485f, .735f)
+    clipRect(left = 0f, top = 0f, right = size.width, bottom = size.height * CLOUD_REGION_FRACTION) {
+        banks.forEachIndexed { index, x ->
+            val width = size.width * (if (index % 2 == 0) .29f else .27f)
+            val height = size.height * (if (index % 2 == 0) .16f else .145f)
+            drawCityCloudBank(
+                x = size.width * (x + drift),
+                y = size.height * if (index % 2 == 0) .025f else .075f,
+                width = width,
+                height = height,
+                color = base.copy(alpha = alpha * if (index == 0 || index == banks.lastIndex) .9f else 1f),
+                mirrored = index % 2 == 1,
+            )
+        }
+    }
+}
+
+private fun DrawScope.drawOpenLandscapeTerrain() {
+    val back = Path().apply {
+        moveTo(0f, size.height * .72f)
+        cubicTo(size.width * .18f, size.height * .64f, size.width * .29f, size.height * .69f,
+            size.width * .43f, size.height * .72f)
+        cubicTo(size.width * .61f, size.height * .76f, size.width * .76f, size.height * .64f,
+            size.width, size.height * .69f)
+        lineTo(size.width, size.height)
+        lineTo(0f, size.height)
+        close()
+    }
+    drawPath(back, Color(0xFF607D70))
+    val front = Path().apply {
+        moveTo(0f, size.height * .80f)
+        cubicTo(size.width * .17f, size.height * .73f, size.width * .36f, size.height * .86f,
+            size.width * .55f, size.height * .81f)
+        cubicTo(size.width * .74f, size.height * .77f, size.width * .86f, size.height * .83f,
+            size.width, size.height * .78f)
+        lineTo(size.width, size.height)
+        lineTo(0f, size.height)
+        close()
+    }
+    drawPath(front, Color(0xFF405F55))
+}
+
+private fun DrawScope.drawOpenLandscapeTreeGroup(centerX: Float, scale: Float) {
+    fun tree(x: Float, baseY: Float, treeScale: Float) {
+        val trunkHeight = size.height * .075f * scale * treeScale
+        val trunkWidth = size.width * .012f * scale * treeScale
+        val trunkLeft = size.width * x - trunkWidth / 2f
+        val trunkTop = size.height * baseY - trunkHeight
+        drawRect(
+            color = Color(0xFF594B3F),
+            topLeft = Offset(trunkLeft, trunkTop),
+            size = Size(trunkWidth, trunkHeight),
+        )
+        val radius = size.width * .027f * scale * treeScale
+        val canopyCenterY = trunkTop - radius * .63f
+        drawCircle(Color(0xFF356A58), radius * 1.04f, Offset(size.width * x, canopyCenterY))
+        drawCircle(Color(0xFF3E7862), radius * .74f, Offset(size.width * x - radius * .62f, canopyCenterY + radius * .2f))
+        drawCircle(Color(0xFF2F604F), radius * .72f, Offset(size.width * x + radius * .62f, canopyCenterY + radius * .18f))
+    }
+    tree(centerX, .80f, 1f)
+    tree(centerX + .052f, .805f, .73f)
 }
 
 private fun DrawScope.drawCityRainField(startsAtCloudBase: Boolean = false) {

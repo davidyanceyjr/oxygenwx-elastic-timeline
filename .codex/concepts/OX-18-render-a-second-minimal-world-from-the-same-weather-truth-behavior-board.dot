@@ -1,0 +1,48 @@
+digraph OX18 {
+  graph [
+    rankdir=TB,
+    bgcolor="#f3f6f8",
+    pad="0.35",
+    nodesep="0.48",
+    ranksep="0.68",
+    splines=polyline,
+    fontname="DejaVu Sans",
+    fontsize=20,
+    labelloc=t,
+    label="OX-18 | One weather truth, two minimal world compositions\nBehavior board — APPROVED BY PRODUCT OWNER · 2026-11-16"
+  ];
+  node [
+    shape=box,
+    style="rounded,filled",
+    fontname="DejaVu Sans",
+    fontsize=12,
+    margin="0.18,0.12",
+    color="#8fa8b6",
+    fillcolor="#ffffff",
+    fontcolor="#20384a",
+    penwidth=1.4
+  ];
+  edge [color="#527487", penwidth=1.6, arrowsize=0.8, fontname="DejaVu Sans", fontsize=10, fontcolor="#405d6f"];
+
+  catalog [shape=oval, fillcolor="#e6f2f4", color="#57a6ad", label="ONE CATALOG SELECTION\nsame location and exact selectedInstant = T"];
+  reading [fillcolor="#edf2f6", label="One selected-time SceneReading\nTyped facts remain independent; each value keeps its evidence and sourceValidTime\nExisting selected-time light / event inputs stay authoritative"];
+  shared [fillcolor="#dff0ef", color="#31949a", penwidth=2.0, label="OX-18 TARGET: one minimal shared semantic decision seam\nResolve weather meaning and evidence once from the selected reading\nPreserve supplied, eligible-carried, unavailable, and probability-only distinctions\nNo copied First City weather mapper; no new plausibility rules or inferred facts"];
+
+  catalog -> reading [label="catalog + selected instant"];
+  reading -> shared [label="typed input, same source truth"];
+
+  city [fillcolor="#e8edf2", color="#5b7990", label="FIRST CITY\nKeep the approved city composition baseline\nPreserve OX-03 / OX-04 meaning, OX-05 depth order,\nand OX-06 First City-local identities"];
+  noncity [fillcolor="#e9f3e9", color="#6a9b72", label="MINIMAL NON-CITY WORLD\nProposed open-landscape composition\nMap the same shared decisions to a distinct, minimal world\nNo city structures or new weather interpretation"];
+  { rank=same; city; noncity; }
+  shared -> city [label="same shared decision set"];
+  shared -> noncity [label="same shared decision set"];
+
+  pair [fillcolor="#e5f2e9", color="#58946b", penwidth=1.8, label="PAIRED PROOF\nSame catalog, exact T, semantic decision set, evidence strength, and source-time meaning\nOnly world-specific composition and artwork differ\nThe side-by-side comparison is review evidence, not an in-app split-screen"];
+  city -> pair;
+  noncity -> pair;
+
+  invariants [shape=note, fillcolor="#fff7e6", color="#c6a85e", label="EVIDENCE INVARIANTS\n- Supplied values and categorical conditions are presented faithfully; do not correct them by plausibility.\n- Eligible carried condition keeps its original sourceValidTime; it is not a new observation at T.\n- Unavailable condition creates no condition-derived weather marks; independent supported facts remain.\n- Precipitation chance remains chance, not a measured amount or rate; marks stay illustrative.\n- Selected instant does not move; neither world adds a forecast field or unsupported cue."];
+  boundary [shape=note, fillcolor="#f1eef8", color="#9a8bb8", label="SCOPE BOUNDARY\nSmallest viable non-city composition only. Cloud/precipitation primitive extraction is not required.\nNo polished scene pack, universal element registry, public scene schema, scene picker, or interaction is approved.\nThis board does not adopt the Living Urban Park proposal or decide default / selectable-world product role."];
+  pair -> invariants [style=invis, weight=10];
+  invariants -> boundary [style=invis, weight=10];
+}

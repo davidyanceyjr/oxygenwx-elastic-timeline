@@ -1,13 +1,6 @@
 package com.oxygen.weather.timeline.presentation.scene
 
-import com.oxygen.weather.timeline.data.SkyCondition
 import java.time.Instant
-
-/** Resolved first-city sky input. A missing category stays absent rather than becoming clear. */
-data class CitySkyDecision(
-    val condition: SkyCondition,
-    val daylight: Double,
-)
 
 enum class CityCueKind { SUN, MOON }
 
@@ -18,19 +11,6 @@ data class CityCueDecision(
     val kind: CityCueKind,
     val visible: Boolean,
 )
-
-enum class CityCloudAppearance { GENERAL, RAIN, SNOW, STORM }
-
-/** Cloud support is retained as supplied; appearance describes only the selected artwork. */
-data class CityCloudDecision(
-    val coverFraction: Double?,
-    val daylight: Double,
-    val localHour: Double,
-    val appearance: CityCloudAppearance,
-    val visible: Boolean,
-)
-
-enum class CityPrecipitation { NONE, RAIN, SNOW, STORM }
 
 enum class FirstCityDepthGroup(val backToFrontOrder: Int) {
     BACKGROUND(0),
@@ -164,13 +144,15 @@ internal object FirstCitySemanticInventory {
 
 /** Small renderer contract for the catalog path; all weather choices are already resolved. */
 data class FirstCityComposition(
-    val selectedInstant: Instant,
+    val weatherDecision: SceneWeatherDecision,
     val treatment: CityTreatment,
-    val sky: CitySkyDecision?,
     val cue: CityCueDecision,
     val moonCue: CityCueDecision,
-    val clouds: CityCloudDecision,
-    val precipitation: CityPrecipitation,
     val hasWeatherState: Boolean,
     val layerOrder: List<FirstCityLayer>,
-)
+) {
+    val selectedInstant: Instant get() = weatherDecision.selectedInstant
+    val sky: SceneSkyDecision? get() = weatherDecision.sky
+    val clouds: SceneCloudDecision get() = weatherDecision.clouds
+    val precipitation: ScenePrecipitation get() = weatherDecision.precipitation
+}

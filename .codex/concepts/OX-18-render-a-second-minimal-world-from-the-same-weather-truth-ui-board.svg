@@ -1,0 +1,120 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1900" height="1430" viewBox="0 0 1900 1430" role="img" aria-labelledby="title desc">
+  <title id="title">OX-18 UI artwork board: minimal second world, same weather truth</title>
+  <desc id="desc">Approved schematic comparing the First City baseline with a minimal open landscape at the same selected catalog instant and shared weather decisions. The paired view is for review only, not an in-app split screen. Both scenes preserve selected-time evidence, support, and source-time meaning.</desc>
+  <defs>
+    <linearGradient id="page" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#f7f9fb"/><stop offset="1" stop-color="#e5ecf1"/></linearGradient>
+    <linearGradient id="rainSky" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#263c52"/><stop offset=".68" stop-color="#637d8a"/><stop offset="1" stop-color="#9b9d96"/></linearGradient>
+    <linearGradient id="landSky" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#30495b"/><stop offset=".67" stop-color="#718895"/><stop offset="1" stop-color="#aeb2a5"/></linearGradient>
+    <linearGradient id="readout" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#203c54"/><stop offset="1" stop-color="#11283d"/></linearGradient>
+    <clipPath id="cityClip"><rect x="0" y="0" width="822" height="420" rx="12"/></clipPath>
+    <clipPath id="landClip"><rect x="0" y="0" width="822" height="420" rx="12"/></clipPath>
+  </defs>
+  <rect width="1900" height="1430" fill="url(#page)"/>
+  <text x="54" y="48" font-family="DejaVu Sans, sans-serif" font-size="30" font-weight="700" fill="#1e3448">OX-18 · one weather truth, two minimal world compositions</text>
+  <text x="55" y="78" font-family="DejaVu Sans, sans-serif" font-size="15" fill="#526b7e">UI artwork board · cycle 146 · APPROVED BY PRODUCT OWNER · 2026-11-16 · schematic, not installed evidence</text>
+
+  <rect x="54" y="96" width="1792" height="66" rx="14" fill="#fff0d6" stroke="#dec891"/>
+  <circle cx="83" cy="129" r="12" fill="#d08a32"/>
+  <text x="108" y="124" font-family="DejaVu Sans, sans-serif" font-size="14" font-weight="700" fill="#654d2b">REVIEW COMPARISON ONLY</text>
+  <text x="108" y="145" font-family="DejaVu Sans, sans-serif" font-size="13" fill="#695d49">The two panes are not an in-app split-screen; no scene picker, switching interaction, or layout change is proposed.</text>
+  <text x="1278" y="134" font-family="DejaVu Sans, sans-serif" font-size="13" font-weight="700" fill="#176f7c">Same catalog · same selected instant · same semantic weather decisions</text>
+
+  <rect x="54" y="184" width="1792" height="156" rx="18" fill="#ffffff" stroke="#91aab8" stroke-width="2"/>
+  <text x="82" y="216" font-family="DejaVu Sans, sans-serif" font-size="16" font-weight="700" fill="#20384a">SHARED INPUT AND DECISION CONTRACT</text>
+  <rect x="80" y="232" width="540" height="47" rx="10" fill="#e7f0f3" stroke="#b5c9d3"/>
+  <text x="103" y="262" font-family="DejaVu Sans, sans-serif" font-size="13" font-weight="700" fill="#31566b">ONE CATALOG / LOCATION · identical in both panes</text>
+  <rect x="680" y="232" width="540" height="47" rx="10" fill="#e7f0f3" stroke="#b5c9d3"/>
+  <text x="703" y="262" font-family="DejaVu Sans, sans-serif" font-size="13" font-weight="700" fill="#31566b">EXACT SELECTED INSTANT T · unchanged</text>
+  <rect x="1280" y="232" width="540" height="47" rx="10" fill="#e7f0f3" stroke="#b5c9d3"/>
+  <text x="1303" y="262" font-family="DejaVu Sans, sans-serif" font-size="13" font-weight="700" fill="#31566b">EVIDENCE / SOURCE TIMES · identical</text>
+  <text x="82" y="315" font-family="DejaVu Sans, sans-serif" font-size="13" fill="#526b7e">Weather meaning is resolved once; each world applies its own minimal composition and artwork. Forecast facts and timeline remain at their approved baseline.</text>
+
+  <path d="M950 340 L950 352 M500 352 L1400 352 M500 352 L500 364 M1400 352 L1400 364" fill="none" stroke="#5a939b" stroke-width="2" stroke-dasharray="6 5"/>
+  <path d="M493 359 L500 368 L507 359 M1393 359 L1400 368 L1407 359" fill="none" stroke="#5a939b" stroke-width="2"/>
+
+  <!-- First City reference -->
+  <g transform="translate(54 366)">
+    <rect width="870" height="824" rx="18" fill="#ffffff" stroke="#8faec0" stroke-width="2"/>
+    <text x="24" y="38" font-family="DejaVu Sans, sans-serif" font-size="18" font-weight="700" fill="#203a50">01 · FIRST CITY</text>
+    <text x="24" y="62" font-family="DejaVu Sans, sans-serif" font-size="12" fill="#60788a">Existing composition baseline · OX-05 depth / OX-06 local identities preserved</text>
+    <g transform="translate(24 82)">
+      <g clip-path="url(#cityClip)">
+        <rect width="822" height="420" fill="url(#rainSky)"/>
+        <path d="M39 89 C39 72 53 62 69 64 C73 45 91 35 110 43 C120 23 145 22 158 42 C177 35 195 48 196 65 C214 69 222 86 214 100 L51 101 C43 98 39 94 39 89Z" fill="#b8c8ce" opacity=".90"/>
+        <path d="M235 111 C238 94 253 85 270 88 C275 70 292 62 310 68 C320 49 344 50 355 69 C374 63 392 77 392 94 C408 99 414 115 404 127 L249 127 C240 124 235 119 235 111Z" fill="#c5d1d5" opacity=".93"/>
+        <path d="M479 82 C482 65 497 58 513 61 C520 44 537 39 553 46 C562 28 586 28 598 47 C615 41 633 54 633 71 C650 75 658 92 648 104 L492 104 C483 101 479 92 479 82Z" fill="#afc0c7" opacity=".9"/>
+        <path d="M650 125 C652 111 665 104 679 107 C685 91 700 87 715 94 C725 78 745 80 754 96 C770 92 786 104 786 119 C801 123 807 132 799 135 L663 135 C655 133 650 130 650 125Z" fill="#c2ced3" opacity=".88"/>
+        <path d="M0 297 L0 270 L42 270 L42 235 L77 235 L77 266 L111 266 L111 219 L149 219 L149 270 L190 270 L190 242 L228 242 L228 273 L272 273 L272 225 L310 225 L310 269 L347 269 L347 239 L388 239 L388 276 L432 276 L432 230 L473 230 L473 269 L520 269 L520 217 L560 217 L560 268 L600 268 L600 240 L641 240 L641 276 L684 276 L684 229 L724 229 L724 267 L766 267 L766 237 L822 237 L822 420 L0 420Z" fill="#566f7b"/>
+        <path d="M0 330 L44 330 L44 296 L88 296 L88 330 L128 330 L128 280 L173 280 L173 330 L219 330 L219 293 L266 293 L266 337 L308 337 L308 298 L356 298 L356 336 L406 336 L406 286 L453 286 L453 332 L495 332 L495 300 L542 300 L542 339 L590 339 L590 288 L636 288 L636 332 L682 332 L682 297 L726 297 L726 340 L775 340 L775 304 L822 304 L822 420 L0 420Z" fill="#2c4859"/>
+        <g fill="#e2bd78" opacity=".78"><rect x="58" y="309" width="7" height="12"/><rect x="143" y="302" width="7" height="12"/><rect x="238" y="311" width="7" height="12"/><rect x="331" y="311" width="7" height="12"/><rect x="425" y="302" width="7" height="12"/><rect x="518" y="312" width="7" height="12"/><rect x="611" y="304" width="7" height="12"/><rect x="710" y="312" width="7" height="12"/></g>
+        <path d="M71 330 C54 310 57 286 76 275 C95 263 117 276 116 296 C131 280 151 288 152 306 C154 322 138 333 118 333Z" fill="#42685e"/><path d="M112 327 L112 356" stroke="#5f5144" stroke-width="8"/>
+        <path d="M83 142 l-17 240 M126 150 l-17 235 M174 137 l-17 253 M223 154 l-17 235 M273 145 l-17 245 M320 151 l-17 240 M368 140 l-17 250 M417 155 l-17 235 M466 145 l-17 245 M516 152 l-17 238 M564 141 l-17 249 M613 154 l-17 236 M662 142 l-17 248 M711 151 l-17 239 M759 143 l-17 247 M803 155 l-17 235" stroke="#d7e8ed" stroke-width="2.2" opacity=".82"/>
+        <line x1="0" y1="140" x2="822" y2="140" stroke="#f4d48f" stroke-width="1.5" stroke-dasharray="7 7" opacity=".8"/>
+      </g>
+      <rect width="822" height="420" rx="12" fill="none" stroke="#a8bdc8" stroke-width="2"/>
+      <rect x="14" y="12" width="207" height="27" rx="13" fill="#f9fbfc" opacity=".93"/><text x="27" y="30" font-family="DejaVu Sans, sans-serif" font-size="10" font-weight="700" fill="#37566a">ILLUSTRATIVE SUPPORTED RAIN</text>
+      <text x="14" y="154" font-family="DejaVu Sans, sans-serif" font-size="9" font-weight="700" fill="#fff0c5">upper-third cloud guide</text>
+    </g>
+    <rect x="24" y="538" width="822" height="34" rx="8" fill="#e8f0f3" stroke="#c2d3db"/>
+    <text x="39" y="560" font-family="DejaVu Sans, sans-serif" font-size="12" font-weight="700" fill="#31566b">Same condition decision · same support · same exact instant T</text>
+    <text x="24" y="602" font-family="DejaVu Sans, sans-serif" font-size="11" fill="#60788a">City-specific depth and composition stay intact; the single rain field crosses near buildings as approved.</text>
+    <text x="24" y="630" font-family="DejaVu Sans, sans-serif" font-size="11" fill="#60788a">Forecast foreground and timeline are unchanged; the pair is a board-only comparison.</text>
+    <text x="24" y="676" font-family="DejaVu Sans, sans-serif" font-size="10" font-weight="700" fill="#526b7e">SAME SELECTED-TIME ANCHOR</text>
+    <line x1="32" y1="700" x2="838" y2="700" stroke="#a7b9c3" stroke-width="3"/>
+    <line x1="32" y1="700" x2="405" y2="700" stroke="#24aab4" stroke-width="5"/>
+    <circle cx="405" cy="700" r="8" fill="#f4bf62" stroke="#fff" stroke-width="2"/>
+    <text x="24" y="735" font-family="DejaVu Sans, sans-serif" font-size="11" fill="#64798a">T is identical in both outputs; no selection jump or new timeline behavior.</text>
+    <text x="24" y="780" font-family="DejaVu Sans, sans-serif" font-size="10" fill="#738796">Board annotations are not app labels or controls.</text>
+  </g>
+
+  <!-- Minimal non-city proposal -->
+  <g transform="translate(976 366)">
+    <rect width="870" height="824" rx="18" fill="#ffffff" stroke="#8faec0" stroke-width="2"/>
+    <text x="24" y="38" font-family="DejaVu Sans, sans-serif" font-size="18" font-weight="700" fill="#203a50">02 · MINIMAL NON-CITY WORLD</text>
+    <text x="24" y="62" font-family="DejaVu Sans, sans-serif" font-size="12" fill="#60788a">Proposed open landscape · small portability proof, not a polished scene pack</text>
+    <g transform="translate(24 82)">
+      <g clip-path="url(#landClip)">
+        <rect width="822" height="420" fill="url(#landSky)"/>
+        <path d="M39 89 C39 72 53 62 69 64 C73 45 91 35 110 43 C120 23 145 22 158 42 C177 35 195 48 196 65 C214 69 222 86 214 100 L51 101 C43 98 39 94 39 89Z" fill="#b8c8ce" opacity=".90"/>
+        <path d="M235 111 C238 94 253 85 270 88 C275 70 292 62 310 68 C320 49 344 50 355 69 C374 63 392 77 392 94 C408 99 414 115 404 127 L249 127 C240 124 235 119 235 111Z" fill="#c5d1d5" opacity=".93"/>
+        <path d="M479 82 C482 65 497 58 513 61 C520 44 537 39 553 46 C562 28 586 28 598 47 C615 41 633 54 633 71 C650 75 658 92 648 104 L492 104 C483 101 479 92 479 82Z" fill="#afc0c7" opacity=".9"/>
+        <path d="M650 125 C652 111 665 104 679 107 C685 91 700 87 715 94 C725 78 745 80 754 96 C770 92 786 104 786 119 C801 123 807 132 799 135 L663 135 C655 133 650 130 650 125Z" fill="#c2ced3" opacity=".88"/>
+        <path d="M0 309 C116 269 212 290 317 313 C420 334 504 276 598 281 C682 285 748 317 822 295 L822 420 L0 420Z" fill="#627c70"/>
+        <path d="M0 347 C116 318 228 337 334 350 C457 365 571 321 681 326 C743 329 785 345 822 337 L822 420 L0 420Z" fill="#405e55"/>
+        <path d="M132 310 C115 291 119 265 139 253 C156 241 177 254 176 274 C191 258 212 265 213 283 C214 298 198 310 179 311Z" fill="#3d6659"/><path d="M174 305 L174 343" stroke="#5e5141" stroke-width="8"/>
+        <path d="M601 326 C583 306 588 280 607 269 C626 256 648 270 647 290 C661 274 682 282 683 300 C684 315 669 327 649 328Z" fill="#365f53"/><path d="M644 321 L644 359" stroke="#594d3e" stroke-width="8"/>
+        <path d="M83 142 l-17 240 M126 150 l-17 235 M174 137 l-17 253 M223 154 l-17 235 M273 145 l-17 245 M320 151 l-17 240 M368 140 l-17 250 M417 155 l-17 235 M466 145 l-17 245 M516 152 l-17 238 M564 141 l-17 249 M613 154 l-17 236 M662 142 l-17 248 M711 151 l-17 239 M759 143 l-17 247 M803 155 l-17 235" stroke="#d7e8ed" stroke-width="2.2" opacity=".82"/>
+        <line x1="0" y1="140" x2="822" y2="140" stroke="#f4d48f" stroke-width="1.5" stroke-dasharray="7 7" opacity=".8"/>
+      </g>
+      <rect width="822" height="420" rx="12" fill="none" stroke="#a8bdc8" stroke-width="2"/>
+      <rect x="14" y="12" width="207" height="27" rx="13" fill="#f9fbfc" opacity=".93"/><text x="27" y="30" font-family="DejaVu Sans, sans-serif" font-size="10" font-weight="700" fill="#37566a">ILLUSTRATIVE SUPPORTED RAIN</text>
+      <text x="14" y="154" font-family="DejaVu Sans, sans-serif" font-size="9" font-weight="700" fill="#fff0c5">upper-third cloud guide</text>
+    </g>
+    <rect x="24" y="538" width="822" height="34" rx="8" fill="#e8f0f3" stroke="#c2d3db"/>
+    <text x="39" y="560" font-family="DejaVu Sans, sans-serif" font-size="12" font-weight="700" fill="#31566b">Same condition decision · same support · same exact instant T</text>
+    <text x="24" y="602" font-family="DejaVu Sans, sans-serif" font-size="11" fill="#60788a">Landscape art differs; supplied weather meaning, evidence, and source-time rules do not.</text>
+    <text x="24" y="630" font-family="DejaVu Sans, sans-serif" font-size="11" fill="#60788a">No buildings, named world role, scene selection, or renderer extraction is proposed here.</text>
+    <text x="24" y="676" font-family="DejaVu Sans, sans-serif" font-size="10" font-weight="700" fill="#526b7e">SAME SELECTED-TIME ANCHOR</text>
+    <line x1="32" y1="700" x2="838" y2="700" stroke="#a7b9c3" stroke-width="3"/>
+    <line x1="32" y1="700" x2="405" y2="700" stroke="#24aab4" stroke-width="5"/>
+    <circle cx="405" cy="700" r="8" fill="#f4bf62" stroke="#fff" stroke-width="2"/>
+    <text x="24" y="735" font-family="DejaVu Sans, sans-serif" font-size="11" fill="#64798a">T is identical in both outputs; no selection jump or new timeline behavior.</text>
+    <text x="24" y="780" font-family="DejaVu Sans, sans-serif" font-size="10" fill="#738796">Board annotations are not app labels or controls.</text>
+  </g>
+
+  <rect x="54" y="1212" width="1792" height="158" rx="18" fill="#ffffff" stroke="#91aab8" stroke-width="2"/>
+  <text x="80" y="1245" font-family="DejaVu Sans, sans-serif" font-size="15" font-weight="700" fill="#20384a">THE SAME EVIDENCE RESULT MUST REACH BOTH COMPOSITIONS</text>
+  <rect x="78" y="1260" width="548" height="82" rx="10" fill="#e8f3ea" stroke="#bdd5c1"/>
+  <text x="96" y="1285" font-family="DejaVu Sans, sans-serif" font-size="12" font-weight="700" fill="#326447">SUPPLIED</text>
+  <text x="96" y="1307" font-family="DejaVu Sans, sans-serif" font-size="11" fill="#476b56">Same supplied category and independently supported facts.</text>
+  <text x="96" y="1327" font-family="DejaVu Sans, sans-serif" font-size="11" fill="#476b56">Illustrative marks do not encode a measured rate.</text>
+  <rect x="676" y="1260" width="548" height="82" rx="10" fill="#fff5df" stroke="#e2cf9e"/>
+  <text x="694" y="1285" font-family="DejaVu Sans, sans-serif" font-size="12" font-weight="700" fill="#745b2c">ELIGIBLE CARRIED</text>
+  <text x="694" y="1307" font-family="DejaVu Sans, sans-serif" font-size="11" fill="#756646">Same older evidence and original source-valid time.</text>
+  <text x="694" y="1327" font-family="DejaVu Sans, sans-serif" font-size="11" fill="#756646">Selected instant T remains authoritative.</text>
+  <rect x="1274" y="1260" width="548" height="82" rx="10" fill="#f1eef8" stroke="#c9c0dc"/>
+  <text x="1292" y="1285" font-family="DejaVu Sans, sans-serif" font-size="12" font-weight="700" fill="#594a78">UNAVAILABLE</text>
+  <text x="1292" y="1307" font-family="DejaVu Sans, sans-serif" font-size="11" fill="#665c7b">No condition-derived weather marks in either world.</text>
+  <text x="1292" y="1327" font-family="DejaVu Sans, sans-serif" font-size="11" fill="#665c7b">Independent supported facts remain available.</text>
+  <text x="55" y="1402" font-family="DejaVu Sans, sans-serif" font-size="11" fill="#657b89">Rain is an illustrative supported-condition example only; this board supplies no forecast values, rates, or fixture data.</text>
+</svg>

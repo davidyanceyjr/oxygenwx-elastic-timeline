@@ -78,6 +78,8 @@ def contract() -> None:
                 PACKAGE + ".data.debug.DebugForecastActivity",
                 ".data.debug.DebugCatalogActivity",
                 PACKAGE + ".data.debug.DebugCatalogActivity",
+                ".data.debug.DebugOx18SceneReviewActivity",
+                PACKAGE + ".data.debug.DebugOx18SceneReviewActivity",
                 "androidx.activity.ComponentActivity",
                 "androidx.compose.ui.tooling.PreviewActivity",
             }

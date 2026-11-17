@@ -8,5 +8,9 @@
             android:name=".data.debug.DebugCatalogActivity"
             android:exported="false"
             android:label="Debug catalog picker" />
+        <activity
+            android:name=".data.debug.DebugOx18SceneReviewActivity"
+            android:exported="true"
+            android:label="OX-18 scene review" />
     </application>
 </manifest>

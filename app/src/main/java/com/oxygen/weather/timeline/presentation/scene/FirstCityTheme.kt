@@ -1,7 +1,5 @@
 package com.oxygen.weather.timeline.presentation.scene
 
-import com.oxygen.weather.timeline.data.SkyCondition
-import com.oxygen.weather.timeline.data.catalog.WeatherCondition
 import java.time.Instant
 import java.time.ZoneId
 import java.time.ZonedDateTime
@@ -46,56 +44,17 @@ object FirstCityTheme {
             "Omit precipitation marks when weather state is unavailable"),
     )
 
-    /** Resolve catalog values, support, solar position, and the established layer order once. */
-    fun compose(reading: SceneReading, zone: ZoneId): FirstCityComposition {
+    /** Compatibility entry point; all weather meaning is resolved by the shared decision seam. */
+    fun compose(reading: SceneReading, zone: ZoneId): FirstCityComposition =
+        compose(SceneWeatherDecision.resolve(reading, zone), zone)
+
+    /** Compose the city-local treatment, cues, and layers from shared weather meaning. */
+    fun compose(weatherDecision: SceneWeatherDecision, zone: ZoneId): FirstCityComposition {
+        val reading = weatherDecision.reading
         val treatment = treatment(reading, zone)
-        val conditions = reading.conditions?.value
-        val skyCondition = conditions?.let(::skyCondition)
-        val local = reading.selectedInstant.atZone(zone)
-        val localHour = local.hour + local.minute / 60.0 + local.second / 3600.0
-        val visualHour = local.hour + local.minute / 60.0
-        val daylight = sin(((visualHour - 6.0) / 12.0) * PI).coerceIn(0.0, 1.0)
-        val cloudFraction = reading.cloudCoverPercent
-            ?.takeIf { it.evidence == SceneEvidence.SUPPLIED }
-            ?.value?.div(100.0)
-        val rainPositive = reading.rainAmount?.let {
-            it.evidence == SceneEvidence.SUPPLIED && it.value?.valueMillimeters?.let { amount -> amount > 0.0 } == true
-        } == true
-        val snowPositive = reading.snowfall?.let {
-            it.evidence == SceneEvidence.SUPPLIED && it.value?.valueCentimeters?.let { amount -> amount > 0.0 } == true
-        } == true
-        val uniqueAmountEvent = when {
-            rainPositive && !snowPositive -> CityPrecipitation.RAIN
-            snowPositive && !rainPositive -> CityPrecipitation.SNOW
-            else -> null
-        }
-        val conditionIsSupplied = reading.conditions?.let {
-            it.evidence == SceneEvidence.SUPPLIED && !it.value.isNullOrEmpty()
-        } == true
-        val conditionIsCarried = reading.conditions?.let {
-            it.evidence == SceneEvidence.EXPECTED_MISSING &&
-                !it.value.isNullOrEmpty() && it.sourceValidTime != null
-        } == true
-        val precipitation = when {
-            conditionIsSupplied -> conditions?.let(::precipitation)?.takeIf { it != CityPrecipitation.NONE }
-                ?: CityPrecipitation.NONE
-            conditionIsCarried -> uniqueAmountEvent ?: conditions?.let(::precipitation) ?: CityPrecipitation.NONE
-            else -> uniqueAmountEvent ?: CityPrecipitation.NONE
-        }
-        val sky = skyCondition?.let { CitySkyDecision(it, daylight) }
-        val cloudAppearance = when (precipitation) {
-            CityPrecipitation.RAIN -> CityCloudAppearance.RAIN
-            CityPrecipitation.SNOW -> CityCloudAppearance.SNOW
-            CityPrecipitation.STORM -> CityCloudAppearance.STORM
-            CityPrecipitation.NONE -> CityCloudAppearance.GENERAL
-        }
-        val clouds = CityCloudDecision(
-            coverFraction = cloudFraction,
-            daylight = daylight,
-            localHour = localHour,
-            appearance = cloudAppearance,
-            visible = cloudFraction?.let { it > .01 } == true,
-        )
+        val sky = weatherDecision.sky
+        val clouds = weatherDecision.clouds
+        val precipitation = weatherDecision.precipitation
         val position = cuePosition(reading, zone, treatment)
         val cue = CityCueDecision(
             position = position,
@@ -131,13 +90,10 @@ object FirstCityTheme {
         }
         val layerOrder = orderedLayerSequence(visibleLayers)
         return FirstCityComposition(
-            selectedInstant = reading.selectedInstant,
+            weatherDecision = weatherDecision,
             treatment = treatment,
-            sky = sky,
             cue = cue,
             moonCue = moonCue,
-            clouds = clouds,
-            precipitation = precipitation,
             hasWeatherState = hasWeatherState,
             layerOrder = layerOrder,
         )
@@ -233,22 +189,6 @@ object FirstCityTheme {
         return ((hour - 6.0) / 16.0).coerceIn(0.0, 1.0).toFloat()
     }
 
-    private fun skyCondition(conditions: Set<WeatherCondition>): SkyCondition? = when {
-        WeatherCondition.STORM in conditions -> SkyCondition.STORM
-        WeatherCondition.RAIN in conditions -> SkyCondition.RAIN
-        WeatherCondition.CLOUDY in conditions -> SkyCondition.CLOUDY
-        WeatherCondition.PARTLY_CLOUDY in conditions -> SkyCondition.PARTLY_CLOUDY
-        WeatherCondition.CLEAR in conditions -> SkyCondition.CLEAR
-        WeatherCondition.SNOW in conditions -> SkyCondition.CLOUDY
-        else -> null
-    }
-
-    private fun precipitation(conditions: Set<WeatherCondition>): CityPrecipitation = when {
-        WeatherCondition.STORM in conditions -> CityPrecipitation.STORM
-        WeatherCondition.SNOW in conditions -> CityPrecipitation.SNOW
-        WeatherCondition.RAIN in conditions -> CityPrecipitation.RAIN
-        else -> CityPrecipitation.NONE
-    }
 }
 
 data class CityLayer(

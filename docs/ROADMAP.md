@@ -1044,6 +1044,8 @@ The SG workstream follows the owner-directed pivot recorded above and is grounde
 
 **Owner execution update (2026-11-16):** The owner explicitly requested execution of cycle 145 after final review. OX-06 was activated and completed within its approved metadata-only scope; no installed visual acceptance is claimed. The focused evidence and cycle closeout are recorded at the paths below.
 
+**Owner sequencing update (2026-11-16):** After OX-06 closed, the owner selected OX-18 as the sole global `NEXT` for cycle 146 board preparation. OX-18's direct dependencies, OX-04 and OX-06, are DONE. This selection does not approve either board, finalize the plan, or authorize implementation.
+
 ### OX-01 — Baseline the current world — DONE
 
 **Objective/scope:** Lock down what currently works before restructuring it: scene state, First City frame composition, scrubbing, astronomy cues, and accessibility. Reuse completed baseline records and isolate only the unmet Scene Engine questions. Scope is limited to this outcome; the boards may propose a split or a changed boundary before approval.
@@ -1140,13 +1142,13 @@ The SG workstream follows the owner-directed pivot recorded above and is grounde
 **Evidence:** Cycle 145 `.codex/test-artifacts/145-ox06-semantic-identity/README.md` and `.codex/history/145-ox06-semantic-identity.md`; archived plan `.codex/history/plans/145-ox06-semantic-identity.md`.
 **Slice board(s):** Product-owner-approved 2026-11-16 behavior package `.codex/concepts/OX-06-scene-element-identity-behavior-board.dot`, `.svg`, `.png`, and `.md`; UI artwork package `.codex/concepts/OX-06-first-city-semantic-identity-ui-artwork-board.svg`, `.png`, and `.md`. Cycle 145 records complete package fingerprints. The approved behavior board proposes First City-local identities/roles distinct from current draw passes and depth, including one cloud-cover identity across Background and Middle-Ground cloud passes. The artwork shows review-only callouts on unchanged day, night, and moderate-rain states. The boards guide scope and acceptance; approval does not finalize or activate the plan or authorize implementation.
 
-### OX-18 — Render a second minimal world from the same weather truth — PLANNED
+### OX-18 — Render a second minimal world from the same weather truth — DONE
 
 **Objective/scope:** Prove that a non-city scene can consume the shared scene model without copying First City's weather interpretation; use the smallest viable second composition, not an entire polished scene pack. Scope is limited to this outcome; the boards may propose a split or a changed boundary before approval.
 **Depends on:** OX-06, OX-04.
 **Exit:** Side-by-side minimal city and non-city compositions driven by the same catalog selection and semantic decisions, with no duplicated meteorological interpretation. Cloud/precipitation primitive extraction is not required for this early proof.
-**Evidence:** Future cycle-specific `.codex/test-artifacts/<cycle-id>/` and `.codex/history/<cycle-id>.md`; exact paths assigned when a cycle is planned.
-**Slice board(s):** Objective-specific behavior board pending; UI artwork board pending. No board approval or activation is claimed.
+**Evidence:** `.codex/test-artifacts/146-ox18-minimal-second-world/README.md` and `.codex/history/146-ox18-minimal-second-world.md`; archived plan `.codex/history/plans/146-ox18-minimal-second-world.md`.
+**Slice board(s):** Product-owner-approved 2026-11-16 behavior package `.codex/concepts/OX-18-render-a-second-minimal-world-from-the-same-weather-truth-behavior-board.dot`, `.svg`, `.png`, and `.md`; UI artwork package `.codex/concepts/OX-18-render-a-second-minimal-world-from-the-same-weather-truth-ui-board.svg`, `.png`, and `.md`. Cycle 146 records the complete package fingerprints and constraints. The behavior board governs one shared semantic weather-decision seam, exact selected-time and evidence meaning, and distinct world-specific compositions without copied meteorological interpretation. The artwork board shows the approved First City rain baseline beside a minimal open-landscape candidate; its panes are review-only and do not establish an in-app split-screen, scene picker, or product role for the second world. Approval clears the board gate but does not finalize or activate the plan or authorize implementation.
 
 ### OX-07 — Extract one reusable cloud renderer — PLANNED
 
