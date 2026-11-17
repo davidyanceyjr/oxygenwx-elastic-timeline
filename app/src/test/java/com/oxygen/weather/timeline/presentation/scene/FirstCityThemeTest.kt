@@ -158,4 +158,58 @@ class FirstCityThemeTest {
         assertTrue(composition.layerOrder.indexOf(FirstCityLayer.FOREGROUND_ARCHITECTURE) <
             composition.layerOrder.indexOf(FirstCityLayer.PRECIPITATION))
     }
+
+    @Test fun `semantic inventory is the complete stable First City identity and role map`() {
+        val inventory = FirstCitySemanticInventory.elements
+
+        assertEquals(11, inventory.size)
+        assertEquals(
+            listOf(
+                FirstCityElementId.SKY_BACKDROP to FirstCityElementRole.SKY,
+                FirstCityElementId.STAR_FIELD to FirstCityElementRole.CELESTIAL_FIELD,
+                FirstCityElementId.SUN_CUE to FirstCityElementRole.TIME_CUE,
+                FirstCityElementId.MOON_CUE to FirstCityElementRole.LUNAR_CUE,
+                FirstCityElementId.CLOUD_COVER to FirstCityElementRole.CLOUD_FIELD,
+                FirstCityElementId.DISTANT_SKYLINE to FirstCityElementRole.CITY_STRUCTURE,
+                FirstCityElementId.DIFFUSE_ATMOSPHERIC_LIGHT to FirstCityElementRole.ATMOSPHERE,
+                FirstCityElementId.NEAR_CITY to FirstCityElementRole.CITY_STRUCTURE,
+                FirstCityElementId.CANOPY to FirstCityElementRole.VEGETATION,
+                FirstCityElementId.WINDOW_DETAILS to FirstCityElementRole.LIGHT_DETAIL,
+                FirstCityElementId.PRECIPITATION_FIELD to FirstCityElementRole.WEATHER_FIELD,
+            ),
+            inventory.map { it.id to it.role },
+        )
+    }
+
+    @Test fun `semantic inventory maps every physical pass and excludes compositing passes`() {
+        val inventory = FirstCitySemanticInventory.elements
+        val mappedPasses = inventory.flatMap { it.renderPasses }
+        val physicalPasses = FirstCityLayer.values().filter { it.depthGroup != null }.toSet()
+
+        assertEquals(12, physicalPasses.size)
+        assertEquals(12, mappedPasses.size)
+        assertEquals(mappedPasses.size, mappedPasses.toSet().size)
+        assertEquals(physicalPasses, mappedPasses.toSet())
+        assertEquals(
+            mapOf(
+                FirstCityLayer.SKY to FirstCityElementId.SKY_BACKDROP,
+                FirstCityLayer.STARS to FirstCityElementId.STAR_FIELD,
+                FirstCityLayer.TIME_CUE to FirstCityElementId.SUN_CUE,
+                FirstCityLayer.LUNAR_CUE to FirstCityElementId.MOON_CUE,
+                FirstCityLayer.BACKGROUND_CLOUDS to FirstCityElementId.CLOUD_COVER,
+                FirstCityLayer.MIDDLE_GROUND_CLOUDS to FirstCityElementId.CLOUD_COVER,
+                FirstCityLayer.BACKGROUND_ARCHITECTURE to FirstCityElementId.DISTANT_SKYLINE,
+                FirstCityLayer.ATMOSPHERE to FirstCityElementId.DIFFUSE_ATMOSPHERIC_LIGHT,
+                FirstCityLayer.FOREGROUND_ARCHITECTURE to FirstCityElementId.NEAR_CITY,
+                FirstCityLayer.CANOPY to FirstCityElementId.CANOPY,
+                FirstCityLayer.WINDOW_LIGHTS to FirstCityElementId.WINDOW_DETAILS,
+                FirstCityLayer.PRECIPITATION to FirstCityElementId.PRECIPITATION_FIELD,
+            ),
+            mappedPasses.associateWith { pass ->
+                requireNotNull(FirstCitySemanticInventory.forRenderPass(pass)).id
+            },
+        )
+        assertNull(FirstCitySemanticInventory.forRenderPass(FirstCityLayer.TIME_WASH))
+        assertNull(FirstCitySemanticInventory.forRenderPass(FirstCityLayer.READOUT_QUIET_ZONE))
+    }
 }

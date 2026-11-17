@@ -1038,6 +1038,12 @@ The SG workstream follows the owner-directed pivot recorded above and is grounde
 
 **Owner sequencing update (2026-11-16):** After OX-04 closed, the owner selected OX-05 as the sole global `NEXT` for cycle 144 board preparation. Both objective-specific boards are pending; selection does not approve either board, finalize a plan, or authorize implementation.
 
+**Owner sequencing update (2026-11-16):** At the owner's direction to prepare the OX-06 board package, OX-06 is the sole global `NEXT` for cycle 145 board preparation. This selection does not approve either board, finalize a plan, or authorize implementation.
+
+**Owner board approval (2026-11-16):** The product owner approved cycle 145's complete OX-06 behavior and UI artwork packages. Their paths and SHA-256 fingerprints are recorded in `.codex/plans/145-ox06-semantic-identity.md`. The behavior board approves a finite First City identity/role map distinct from current render passes and depth, including one cloud-cover identity across Background and Middle-Ground cloud passes. The artwork board keeps day, night, and moderate-rain appearance unchanged and uses board-only callouts. Final plan review is complete: cycle 145 is `PLANNED` at `REVIEW`, with the plan marked `FINAL`; it remains unactivated, and implementation is not authorized.
+
+**Owner execution update (2026-11-16):** The owner explicitly requested execution of cycle 145 after final review. OX-06 was activated and completed within its approved metadata-only scope; no installed visual acceptance is claimed. The focused evidence and cycle closeout are recorded at the paths below.
+
 ### OX-01 — Baseline the current world — DONE
 
 **Objective/scope:** Lock down what currently works before restructuring it: scene state, First City frame composition, scrubbing, astronomy cues, and accessibility. Reuse completed baseline records and isolate only the unmet Scene Engine questions. Scope is limited to this outcome; the boards may propose a split or a changed boundary before approval.
@@ -1126,13 +1132,13 @@ The SG workstream follows the owner-directed pivot recorded above and is grounde
 **Evidence:** Cycle 144 targets `.codex/test-artifacts/144-ox05-depth-ordering/README.md`, `.codex/history/144-ox05-depth-ordering.md`, and archived plan `.codex/history/plans/144-ox05-depth-ordering.md`.
 **Slice board(s):** Product-owner-approved 2026-11-16 revised behavior package `.codex/concepts/OX-05-debug-astronomy-sidecar-behavior-board.dot`, `.svg`, `.png`, and `.md`; revised UI artwork package `.codex/concepts/OX-05-debug-astronomy-sidecar-ui-board.svg`, `.png`, and `.md`. The approved revision specifies the fixed debug-only fixture, authored-synthetic astronomy sidecar provenance, primary-route adapter and label, the exact celestial and moderate-rain review states, and the owner-directed world-layer order. Cycle 144 records the complete package fingerprints. The owner-selected option B remains: the single field is in Foreground and crosses in front of near buildings. The board package guides scope and acceptance; installed screenshots are still required for visual acceptance.
 
-### OX-06 — Give scene elements semantic identity — PLANNED
+### OX-06 — Give scene elements semantic identity — DONE
 
 **Objective/scope:** Identify meaningful objects independently of the draw function that happens to render them. Scope is limited to this outcome; the boards may propose a split or a changed boundary before approval.
 **Depends on:** OX-05.
 **Exit:** First City elements have testable identities/roles without imposing a universal element registry. Provide the scoped proof or explicit recorded disposition; visual claims require installed evidence when applicable.
-**Evidence:** Future cycle-specific `.codex/test-artifacts/<cycle-id>/` and `.codex/history/<cycle-id>.md`; exact paths assigned when a cycle is planned.
-**Slice board(s):** Objective-specific behavior board pending; UI artwork board pending. No board approval or activation is claimed.
+**Evidence:** Cycle 145 `.codex/test-artifacts/145-ox06-semantic-identity/README.md` and `.codex/history/145-ox06-semantic-identity.md`; archived plan `.codex/history/plans/145-ox06-semantic-identity.md`.
+**Slice board(s):** Product-owner-approved 2026-11-16 behavior package `.codex/concepts/OX-06-scene-element-identity-behavior-board.dot`, `.svg`, `.png`, and `.md`; UI artwork package `.codex/concepts/OX-06-first-city-semantic-identity-ui-artwork-board.svg`, `.png`, and `.md`. Cycle 145 records complete package fingerprints. The approved behavior board proposes First City-local identities/roles distinct from current draw passes and depth, including one cloud-cover identity across Background and Middle-Ground cloud passes. The artwork shows review-only callouts on unchanged day, night, and moderate-rain states. The boards guide scope and acceptance; approval does not finalize or activate the plan or authorize implementation.
 
 ### OX-18 — Render a second minimal world from the same weather truth — PLANNED
 

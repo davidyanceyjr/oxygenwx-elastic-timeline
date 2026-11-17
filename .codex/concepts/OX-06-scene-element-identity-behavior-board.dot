@@ -1,0 +1,40 @@
+digraph OX06SceneElementIdentity {
+  graph [rankdir=TB, bgcolor="#eef2f5", pad="0.34", nodesep="0.34", ranksep="0.48",
+    splines=polyline, fontname="DejaVu Sans", fontsize=18, labelloc=t,
+    label="OX-06  |  GIVE FIRST CITY ELEMENTS SEMANTIC IDENTITY\nBehavior board • cycle 145 • DRAFT FOR OWNER REVIEW"];
+  node [shape=box, style="rounded,filled", fontname="DejaVu Sans", fontsize=11,
+    color="#547186", fontcolor="#233c50", penwidth=1.2, margin="0.16,0.10"];
+  edge [fontname="DejaVu Sans", fontsize=9, color="#477b78", fontcolor="#3b6867", penwidth=1.15, arrowsize=0.72];
+
+  input [fillcolor="#d8e9f1", label="EXISTING FIRST CITY DECISION\nFirstCityComposition remains the source of resolved selected-time scene decisions.\nOX-03 composition mapping and OX-04 support / unavailable meaning stay intact."];
+
+  identity [fillcolor="#e1edf0", label="PROPOSED LOCAL ELEMENT IDENTITY\nA meaningful First City object has a stable First City identity and a semantic role.\nIllustrative names only; no global ID format or reusable registry is chosen here.\nIdentity is separate from visibility, depth, and the drawing function."];
+  input -> identity [label="describe existing scene objects"];
+
+  map [shape=plain, label=<
+    <TABLE BORDER="1" CELLBORDER="1" CELLSPACING="0" CELLPADDING="8" COLOR="#8fa9b8">
+      <TR><TD BGCOLOR="#d9e6ed"><B>Meaningful object</B></TD><TD BGCOLOR="#d9e6ed"><B>Semantic role</B></TD><TD BGCOLOR="#d9e6ed"><B>Existing draw pass mapping</B></TD></TR>
+      <TR><TD BGCOLOR="#f8fbfc" ALIGN="LEFT">Sky backdrop / stars</TD><TD BGCOLOR="#f8fbfc">Sky / celestial field</TD><TD BGCOLOR="#f8fbfc" ALIGN="LEFT">SKY / STARS</TD></TR>
+      <TR><TD BGCOLOR="#f8fbfc" ALIGN="LEFT">Sun cue / Moon cue</TD><TD BGCOLOR="#f8fbfc">Time cue / lunar cue</TD><TD BGCOLOR="#f8fbfc" ALIGN="LEFT">TIME_CUE / LUNAR_CUE</TD></TR>
+      <TR><TD BGCOLOR="#f8fbfc" ALIGN="LEFT">One cloud-cover object</TD><TD BGCOLOR="#f8fbfc">Cloud field</TD><TD BGCOLOR="#f8fbfc" ALIGN="LEFT">BACKGROUND_CLOUDS + MIDDLE_GROUND_CLOUDS</TD></TR>
+      <TR><TD BGCOLOR="#f8fbfc" ALIGN="LEFT">Distant skyline / near city</TD><TD BGCOLOR="#f8fbfc">City structure</TD><TD BGCOLOR="#f8fbfc" ALIGN="LEFT">BACKGROUND_ARCHITECTURE / FOREGROUND_ARCHITECTURE</TD></TR>
+      <TR><TD BGCOLOR="#f8fbfc" ALIGN="LEFT">Canopy / window details</TD><TD BGCOLOR="#f8fbfc">Vegetation / light detail</TD><TD BGCOLOR="#f8fbfc" ALIGN="LEFT">CANOPY / WINDOW_LIGHTS</TD></TR>
+      <TR><TD BGCOLOR="#f8fbfc" ALIGN="LEFT">Single rain / snow field</TD><TD BGCOLOR="#f8fbfc">Weather field</TD><TD BGCOLOR="#f8fbfc" ALIGN="LEFT">PRECIPITATION</TD></TR>
+    </TABLE>>];
+  identity -> map [label="finite First City proposal"];
+
+  separate [fillcolor="#fff0d6", color="#d2a34f", label="KEEP THESE CONCEPTS SEPARATE\nIdentity answers “which First City object?”\nRole answers “what kind of object is it?”\nOX-05 depth group / local order answers “where does it draw?”\nRenderer pass answers “which code draws it?”\nOne cloud identity may map to two existing cloud passes."];
+  map -> separate [label="do not equate object with layer"];
+
+  stable [fillcolor="#e6e9f2", label="VISIBLE OR HIDDEN AT SELECTED TIME\nExisting composition decisions still control whether optional objects appear.\nA visibility change does not rename the semantic object or change its role.\nSelectedInstant and supplied / carried / unavailable weather meanings stay authoritative."];
+  separate -> stable [label="composition decides presentation"];
+
+  passes [shape=note, fillcolor="#f1edf5", color="#9985ad", label="NOT SEMANTIC OBJECTS\nTIME_WASH and READOUT_QUIET_ZONE remain named compositing passes.\nThey do not receive scene-object identity or change their OX-05 placement.\nBackground < Middle-Ground < Foreground and all approved sublayer ordering remain unchanged."];
+  stable -> passes;
+
+  proof [fillcolor="#dcebe4", color="#5f9380", label="OX-06 EXIT TARGET\nFirst City has a finite, reviewable set of meaningful object identities and roles,\nwith a testable mapping to current draw passes and no universal element registry.\nProvide scoped proof or an explicit recorded disposition; make no visual-acceptance claim without installed evidence when applicable."];
+  passes -> proof;
+
+  bounds [shape=note, fillcolor="#f0edf3", color="#a79ab3", label="OUT OF SCOPE\nNo renderer or weather-decision changes; no new weather facts or interpolation.\nNo world-wide registry, scene-pack schema, second world, inspector, hit target,\nMoon inspection interaction, readout/timeline change, or artwork redesign.\nThose remain separate roadmap outcomes. Board approval does not authorize implementation."];
+  proof -> bounds [style=dashed, color="#92869e", arrowhead=none];
+}

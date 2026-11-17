@@ -59,6 +59,109 @@ enum class FirstCityLayer(
     READOUT_QUIET_ZONE(null, null),
 }
 
+/** Stable, First City-local identities for meaningful scene objects. */
+internal enum class FirstCityElementId {
+    SKY_BACKDROP,
+    STAR_FIELD,
+    SUN_CUE,
+    MOON_CUE,
+    CLOUD_COVER,
+    DISTANT_SKYLINE,
+    DIFFUSE_ATMOSPHERIC_LIGHT,
+    NEAR_CITY,
+    CANOPY,
+    WINDOW_DETAILS,
+    PRECIPITATION_FIELD,
+}
+
+/** Reusable semantic categories, kept separate from element identity and physical draw order. */
+internal enum class FirstCityElementRole {
+    SKY,
+    CELESTIAL_FIELD,
+    TIME_CUE,
+    LUNAR_CUE,
+    CLOUD_FIELD,
+    CITY_STRUCTURE,
+    ATMOSPHERE,
+    VEGETATION,
+    LIGHT_DETAIL,
+    WEATHER_FIELD,
+}
+
+/** Describes one meaningful First City object and the existing physical passes that render it. */
+internal data class FirstCitySemanticElement(
+    val id: FirstCityElementId,
+    val role: FirstCityElementRole,
+    val renderPasses: Set<FirstCityLayer>,
+)
+
+/**
+ * Complete First City semantic inventory, independent of which objects are visible at one instant.
+ * Compositing-only passes intentionally have no semantic element.
+ */
+internal object FirstCitySemanticInventory {
+    val elements: List<FirstCitySemanticElement> = listOf(
+        FirstCitySemanticElement(
+            FirstCityElementId.SKY_BACKDROP,
+            FirstCityElementRole.SKY,
+            setOf(FirstCityLayer.SKY),
+        ),
+        FirstCitySemanticElement(
+            FirstCityElementId.STAR_FIELD,
+            FirstCityElementRole.CELESTIAL_FIELD,
+            setOf(FirstCityLayer.STARS),
+        ),
+        FirstCitySemanticElement(
+            FirstCityElementId.SUN_CUE,
+            FirstCityElementRole.TIME_CUE,
+            setOf(FirstCityLayer.TIME_CUE),
+        ),
+        FirstCitySemanticElement(
+            FirstCityElementId.MOON_CUE,
+            FirstCityElementRole.LUNAR_CUE,
+            setOf(FirstCityLayer.LUNAR_CUE),
+        ),
+        FirstCitySemanticElement(
+            FirstCityElementId.CLOUD_COVER,
+            FirstCityElementRole.CLOUD_FIELD,
+            setOf(FirstCityLayer.BACKGROUND_CLOUDS, FirstCityLayer.MIDDLE_GROUND_CLOUDS),
+        ),
+        FirstCitySemanticElement(
+            FirstCityElementId.DISTANT_SKYLINE,
+            FirstCityElementRole.CITY_STRUCTURE,
+            setOf(FirstCityLayer.BACKGROUND_ARCHITECTURE),
+        ),
+        FirstCitySemanticElement(
+            FirstCityElementId.DIFFUSE_ATMOSPHERIC_LIGHT,
+            FirstCityElementRole.ATMOSPHERE,
+            setOf(FirstCityLayer.ATMOSPHERE),
+        ),
+        FirstCitySemanticElement(
+            FirstCityElementId.NEAR_CITY,
+            FirstCityElementRole.CITY_STRUCTURE,
+            setOf(FirstCityLayer.FOREGROUND_ARCHITECTURE),
+        ),
+        FirstCitySemanticElement(
+            FirstCityElementId.CANOPY,
+            FirstCityElementRole.VEGETATION,
+            setOf(FirstCityLayer.CANOPY),
+        ),
+        FirstCitySemanticElement(
+            FirstCityElementId.WINDOW_DETAILS,
+            FirstCityElementRole.LIGHT_DETAIL,
+            setOf(FirstCityLayer.WINDOW_LIGHTS),
+        ),
+        FirstCitySemanticElement(
+            FirstCityElementId.PRECIPITATION_FIELD,
+            FirstCityElementRole.WEATHER_FIELD,
+            setOf(FirstCityLayer.PRECIPITATION),
+        ),
+    )
+
+    fun forRenderPass(layer: FirstCityLayer): FirstCitySemanticElement? =
+        elements.firstOrNull { layer in it.renderPasses }
+}
+
 /** Small renderer contract for the catalog path; all weather choices are already resolved. */
 data class FirstCityComposition(
     val selectedInstant: Instant,
