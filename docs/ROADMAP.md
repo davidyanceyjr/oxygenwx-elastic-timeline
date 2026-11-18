@@ -1182,13 +1182,13 @@ The SG workstream follows the owner-directed pivot recorded above and is grounde
 **Evidence:** Cycle 148 targets `.codex/test-artifacts/148-ox34-scene-declaration/README.md`, `.codex/history/148-ox34-scene-declaration.md`, and archived plan `.codex/history/plans/148-ox34-scene-declaration.md`. Do not claim unperformed checks.
 **Slice board(s):** Product-owner-approved 2026-11-18 behavior package `.codex/concepts/OX-34-scene-declaration-behavior-board.dot`, `.svg`, and `.png`; cycle 148 records fingerprints. The board scopes an immutable First City-local declaration using existing OX-06 identities and OX-05 pass depth/order, with `CANOPY` and two-pass `CLOUD_COVER` as examples. UI artwork does not apply because this slice preserves visible output. Approval clears the board gate but does not activate implementation.
 
-### OX-35 — Define logical element geometry and anchors — PLANNED
+### OX-35 — Define logical element geometry and anchors — DONE
 
 **Objective/scope:** Add bounded logical position/anchor/bounds or transform semantics only where required to position a replaceable object. Defer arbitrary 3D transforms and viewport camera logic.
 **Depends on:** OX-34.
 **Exit:** One scene element can be positioned and its transformed bounds determined consistently from its authored declaration; baseline scene remains visually unchanged.
-**Evidence:** Future cycle-specific `.codex/test-artifacts/<cycle-id>/` and `.codex/history/<cycle-id>.md`; assign exact paths only when the slice is planned. Do not claim unperformed checks.
-**Slice board(s):** Objective-specific behavior/contract board pending; UI artwork board only if approved scope changes visible output. Owner approval required.
+**Evidence:** Cycle 149 targets `.codex/test-artifacts/149-ox35-element-geometry/README.md`, `.codex/history/149-ox35-element-geometry.md`, and archived plan `.codex/history/plans/149-ox35-element-geometry.md`. Do not claim unperformed checks.
+**Slice board(s):** Product-owner-approved 2026-11-18 behavior package `.codex/concepts/OX-35-element-geometry-behavior-board.dot`, `.svg`, and `.png`; cycle 149 records package fingerprints. UI artwork does not apply because visible output must remain unchanged.
 
 ### OX-36 — Define weather-input slots and unknown-state fallback — PLANNED
 

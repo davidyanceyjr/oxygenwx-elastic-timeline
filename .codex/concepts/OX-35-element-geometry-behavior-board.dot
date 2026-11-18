@@ -1,0 +1,18 @@
+digraph OX35 {
+  graph [label="OX-35 | Logical element geometry and anchors\nPROPOSED behavior contract for owner review | baseline visuals unchanged", labelloc=t, fontsize=18, fontname="DejaVu Sans", bgcolor="#f8fafc", pad=0.25, ranksep=0.55, nodesep=0.35];
+  node [shape=box, style="rounded,filled", fillcolor="#ffffff", color="#64748b", fontname="DejaVu Sans", fontsize=11, margin="0.18,0.12"];
+  edge [color="#475569", fontname="DejaVu Sans", fontsize=10];
+
+  inherited [label="ESTABLISHED | OX-34\nFirst City CANOPY / VEGETATION owns one physical CANOPY pass\nPass depth and order remain authoritative", fillcolor="#e0f2fe"];
+  canvas [label="ESTABLISHED | current scene\nFirst City world: 1024 x 1536 logical units\nCanopy bitmap: 1024 x 1536 pixels\nCurrent drawAlignedLayer applies viewport-dependent crop", fillcolor="#e0f2fe"];
+  declaration [label="PROPOSED | CANOPY geometry in its scene-local declaration\nWorld-space anchor position (x, y)\nUnscaled width and height in First City world units\nNormalized anchor fractions (ax, ay), each 0..1\nPositive uniform scale s; no rotation or skew", fillcolor="#dcfce7", color="#16a34a"];
+  formula [label="PROPOSED | deterministic transformed bounds\nscaledWidth = width x s; scaledHeight = height x s\nleft = x - ax x scaledWidth; top = y - ay x scaledHeight\nright = left + scaledWidth; bottom = top + scaledHeight\nBounds describe the authored rectangle, not nontransparent pixels", fillcolor="#f0fdf4"];
+  canopy [label="PROPOSED baseline CANOPY example\nposition (0, 0), size 1024 x 1536\nanchor (0, 0) = top-left; scale 1\ncomputed bounds [0, 0] to [1024, 1536]", fillcolor="#f0fdf4"];
+  exit [label="EXIT / INVARIANTS\nOne declared element yields repeatable positioned bounds\nExisting renderer still draws CANOPY with current crop and pass order\nNo installed visual change, camera mapping, 3D transforms,\nasset swap, renderer adapter, or second-world migration", fillcolor="#fef3c7", color="#d97706"];
+
+  inherited -> declaration;
+  canvas -> declaration;
+  declaration -> formula;
+  formula -> canopy;
+  canopy -> exit;
+}

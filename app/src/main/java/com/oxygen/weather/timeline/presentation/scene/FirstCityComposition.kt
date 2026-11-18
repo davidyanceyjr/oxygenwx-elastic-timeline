@@ -74,11 +74,47 @@ internal data class FirstCityPassReference(val layer: FirstCityLayer) {
     val localOrder: Int = requireNotNull(layer.localOrder)
 }
 
+/** Bounds of an authored rectangle in First City world units, independent of viewport crop. */
+internal data class FirstCityWorldBounds(
+    val left: Float,
+    val top: Float,
+    val right: Float,
+    val bottom: Float,
+)
+
+/** The position names an anchor within an unscaled world-space rectangle. */
+internal data class FirstCityElementGeometry(
+    val x: Float,
+    val y: Float,
+    val width: Float,
+    val height: Float,
+    val anchorX: Float,
+    val anchorY: Float,
+    val scale: Float,
+) {
+    init {
+        require(x.isFinite() && y.isFinite())
+        require(width.isFinite() && width > 0f && height.isFinite() && height > 0f)
+        require(anchorX.isFinite() && anchorX in 0f..1f)
+        require(anchorY.isFinite() && anchorY in 0f..1f)
+        require(scale.isFinite() && scale > 0f)
+    }
+
+    fun transformedBounds(): FirstCityWorldBounds {
+        val scaledWidth = width * scale
+        val scaledHeight = height * scale
+        val left = x - anchorX * scaledWidth
+        val top = y - anchorY * scaledHeight
+        return FirstCityWorldBounds(left, top, left + scaledWidth, top + scaledHeight)
+    }
+}
+
 /** Describes one meaningful First City object and its ordered physical passes. */
 internal data class FirstCitySemanticElement(
     val id: FirstCityElementId,
     val role: FirstCityElementRole,
     val renderPasses: Set<FirstCityLayer>,
+    val geometry: FirstCityElementGeometry? = null,
 ) {
     val orderedPasses: List<FirstCityPassReference> = renderPasses
         .map(::FirstCityPassReference)
@@ -136,6 +172,15 @@ internal object FirstCitySemanticInventory {
             FirstCityElementId.CANOPY,
             FirstCityElementRole.VEGETATION,
             setOf(FirstCityLayer.CANOPY),
+            geometry = FirstCityElementGeometry(
+                x = 0f,
+                y = 0f,
+                width = FirstCityTheme.worldWidth.toFloat(),
+                height = FirstCityTheme.worldHeight.toFloat(),
+                anchorX = 0f,
+                anchorY = 0f,
+                scale = 1f,
+            ),
         ),
         FirstCitySemanticElement(
             FirstCityElementId.WINDOW_DETAILS,
