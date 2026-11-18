@@ -22,6 +22,39 @@ import org.junit.Test
 class SharedSceneWeatherDecisionTest {
     private val zone = ZoneId.of("America/Chicago")
 
+    @Test fun `cloud-cover slot keeps supplied value and source evidence`() = runBlocking {
+        val selected = Instant.parse("2026-10-28T20:00:00Z")
+        val recording = DebugSg11StormFallbackCatalogFixture.unavailableRecording(
+            DebugOx18ReviewScenario.location,
+        )
+        val decision = SceneWeatherDecision.resolve(recording.reading(selected), zone)
+        val slot = CloudCoverInputSlot.from(decision)
+
+        assertEquals(FirstCityElementId.CLOUD_COVER, slot.elementId)
+        assertEquals(selected, slot.selectedInstant)
+        assertEquals(.4, requireNotNull(slot.coverFraction), 0.0)
+        assertEquals(decision.clouds.coverFraction, slot.coverFraction)
+        val source = requireNotNull(slot.source)
+        assertEquals(SceneEvidence.SUPPLIED, source.evidence)
+        assertEquals(40.0, requireNotNull(source.value), 0.0)
+        assertEquals(source.expectedSlot, source.sourceValidTime)
+    }
+
+    @Test fun `cloud-cover slot leaves missing cover unavailable despite carried rain and chance`() = runBlocking {
+        val selected = Instant.parse("2026-10-04T16:30:00Z")
+        val decision = SceneWeatherDecision.resolve(sg4Reading(selected), zone)
+        val slot = CloudCoverInputSlot.from(decision)
+
+        assertEquals(selected, slot.selectedInstant)
+        assertNull(slot.coverFraction)
+        assertEquals(SceneEvidence.EXPECTED_MISSING, slot.source?.evidence)
+        assertNull(slot.source?.value)
+        assertNull(slot.source?.sourceValidTime)
+        assertEquals(SceneEvidence.EXPECTED_MISSING, decision.reading.conditions?.evidence)
+        assertEquals(Instant.parse("2026-10-04T15:00:00Z"), decision.reading.conditions?.sourceValidTime)
+        assertEquals(ScenePrecipitation.RAIN, decision.precipitation)
+    }
+
     @Test fun `supplied rain decisions share one reading and retain independent probability`() = runBlocking {
         val selected = Instant.parse("2026-10-04T15:30:00Z")
         val reading = sg4Reading(selected)

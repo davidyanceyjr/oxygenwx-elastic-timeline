@@ -1190,13 +1190,13 @@ The SG workstream follows the owner-directed pivot recorded above and is grounde
 **Evidence:** Cycle 149 targets `.codex/test-artifacts/149-ox35-element-geometry/README.md`, `.codex/history/149-ox35-element-geometry.md`, and archived plan `.codex/history/plans/149-ox35-element-geometry.md`. Do not claim unperformed checks.
 **Slice board(s):** Product-owner-approved 2026-11-18 behavior package `.codex/concepts/OX-35-element-geometry-behavior-board.dot`, `.svg`, and `.png`; cycle 149 records package fingerprints. UI artwork does not apply because visible output must remain unchanged.
 
-### OX-36 — Define weather-input slots and unknown-state fallback — PLANNED
+### OX-36 — Define weather-input slots and unknown-state fallback — DONE
 
 **Objective/scope:** Define the minimum typed element-input boundary for the existing shared SceneWeatherDecision, preserving supplied, carried and unavailable meaning; forbid provider interpretation in pack assets or scene elements.
 **Depends on:** OX-34, OX-04, OX-18.
 **Exit:** One supported and one unavailable existing scene input are resolved without inventing evidence, with the exact interpretation owner named.
-**Evidence:** Future cycle-specific `.codex/test-artifacts/<cycle-id>/` and `.codex/history/<cycle-id>.md`; assign exact paths only when the slice is planned. Do not claim unperformed checks.
-**Slice board(s):** Objective-specific behavior/contract board pending; UI artwork board only if approved scope changes visible output. Owner approval required.
+**Evidence:** Cycle 150 targets `.codex/test-artifacts/150-ox36-weather-input-slots/README.md`, `.codex/history/150-ox36-weather-input-slots.md`, and archived plan `.codex/history/plans/150-ox36-weather-input-slots.md`. Do not claim unperformed checks.
+**Slice board(s):** Product-owner-approved 2026-11-18 behavior package `.codex/concepts/OX-36-weather-input-slots-behavior-board.dot`, `.svg`, and `.png`; cycle 150 records all package fingerprints. UI artwork does not apply because the approved scope preserves visible output. Board approval does not activate implementation.
 
 ### OX-38 — Adapt one existing world to the minimum declaration — PLANNED
 

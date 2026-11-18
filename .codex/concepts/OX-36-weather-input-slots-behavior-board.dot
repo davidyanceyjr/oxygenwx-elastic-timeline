@@ -1,0 +1,18 @@
+digraph OX36 {
+  graph [label="OX-36 | Typed weather-input slots and unknown fallback\nPROPOSED behavior contract for product-owner review | no visual change", labelloc=t, fontsize=18, fontname="DejaVu Sans", bgcolor="#f8fafc", pad=0.25, ranksep=0.55, nodesep=0.35];
+  node [shape=box, style="rounded,filled", fillcolor="#ffffff", color="#64748b", fontname="DejaVu Sans", fontsize=11, margin="0.18,0.12"];
+  edge [color="#475569", fontname="DejaVu Sans", fontsize=10];
+
+  source [label="ESTABLISHED | canonical projection\nSceneReading carries typed values, evidence, expected slot,\nsource valid time, and selected instant", fillcolor="#e0f2fe"];
+  owner [label="ESTABLISHED | interpretation owner\nSceneWeatherDecision.resolve(reading, zone) interprets weather once\nFirst City and Minimal Open Landscape consume shared decisions", fillcolor="#e0f2fe"];
+  slot [label="PROPOSED | scene-element input slot\nSmall typed projection from SceneWeatherDecision\nKeep selected instant, value or absence, evidence meaning,\nand source time where carried; scene-local identity stays separate\nNo provider DTO, rule, or raw weather decoding in an element", fillcolor="#dcfce7", color="#16a34a"];
+  supplied [label="SUPPORTED EXAMPLE | cloud cover\nSupplied cloud-cover point with value > 1%\nShared decision supplies visible cloud cover fraction\nSlot reports supported value and supplied provenance", fillcolor="#f0fdf4"];
+  unavailable [label="UNAVAILABLE EXAMPLE | cloud cover\nMissing / unsupported / probability-only cover has no\nsupplied cloud-cover fraction in shared decision\nSlot remains unavailable; no clouds inferred from chance\nor a weather label", fillcolor="#fef3c7", color="#d97706"];
+  carried [label="CARRIED MEANING | preserve, do not promote\nA carried condition retains its earlier source valid time\nShared decision owns any eligible precipitation choice\nSlot must not relabel carried input as supplied", fillcolor="#fef3c7"];
+  exit [label="EXIT / BOUNDARIES\nResolve supported and unavailable inputs from the existing seam\nName SceneWeatherDecision as interpretation owner\nPreserve current visuals, draw order, selected instant, and\nexisting unknown-state fallback; no adapter, pack, or UI work", fillcolor="#ede9fe", color="#7c3aed"];
+
+  source -> owner -> slot;
+  slot -> supplied -> exit;
+  slot -> unavailable -> exit;
+  slot -> carried -> exit;
+}
