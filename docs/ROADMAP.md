@@ -1105,132 +1105,750 @@ The SG workstream follows the owner-directed pivot recorded above and is grounde
 **Evidence:** Future cycle-specific `.codex/test-artifacts/<cycle-id>/` and `.codex/history/<cycle-id>.md`; exact paths assigned when a cycle is planned.
 **Slice board(s):** Objective-specific behavior board pending; UI artwork board pending. No board approval or activation is claimed.
 
-### OX-07 — Extract one reusable cloud renderer — PLANNED
+**Owner-proposed Scene Engine pending-slice reconciliation (v4; manually rebased onto clean `main` at `4885b25`, owner-directed 2026-11-18):** Replace only the unstarted OX tail beginning at the original `OX-07` heading in `docs/ROADMAP.md`. Preserve all existing content before that heading verbatim. On this baseline OX-01, OX-01R, and OX-01f are `DONE`, while OX-02, OX-02A, OX-03 through OX-06, and OX-18 remain `PLANNED`; no completion, code, evidence, or history from `fix/scene-engine` is imported. Original pending OX IDs remain stable. Newly introduced OX-87–OX-98 are bounded follow-ups. OX-14 and OX-83 are intentionally `DEFERRED` with explicit re-entry conditions; all other v4 tail leaves are `PLANNED`. Their declared dependencies remain gates. No `NEXT`, `ACTIVE`, board approval, open cycle, release decision, or authority override is claimed.
 
-**Objective/scope:** Reuse existing cloud drawing behavior behind the new scene contract; prove portability before extracting the whole renderer. Scope is limited to this outcome; the boards may propose a split or a changed boundary before approval.
-**Depends on:** OX-05, OX-06, OX-18.
-**Exit:** One renderer used from the chosen scene path, with before/after visual evidence and scoped state evidence. In affected states and routes, all visible cloud output, including edges, blur, shadows, movement, and transitions, remains within the top 33% of the atmospheric scene viewport under the existing SG.4a rule. Provide the scoped proof or explicit recorded disposition; visual claims require installed evidence when applicable.
+**Reconciliation basis:** `OxygenWX_v3_LLM_Slop_PreAdoption_Audit.md` findings F1–F8 and all 80 per-slice dispositions. Reuse the OX-04/05/06/18 contract outcomes only after their currently `PLANNED` prerequisite slices are complete, prove a minimal real pack on existing First City/Open Landscape before Park polish, maintain independent Park art and commercial workstreams, preserve first-use weather correctness, and distinguish local platform, free Park and paid-channel readiness.
+
+**Rebase note:** OX-02, OX-02A, OX-03 through OX-06, and OX-18 remain `PLANNED` exactly as on `main`. OX-23 remains a proposed intake, not a selected `NEXT`; the owner must resolve the still-planned prefix ordering and eligibility before planning a v4-tail cycle.
+
+**Established non-negotiables:** Weather place/catalog revision/exact selected instant, canonical projection and timeline/gesture ownership remain external to theme selection. The bundled free weather experience remains usable without entitlements. Data-only packages require manifest/capability/asset and resource validation before scene activation; canonical payload identity is distinct from archive transport identity or trusted origin. First valid hot swap preserves place/catalog/instant, no restart, no theme-triggered fetch, and atomic scene commit. Exact mural facts never invent missing data. Cloud output remains within the top 33% of the atmospheric scene canvas. These are scope constraints, not assertions that the app already implements each feature.
+
+**Independent paths:** Minimal declaration and first executable substitution → real versioned build/validate/render/import/hot-swap proof; Living Urban Park composition, mural, camera and individually authored art states; optional Moon/Time Lab and evidence-triggered optimization; separate paid entitlement/channel path. Dedicated TEST slices assess core/local platform, free Park and paid launch independently. Fold viewport obligation remains pending actual device/emulator evidence or an explicit future owner authority decision; missing evidence is never a pass.
+
+**Slice gates:** Record these slices before their boards exist as permitted by `docs/ROADMAP_SPECIFICATION.md`. Every future cycle still requires objective-specific behavior board and UI artwork board where visible output changes, approved by the product owner before final plan activation. Reuse prior accepted boards as evidence, not as automatic approval for new work. No unapproved tests, implementation or speculative optimization is authorized.
+
+### OX-23 — Inventory the authorable scene-element matrix — PLANNED
+
+**Objective/scope:** Inventory meaningful existing First City and Minimal Open Landscape scene objects with source paths and current identity, role, depth, draw-pass and weather-input ownership. Mark candidate authoring fields as required-now or consumer-deferred. This is evidence intake, not a new universal registry.
+**Depends on:** OX-04, OX-05, OX-06, OX-18.
+**Exit:** A source-linked matrix identifies the actual objects needed for first asset substitution, the completed OX-05/OX-06/OX-18 contracts being reused, and explicit deferred fields. No code or visual change.
+**Evidence:** Future cycle-specific `.codex/test-artifacts/<cycle-id>/` and `.codex/history/<cycle-id>.md`; assign exact paths only when the slice is planned. Do not claim unperformed checks.
+**Slice board(s):** Objective-specific behavior/contract board pending; UI artwork board only if approved scope changes visible output. Owner approval required.
+
+### OX-34 — Type scene identities, roles and ordered depth — PLANNED
+
+**Objective/scope:** Introduce the smallest immutable scene-local declaration for identity, semantic role, depth and order needed by one replaceable object. Adapt rather than replace OX-06 identities; avoid global element registries.
+**Depends on:** OX-23, OX-05, OX-06.
+**Exit:** A concrete existing-world object and a multi-pass object are represented by the declaration without changing baseline pass ordering; no universal graph executor is introduced.
+**Evidence:** Future cycle-specific `.codex/test-artifacts/<cycle-id>/` and `.codex/history/<cycle-id>.md`; assign exact paths only when the slice is planned. Do not claim unperformed checks.
+**Slice board(s):** Objective-specific behavior/contract board pending; UI artwork board only if approved scope changes visible output. Owner approval required.
+
+### OX-35 — Define logical element geometry and anchors — PLANNED
+
+**Objective/scope:** Add bounded logical position/anchor/bounds or transform semantics only where required to position a replaceable object. Defer arbitrary 3D transforms and viewport camera logic.
+**Depends on:** OX-34.
+**Exit:** One scene element can be positioned and its transformed bounds determined consistently from its authored declaration; baseline scene remains visually unchanged.
+**Evidence:** Future cycle-specific `.codex/test-artifacts/<cycle-id>/` and `.codex/history/<cycle-id>.md`; assign exact paths only when the slice is planned. Do not claim unperformed checks.
+**Slice board(s):** Objective-specific behavior/contract board pending; UI artwork board only if approved scope changes visible output. Owner approval required.
+
+### OX-36 — Define weather-input slots and unknown-state fallback — PLANNED
+
+**Objective/scope:** Define the minimum typed element-input boundary for the existing shared SceneWeatherDecision, preserving supplied, carried and unavailable meaning; forbid provider interpretation in pack assets or scene elements.
+**Depends on:** OX-34, OX-04, OX-18.
+**Exit:** One supported and one unavailable existing scene input are resolved without inventing evidence, with the exact interpretation owner named.
+**Evidence:** Future cycle-specific `.codex/test-artifacts/<cycle-id>/` and `.codex/history/<cycle-id>.md`; assign exact paths only when the slice is planned. Do not claim unperformed checks.
+**Slice board(s):** Objective-specific behavior/contract board pending; UI artwork board only if approved scope changes visible output. Owner approval required.
+
+### OX-38 — Adapt one existing world to the minimum declaration — PLANNED
+
+**Objective/scope:** Introduce a thin definition-to-renderer adapter for one existing First City object/path while preserving all unrelated First City drawing code and weather decisions. Do not migrate both worlds or optional data/hit metadata.
+**Depends on:** OX-34, OX-35, OX-36.
+**Exit:** A selected-instant First City rendering path reads one declared object while installed baseline visuals, draw order and weather truth stay unchanged; untouched objects remain on their existing path.
+**Evidence:** Future cycle-specific `.codex/test-artifacts/<cycle-id>/` and `.codex/history/<cycle-id>.md`; assign exact paths only when the slice is planned. Do not claim unperformed checks.
+**Slice board(s):** Objective-specific behavior/contract board pending; UI artwork board only if approved scope changes visible output. Owner approval required.
+
+### OX-24 — Swap one scene asset through definition data — PLANNED
+
+**Objective/scope:** Substitute one renderer-compatible asset from scene definition data in the first world, without edits to the weather interpreter or copied world renderer.
+**Depends on:** OX-38.
+**Exit:** Installed before/after captures show a changed asset using the same scene-local element identity, depth and position; restoring the original is an authored choice, not a renderer edit.
+**Evidence:** Future cycle-specific `.codex/test-artifacts/<cycle-id>/` and `.codex/history/<cycle-id>.md`; assign exact paths only when the slice is planned. Do not claim unperformed checks.
+**Slice board(s):** Objective-specific behavior board and UI artwork board pending for the affected installed states. Owner approval required.
+
+### OX-92 — Reuse the thin scene adapter in the minimal second world — PLANNED
+
+**Objective/scope:** Apply the same minimum authored identity/geometry/input contract to one existing Minimal Open Landscape object. Do not require the Park, a generalized executor or artwork parity beyond the chosen object.
+**Depends on:** OX-38, OX-18.
+**Exit:** First City and Minimal Open Landscape each consume the same declaration shape for at least one comparable capability, with shared selected-instant weather decisions and unmodified critical forecast access.
 **Evidence:** Future cycle-specific `.codex/test-artifacts/<cycle-id>/` and `.codex/history/<cycle-id>.md`; exact paths assigned when a cycle is planned.
 **Slice board(s):** Objective-specific behavior board pending; UI artwork board pending. No board approval or activation is claimed.
 
-### OX-08 — Extract one reusable precipitation renderer — PLANNED
+### OX-41 — Decide the park role and composition landmarks — PLANNED
 
-**Objective/scope:** Apply the cloud extraction lesson to rain/snow without introducing impossible particle counts or false intensity. Scope is limited to this outcome; the boards may propose a split or a changed boundary before approval.
-**Depends on:** OX-07, OX-04.
-**Exit:** At least clear/rain/snow examples and verified no-data behavior; no regressions in selected-time behavior. Provide the scoped proof or explicit recorded disposition; visual claims require installed evidence when applicable.
+**Objective/scope:** Record an explicit owner decision whether the Living Urban Park is the bundled free default or a bundled selectable world, and approve a coarse composition map for the entrance, curved path, mural wall, vegetation, skyline and streetcar shelter. Reuse provided reference artwork; do not presume an already-approved UI board.
+**Depends on:** OX-23, OX-35.
+**Exit:** The owner-approved role and labeled composition board identify required/optional landmarks, default/free access and the reference-state scope. No visual acceptance or implementation is claimed.
+**Evidence:** Future cycle-specific `.codex/test-artifacts/<cycle-id>/` and `.codex/history/<cycle-id>.md`; assign exact paths only when the slice is planned. Do not claim unperformed checks.
+**Slice board(s):** Objective-specific behavior/contract board pending; UI artwork board only if approved scope changes visible output. Owner approval required.
+
+### OX-19 — Separate scene choice from weather location and selected time — PLANNED
+
+**Objective/scope:** Make world selection independent of place, active catalog revision and exact selected instant, using the two already bundled existing worlds. No Park, local pack storage, payment or Settings needed.
+**Depends on:** OX-92, OX-18.
+**Exit:** In-session switch between bundled First City and Open Landscape keeps place, catalog revision, precise instant and forecast behavior unchanged, with no switch-triggered fetch or process/Activity restart.
+**Evidence:** Future cycle-specific `.codex/test-artifacts/<cycle-id>/` and `.codex/history/<cycle-id>.md`; assign exact paths only when the slice is planned. Do not claim unperformed checks.
+**Slice board(s):** Objective-specific behavior board and UI artwork board pending for the affected installed states. Owner approval required.
+
+### OX-20 — Define non-executable pack identity and manifest version — PLANNED
+
+**Objective/scope:** Define only the non-executable package identity, manifest version, world-definition reference and supported engine compatibility needed to describe existing First City/Open Landscape examples. No public editor or downloadable code.
+**Depends on:** OX-19, OX-92.
+**Exit:** One bounded versioned manifest schema has explicit valid/invalid examples and can name an existing authored world without meteorological interpretation or a Park dependency.
+**Evidence:** Future cycle-specific `.codex/test-artifacts/<cycle-id>/` and `.codex/history/<cycle-id>.md`; assign exact paths only when the slice is planned. Do not claim unperformed checks.
+**Slice board(s):** Objective-specific behavior/contract board pending; UI artwork board only if approved scope changes visible output. Owner approval required.
+
+### OX-51 — Define assets and integrity references for scene packs — PLANNED
+
+**Objective/scope:** Define relative, pack-root-confined asset references and supported asset/font types required by one real variant. Establish missing/mismatched digest outcomes and define which layer owns resource-size and path limits; do not pick arbitrary thresholds before runtime evidence.
+**Depends on:** OX-20, OX-24.
+**Exit:** A real example resolves every asset inside its pack root; escaped/absolute paths, unsupported asset types and missing/digest-mismatched resources have explicit reject dispositions.
+**Evidence:** Future cycle-specific `.codex/test-artifacts/<cycle-id>/` and `.codex/history/<cycle-id>.md`; assign exact paths only when the slice is planned. Do not claim unperformed checks.
+**Slice board(s):** Objective-specific behavior/contract board pending; UI artwork board only if approved scope changes visible output. Owner approval required.
+
+### OX-52 — Define renderer capability compatibility and safe rejection — PLANNED
+
+**Objective/scope:** Define the bounded data-only trust boundary and versioned renderer capability policy. Required unknown capabilities reject; approved optional capabilities have an explicit omit/default policy. Reject executable payloads and record where decode, resource, extraction and memory budgets will be enforced. Content integrity is distinct from trusted origin and entitlement.
+**Depends on:** OX-20, OX-51, OX-36.
+**Exit:** A version/capability/trust matrix names allowed resource classes, rejection of unsafe or unsupported constructs and ownership of finite import/load budgets; free bundled scene is not entitlement-gated.
+**Evidence:** Future cycle-specific `.codex/test-artifacts/<cycle-id>/` and `.codex/history/<cycle-id>.md`; assign exact paths only when the slice is planned. Do not claim unperformed checks.
+**Slice board(s):** Objective-specific behavior/contract board pending; UI artwork board only if approved scope changes visible output. Owner approval required.
+
+### OX-53 — Finalize two evidence-based example pack manifests — PLANNED
+
+**Objective/scope:** Provide two minimal complete, evidence-based manifest examples using the existing First City and Open Landscape or an asset variant; no Park assets, mural or inspector actions required.
+**Depends on:** OX-52, OX-92, OX-24.
+**Exit:** Both examples identify manifest, version, definitions, compatible render capabilities and relative assets sufficient for a first real pack-builder proof; unresolved optional features remain deferred.
+**Evidence:** Future cycle-specific `.codex/test-artifacts/<cycle-id>/` and `.codex/history/<cycle-id>.md`; assign exact paths only when the slice is planned. Do not claim unperformed checks.
+**Slice board(s):** Objective-specific behavior/contract board pending; UI artwork board only if approved scope changes visible output. Owner approval required.
+
+### OX-30 — Build one versioned declarative scene-pack artifact — PLANNED
+
+**Objective/scope:** Implement a developer-facing local build operation converting one source manifest and its approved assets into one self-contained, non-executable pack. No app installation, downloader or storefront.
+**Depends on:** OX-53.
+**Exit:** One documented invocation produces a versioned pack artifact with the expected manifest and asset payload; validation failures have a readable build result.
+**Evidence:** Future cycle-specific `.codex/test-artifacts/<cycle-id>/` and `.codex/history/<cycle-id>.md`; assign exact paths only when the slice is planned. Do not claim unperformed checks.
+**Slice board(s):** Objective-specific behavior/contract board pending; UI artwork board only if approved scope changes visible output. Owner approval required.
+
+### OX-54 — Prove reproducible pack builds and a distinct variant — PLANNED
+
+**Objective/scope:** Prove repeatable builds from identical source inputs and define exactly one canonical content-identity rule (payload digest versus archive/transport digest explicitly distinguished). The builder, future validator and installer must use that same rule; variant style proof may be deferred if unrelated to identity.
+**Depends on:** OX-30.
+**Exit:** Two builds have matching documented canonical content identities with reproducible inputs, versions and declared treatment of archive metadata; reader/installer contract consumes the same identity definition.
+**Evidence:** Future cycle-specific `.codex/test-artifacts/<cycle-id>/` and `.codex/history/<cycle-id>.md`; assign exact paths only when the slice is planned. Do not claim unperformed checks.
+**Slice board(s):** Objective-specific behavior/contract board pending; UI artwork board only if approved scope changes visible output. Owner approval required.
+
+### OX-26 — Decode one generated pack manifest into a typed result — PLANNED
+
+**Objective/scope:** Parse and validate manifest structure, identity, version and required renderer capability IDs from a real locally built data-only artifact. Leave asset resource inspection and path enforcement to OX-91, and do not activate or import a pack.
+**Depends on:** OX-30, OX-52, OX-54.
+**Exit:** The real generated manifest yields a typed decoded/accepted result; malformed or version-incompatible manifests yield a bounded rejection without executing pack code.
+**Evidence:** Future cycle-specific `.codex/test-artifacts/<cycle-id>/` and `.codex/history/<cycle-id>.md`; assign exact paths only when the slice is planned. Do not claim unperformed checks.
+**Slice board(s):** Objective-specific behavior/contract board pending; UI artwork board only if approved scope changes visible output. Owner approval required.
+
+### OX-91 — Validate referenced pack resources before scene activation — PLANNED
+
+**Objective/scope:** Inspect a generated pack against the approved resource/trust policy: confined relative paths, allowed asset types, content identity/digest, finite resource budgets and required capability availability. Keep package validation separate from installer and entitlement.
+**Depends on:** OX-26, OX-51, OX-52, OX-54.
+**Exit:** A valid generated pack yields one validated artifact/asset set; deliberate path escape, unsupported resource, oversized input or mismatched content are rejected before any scene activation, with no partial asset state.
+**Evidence:** Future cycle-specific `.codex/test-artifacts/<cycle-id>/` and `.codex/history/<cycle-id>.md`; exact paths assigned when a cycle is planned.
+**Slice board(s):** Objective-specific behavior board pending; UI artwork board only if the approved scope changes visible output. No board approval or activation is claimed.
+
+### OX-55 — Instantiate a validated pack in the existing renderer — PLANNED
+
+**Objective/scope:** Instantiate one actually built and validated data-only pack with the existing in-app renderer capabilities and shared selected-time weather. No Park, entitlement, Settings or new meteorological interpreter.
+**Depends on:** OX-91, OX-19, OX-92.
+**Exit:** An installed device capture of a real loaded package shows an alternate authored world/variant under the same selected time, place and catalog as the bundled scene; unsupported renderer requirements do not silently execute.
+**Evidence:** Future cycle-specific `.codex/test-artifacts/<cycle-id>/` and `.codex/history/<cycle-id>.md`; assign exact paths only when the slice is planned. Do not claim unperformed checks.
+**Slice board(s):** Objective-specific behavior board and UI artwork board pending for the affected installed states. Owner approval required.
+
+### OX-56 — Recover safely from failed pack resolution — PLANNED
+
+**Objective/scope:** Fail safely at scene resolution for a missing or invalid already referenced package, choosing the bundled free world without mutating forecast state. Import-time rejections are owned by OX-91/OX-57.
+**Depends on:** OX-55, OX-91.
+**Exit:** A scoped device-local resolution failure leaves the free scene, exact selected weather and timeline operational with no partial scene commit or process failure.
+**Evidence:** Future cycle-specific `.codex/test-artifacts/<cycle-id>/` and `.codex/history/<cycle-id>.md`; assign exact paths only when the slice is planned. Do not claim unperformed checks.
+**Slice board(s):** Objective-specific behavior board and UI artwork board pending for the affected installed states. Owner approval required.
+
+### OX-31 — Define the app-managed installed-pack catalog — PLANNED
+
+**Objective/scope:** Define the application-managed installed-theme catalog abstraction for built-in free themes and compatible local packs, including stable ID/version, display name and validity status. No global filesystem scan, purchase provider or Settings UI.
+**Depends on:** OX-55, OX-20.
+**Exit:** Catalog queries represent the never-removable bundled free world and known compatible/incompatible app-owned entries distinctly, independent of weather interpretation.
+**Evidence:** Future cycle-specific `.codex/test-artifacts/<cycle-id>/` and `.codex/history/<cycle-id>.md`; assign exact paths only when the slice is planned. Do not claim unperformed checks.
+**Slice board(s):** Objective-specific behavior/contract board pending; UI artwork board only if approved scope changes visible output. Owner approval required.
+
+### OX-57 — Install one validated local pack atomically — PLANNED
+
+**Objective/scope:** Import one validated data-only package through a developer/device-local path into app-owned storage using staged write and atomic catalog activation. Enforce pack-root path confinement, allowed resource types and bounded extraction/memory rules before commit; failed replacement retains the prior valid scene.
+**Depends on:** OX-31, OX-91.
+**Exit:** On device, a valid generated artifact becomes selectable in the installed catalog. A deliberately invalid/oversized/escaped package or interrupted import leaves no partial install or displaced previously valid package; weather data is unchanged.
+**Evidence:** Future cycle-specific `.codex/test-artifacts/<cycle-id>/` and `.codex/history/<cycle-id>.md`; assign exact paths only when the slice is planned. Do not claim unperformed checks.
+**Slice board(s):** Objective-specific behavior/contract board pending; UI artwork board only if approved scope changes visible output. Owner approval required.
+
+### OX-32 — Hot-swap one installed theme during a running session — PLANNED
+
+**Objective/scope:** Atomically switch an active bundled/free scene to a validated locally installed pack and back in the same Activity/process, without touching active weather location, catalog revision, exact selected instant, currently displayed facts or timeline gesture ownership; no switch-triggered forecast fetch. Prove this on the first implemented hot swap, not a later remediation slice.
+**Depends on:** OX-57, OX-19, OX-55.
+**Exit:** Installed free → alternate → free evidence proves visible scene change without Activity/process restart, weather-place/catalog/selected-instant mutation, new switch-triggered fetch or timeline/gesture regression; activation never leaves half of two scenes visible.
+**Evidence:** Future cycle-specific `.codex/test-artifacts/<cycle-id>/` and `.codex/history/<cycle-id>.md`; assign exact paths only when the slice is planned. Do not claim unperformed checks.
+**Slice board(s):** Objective-specific behavior board and UI artwork board pending for the affected installed states. Owner approval required.
+
+### OX-25 — Author the park entrance and curved-path scaffold — PLANNED
+
+**Objective/scope:** Render a coarse, replaceable Living Urban Park path, entrance and distant background in one authored scene using the proven minimal element contract. Do not wait for cross-world style parity, complete weather renderers, pack import or final artwork.
+**Depends on:** OX-24, OX-41.
+**Exit:** An installed portrait scene has recognizable park entrance/path and distant backdrop, correct depth ordering and unchanged forecast/timeline operation; the First City route remains usable.
+**Evidence:** Future cycle-specific `.codex/test-artifacts/<cycle-id>/` and `.codex/history/<cycle-id>.md`; assign exact paths only when the slice is planned. Do not claim unperformed checks.
+**Slice board(s):** Objective-specific behavior board and UI artwork board pending for the affected installed states. Owner approval required.
+
+### OX-37 — Declare optional exact-data surfaces — PLANNED
+
+**Objective/scope:** Declare an optional data-surface anchor and canonical exact-binding reference only when preparing the Park mural. Decorative worlds need not carry it; no forecast conversion is allowed inside drawing.
+**Depends on:** OX-35, OX-04.
+**Exit:** One declared wall surface can opt into one exact-value binding without imposing data surfaces on First City/Open Landscape or implementing mural rendering.
+**Evidence:** Future cycle-specific `.codex/test-artifacts/<cycle-id>/` and `.codex/history/<cycle-id>.md`; assign exact paths only when the slice is planned. Do not claim unperformed checks.
+**Slice board(s):** Objective-specific behavior/contract board pending; UI artwork board only if approved scope changes visible output. Owner approval required.
+
+### OX-42 — Place the park mural wall and data-surface anchor — PLANNED
+
+**Objective/scope:** Add a left-wall mural surface with declared data-surface identity, plane, anchor and reserved text area; do not bind or paint a forecast measurement yet.
+**Depends on:** OX-25, OX-37.
+**Exit:** Installed portrait evidence identifies the mural plane and a non-occluded reserved data region; no exact-reading or typography claim is made.
+**Evidence:** Future cycle-specific `.codex/test-artifacts/<cycle-id>/` and `.codex/history/<cycle-id>.md`; assign exact paths only when the slice is planned. Do not claim unperformed checks.
+**Slice board(s):** Objective-specific behavior board and UI artwork board pending for the affected installed states. Owner approval required.
+
+### OX-43 — Place park vegetation and bench elements — PLANNED
+
+**Objective/scope:** Place a small declared set of trees and benches into their approved depth groups, with logical bounds and occlusion. Use placeholders if finished artwork is not ready.
+**Depends on:** OX-25, OX-35.
+**Exit:** Installed park evidence shows tree/bench placement and natural depth ordering without covering the essential readout or timeline.
+**Evidence:** Future cycle-specific `.codex/test-artifacts/<cycle-id>/` and `.codex/history/<cycle-id>.md`; assign exact paths only when the slice is planned. Do not claim unperformed checks.
+**Slice board(s):** Objective-specific behavior board and UI artwork board pending for the affected installed states. Owner approval required.
+
+### OX-44 — Place the park streetcar shelter element — PLANNED
+
+**Objective/scope:** Place a coarse historic streetcar shelter at its approved anchor with declared identity and layer order. Use existing path/entrance geometry, not a dependency on finished trees or mural artwork.
+**Depends on:** OX-25, OX-41.
+**Exit:** Installed scene demonstrates stable shelter placement and correct basic occlusion against the path, entrance and background without blocking central forecast access.
+**Evidence:** Future cycle-specific `.codex/test-artifacts/<cycle-id>/` and `.codex/history/<cycle-id>.md`; assign exact paths only when the slice is planned. Do not claim unperformed checks.
+**Slice board(s):** Objective-specific behavior board and UI artwork board pending for the affected installed states. Owner approval required.
+
+### OX-85 — Establish the initial portrait camera and safe areas — PLANNED
+
+**Objective/scope:** Establish the initial portrait camera and essential timeline/central-readout safe areas against the coarse park entrance, path and mural plane; optional shelter/trees can be fitted later without redesigning this contract.
+**Depends on:** OX-25, OX-42, OX-41.
+**Exit:** Installed Pixel 3 XL portrait evidence records logical crop, viewport/insets and non-obstructed central weather/timeline access, with a recognizable park and reserved mural plane.
+**Evidence:** Future cycle-specific `.codex/test-artifacts/<cycle-id>/` and `.codex/history/<cycle-id>.md`; assign exact paths only when the slice is planned. Do not claim unperformed checks.
+**Slice board(s):** Objective-specific behavior board and UI artwork board pending for the affected installed states. Owner approval required.
+
+### OX-12 — Expose one exact selected-time forecast binding — PLANNED
+
+**Objective/scope:** Create a typed exact selected-time reading from the existing canonical projection, with original source-valid time, supported/carried/unavailable meaning and display unit; no mural structure is required.
+**Depends on:** OX-04, OX-03.
+**Exit:** For one selected measurement, supplied, eligible carried and unavailable projections give one consistent value/evidence contract usable by both central readout and a future surface, without fabricated interpolation.
+**Evidence:** Future cycle-specific `.codex/test-artifacts/<cycle-id>/` and `.codex/history/<cycle-id>.md`; assign exact paths only when the slice is planned. Do not claim unperformed checks.
+**Slice board(s):** Objective-specific behavior/contract board pending; UI artwork board only if approved scope changes visible output. Owner approval required.
+
+### OX-12A — Paint the selected reading on the park mural — PLANNED
+
+**Objective/scope:** Render one canonical exact selected reading on the authored Park mural, preserving units, original sample time and explicit unavailable state from the first usable implementation. Keep the central readout primary and accessible; never independently infer units or data.
+**Depends on:** OX-12, OX-42, OX-37.
+**Exit:** Installed portrait supported, carried and unavailable cases show a wall-integrated reading whose values/units and unavailable meaning match the central authoritative binding; no invented missing value appears.
+**Evidence:** Future cycle-specific `.codex/test-artifacts/<cycle-id>/` and `.codex/history/<cycle-id>.md`; assign exact paths only when the slice is planned. Do not claim unperformed checks.
+**Slice board(s):** Objective-specific behavior board and UI artwork board pending for the affected installed states. Owner approval required.
+
+### OX-07 — Extract the First City cloud rendering capability — PLANNED
+
+**Objective/scope:** Place current First City cloud drawing behind a typed reusable renderer entry that consumes resolved cloud decisions plus world-authored style. Preserve existing visual output and avoid rewriting the overall Canvas.
+**Depends on:** OX-36, OX-38.
+**Exit:** Installed First City day/rain comparison shows no unapproved visual change; the capability can be called from a declared cloud element.
+**Evidence:** Future cycle-specific `.codex/test-artifacts/<cycle-id>/` and `.codex/history/<cycle-id>.md`; assign exact paths only when the slice is planned. Do not claim unperformed checks.
+**Slice board(s):** Objective-specific behavior board and UI artwork board pending for the affected installed states. Owner approval required.
+
+### OX-45 — Use clouds in a second world and verify the upper bound — PLANNED
+
+**Objective/scope:** Invoke the reusable cloud renderer from Minimal Open Landscape, which already exists, rather than waiting for Park art. Verify the mandatory upper-third cloud constraint including blur, shadow and movement for affected states.
+**Depends on:** OX-07, OX-92, OX-04.
+**Exit:** Installed two-world samples share weather decisions; all visible cloud output in checked states remains in the top 33% of the atmospheric scene viewport; unknown cloud coverage is not fabricated.
+**Evidence:** Future cycle-specific `.codex/test-artifacts/<cycle-id>/` and `.codex/history/<cycle-id>.md`; assign exact paths only when the slice is planned. Do not claim unperformed checks.
+**Slice board(s):** Objective-specific behavior board and UI artwork board pending for the affected installed states. Owner approval required.
+
+### OX-08 — Extract the reusable rain rendering capability — PLANNED
+
+**Objective/scope:** Extract existing rain drawing behind a declared precipitation-element renderer. Keep OX-03 cloud-origin placement when visible clouds exist and the documented no-cloud fallback when applicable; no new rainfall-rate inference.
+**Depends on:** OX-07, OX-36, OX-04.
+**Exit:** Focused installed First City supported-rain and dry comparisons preserve baseline behavior and selected-time reading; rain is callable from the scene declaration.
+**Evidence:** Future cycle-specific `.codex/test-artifacts/<cycle-id>/` and `.codex/history/<cycle-id>.md`; assign exact paths only when the slice is planned. Do not claim unperformed checks.
+**Slice board(s):** Objective-specific behavior board and UI artwork board pending for the affected installed states. Owner approval required.
+
+### OX-46 — Extract the reusable snow rendering capability — PLANNED
+
+**Objective/scope:** Move snow drawing behind its own compatible precipitation capability, reusing only evidenced rain interfaces. Do not introduce a generalized particle runtime.
+**Depends on:** OX-08, OX-36.
+**Exit:** Installed snow and no-snow comparisons show correct OX-18-driven state and unchanged essential data access in the existing world.
+**Evidence:** Future cycle-specific `.codex/test-artifacts/<cycle-id>/` and `.codex/history/<cycle-id>.md`; assign exact paths only when the slice is planned. Do not claim unperformed checks.
+**Slice board(s):** Objective-specific behavior board and UI artwork board pending for the affected installed states. Owner approval required.
+
+### OX-47 — Prove cross-world precipitation depth and unknown states — PLANNED
+
+**Objective/scope:** Wire reusable rain and snow capabilities into the existing minimal second world with declared precipitation depths and scene-specific placement. Park occlusion polish belongs to Park art states, not this reusable proof.
+**Depends on:** OX-45, OX-46, OX-92, OX-04.
+**Exit:** Installed two-world supplied rain/snow, dry and unavailable cases preserve depth, source truth, responsiveness and essential exact forecast access; no Park composition dependency.
+**Evidence:** Future cycle-specific `.codex/test-artifacts/<cycle-id>/` and `.codex/history/<cycle-id>.md`; assign exact paths only when the slice is planned. Do not claim unperformed checks.
+**Slice board(s):** Objective-specific behavior board and UI artwork board pending for the affected installed states. Owner approval required.
+
+### OX-09 — Make repeat selections produce repeatable scenes — PLANNED
+
+**Objective/scope:** Inspect reproducibility for the existing procedural elements on repeat selection and across scene/world changes. Apply stable seeds only where actual re-randomization is demonstrated; do not construct speculative cache machinery.
+**Depends on:** OX-38, OX-92.
+**Exit:** Evidence records the sampled repeat-selection result and either a proven no-change disposition or a scoped stable-seed correction with visually equivalent motion/selection meaning.
+**Evidence:** Future cycle-specific `.codex/test-artifacts/<cycle-id>/` and `.codex/history/<cycle-id>.md`; assign exact paths only when the slice is planned. Do not claim unperformed checks.
+**Slice board(s):** Objective-specific behavior board and UI artwork board pending for the affected installed states. Owner approval required.
+
+### OX-96 — Measure the first loaded pack and renderer baseline — PLANNED
+
+**Objective/scope:** Record focused selected-instant evaluation, first valid packaged-world rendering and one in-session theme-switch cost before Park polish. Do not implement caching or global performance refactoring in this measurement slice.
+**Depends on:** OX-55, OX-32.
+**Exit:** Reference-device measurements distinguish initial package/scene resolution, first frame and in-session switch from ordinary selected-time rendering; any bottleneck is recorded as observed, not assumed.
+**Evidence:** Future cycle-specific `.codex/test-artifacts/<cycle-id>/` and `.codex/history/<cycle-id>.md`; exact paths assigned when a cycle is planned.
+**Slice board(s):** Objective-specific behavior board pending; UI artwork board only if the approved scope changes visible output. No board approval or activation is claimed.
+
+### OX-29 — TEST: free-world and local pack build/import proof — PLANNED
+
+**Objective/scope:** Independently test the free bundled scene, local pack builder/validator, valid and invalid developer-local imports, and first weather-preserving hot swap without any commerce provider or Park art prerequisite.
+**Depends on:** OX-57, OX-55, OX-56, OX-32.
+**Exit:** Installed matrix records free/no-purchase availability, reproducible local artifact import/validation, invalid rejection, alternate-world rendering and no-restart weather-truth-preserving switch; pass/fail/not-run cases are explicit.
+**Evidence:** Future cycle-specific `.codex/test-artifacts/<cycle-id>/` and `.codex/history/<cycle-id>.md`; assign exact paths only when the slice is planned. Do not claim unperformed checks.
+**Slice board(s):** Objective-specific TEST/coverage behavior board pending; UI artwork board only if the approved work changes visual presentation. Owner approval required.
+
+### OX-58 — Restore installed catalog entries after relaunch — PLANNED
+
+**Objective/scope:** Prove durable on-device app-owned catalog restoration rather than only in-memory visibility; keep this separate from remembered active-theme selection.
+**Depends on:** OX-57.
+**Exit:** After a cold relaunch, the same installed pack identity/version is discovered and the always-available bundled free entry remains; no transient memory-only catalog suffices.
+**Evidence:** Future cycle-specific `.codex/test-artifacts/<cycle-id>/` and `.codex/history/<cycle-id>.md`; assign exact paths only when the slice is planned. Do not claim unperformed checks.
+**Slice board(s):** Objective-specific behavior/contract board pending; UI artwork board only if approved scope changes visible output. Owner approval required.
+
+### OX-61 — Persist and restore the chosen installed theme — PLANNED
+
+**Objective/scope:** Store a stable pack/variant selection key independently of place and forecast state, and restore a still-available compatible choice on launch. Do not implement Settings UI.
+**Depends on:** OX-32, OX-58.
+**Exit:** Installed selection survives a cold launch and reconstitutes the same world without changing weather facts or requiring a purchase provider.
+**Evidence:** Future cycle-specific `.codex/test-artifacts/<cycle-id>/` and `.codex/history/<cycle-id>.md`; assign exact paths only when the slice is planned. Do not claim unperformed checks.
+**Slice board(s):** Objective-specific behavior board and UI artwork board pending for the affected installed states. Owner approval required.
+
+### OX-62 — Restore the free world when the chosen theme is unavailable — PLANNED
+
+**Objective/scope:** Recover from missing/disabled/incompatible active theme at relaunch using a controlled unavailable-entry fixture; do not require future update/removal UX OX-83. Keep the bundled free scene always available.
+**Depends on:** OX-61, OX-56.
+**Exit:** Cold launch with a previously selected theme unavailable shows safe free-world fallback, truthful catalog status and unchanged forecast access, with no commerce dependency.
+**Evidence:** Future cycle-specific `.codex/test-artifacts/<cycle-id>/` and `.codex/history/<cycle-id>.md`; assign exact paths only when the slice is planned. Do not claim unperformed checks.
+**Slice board(s):** Objective-specific behavior board and UI artwork board pending for the affected installed states. Owner approval required.
+
+### OX-33 — List installed compatible themes in application Settings — PLANNED
+
+**Objective/scope:** Add a bounded Jetpack Compose Settings theme list backed by the app-managed catalog, showing the free bundled world, installed alternate names and active/incompatible status. Do not implement selection mechanics, downloads or checkout.
+**Depends on:** OX-31, OX-58.
+**Exit:** Installed Settings capture lists catalog-backed theme entries with correct compatible/active labels and accessible text; it does not scan shared device storage.
+**Evidence:** Future cycle-specific `.codex/test-artifacts/<cycle-id>/` and `.codex/history/<cycle-id>.md`; assign exact paths only when the slice is planned. Do not claim unperformed checks.
+**Slice board(s):** Objective-specific behavior board and UI artwork board pending for the affected installed states. Owner approval required.
+
+### OX-69 — Select themes from Settings using the existing hot-swap path — PLANNED
+
+**Objective/scope:** Wire the Settings choice to OX-32 switching and OX-61 persistence; indicate active state, disable invalid choices, and preserve returning to the normal forecast. Do not duplicate scene-loading logic.
+**Depends on:** OX-33, OX-32, OX-61, OX-62.
+**Exit:** On device, selecting free and installed themes from Settings switches the displayed world without restart, persists across relaunch and makes fallback/disabled status clear with accessible actions.
+**Evidence:** Future cycle-specific `.codex/test-artifacts/<cycle-id>/` and `.codex/history/<cycle-id>.md`; assign exact paths only when the slice is planned. Do not claim unperformed checks.
+**Slice board(s):** Objective-specific behavior board and UI artwork board pending for the affected installed states. Owner approval required.
+
+### OX-78 — TEST: verify hot-swap, persistence and recovery — PLANNED
+
+**Objective/scope:** Exercise repeat in-session theme switches, cold restoration, missing selected packs and recovery across approved device/launch conditions.
+**Depends on:** OX-29, OX-61, OX-62, OX-69.
+**Exit:** Installed evidence records selection continuity, no restart and fallback behavior with explicit pass/fail/not-run outcomes.
+**Evidence:** Future cycle-specific `.codex/test-artifacts/<cycle-id>/` and `.codex/history/<cycle-id>.md`; assign exact paths only when the slice is planned. Do not claim unperformed checks.
+**Slice board(s):** Objective-specific TEST/coverage behavior board pending; UI artwork board only if the approved work changes visual presentation. Owner approval required.
+
+### OX-98 — TEST: core installed-theme choice accessibility — PLANNED
+
+**Objective/scope:** Verify theme list announcements, disabled/unavailable statuses, focus order, selection activation and preserved exact weather access in the bundled and one installed world. No Park/Moon completion or payment provider required.
+**Depends on:** OX-69, OX-61, OX-62.
+**Exit:** Installed accessibility evidence covers the app-managed Settings theme list, active selection, disabled status, switch and recovery with actual pass/fail/not-run outcomes.
+**Evidence:** Future cycle-specific `.codex/test-artifacts/<cycle-id>/` and `.codex/history/<cycle-id>.md`; exact paths assigned when a cycle is planned.
+**Slice board(s):** Objective-specific behavior board pending; UI artwork board only if the approved scope changes visible output. No board approval or activation is claimed.
+
+### OX-73 — Measure theme-switch and restore costs — PLANNED
+
+**Objective/scope:** Measure repeated valid-pack switch and cold restore independently of final Park art. Report memory, latency and actual observed resource issues; do not automatically redesign catalog compilation.
+**Depends on:** OX-32, OX-61, OX-96.
+**Exit:** Measured same-session switches and cold restore produce observed costs with a retain/follow-up decision; any new optimization requires its own bounded approved slice.
+**Evidence:** Future cycle-specific `.codex/test-artifacts/<cycle-id>/` and `.codex/history/<cycle-id>.md`; assign exact paths only when the slice is planned. Do not claim unperformed checks.
+**Slice board(s):** Objective-specific behavior/contract board pending; UI artwork board only if approved scope changes visible output. Owner approval required.
+
+### OX-39 — Swap one visual treatment through definition data — PLANNED
+
+**Objective/scope:** Allow one existing rendering capability to consume an alternate visual style/treatment declared in the scene definition. Avoid an arbitrary plugin renderer or unrestricted shader framework.
+**Depends on:** OX-24, OX-36.
+**Exit:** Two styles render from the same selected weather input with unchanged weather facts, element identity and depth; installed captures distinguish the treatment.
+**Evidence:** Future cycle-specific `.codex/test-artifacts/<cycle-id>/` and `.codex/history/<cycle-id>.md`; assign exact paths only when the slice is planned. Do not claim unperformed checks.
+**Slice board(s):** Objective-specific behavior board and UI artwork board pending for the affected installed states. Owner approval required.
+
+### OX-40 — Prove substitution parity across the existing worlds — PLANNED
+
+**Objective/scope:** Compare a supported equivalent role across two already existing worlds and record actual substitution parity and capability gaps. Do not require those worlds to have identical content or add Park artwork.
+**Depends on:** OX-39, OX-92.
+**Exit:** Installed comparisons of the affected scene element(s) preserve shared weather meaning, forecast access and unknown-state handling in both existing worlds; unsupported capabilities are documented rather than silently assumed.
+**Evidence:** Future cycle-specific `.codex/test-artifacts/<cycle-id>/` and `.codex/history/<cycle-id>.md`; assign exact paths only when the slice is planned. Do not claim unperformed checks.
+**Slice board(s):** Objective-specific behavior board and UI artwork board pending for the affected installed states. Owner approval required.
+
+### OX-79 — TEST: verify weather truth and source support across packs — PLANNED
+
+**Objective/scope:** Verify supported, carried and unavailable weather semantics and exact selected-time forecast fact parity across bundled and installed worlds. Use established existing-world routes; do not wait for Moon detail, Park mural art or paid launch.
+**Depends on:** OX-78, OX-36, OX-40, OX-12.
+**Exit:** A scoped installed cross-pack matrix identifies exact selected instant, source validity, units, supported/missing interpretation and unchanged weather/catalog during switching with pass/fail/not-run per scenario.
+**Evidence:** Future cycle-specific `.codex/test-artifacts/<cycle-id>/` and `.codex/history/<cycle-id>.md`; assign exact paths only when the slice is planned. Do not claim unperformed checks.
+**Slice board(s):** Objective-specific TEST/coverage behavior board pending; UI artwork board only if the approved work changes visual presentation. Owner approval required.
+
+### OX-93 — TEST: record first-generation local platform readiness — PLANNED
+
+**Objective/scope:** Reconcile independent build/import, weather-safe live switching, persisted theme selection, installed catalog, Settings and core accessibility/performance evidence. Decide the local theming-platform milestone separately from Park artwork and paid distribution; owner approval is not assumed.
+**Depends on:** OX-29, OX-78, OX-79, OX-98, OX-73.
+**Exit:** Owner-facing readiness matrix distinguishes proven core platform capabilities, failed/not-run items and outstanding blockers; an owner decision is explicitly recorded or remains pending without claiming release approval.
+**Evidence:** Future cycle-specific `.codex/test-artifacts/<cycle-id>/` and `.codex/history/<cycle-id>.md`; exact paths assigned when a cycle is planned.
+**Slice board(s):** Objective-specific behavior board pending; UI artwork board only if the approved scope changes visible output. No board approval or activation is claimed.
+
+### OX-59 — Prove theme-switch and timeline-scrub interleaving — PLANNED
+
+**Objective/scope:** Exercise one bounded overlap between active timeline scrubbing and theme switching to establish coherent selected-instant ownership in the currently installed world. This is a distinct interaction proof, not postponed correction of OX-32 basic invariants.
+**Depends on:** OX-32.
+**Exit:** An installed focused scrub/switch sequence produces one coherent final selected instant and one active scene with no stale selection or gesture theft; the same contract already holds on ordinary OX-32 swaps.
+**Evidence:** Future cycle-specific `.codex/test-artifacts/<cycle-id>/` and `.codex/history/<cycle-id>.md`; assign exact paths only when the slice is planned. Do not claim unperformed checks.
+**Slice board(s):** Objective-specific behavior board and UI artwork board pending for the affected installed states. Owner approval required.
+
+### OX-60 — Manage theme-specific visual resources across swaps — PLANNED
+
+**Objective/scope:** Bound lifecycle ownership for activated assets, transformed hit regions and scene-specific animation state when one theme is replaced. Do not introduce an unrelated caching/graphics framework.
+**Depends on:** OX-32.
+**Exit:** Repeated free ↔ alternate switching leaves no stale visual layers or old-theme interactive targets; affected resource ownership is inspectable on device.
+**Evidence:** Future cycle-specific `.codex/test-artifacts/<cycle-id>/` and `.codex/history/<cycle-id>.md`; assign exact paths only when the slice is planned. Do not claim unperformed checks.
+**Slice board(s):** Objective-specific behavior board and UI artwork board pending for the affected installed states. Owner approval required.
+
+### OX-48 — Polish mural source-time and carried-state disclosure — PLANNED
+
+**Objective/scope:** Refine wall-integrated source-valid-time, carried-state and demo/unavailable disclosure typography and placement without changing the truthful binding already implemented by OX-12A.
+**Depends on:** OX-12A.
+**Exit:** Installed focused cases show readable, accurately labeled carried/source-time disclosure and explicit unavailability without changing weather meaning or obscuring primary readout.
+**Evidence:** Future cycle-specific `.codex/test-artifacts/<cycle-id>/` and `.codex/history/<cycle-id>.md`; assign exact paths only when the slice is planned. Do not claim unperformed checks.
+**Slice board(s):** Objective-specific behavior board and UI artwork board pending for the affected installed states. Owner approval required.
+
+### OX-86 — Make mural typography and materials theme-replaceable — PLANNED
+
+**Objective/scope:** Author one legible wall-integrated typography/material treatment and a declared visual variant without changing the bound measurement or weather meaning.
+**Depends on:** OX-12A, OX-39.
+**Exit:** Installed before/after murals demonstrate theme-defined visual treatment and unchanged selected-time value, unit, support state and accessible equivalent.
+**Evidence:** Future cycle-specific `.codex/test-artifacts/<cycle-id>/` and `.codex/history/<cycle-id>.md`; assign exact paths only when the slice is planned. Do not claim unperformed checks.
+**Slice board(s):** Objective-specific behavior board and UI artwork board pending for the affected installed states. Owner approval required.
+
+### OX-21 — Fit the portrait park camera and mural legibility — PLANNED
+
+**Objective/scope:** Measure and refine the portrait Park camera after the mural displays real text. Preserve the adopted at-least-16-sp-equivalent main mural reading and protected timeline/central readout. OX-85 was placeholder composition; this is typography-and-camera evidence.
+**Depends on:** OX-85, OX-12A.
+**Exit:** Installed portrait evidence records viewport, font scale, camera scale and measured actual mural text size of at least 16 sp equivalent, or fails explicitly; optional world area crops before critical content.
+**Evidence:** Future cycle-specific `.codex/test-artifacts/<cycle-id>/` and `.codex/history/<cycle-id>.md`; assign exact paths only when the slice is planned. Do not claim unperformed checks.
+**Slice board(s):** Objective-specific behavior board and UI artwork board pending for the affected installed states. Owner approval required.
+
+### OX-49 — Adapt park camera to landscape phone — PLANNED
+
+**Objective/scope:** Add landscape-phone camera and safe-area handling to the same logical park definition, revealing optional world area rather than creating a second layout/world.
+**Depends on:** OX-21.
+**Exit:** Installed landscape capture records actual viewport and shows timeline/readout/mural within insets with main mural reading at least 16 sp equivalent.
+**Evidence:** Future cycle-specific `.codex/test-artifacts/<cycle-id>/` and `.codex/history/<cycle-id>.md`; assign exact paths only when the slice is planned. Do not claim unperformed checks.
+**Slice board(s):** Objective-specific behavior board and UI artwork board pending for the affected installed states. Owner approval required.
+
+### OX-50 — Adapt park camera to unfolded fold posture — PLANNED
+
+**Objective/scope:** Adapt the same Park world to the adopted unfolded-fold posture, respecting hinges, safe areas and the at-least-16-sp-equivalent mural main reading. An actual configured fold emulator or device may supply installed evidence; do not claim unavailable hardware was tested or silently weaken the viewport contract.
+**Depends on:** OX-21.
+**Exit:** Recorded unfolded viewport, hinge/insets, camera scale and installed measured mural text prove the approved posture on a real fold device or verified fold emulator. If neither is available, record NOT RUN / evidence unavailable and keep the obligation open for owner disposition; do not claim DONE from a portrait capture.
+**Evidence:** Future cycle-specific `.codex/test-artifacts/<cycle-id>/` and `.codex/history/<cycle-id>.md`; assign exact paths only when the slice is planned. Do not claim unperformed checks.
+**Slice board(s):** Objective-specific behavior board and UI artwork board pending for the affected installed states. Owner approval required.
+
+### OX-22 — Polish the Park daylight entrance and curved-path materials — PLANNED
+
+**Objective/scope:** Author the approved daylight material, perspective and visual hierarchy for entrance and curved path only. Do not combine skyline, mural painting, shelter, trees, weather states or multi-viewport sign-off.
+**Depends on:** OX-25, OX-85.
+**Exit:** Installed daylight portrait before/after compared with approved concept shows readable, recognizable entrance/path materials and correct depth, with essential central weather and timeline protected.
+**Evidence:** Future cycle-specific `.codex/test-artifacts/<cycle-id>/` and `.codex/history/<cycle-id>.md`; assign exact paths only when the slice is planned. Do not claim unperformed checks.
+**Slice board(s):** Objective-specific behavior board and UI artwork board pending for the affected installed states. Owner approval required.
+
+### OX-87 — Finish the Park distant skyline visual treatment — PLANNED
+
+**Objective/scope:** Replace coarse distant background silhouette with approved skyline geometry, scale and daytime treatment using reusable scene assets and correct depth; do not retouch the path or mural.
+**Depends on:** OX-25, OX-22.
+**Exit:** Installed daytime Park capture demonstrates approved skyline relationship to path and protected essential weather content, with no unintended foreground occlusion.
 **Evidence:** Future cycle-specific `.codex/test-artifacts/<cycle-id>/` and `.codex/history/<cycle-id>.md`; exact paths assigned when a cycle is planned.
 **Slice board(s):** Objective-specific behavior board pending; UI artwork board pending. No board approval or activation is claimed.
 
-### OX-09 — Make repeated scene states deterministic — PLANNED
+### OX-88 — Finish Park mural-wall materials and paint surface — PLANNED
 
-**Objective/scope:** Make returning to the same scene input produce the same layout of procedural details; evaluate whether current procedural paths already satisfy this. Scope is limited to this outcome; the boards may propose a split or a changed boundary before approval.
-**Depends on:** OX-07, OX-08.
-**Exit:** Authorized repeatability checks or image comparisons and documented seed policy; no perceptible arbitrary popping. Provide the scoped proof or explicit recorded disposition; visual claims require installed evidence when applicable.
+**Objective/scope:** Finalize the wall and surface look surrounding the already truthful and readable mural data binding; isolate artwork/material integration from forecast selection and exact-value conversion.
+**Depends on:** OX-42, OX-12A, OX-22.
+**Exit:** Installed portrait capture matches the approved wall/mural material direction while supplied/carried/unavailable text and units remain correct and legible.
 **Evidence:** Future cycle-specific `.codex/test-artifacts/<cycle-id>/` and `.codex/history/<cycle-id>.md`; exact paths assigned when a cycle is planned.
 **Slice board(s):** Objective-specific behavior board pending; UI artwork board pending. No board approval or activation is claimed.
 
-### OX-10 — Moon: inspect the object — PLANNED
+### OX-63 — Finish the Park streetcar shelter artwork — PLANNED
 
-**Objective/scope:** Make the displayed Moon the first genuine scene-element interaction using the spec's Observe → Touch → Learn → Dismiss loop. Scope is limited to this outcome; the boards may propose a split or a changed boundary before approval.
-**Depends on:** OX-06, OX-09, OX-04.
-**Exit:** Tapping the visible Moon opens inspection; tap outside or Back dismisses. A selected-time change updates its facts while available and dismisses when the Moon object is unavailable. An available Moon with unavailable facts states that explicitly. Verify an accessible inspect action and preserve timeline/main-view gestures with scoped installed evidence.
+**Objective/scope:** Replace the coarse historic streetcar shelter placeholder with approved architectural details, surface and lighting-neutral artwork. Leave vegetation/benches for OX-89 and weather lighting for state slices.
+**Depends on:** OX-44, OX-22.
+**Exit:** Installed Park before/after art review shows recognizable approved shelter and clean depth/occlusion without hiding mural or central forecast content.
+**Evidence:** Future cycle-specific `.codex/test-artifacts/<cycle-id>/` and `.codex/history/<cycle-id>.md`; assign exact paths only when the slice is planned. Do not claim unperformed checks.
+**Slice board(s):** Objective-specific behavior board and UI artwork board pending for the affected installed states. Owner approval required.
+
+### OX-89 — Finish Park vegetation, benches and approved props — PLANNED
+
+**Objective/scope:** Replace coarse trees, benches and any owner-approved small props with authored replaceable art, preserving wind/season constraints and depth where supported. Do not rewrite the shelter or skyline.
+**Depends on:** OX-43, OX-22.
+**Exit:** Installed daylight capture shows approved foreground vegetation/props and natural occlusion with no newly blocked mural/readout/timeline.
 **Evidence:** Future cycle-specific `.codex/test-artifacts/<cycle-id>/` and `.codex/history/<cycle-id>.md`; exact paths assigned when a cycle is planned.
 **Slice board(s):** Objective-specific behavior board pending; UI artwork board pending. No board approval or activation is claimed.
 
-### OX-11 — Moon: explain only supported facts — PLANNED
+### OX-64 — Author the park golden-hour lighting treatment — PLANNED
 
-**Objective/scope:** Extend Moon inspection with phase, illumination, rise/set, and optional trajectory **only where the available model actually supports them**. Scope is limited to this outcome; the boards may propose a split or a changed boundary before approval.
-**Depends on:** OX-10.
-**Exit:** Data-support inventory, verified supported/unsupported states, no fabricated altitude/azimuth/illumination fields. Provide the scoped proof or explicit recorded disposition; visual claims require installed evidence when applicable.
+**Objective/scope:** Add the owner-approved golden-hour visual treatment through scene style inputs, preserving factual source-time and supported sky decisions; do not fabricate sunset astronomy.
+**Depends on:** OX-22, OX-36.
+**Exit:** Installed approved golden-hour capture demonstrates the authored light treatment without changing exact weather values or timeline behavior.
+**Evidence:** Future cycle-specific `.codex/test-artifacts/<cycle-id>/` and `.codex/history/<cycle-id>.md`; assign exact paths only when the slice is planned. Do not claim unperformed checks.
+**Slice board(s):** Objective-specific behavior board and UI artwork board pending for the affected installed states. Owner approval required.
+
+### OX-65 — Author the park night and moonlit visual treatment — PLANNED
+
+**Objective/scope:** Add the approved nighttime composition and available celestial treatment, including shelter/mural readability. Do not claim unsupported lunar position or illumination measurements.
+**Depends on:** OX-22, OX-36.
+**Exit:** Installed night capture matches the approved night artwork direction and keeps mural/central selected-time facts readable.
+**Evidence:** Future cycle-specific `.codex/test-artifacts/<cycle-id>/` and `.codex/history/<cycle-id>.md`; assign exact paths only when the slice is planned. Do not claim unperformed checks.
+**Slice board(s):** Objective-specific behavior board and UI artwork board pending for the affected installed states. Owner approval required.
+
+### OX-66 — Author the park rain visual treatment — PLANNED
+
+**Objective/scope:** Apply the shared rain capability to approved park surfaces and atmosphere, including any evidence-supported wetness treatment; avoid introducing false accumulation or rate measurements.
+**Depends on:** OX-22, OX-47.
+**Exit:** Installed supported-rain capture shows correct cloud/precipitation ordering and readable mural while remaining faithful to selected-time evidence.
+**Evidence:** Future cycle-specific `.codex/test-artifacts/<cycle-id>/` and `.codex/history/<cycle-id>.md`; assign exact paths only when the slice is planned. Do not claim unperformed checks.
+**Slice board(s):** Objective-specific behavior board and UI artwork board pending for the affected installed states. Owner approval required.
+
+### OX-67 — Author the park snow visual treatment — PLANNED
+
+**Objective/scope:** Apply the shared snow capability and owner-approved illustrative winter surface assets to the park. Treat accumulation as an artistic state unless backed by supported facts and labeled accordingly.
+**Depends on:** OX-22, OX-47.
+**Exit:** Installed supported-snow capture shows approved winter visual state, correct precipitation truth and unobscured essential forecast access.
+**Evidence:** Future cycle-specific `.codex/test-artifacts/<cycle-id>/` and `.codex/history/<cycle-id>.md`; assign exact paths only when the slice is planned. Do not claim unperformed checks.
+**Slice board(s):** Objective-specific behavior board and UI artwork board pending for the affected installed states. Owner approval required.
+
+### OX-68 — Verify the Park missing/unavailable visual state — PLANNED
+
+**Objective/scope:** Author and verify the Park-specific appearance when one weather field or mural reading is unavailable, using the established evidence semantics rather than implying clear weather or zero. Do not combine this with acceptance of every finished art state.
+**Depends on:** OX-22, OX-12A, OX-04.
+**Exit:** Installed focused unavailable-evidence capture demonstrates explicit unavailability and appropriate scene fallback while the central exact forecast access remains truthful.
+**Evidence:** Future cycle-specific `.codex/test-artifacts/<cycle-id>/` and `.codex/history/<cycle-id>.md`; assign exact paths only when the slice is planned. Do not claim unperformed checks.
+**Slice board(s):** Objective-specific behavior board and UI artwork board pending for the affected installed states. Owner approval required.
+
+### OX-90 — Integrate and review the complete Park visual states — PLANNED
+
+**Objective/scope:** Compare the authored Park daylight, golden-hour, night, rain, snow and unavailable appearances against the approved references as one composed free-world experience. This is a bounded cohesion review, not a new full system/device/accessibility matrix.
+**Depends on:** OX-87, OX-88, OX-63, OX-89, OX-64, OX-65, OX-66, OX-67, OX-68, OX-21.
+**Exit:** Installed review set identifies all approved states and documented intentional deviations; no unresolved artwork seams block the owner-approved free Park baseline, and source truth/readability remain intact.
 **Evidence:** Future cycle-specific `.codex/test-artifacts/<cycle-id>/` and `.codex/history/<cycle-id>.md`; exact paths assigned when a cycle is planned.
 **Slice board(s):** Objective-specific behavior board pending; UI artwork board pending. No board approval or activation is claimed.
 
-### OX-12 — Bind one exact selected-time reading — PLANNED
+### OX-84 — Declare optional inspect actions and hit metadata — PLANNED
 
-**Objective/scope:** Implement one typed exact-reading binding derived from the existing forecast projection. It carries selected instant, source-valid time, supported value and unit, provenance, carried status and explicit unavailable state. The central readout and OX-12A mural consume that same binding; OX-12A owns mural artwork.
-**Depends on:** OX-03, OX-06, OX-04.
-**Exit:** The implemented binding preserves the selected value, unit, source-valid time, provenance, carried status and unavailable state through authorized scoped verification; the central readout consumes it without changing essential access. OX-12A verifies agreement with the mural after that surface exists. No world artwork or readout removal.
+**Objective/scope:** Declare optional interactive identity, transformed hit-region intent and accessible action for an existing inspectable object. Keep timeline gesture arbitration with its current owner.
+**Depends on:** OX-35.
+**Exit:** One inspectable object and one decorative object have correctly distinct interaction declarations; no full inspection UI or mandatory global hit registry.
+**Evidence:** Future cycle-specific `.codex/test-artifacts/<cycle-id>/` and `.codex/history/<cycle-id>.md`; assign exact paths only when the slice is planned. Do not claim unperformed checks.
+**Slice board(s):** Objective-specific behavior/contract board pending; UI artwork board only if approved scope changes visible output. Owner approval required.
+
+### OX-10 — Give a visible Moon a scene-declared inspect target — PLANNED
+
+**Objective/scope:** Give the already existing First City Moon rendering a declared visible, transformed inspect hit target without requiring Park night art, temperature binding or a full facts interface.
+**Depends on:** OX-84, OX-38.
+**Exit:** An installed supported First City night state exposes a Moon target only while visible and enabled; offscreen/occluded Moon does not claim taps, and timeline gestures remain owned by the timeline.
+**Evidence:** Future cycle-specific `.codex/test-artifacts/<cycle-id>/` and `.codex/history/<cycle-id>.md`; assign exact paths only when the slice is planned. Do not claim unperformed checks.
+**Slice board(s):** Objective-specific behavior board and UI artwork board pending for the affected installed states. Owner approval required.
+
+### OX-70 — Complete Moon inspection lifecycle and accessible action — PLANNED
+
+**Objective/scope:** Implement open, Back/outside-dismiss and selected-time update for Moon inspection using the declared semantic object. Keep unavailable facts explicit and add an equivalent accessible inspect action.
+**Depends on:** OX-10, OX-04.
+**Exit:** Installed focused interactions verify opening, update on scrub, dismissal when the object vanishes and accessible activation without breaking established gestures.
+**Evidence:** Future cycle-specific `.codex/test-artifacts/<cycle-id>/` and `.codex/history/<cycle-id>.md`; assign exact paths only when the slice is planned. Do not claim unperformed checks.
+**Slice board(s):** Objective-specific behavior board and UI artwork board pending for the affected installed states. Owner approval required.
+
+### OX-11 — Show only supported facts in Moon inspection — PLANNED
+
+**Objective/scope:** Bind the current supported lunar fact inventory and source times to Moon inspection; omit or mark unavailable any phase, rise/set, illumination or path data not backed by the adopted model.
+**Depends on:** OX-70, OX-04.
+**Exit:** Installed supported/unavailable content matches canonical source evidence and updates with selected instant; unsupported numbers are never implied.
+**Evidence:** Future cycle-specific `.codex/test-artifacts/<cycle-id>/` and `.codex/history/<cycle-id>.md`; assign exact paths only when the slice is planned. Do not claim unperformed checks.
+**Slice board(s):** Objective-specific behavior board and UI artwork board pending for the affected installed states. Owner approval required.
+
+### OX-13 — Prove one progressive weather-information path — PLANNED
+
+**Objective/scope:** Implement one approved progressive-information experience using the Moon as the concrete Observe → Inspect → Understand → Nerd Out path; do not demand mural readiness as another independent information route.
+**Depends on:** OX-11.
+**Exit:** One installed Moon-led drill-down and return retains exact time, essential central/readout and forecast-browser access, with supported source facts only.
+**Evidence:** Future cycle-specific `.codex/test-artifacts/<cycle-id>/` and `.codex/history/<cycle-id>.md`; assign exact paths only when the slice is planned. Do not claim unperformed checks.
+**Slice board(s):** Objective-specific behavior board and UI artwork board pending for the affected installed states. Owner approval required.
+
+### OX-14 — Defer overlay reduction until actual obstruction evidence — DEFERRED
+
+**Objective/scope:** DEFERRED: no confirmed overlay obstruction currently justifies reducing essential forecast UI. Re-entry: installed Park evidence identifies a specific obstruction and the owner approves an equivalent exact and accessible access path.
+**Depends on:** OX-90, OX-13.
+**Exit:** Upon re-entry, installed before/after shows an owner-approved reduction of the evidenced obstruction without changing source truth, timeline gestures or essential accessible facts.
+**Evidence:** Future cycle-specific `.codex/test-artifacts/<cycle-id>/` and `.codex/history/<cycle-id>.md`; assign exact paths only when the slice is planned. Do not claim unperformed checks.
+**Slice board(s):** Objective-specific behavior board and UI artwork board pending for the affected installed states. Owner approval required.
+
+### OX-15 — Add Time Lab replay of weather-state transitions — PLANNED
+
+**Objective/scope:** Expose a small replayable fixture set for clear→cloudy and cloudy→rain/snow without constructing a second meteorological interpreter.
+**Depends on:** OX-09, OX-47.
+**Exit:** Time Lab reproduces each declared selected-time transition with recorded source/evidence inputs and a visible resulting world state.
+**Evidence:** Future cycle-specific `.codex/test-artifacts/<cycle-id>/` and `.codex/history/<cycle-id>.md`; assign exact paths only when the slice is planned. Do not claim unperformed checks.
+**Slice board(s):** Objective-specific behavior board and UI artwork board pending for the affected installed states. Owner approval required.
+
+### OX-71 — Add a reproducible Time Lab theme-swap scenario — PLANNED
+
+**Objective/scope:** Add one debug-only reproducible installed-theme change scenario with selected instant, catalog revision and active scene logged. Do not couple it to Park night artwork or a finished consumer Settings screen.
+**Depends on:** OX-15, OX-32.
+**Exit:** Time Lab reproduces one active-theme switch with both world identities and preserved selected weather state, using the existing validated switch path.
+**Evidence:** Future cycle-specific `.codex/test-artifacts/<cycle-id>/` and `.codex/history/<cycle-id>.md`; assign exact paths only when the slice is planned. Do not claim unperformed checks.
+**Slice board(s):** Objective-specific behavior board and UI artwork board pending for the affected installed states. Owner approval required.
+
+### OX-97 — Add a reproducible Time Lab day-to-night scenario — PLANNED
+
+**Objective/scope:** Provide one selected-time day→night lighting-state fixture in Time Lab using existing weather decisions; no Moon facts, Park artwork or pack commerce are required.
+**Depends on:** OX-15, OX-36.
+**Exit:** Time Lab replays and identifies two selected instant/lighting states with their evidence and visible world result; no new meteorological interpreter.
 **Evidence:** Future cycle-specific `.codex/test-artifacts/<cycle-id>/` and `.codex/history/<cycle-id>.md`; exact paths assigned when a cycle is planned.
-**Slice board(s):** Objective-specific behavior board pending; UI artwork board only if final scope changes visible output. No board approval or activation is claimed.
+**Slice board(s):** Objective-specific behavior board pending; UI artwork board only if the approved scope changes visible output. No board approval or activation is claimed.
 
-### OX-12A — Render one bound reading on a world surface — PLANNED
+### OX-16 — List scene elements and source metadata in Time Lab — PLANNED
 
-**Objective/scope:** Render the OX-12 exact binding on a mural that supplements the central readout. Both show the same selected-time reading, units and source-time disclosure; the central readout remains primary immediate access to essential forecast facts.
-**Depends on:** OX-12, OX-06, OX-04.
-**Exit:** Installed normal, unavailable and carried-state captures plus direct inspection/occlusion checks; mural and central readout agree on selected reading, units and source-time disclosure, and essential information remains immediately reachable through the central readout.
+**Objective/scope:** List current First City scene element identity, role, depth/local order, draw pass, renderer/asset reference in a debug-only read-only inspector. Do not require a Park object which this slice does not create.
+**Depends on:** OX-38.
+**Exit:** A reviewer can trace a First City cloud, Moon cue and foreground city/canopy element to the declaration/render pass currently used; no Park evidence is falsely claimed.
+**Evidence:** Future cycle-specific `.codex/test-artifacts/<cycle-id>/` and `.codex/history/<cycle-id>.md`; assign exact paths only when the slice is planned. Do not claim unperformed checks.
+**Slice board(s):** Objective-specific behavior board and UI artwork board pending for the affected installed states. Owner approval required.
+
+### OX-72 — Overlay declared bounds, occlusion and hit regions in Time Lab — PLANNED
+
+**Objective/scope:** Overlay transformed bounds and optional hit regions for an already available First City inspectable object and one foreground object in Time Lab; no dependence on the completed Moon inspection dialogue or Park art.
+**Depends on:** OX-16, OX-84, OX-35.
+**Exit:** Installed debug evidence shows correct bounds and target occlusion for an existing Moon/foreground scene pair, with no change when overlay is disabled.
+**Evidence:** Future cycle-specific `.codex/test-artifacts/<cycle-id>/` and `.codex/history/<cycle-id>.md`; assign exact paths only when the slice is planned. Do not claim unperformed checks.
+**Slice board(s):** Objective-specific behavior board and UI artwork board pending for the affected installed states. Owner approval required.
+
+### OX-17 — Measure finished Park catalog and scrub costs — PLANNED
+
+**Objective/scope:** Measure semantic-plan evaluation and repeated scrubbing across the supported catalog for the finished Park and a packed world. Compare with OX-96 first-loaded-pack baseline; do not invent day compilation or caching without measurement.
+**Depends on:** OX-90, OX-15, OX-96.
+**Exit:** Repeatable reference-device measurements distinguish catalog semantic evaluation, cross-day scrubbing and visible frame work; the report documents observed bottlenecks or explicit retain-current-design disposition.
+**Evidence:** Future cycle-specific `.codex/test-artifacts/<cycle-id>/` and `.codex/history/<cycle-id>.md`; assign exact paths only when the slice is planned. Do not claim unperformed checks.
+**Slice board(s):** Objective-specific behavior/contract board pending; UI artwork board only if approved scope changes visible output. Owner approval required.
+
+### OX-81 — TEST: verify scene viewports and font readability — PLANNED
+
+**Objective/scope:** Run a dedicated installed Park/theme viewport and typography matrix across approved portrait, landscape and unfolded-fold postures with actual viewport/inset/font metrics. Unsupported fold evidence stays NOT RUN and becomes an explicit owner release decision, never silently accepted.
+**Depends on:** OX-50, OX-90, OX-69.
+**Exit:** Recorded device/emulator configurations, measured mural >=16 sp-equivalent on each verified posture, and per-state pass/fail/not-run results; missing required fold posture remains an explicit open gate unless an owner-approved authority change occurs.
+**Evidence:** Future cycle-specific `.codex/test-artifacts/<cycle-id>/` and `.codex/history/<cycle-id>.md`; assign exact paths only when the slice is planned. Do not claim unperformed checks.
+**Slice board(s):** Objective-specific TEST/coverage behavior board pending; UI artwork board only if the approved work changes visual presentation. Owner approval required.
+
+### OX-82 — TEST: verify accessible access and reduced-motion behavior — PLANNED
+
+**Objective/scope:** Run dedicated expanded scene/inspect accessibility and reduced-motion acceptance for supported world variants including completed Park and Moon interactions. Keep platform-local Settings accessibility separately in OX-98.
+**Depends on:** OX-69, OX-70, OX-09, OX-90.
+**Exit:** Scoped device matrix documents accessible essential forecast routes, inspect actions, focus and reduced-motion states across completed worlds, recording each pass/fail/not-run without inferred coverage.
+**Evidence:** Future cycle-specific `.codex/test-artifacts/<cycle-id>/` and `.codex/history/<cycle-id>.md`; assign exact paths only when the slice is planned. Do not claim unperformed checks.
+**Slice board(s):** Objective-specific TEST/coverage behavior board pending; UI artwork board only if the approved work changes visual presentation. Owner approval required.
+
+### OX-80 — TEST: record free Park product readiness and blockers — PLANNED
+
+**Objective/scope:** Prepare a separate release recommendation for the bundled free Living Urban Park weather experience using approved visual, viewport, interaction, factual and scoped performance evidence. Do not import payment-provider readiness or infer an owner signature.
+**Depends on:** OX-90, OX-79, OX-81, OX-82, OX-17, OX-93.
+**Exit:** A pass/fail/not-run matrix identifies required free-Park states, viewport/fold evidence, source truth, accessibility and measured performance, and records an explicit owner release decision or unresolved gate.
+**Evidence:** Future cycle-specific `.codex/test-artifacts/<cycle-id>/` and `.codex/history/<cycle-id>.md`; assign exact paths only when the slice is planned. Do not claim unperformed checks.
+**Slice board(s):** Objective-specific TEST/coverage behavior board pending; UI artwork board only if the approved work changes visual presentation. Owner approval required.
+
+### OX-27 — Select scene-pack distribution and entitlement policy — PLANNED
+
+**Objective/scope:** Choose a paid distribution/entitlement channel based on the proven local versioned package. Provider choice must not block free/local pack build, installation, hot swapping or Settings.
+**Depends on:** OX-55, OX-53.
+**Exit:** Owner decision names a feasible provider/channel and entitlement boundary (or records unresolved external choice), with the free bundled world and local platform explicitly independent.
+**Evidence:** Future cycle-specific `.codex/test-artifacts/<cycle-id>/` and `.codex/history/<cycle-id>.md`; assign exact paths only when the slice is planned. Do not claim unperformed checks.
+**Slice board(s):** Objective-specific behavior/contract board pending; UI artwork board only if approved scope changes visible output. Owner approval required.
+
+### OX-74 — Specify offline, restoration and revocation semantics — PLANNED
+
+**Objective/scope:** Decide the paid pack offline-use, restore, update and revocation behaviors with the selected provider and existing local catalog. Keep weather data and bundled free world outside entitlement control.
+**Depends on:** OX-27, OX-57.
+**Exit:** Approved contract gives accept/reject/restore outcomes for already-installed packs and missing entitlements without inventing an account system.
+**Evidence:** Future cycle-specific `.codex/test-artifacts/<cycle-id>/` and `.codex/history/<cycle-id>.md`; assign exact paths only when the slice is planned. Do not claim unperformed checks.
+**Slice board(s):** Objective-specific behavior/contract board pending; UI artwork board only if approved scope changes visible output. Owner approval required.
+
+### OX-28 — Integrate a first entitlement-read boundary — PLANNED
+
+**Objective/scope:** Implement only the selected provider entitlement query/representation as a boundary consumed by pack delivery, not renderer code. Acquisition, Settings presentation and restoration follow later slices.
+**Depends on:** OX-74.
+**Exit:** An approved controlled scenario distinguishes entitled, not-entitled and unavailable-provider states without affecting core weather operations.
+**Evidence:** Future cycle-specific `.codex/test-artifacts/<cycle-id>/` and `.codex/history/<cycle-id>.md`; assign exact paths only when the slice is planned. Do not claim unperformed checks.
+**Slice board(s):** Objective-specific behavior/contract board pending; UI artwork board only if approved scope changes visible output. Owner approval required.
+
+### OX-75 — Acquire one entitled pack artifact through the chosen channel — PLANNED
+
+**Objective/scope:** Acquire one legitimately entitled, versioned pack through the chosen provider and hand it to the SAME safe validated local installer used by developer-local packs. Trust/asset validation must precede activation; no alternate path bypasses OX-91.
+**Depends on:** OX-28, OX-57.
+**Exit:** An entitled controlled acquisition yields the canonical OX-30 artifact and validated OX-57 install; unauthorized or invalid artifacts never activate; free weather remains usable.
+**Evidence:** Future cycle-specific `.codex/test-artifacts/<cycle-id>/` and `.codex/history/<cycle-id>.md`; assign exact paths only when the slice is planned. Do not claim unperformed checks.
+**Slice board(s):** Objective-specific behavior/contract board pending; UI artwork board only if approved scope changes visible output. Owner approval required.
+
+### OX-76 — Gate paid activation and restore permitted offline use — PLANNED
+
+**Objective/scope:** Connect entitlement results to paid-pack availability and implement the approved offline/restoration behavior, reusing catalog and hot-swap. Free-world activation must never depend on the provider.
+**Depends on:** OX-75, OX-74, OX-32.
+**Exit:** Controlled on-device entitled, denied and approved offline/restoration cases preserve the free scene and essential weather information.
+**Evidence:** Future cycle-specific `.codex/test-artifacts/<cycle-id>/` and `.codex/history/<cycle-id>.md`; assign exact paths only when the slice is planned. Do not claim unperformed checks.
+**Slice board(s):** Objective-specific behavior/contract board pending; UI artwork board only if approved scope changes visible output. Owner approval required.
+
+### OX-77 — Expose bounded paid-pack status and recovery UI — PLANNED
+
+**Objective/scope:** Present one approved purchased/available/unavailable/retry state flow in the existing theme-selection experience. Do not build an independent storefront or arbitrary commerce catalog.
+**Depends on:** OX-76, OX-69.
+**Exit:** Installed user-facing states distinguish owned, unavailable and failed acquisition, allow return to free scene and retain accessible theme choices.
+**Evidence:** Future cycle-specific `.codex/test-artifacts/<cycle-id>/` and `.codex/history/<cycle-id>.md`; assign exact paths only when the slice is planned. Do not claim unperformed checks.
+**Slice board(s):** Objective-specific behavior board and UI artwork board pending for the affected installed states. Owner approval required.
+
+### OX-94 — TEST: verify commercial pack acquisition and entitlement — PLANNED
+
+**Objective/scope:** Exercise controlled legitimate acquisition, denied/unavailable entitlement, offline/restore behavior and paid status UI through the existing validated installer and selector. This is separate from core/local-theme acceptance.
+**Depends on:** OX-75, OX-76, OX-77, OX-57, OX-62.
+**Exit:** Controlled on-device commercial matrix records permitted/denied/restore/revoke cases, failed/invalid artifact handling and free-world access with actual pass/fail/not-run results; no payment-provider truth is invented.
 **Evidence:** Future cycle-specific `.codex/test-artifacts/<cycle-id>/` and `.codex/history/<cycle-id>.md`; exact paths assigned when a cycle is planned.
-**Slice board(s):** Objective-specific behavior board pending; UI artwork board pending. No board approval or activation is claimed.
+**Slice board(s):** Objective-specific behavior board pending; UI artwork board only if the approved scope changes visible output. No board approval or activation is claimed.
 
-### OX-21 — Adapt one world across viewports — PLANNED
+### OX-95 — TEST: record separate paid-channel launch decision — PLANNED
 
-**Objective/scope:** Approve portrait phone, landscape phone and unfolded fold posture as the three viewport states. One logical park world fits the mural, central readout and timeline, preserves a recognizable park entrance, reveals optional world area and avoids insets/hinge. Simplify optional scenery first.
-**Depends on:** OX-12A, OX-18.
-**Exit:** For each of the three approved viewports, record dimensions, font scale, camera scale, mural main reading's resulting sp equivalent and an installed capture. The reading must remain at least 16 sp equivalent after camera scaling, with central readout, timeline and recognizable park entrance preserved; direct touch/selection checks pass. If these cannot fit, the slice fails its exit and the layout must be revised.
+**Objective/scope:** Report whether the selected commercial channel is ready after its own entitlement/acquisition/restore QA, independently identifying free-platform and free-Park release decisions. Do not assume launch or claim store approval.
+**Depends on:** OX-94, OX-93, OX-80.
+**Exit:** Owner-facing paid-launch report records actual tested provider behavior, release blockers and explicit owner decision; free weather remains usable regardless of provider outcome.
 **Evidence:** Future cycle-specific `.codex/test-artifacts/<cycle-id>/` and `.codex/history/<cycle-id>.md`; exact paths assigned when a cycle is planned.
-**Slice board(s):** Objective-specific behavior board pending; UI artwork board pending. No board approval or activation is claimed.
+**Slice board(s):** Objective-specific behavior board pending; UI artwork board only if the approved scope changes visible output. No board approval or activation is claimed.
 
-**Approved viewport evidence:** Portrait phone, landscape phone, and unfolded fold posture. For each, record dimensions, font scale, camera scale, mural reading sp equivalent, and installed capture. The mural reading must remain at least 16 sp equivalent; preserve the central readout, timeline, and recognizable park entrance, simplifying optional scenery first.
+### OX-83 — Defer routine installed-pack update and removal management — DEFERRED
 
-### OX-13 — Establish a progressive weather-information ladder — PLANNED
-
-**Objective/scope:** Make Experience → Inspect → Understand → Nerd Out coherent around the scene, while preserving precise forecast access. Scope is limited to this outcome; the boards may propose a split or a changed boundary before approval.
-**Depends on:** OX-10, OX-12A.
-**Exit:** Board-approved information hierarchy with at least one end-to-end flow from world to deeper forecast and back. Provide the scoped proof or explicit recorded disposition; visual claims require installed evidence when applicable.
-**Evidence:** Future cycle-specific `.codex/test-artifacts/<cycle-id>/` and `.codex/history/<cycle-id>.md`; exact paths assigned when a cycle is planned.
-**Slice board(s):** Objective-specific behavior board pending; UI artwork board pending. No board approval or activation is claimed.
-
-### OX-14 — Rebalance the normal screen toward the scene — PLANNED
-
-**Objective/scope:** Review conventional overlay dominance while retaining the central readout as primary immediate access. Any proposal to remove or reduce that readout requires a separate owner decision and verified alternate access before implementation.
-**Depends on:** OX-13, OX-21.
-**Exit:** Before/after experience review, precise data remains accessible, verified normal/inspect/advanced modes. Provide the scoped proof or explicit recorded disposition; visual claims require installed evidence when applicable.
-**Evidence:** Future cycle-specific `.codex/test-artifacts/<cycle-id>/` and `.codex/history/<cycle-id>.md`; exact paths assigned when a cycle is planned.
-**Slice board(s):** Objective-specific behavior board pending; UI artwork board pending. No board approval or activation is claimed.
-
-### OX-15 — Time Lab: transition scenarios — PLANNED
-
-**Objective/scope:** Turn the existing fixture and Time Lab infrastructure into repeatable scene-transition tests, beginning with a few high-value pairs. Scope is limited to this outcome; the boards may propose a split or a changed boundary before approval.
-**Depends on:** OX-09, OX-10.
-**Exit:** Repeatable clear→cloudy, cloudy→rain, day→night, and moon-obscured scenarios. A smaller, nonempty required set is permitted only if the approved behavior board identifies it before execution and a concrete roadmap follow-up is recorded for each omitted scenario before closeout. Provide the scoped proof or explicit recorded disposition; visual claims require installed evidence when applicable.
-**Evidence:** Future cycle-specific `.codex/test-artifacts/<cycle-id>/` and `.codex/history/<cycle-id>.md`; exact paths assigned when a cycle is planned.
-**Slice board(s):** Objective-specific behavior board pending; UI artwork board pending. No board approval or activation is claimed.
-
-### OX-16 — Time Lab: inspect layers and element bounds — PLANNED
-
-**Objective/scope:** Give reviewers visibility into semantic role, depth group, element bounds, and hit targets in a debug-only inspection surface. Scope is limited to this outcome; the boards may propose a split or a changed boundary before approval.
-**Depends on:** OX-05, OX-06, OX-10.
-**Exit:** Can identify at least a cloud, Moon, and one foreground object; inspection does not alter normal output. Provide the scoped proof or explicit recorded disposition; visual claims require installed evidence when applicable.
-**Evidence:** Future cycle-specific `.codex/test-artifacts/<cycle-id>/` and `.codex/history/<cycle-id>.md`; exact paths assigned when a cycle is planned.
-**Slice board(s):** Objective-specific behavior board pending; UI artwork board pending. No board approval or activation is claimed.
-
-### OX-17 — Validate catalog-wide scene readiness and scrub cost — PLANNED
-
-**Objective/scope:** Measure the existing full-window semantic plan before choosing whether to implement spec-style day compilation or extra caches. No optimization or compilation redesign is authorized by this measurement slice. Scope is limited to this outcome; the boards may propose a split or a changed boundary before approval.
-**Depends on:** OX-02, OX-09, OX-15.
-**Exit:** Baseline measurements, a board decision to retain full-window plan or change compilation granularity, and scoped cross-day/window-boundary evidence. **No pre-rendering the catalog into full-size bitmaps.** Provide the scoped proof or explicit recorded disposition; visual claims require installed evidence when applicable.
-**Evidence:** Future cycle-specific `.codex/test-artifacts/<cycle-id>/` and `.codex/history/<cycle-id>.md`; exact paths assigned when a cycle is planned.
-**Slice board(s):** Objective-specific behavior board pending; UI artwork board only if final scope changes visible output. No board approval or activation is claimed.
-
-### OX-19 — Decouple weather location from scene identity — PLANNED
-
-**Objective/scope:** Make changing the world independent of changing the selected geographic weather catalog. Scope is limited to this outcome; the boards may propose a split or a changed boundary before approval.
-**Depends on:** OX-18.
-**Exit:** Same selected place and instant across scene switching, consistent data correctness and interaction behavior. Provide the scoped proof or explicit recorded disposition; visual claims require installed evidence when applicable.
-**Evidence:** Future cycle-specific `.codex/test-artifacts/<cycle-id>/` and `.codex/history/<cycle-id>.md`; exact paths assigned when a cycle is planned.
-**Slice board(s):** Objective-specific behavior board pending; UI artwork board pending. No board approval or activation is claimed.
-
-### OX-20 — Define the future scene-pack boundary from real evidence — PLANNED
-
-**Objective/scope:** Record what would be required to package two proven worlds safely; do not build a store, downloader, or public scene DSL yet. Scope is limited to this outcome; the boards may propose a split or a changed boundary before approval.
-**Depends on:** OX-18, OX-19.
-**Exit:** Versioned boundary proposal with two example scene manifests or equivalent design evidence; explicit deferred work list. Provide the scoped proof or explicit recorded disposition; visual claims require installed evidence when applicable.
-**Evidence:** Future cycle-specific `.codex/test-artifacts/<cycle-id>/` and `.codex/history/<cycle-id>.md`; exact paths assigned when a cycle is planned.
-**Slice board(s):** Objective-specific behavior board pending; UI artwork board pending. No board approval or activation is claimed.
-
-### OX-22 — Polish Living Urban Park default world — PLANNED
-
-**Objective/scope:** Author park entrance, curved path, mural, trees/benches, skyline and optional distant sign/water tower using proven semantic/world contracts.
-**Depends on:** OX-21, OX-07, OX-08, OX-09.
-**Exit:** Installed approved daytime, nighttime, rain, snow and unavailable states plus directly affected scrub/inspect checks; exact forecast access and DEMO DATA truth remain.
-**Evidence:** Future cycle-specific `.codex/test-artifacts/<cycle-id>/` and `.codex/history/<cycle-id>.md`; exact paths assigned when a cycle is planned.
-**Slice board(s):** Objective-specific behavior board pending; UI artwork board pending. Before plan finalization, the approved boards must record whether the park replaces First City as the normal entry scene or remains a selectable world, and define the affected visual states. No board approval or activation is claimed.
+**Objective/scope:** DEFERRED: version replacement, explicit removal and routine package-upgrade UI are not required for the first build/install/hot-swap proof. Re-entry: a concrete pack update/removal requirement or distribution-channel evidence is approved by the owner. Preserve staged replacement safety in OX-57.
+**Depends on:** OX-58, OX-57.
+**Exit:** Upon re-entry, one approved update or removal operation preserves the bundled free theme and leaves an existing compatible version intact after a failed replacement, with installed proof.
+**Evidence:** Future cycle-specific `.codex/test-artifacts/<cycle-id>/` and `.codex/history/<cycle-id>.md`; assign exact paths only when the slice is planned. Do not claim unperformed checks.
+**Slice board(s):** Objective-specific behavior/contract board pending; UI artwork board only if approved scope changes visible output. Owner approval required.

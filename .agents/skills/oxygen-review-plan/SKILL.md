@@ -8,6 +8,14 @@ description: Review and finalize the current Oxygen Time Lab PLANNED cycle from 
 Use this entry point to turn a first draft into a complete, bounded, executable
 plan. Do not activate it or implement it.
 
+When invoked without a specific issue, review the plan as written against all
+requirements below and finalize it only if every gate passes. When the owner
+supplies a focused issue, review and resolve only that issue and its directly
+affected scope, dependencies, boards, acceptance, and checkpoint fields. Do
+not broaden that pass into a full-plan review or mark the plan `FINAL` merely
+because the focused issue is resolved. Report what changed and what remains
+for a later full review.
+
 ## Routine context
 
 1. Read `.codex/current.md`, `.codex/README.md`, the referenced cycle plan,
@@ -44,18 +52,17 @@ plan. Do not activate it or implement it.
   resolution. Keep unresolved owner decisions explicit.
 - Use `audit-planned-context` when a split may be needed. It is a targeted
   specialist; do not invent a context-window size or token estimate.
-- Keep model difficulty and fit in `rate-plan`; they are not a routine review
-  gate.
 
 ## Finalization
 
-Revise until the plan has a clear boundary, ordered steps, per-slice approvals,
-invariants, acceptance, authorized verification, evidence locations, risks,
-and exclusions. Set the cycle manifest to `FINAL` only when every included
+For a full review, revise until the plan has a clear boundary, ordered steps,
+per-slice approvals, invariants, acceptance, authorized verification, evidence
+locations, risks, and exclusions. Set the cycle manifest to `FINAL` only when every included
 slice has its complete board/exit record. Save the finished plan at checkpoint
 `REVIEW`, including accepted gates, completed outputs, decisions, exact next
 stage read set, and next action.
 
-Run `python scripts/dev.py workflow` after changes. Advance from `DRAFT` to
-`REVIEW` only when the board and plan gates pass. Leave the cycle `PLANNED` and
-ready for the user's authorized activation step. Do not implement.
+Run `python scripts/dev.py workflow` after changes. In a full review, advance
+from `DRAFT` to `REVIEW` only when the board and plan gates pass. In a focused
+review, preserve the current stage and pending gates. Leave the cycle
+`PLANNED`; do not implement.

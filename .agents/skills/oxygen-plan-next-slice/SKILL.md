@@ -34,8 +34,9 @@ cycle.
    `python scripts/codex_cycle.py start --id <cycle-id> --slice <slice-id> ...`
    only after the eligible slice roster is clear. The generated plan is a
    draft shell, not an implementation-ready plan.
-4. Prepare an objective-specific behavior board for every slice and a UI
-   artwork board for every slice that changes UI or visual output. A combined
+4. Use `oxygen-build-slice-boards` to prepare an objective-specific behavior
+   board for every slice and a UI artwork board for every slice that changes
+   UI or visual output. A combined
    board may cover both only when each slice's flow and appearance are
    reviewable. Obtain product-owner approval before drafting the substantive
    plan. Record each path, approval, constraints, and relation to scope and
@@ -54,7 +55,7 @@ cycle.
 Draft only from the approved boards. Record per-slice scope, exclusions,
 dependencies, invariants, observable exit, authorized verification, evidence,
 risks, and compatibility/documentation work. Keep the cycle roster ordered.
-Use `rate-plan` when the owner requests difficulty or model fit; keep that
+Use `rate-plan` when the owner requests a difficulty rating; keep that
 assessment out of routine intake.
 
 The plan and checkpoint carry a versioned JSON cycle roster and workflow
