@@ -25,6 +25,22 @@ class FirstCityThemeTest {
         solarEvents = events,
     )
 
+    @Test fun canopyAdapterUsesDeclarationAtSelectedInstant() {
+        val selected = sunrise.plusSeconds(3600)
+        val weatherDecision = SceneWeatherDecision.resolve(reading(selected, null), zone)
+        val composition = FirstCityTheme.compose(weatherDecision, zone)
+        val input = composition.canopyRenderInput()
+
+        assertEquals(selected, input.selectedInstant)
+        assertEquals(FirstCityElementId.CANOPY, input.id)
+        assertEquals(FirstCityLayer.CANOPY, input.pass.layer)
+        assertEquals(FirstCityDepthGroup.FOREGROUND, input.pass.depthGroup)
+        assertEquals(1, input.pass.localOrder)
+        assertEquals(FirstCityWorldBounds(0f, 0f, 1024f, 1536f), input.bounds)
+        assertTrue(FirstCityLayer.CANOPY in composition.layerOrder)
+        assertTrue(composition.weatherDecision === weatherDecision)
+    }
+
     @Test fun `sun cue meets the horizon only at provider events and stays absent outside them`() {
         val events = SolarDayEvents(date, sunrise, sunset)
         val before = reading(sunrise.minusSeconds(1), events)

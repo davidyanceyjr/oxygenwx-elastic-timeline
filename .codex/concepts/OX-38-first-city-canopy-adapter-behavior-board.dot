@@ -1,0 +1,19 @@
+digraph OX38 {
+  graph [label="OX-38 | First City canopy declaration adapter (proposal for owner review)", labelloc=t, fontsize=20, fontname="DejaVu Sans", ranksep=0.6, nodesep=0.4, bgcolor="#f7f9fc"];
+  node [shape=box, style="rounded,filled", fontname="DejaVu Sans", fontsize=11, color="#48718b", fillcolor="#e9f3f8", margin="0.16,0.10"];
+  edge [color="#44657c", fontname="DejaVu Sans", fontsize=10];
+  selected [label="Selected instant\nExisting FirstCityComposition\nExisting shared SceneWeatherDecision"];
+  order [label="Existing layerOrder traversal\nCANOPY retains Foreground order 1"];
+  declaration [label="First City-local CANOPY declaration\nID CANOPY | role VEGETATION\npass CANOPY | authored world geometry"];
+  adapter [label="Thin adapter resolves only CANOPY\nDeclaration -> current renderer arguments\nNo asset substitution or new weather rule", fillcolor="#d7ecdb", color="#4b8060"];
+  render [label="Existing canopy image and draw path\nSame bounds, placement, and appearance"];
+  other [label="All other objects/passes\nStay on existing direct draw branches", fillcolor="#f1f1f1"];
+  evidence [label="Focused slice proof\nDeclared path consumed at selected instant\nPass order, bounds and weather truth retained\nInstalled baseline visual comparison required by exit\nNo system/device test matrix", fillcolor="#fff2d8", color="#9b762f"];
+  selected -> order;
+  order -> adapter [label="CANOPY only"];
+  declaration -> adapter;
+  adapter -> render;
+  order -> other [label="all others"];
+  render -> evidence;
+  other -> evidence;
+}

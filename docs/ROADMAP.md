@@ -1198,13 +1198,13 @@ The SG workstream follows the owner-directed pivot recorded above and is grounde
 **Evidence:** Cycle 150 targets `.codex/test-artifacts/150-ox36-weather-input-slots/README.md`, `.codex/history/150-ox36-weather-input-slots.md`, and archived plan `.codex/history/plans/150-ox36-weather-input-slots.md`. Do not claim unperformed checks.
 **Slice board(s):** Product-owner-approved 2026-11-18 behavior package `.codex/concepts/OX-36-weather-input-slots-behavior-board.dot`, `.svg`, and `.png`; cycle 150 records all package fingerprints. UI artwork does not apply because the approved scope preserves visible output. Board approval does not activate implementation.
 
-### OX-38 — Adapt one existing world to the minimum declaration — PLANNED
+### OX-38 — Adapt one existing world to the minimum declaration — DONE
 
 **Objective/scope:** Introduce a thin definition-to-renderer adapter for one existing First City object/path while preserving all unrelated First City drawing code and weather decisions. Do not migrate both worlds or optional data/hit metadata.
 **Depends on:** OX-34, OX-35, OX-36.
 **Exit:** A selected-instant First City rendering path reads one declared object while installed baseline visuals, draw order and weather truth stay unchanged; untouched objects remain on their existing path.
-**Evidence:** Future cycle-specific `.codex/test-artifacts/<cycle-id>/` and `.codex/history/<cycle-id>.md`; assign exact paths only when the slice is planned. Do not claim unperformed checks.
-**Slice board(s):** Objective-specific behavior/contract board pending; UI artwork board only if approved scope changes visible output. Owner approval required.
+**Evidence:** Cycle 151 targets `.codex/test-artifacts/151-ox38-first-city-adapter/README.md` and `.codex/history/151-ox38-first-city-adapter.md`. Do not claim unperformed checks.
+**Slice board(s):** Product-owner-approved 2026-11-18 behavior package `.codex/concepts/OX-38-first-city-canopy-adapter-behavior-board.dot`, `.svg`, and `.png`; cycle 151 records package fingerprints. UI artwork does not apply because visible output is unchanged. Approval does not activate implementation.
 
 ### OX-24 — Swap one scene asset through definition data — PLANNED
 

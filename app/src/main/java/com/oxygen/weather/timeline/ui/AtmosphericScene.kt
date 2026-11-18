@@ -30,8 +30,11 @@ import com.oxygen.weather.timeline.presentation.scene.CityCloudAppearance
 import com.oxygen.weather.timeline.presentation.scene.CityPrecipitation
 import com.oxygen.weather.timeline.presentation.scene.FirstCityDepthGroup
 import com.oxygen.weather.timeline.presentation.scene.FirstCityComposition
+import com.oxygen.weather.timeline.presentation.scene.FirstCityElementId
 import com.oxygen.weather.timeline.presentation.scene.FirstCityLayer
 import com.oxygen.weather.timeline.presentation.scene.FirstCityTheme
+import com.oxygen.weather.timeline.presentation.scene.FirstCityWorldBounds
+import com.oxygen.weather.timeline.presentation.scene.canopyRenderInput
 import com.oxygen.weather.timeline.presentation.scene.MinimalOpenLandscapeComposition
 import com.oxygen.weather.timeline.presentation.scene.SceneReading
 import java.time.ZoneId
@@ -141,7 +144,15 @@ fun CatalogAtmosphericScene(
                     reducedMotion = reducedMotion,
                 )
                 FirstCityLayer.FOREGROUND_ARCHITECTURE -> drawCityForegroundLayer(architecture)
-                FirstCityLayer.CANOPY -> drawAlignedLayer(canopy)
+                FirstCityLayer.CANOPY -> {
+                    val input = composition.canopyRenderInput()
+                    check(input.selectedInstant == composition.selectedInstant)
+                    check(input.pass.layer == layer)
+                    check(input.id == FirstCityElementId.CANOPY)
+                    check(input.bounds == FirstCityWorldBounds(0f, 0f,
+                        FirstCityTheme.worldWidth.toFloat(), FirstCityTheme.worldHeight.toFloat()))
+                    drawAlignedLayer(canopy)
+                }
                 FirstCityLayer.TIME_WASH -> drawCityTimeWash(composition.treatment)
                 FirstCityLayer.READOUT_QUIET_ZONE -> drawCityReadoutQuietZone()
                 FirstCityLayer.WINDOW_LIGHTS -> if (!omitOptionalCityLayers) drawCityWindowLights()

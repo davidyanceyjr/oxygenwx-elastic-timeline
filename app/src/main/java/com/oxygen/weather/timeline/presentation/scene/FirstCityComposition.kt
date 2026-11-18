@@ -198,6 +198,26 @@ internal object FirstCitySemanticInventory {
         elements.firstOrNull { layer in it.renderPasses }
 }
 
+/** The one declaration-backed First City draw input. Other layers keep their direct paths. */
+internal data class FirstCityCanopyRenderInput(
+    val selectedInstant: Instant,
+    val id: FirstCityElementId,
+    val pass: FirstCityPassReference,
+    val bounds: FirstCityWorldBounds,
+)
+
+internal fun FirstCityComposition.canopyRenderInput(): FirstCityCanopyRenderInput {
+    val declaration = requireNotNull(FirstCitySemanticInventory.forRenderPass(FirstCityLayer.CANOPY))
+    require(declaration.id == FirstCityElementId.CANOPY)
+    require(declaration.role == FirstCityElementRole.VEGETATION)
+    val pass = declaration.orderedPasses.single()
+    require(pass.layer == FirstCityLayer.CANOPY)
+    val bounds = requireNotNull(declaration.geometry).transformedBounds()
+    require(bounds == FirstCityWorldBounds(0f, 0f,
+        FirstCityTheme.worldWidth.toFloat(), FirstCityTheme.worldHeight.toFloat()))
+    return FirstCityCanopyRenderInput(selectedInstant, declaration.id, pass, bounds)
+}
+
 /** Small renderer contract for the catalog path; all weather choices are already resolved. */
 data class FirstCityComposition(
     val weatherDecision: SceneWeatherDecision,
