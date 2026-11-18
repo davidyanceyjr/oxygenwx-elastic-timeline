@@ -1,0 +1,39 @@
+digraph OX41 {
+  graph [label="OX-41 | Living Urban Park role + coarse composition proposal\nDecision board only; no implementation or visual acceptance", labelloc=t, fontsize=22, fontname="DejaVu Sans", bgcolor="#f6f8f3", pad=0.35, nodesep=0.4, ranksep=0.6];
+  node [fontname="DejaVu Sans", fontsize=13, style="rounded,filled", color="#375344", fillcolor="#ffffff", margin="0.18,0.12"];
+  edge [color="#58705e", arrowsize=0.7];
+
+  role [shape=diamond, fillcolor="#fff3cf", label="OWNER DECISION\nPark role?"];
+  default [label="A: bundled free default\nPark opens as primary world"];
+  selectable [label="B: bundled selectable world\nExisting primary world retained"];
+  shared [fillcolor="#dcf0e2", label="Both choices: Park is bundled and free\nNo entitlement gate; scene choice does not alter\nplace, catalog revision or exact selected instant"];
+  role -> default [label="approve A"];
+  role -> selectable [label="approve B"];
+  default -> shared;
+  selectable -> shared;
+
+  subgraph cluster_map {
+    label="Coarse composition map | portrait reference, eye-level entry view";
+    color="#8aa58e"; style="rounded"; bgcolor="#e8eee6";
+    skyline [label="DISTANT SKYLINE\nRequired context; low detail", fillcolor="#e8f1fc"];
+    vegetation [label="VEGETATION + BENCHES\nRequired framing group", fillcolor="#d6eacb"];
+    shelter [label="STREETCAR SHELTER\nRequired landmark; coarse anchor", fillcolor="#f1e2c5"];
+    mural [label="MURAL WALL\nRequired left-side data-surface anchor\nExact forecast facts remain separate work", fillcolor="#f3d9c8"];
+    path [label="CURVED PATH\nRequired central depth route", fillcolor="#e5ded0"];
+    entrance [label="PARK ENTRANCE\nRequired foreground threshold", fillcolor="#dce6d4"];
+    optional [label="Optional reference motifs\nwater tower, banner, fountain, flower detail", style="rounded,dashed,filled", fillcolor="#f8f8f4"];
+    {rank=same; skyline; shelter}
+    {rank=same; mural; path; vegetation}
+    skyline -> shelter [style=invis];
+    shelter -> path [label="behind"];
+    mural -> path [label="left of"];
+    vegetation -> path [label="frames", dir=back];
+    path -> entrance [label="leads to", dir=back];
+    optional -> entrance [style=dashed, label="may omit"];
+  }
+  shared -> skyline [label="approve map + reference scope"];
+  ref [shape=note, fillcolor="#fff9e7", label="Reference state proposed: daylight portrait\nSource: design_draft/OxygenWX_Living_Urban_Park_Concept_01_Visual_Reference.png\nConcept image informs landmarks, not literal readings, weather, UI or final artwork"];
+  entrance -> ref [style=dotted];
+  out [shape=box, fillcolor="#d5ece7", label="OX-41 exit record\nOwner chooses A or B; approves required/optional landmarks,\nfree/default access and reference-state scope.\nNo app change, installed capture or device test claim."];
+  ref -> out;
+}

@@ -1226,13 +1226,16 @@ The SG workstream follows the owner-directed pivot recorded above and is grounde
 **Evidence:** Future cycle-specific `.codex/test-artifacts/<cycle-id>/` and `.codex/history/<cycle-id>.md`; exact paths assigned when a cycle is planned.
 **Slice board(s):** Product-owner-approved 2026-11-18 objective-specific behavior package `.codex/concepts/OX-92-second-world-adapter-behavior-board.dot`, `.svg`, and `.png`; cycle 153 records its fingerprints. The board proposes one existing Open Landscape tree group as the adapter target while preserving baseline appearance and shared weather decisions. UI artwork does not apply because visible output remains unchanged. Approval does not activate implementation.
 
-### OX-41 — Decide the park role and composition landmarks — PLANNED
+**Owner sequencing decision (2026-11-18):** The owner selected OX-41 for `oxygen-plan-next-slice` after OX-92 closed. OX-41 is the sole global `NEXT`; OX-23 and OX-35 are `DONE`. Focused slice-specific tests are authorized; system and device tests are out of scope. Selection does not approve boards or authorize implementation.
+
+### OX-41 — Decide the park role and composition landmarks — DONE
 
 **Objective/scope:** Record an explicit owner decision whether the Living Urban Park is the bundled free default or a bundled selectable world, and approve a coarse composition map for the entrance, curved path, mural wall, vegetation, skyline and streetcar shelter. Reuse provided reference artwork; do not presume an already-approved UI board.
 **Depends on:** OX-23, OX-35.
 **Exit:** The owner-approved role and labeled composition board identify required/optional landmarks, default/free access and the reference-state scope. No visual acceptance or implementation is claimed.
-**Evidence:** Future cycle-specific `.codex/test-artifacts/<cycle-id>/` and `.codex/history/<cycle-id>.md`; assign exact paths only when the slice is planned. Do not claim unperformed checks.
-**Slice board(s):** Objective-specific behavior/contract board pending; UI artwork board only if approved scope changes visible output. Owner approval required.
+**Evidence:** Cycle 154 targets `.codex/test-artifacts/154-ox41-park-role-composition/` and `.codex/history/154-ox41-park-role-composition.md`; do not claim unperformed checks.
+**Slice board(s):** Product-owner-approved 2026-11-18 behavior/contract package `.codex/concepts/OX-41-park-role-composition-behavior-board.dot`, `.svg`, and `.png`; cycle 154 records package fingerprints. UI artwork does not apply because this decision slice changes no app output. Approval does not activate implementation.
+**Owner role decision (2026-11-18):** The Living Urban Park is the bundled free default (board option A). First City and Open Landscape remain available as other bundled worlds. This records product intent; it does not change the current app default or implement switching.
 
 ### OX-19 — Separate scene choice from weather location and selected time — PLANNED
 
