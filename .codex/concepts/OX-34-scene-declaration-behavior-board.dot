@@ -1,0 +1,22 @@
+digraph OX34 {
+  graph [label="OX-34 | Type scene identities, roles and ordered depth\nPROPOSED behavior contract for owner review | no visible output change", labelloc=t, fontsize=18, fontname="DejaVu Sans", bgcolor="#f8fafc", pad=0.25, ranksep=0.5, nodesep=0.35];
+  node [shape=box, style="rounded,filled", fillcolor="#ffffff", color="#64748b", fontname="DejaVu Sans", fontsize=11, margin="0.16,0.11"];
+  edge [color="#475569", fontname="DejaVu Sans", fontsize=10];
+
+  existing [label="ESTABLISHED | OX-06 / current code\nFirstCityElementId + FirstCityElementRole\nFirstCitySemanticInventory maps one ID to pass set", fillcolor="#e0f2fe"];
+  depth [label="ESTABLISHED | OX-05 / current code\nFirstCityLayer has depth group + local order\nFirstCityTheme sorts physical passes Background → Middle-Ground → Foreground", fillcolor="#e0f2fe"];
+  matrix [label="ESTABLISHED | OX-23 matrix\nCANOPY: Foreground / 1; bitmap candidate\nCLOUD_COVER: Background / 4 + Middle-Ground / 1", fillcolor="#e0f2fe"];
+
+  declaration [label="PROPOSED | immutable First City-local element declaration\nExisting element ID + existing semantic role\nOrdered list of physical pass references, each with existing depth group + local order\nOne object may own multiple pass references", fillcolor="#dcfce7", color="#16a34a"];
+  canopy [label="PROPOSED example | CANOPY / VEGETATION\nOne pass: CANOPY (Foreground, 1)\nPreserves first asset-substitution candidate", fillcolor="#f0fdf4"];
+  cloud [label="PROPOSED example | CLOUD_COVER / CLOUD_FIELD\nTwo passes, one identity:\nBACKGROUND_CLOUDS (Background, 4)\nMIDDLE_GROUND_CLOUDS (Middle-Ground, 1)", fillcolor="#f0fdf4"];
+  invariant [label="EXIT / INVARIANT\nExisting visible-pass sequence and special compositing passes remain unchanged\nNo universal registry or graph executor\nNo geometry, weather-input slots, renderer adapter, or asset swap", fillcolor="#fef3c7", color="#d97706"];
+
+  existing -> declaration;
+  depth -> declaration;
+  matrix -> declaration;
+  declaration -> canopy;
+  declaration -> cloud;
+  canopy -> invariant;
+  cloud -> invariant;
+}

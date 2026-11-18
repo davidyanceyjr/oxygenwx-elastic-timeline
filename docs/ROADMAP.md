@@ -1172,13 +1172,15 @@ The SG workstream follows the owner-directed pivot recorded above and is grounde
 **Evidence:** Source-linked matrix `.codex/test-artifacts/147-ox23-scene-element-matrix/scene-element-matrix.md`, verification record `.codex/test-artifacts/147-ox23-scene-element-matrix/README.md`, and closeout `.codex/history/147-ox23-scene-element-matrix.md`; archived plan `.codex/history/plans/147-ox23-scene-element-matrix.md`.
 **Slice board(s):** Product-owner approved 2026-11-18 objective-specific behavior/contract board `.codex/concepts/OX-23-scene-element-matrix-behavior-board.md`, with DOT source and SVG/PNG renders at the same stem; no additional constraints stated. Cycle 147 records package fingerprints. UI artwork does not apply to this no-visual-change slice.
 
-### OX-34 — Type scene identities, roles and ordered depth — PLANNED
+**Owner sequencing decision (2026-11-18):** The owner requested `oxygen-plan-next-slice OX-34` after OX-23 closed. OX-34 is the sole global `NEXT`; OX-23, OX-05, and OX-06 are `DONE`. Board preparation and cycle intake do not approve the board or authorize implementation.
+
+### OX-34 — Type scene identities, roles and ordered depth — DONE
 
 **Objective/scope:** Introduce the smallest immutable scene-local declaration for identity, semantic role, depth and order needed by one replaceable object. Adapt rather than replace OX-06 identities; avoid global element registries.
 **Depends on:** OX-23, OX-05, OX-06.
 **Exit:** A concrete existing-world object and a multi-pass object are represented by the declaration without changing baseline pass ordering; no universal graph executor is introduced.
-**Evidence:** Future cycle-specific `.codex/test-artifacts/<cycle-id>/` and `.codex/history/<cycle-id>.md`; assign exact paths only when the slice is planned. Do not claim unperformed checks.
-**Slice board(s):** Objective-specific behavior/contract board pending; UI artwork board only if approved scope changes visible output. Owner approval required.
+**Evidence:** Cycle 148 targets `.codex/test-artifacts/148-ox34-scene-declaration/README.md`, `.codex/history/148-ox34-scene-declaration.md`, and archived plan `.codex/history/plans/148-ox34-scene-declaration.md`. Do not claim unperformed checks.
+**Slice board(s):** Product-owner-approved 2026-11-18 behavior package `.codex/concepts/OX-34-scene-declaration-behavior-board.dot`, `.svg`, and `.png`; cycle 148 records fingerprints. The board scopes an immutable First City-local declaration using existing OX-06 identities and OX-05 pass depth/order, with `CANOPY` and two-pass `CLOUD_COVER` as examples. UI artwork does not apply because this slice preserves visible output. Approval clears the board gate but does not activate implementation.
 
 ### OX-35 — Define logical element geometry and anchors — PLANNED
 

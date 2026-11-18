@@ -68,12 +68,23 @@ internal enum class FirstCityElementRole {
     WEATHER_FIELD,
 }
 
-/** Describes one meaningful First City object and the existing physical passes that render it. */
+/** One existing physical pass, with its established absolute depth and local order. */
+internal data class FirstCityPassReference(val layer: FirstCityLayer) {
+    val depthGroup: FirstCityDepthGroup = requireNotNull(layer.depthGroup)
+    val localOrder: Int = requireNotNull(layer.localOrder)
+}
+
+/** Describes one meaningful First City object and its ordered physical passes. */
 internal data class FirstCitySemanticElement(
     val id: FirstCityElementId,
     val role: FirstCityElementRole,
     val renderPasses: Set<FirstCityLayer>,
-)
+) {
+    val orderedPasses: List<FirstCityPassReference> = renderPasses
+        .map(::FirstCityPassReference)
+        .sortedWith(compareBy<FirstCityPassReference> { it.depthGroup.backToFrontOrder }
+            .thenBy { it.localOrder })
+}
 
 /**
  * Complete First City semantic inventory, independent of which objects are visible at one instant.
