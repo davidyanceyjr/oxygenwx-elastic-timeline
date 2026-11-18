@@ -1216,13 +1216,15 @@ The SG workstream follows the owner-directed pivot recorded above and is grounde
 **Evidence:** Cycle 152 records the focused test, the two matched fixed-instant installed captures, restoration check, and limits in `.codex/test-artifacts/152-ox24-scene-asset-swap/README.md`; closeout is `.codex/history/152-ox24-scene-asset-swap.md`.
 **Slice board(s):** Product-owner-approved 2026-11-18 behavior package `.codex/concepts/OX-24-scene-asset-swap-behavior-board.dot`, `.svg`, `.png`, and UI artwork package `.codex/concepts/OX-24-scene-asset-swap-ui-board.svg`, `.png`. Cycle 152 records fingerprints. The boards constrain the substitution to the First City CANOPY path, preserving weather truth, identity, pass depth, geometry, and unrelated layers. Approval does not activate implementation.
 
-### OX-92 — Reuse the thin scene adapter in the minimal second world — PLANNED
+**Owner sequencing decision (2026-11-18):** The owner selected OX-92 for `oxygen-plan-next-slice` after OX-24 closed. OX-92 is the sole global `NEXT`; focused slice-specific tests are authorized. System and device tests are out of scope. Board preparation and cycle intake do not authorize implementation.
+
+### OX-92 — Reuse the thin scene adapter in the minimal second world — DONE
 
 **Objective/scope:** Apply the same minimum authored identity/geometry/input contract to one existing Minimal Open Landscape object. Do not require the Park, a generalized executor or artwork parity beyond the chosen object.
 **Depends on:** OX-38, OX-18.
 **Exit:** First City and Minimal Open Landscape each consume the same declaration shape for at least one comparable capability, with shared selected-instant weather decisions and unmodified critical forecast access.
 **Evidence:** Future cycle-specific `.codex/test-artifacts/<cycle-id>/` and `.codex/history/<cycle-id>.md`; exact paths assigned when a cycle is planned.
-**Slice board(s):** Objective-specific behavior board pending; UI artwork board pending. No board approval or activation is claimed.
+**Slice board(s):** Product-owner-approved 2026-11-18 objective-specific behavior package `.codex/concepts/OX-92-second-world-adapter-behavior-board.dot`, `.svg`, and `.png`; cycle 153 records its fingerprints. The board proposes one existing Open Landscape tree group as the adapter target while preserving baseline appearance and shared weather decisions. UI artwork does not apply because visible output remains unchanged. Approval does not activate implementation.
 
 ### OX-41 — Decide the park role and composition landmarks — PLANNED
 

@@ -210,19 +210,35 @@ internal data class FirstCityCanopyRenderInput(
     val asset: FirstCityCanopyAsset,
 )
 
+internal fun FirstCitySemanticElement.canopyDeclaration():
+    SceneElementDeclaration<FirstCityElementId, FirstCityPassReference, FirstCityElementGeometry> {
+    require(id == FirstCityElementId.CANOPY)
+    require(role == FirstCityElementRole.VEGETATION)
+    return SceneElementDeclaration(id, SceneElementRole.VEGETATION,
+        orderedPasses.single(), requireNotNull(geometry))
+}
+
+internal fun resolveFirstCityCanopy(
+    weatherDecision: SceneWeatherDecision,
+    declaration: SceneElementDeclaration<FirstCityElementId, FirstCityPassReference, FirstCityElementGeometry>,
+    asset: FirstCityCanopyAsset,
+): FirstCityCanopyRenderInput {
+    require(declaration.id == FirstCityElementId.CANOPY)
+    require(declaration.role == SceneElementRole.VEGETATION)
+    require(declaration.pass.layer == FirstCityLayer.CANOPY)
+    val bounds = declaration.geometry.transformedBounds()
+    require(bounds == FirstCityWorldBounds(0f, 0f,
+        FirstCityTheme.worldWidth.toFloat(), FirstCityTheme.worldHeight.toFloat()))
+    return FirstCityCanopyRenderInput(weatherDecision.selectedInstant, declaration.id,
+        declaration.pass, bounds, asset)
+}
+
 internal fun FirstCityComposition.canopyRenderInput(
     declaration: FirstCitySemanticElement = requireNotNull(
         FirstCitySemanticInventory.forRenderPass(FirstCityLayer.CANOPY)
     ),
 ): FirstCityCanopyRenderInput {
-    require(declaration.id == FirstCityElementId.CANOPY)
-    require(declaration.role == FirstCityElementRole.VEGETATION)
-    val pass = declaration.orderedPasses.single()
-    require(pass.layer == FirstCityLayer.CANOPY)
-    val bounds = requireNotNull(declaration.geometry).transformedBounds()
-    require(bounds == FirstCityWorldBounds(0f, 0f,
-        FirstCityTheme.worldWidth.toFloat(), FirstCityTheme.worldHeight.toFloat()))
-    return FirstCityCanopyRenderInput(selectedInstant, declaration.id, pass, bounds,
+    return resolveFirstCityCanopy(weatherDecision, declaration.canopyDeclaration(),
         requireNotNull(declaration.canopyAsset))
 }
 

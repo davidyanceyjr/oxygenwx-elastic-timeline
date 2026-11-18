@@ -36,6 +36,9 @@ import com.oxygen.weather.timeline.presentation.scene.FirstCityLayer
 import com.oxygen.weather.timeline.presentation.scene.FirstCityTheme
 import com.oxygen.weather.timeline.presentation.scene.FirstCityWorldBounds
 import com.oxygen.weather.timeline.presentation.scene.canopyRenderInput
+import com.oxygen.weather.timeline.presentation.scene.treeGroupRenderInput
+import com.oxygen.weather.timeline.presentation.scene.OpenLandscapeElementId
+import com.oxygen.weather.timeline.presentation.scene.OpenLandscapePass
 import com.oxygen.weather.timeline.presentation.scene.MinimalOpenLandscapeComposition
 import com.oxygen.weather.timeline.presentation.scene.SceneReading
 import java.time.ZoneId
@@ -213,7 +216,12 @@ fun CatalogOpenLandscapeScene(
         }
         if (weather.clouds.visible) drawOpenLandscapeClouds(weather.clouds, reducedMotion)
         drawOpenLandscapeTerrain()
-        drawOpenLandscapeTreeGroup(centerX = .20f, scale = 1f)
+        val treeInput = composition.treeGroupRenderInput()
+        check(treeInput.selectedInstant == composition.selectedInstant)
+        check(treeInput.id == OpenLandscapeElementId.LEFT_TREE_GROUP)
+        check(treeInput.pass == OpenLandscapePass.FIRST_TREE_GROUP)
+        drawOpenLandscapeTreeGroup(centerX = treeInput.geometry.centerX,
+            scale = treeInput.geometry.scale)
         drawOpenLandscapeTreeGroup(centerX = .78f, scale = .92f)
         when (weather.precipitation) {
             CityPrecipitation.RAIN -> drawCityRainField(startsAtCloudBase = weather.clouds.visible)

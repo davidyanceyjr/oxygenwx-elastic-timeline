@@ -22,6 +22,32 @@ import org.junit.Test
 class SharedSceneWeatherDecisionTest {
     private val zone = ZoneId.of("America/Chicago")
 
+    @Test fun `both vegetation adapters consume the shared declaration shape and decision`() = runBlocking {
+        val selected = Instant.parse("2026-10-04T15:30:00Z")
+        val decision = SceneWeatherDecision.resolve(sg4Reading(selected), zone)
+        val city = FirstCityTheme.compose(decision, zone)
+        val landscape = MinimalOpenLandscapeTheme.compose(decision)
+        val cityDeclaration = FirstCitySemanticInventory.canopy(FirstCityCanopyAsset.OLIVE)
+            .canopyDeclaration()
+        val landscapeDeclaration = OpenLandscapeSemanticInventory.leftTreeGroup
+        val cityInput = city.canopyRenderInput()
+        val landscapeInput = landscape.treeGroupRenderInput()
+
+        assertEquals(SceneElementRole.VEGETATION, cityDeclaration.role)
+        assertEquals(SceneElementRole.VEGETATION, landscapeDeclaration.role)
+        assertEquals(FirstCityElementId.CANOPY, cityDeclaration.id)
+        assertEquals(FirstCityLayer.CANOPY, cityDeclaration.pass.layer)
+        assertEquals(FirstCityWorldBounds(0f, 0f, 1024f, 1536f), cityInput.bounds)
+        assertEquals(FirstCityCanopyAsset.OLIVE, cityInput.asset)
+        assertEquals(OpenLandscapeElementId.LEFT_TREE_GROUP, landscapeDeclaration.id)
+        assertEquals(OpenLandscapePass.FIRST_TREE_GROUP, landscapeDeclaration.pass)
+        assertEquals(OpenLandscapeTreeGeometry(.20f, 1f), landscapeInput.geometry)
+        assertEquals(selected, cityInput.selectedInstant)
+        assertEquals(selected, landscapeInput.selectedInstant)
+        assertSame(decision, city.weatherDecision)
+        assertSame(decision, landscape.weatherDecision)
+    }
+
     @Test fun `cloud-cover slot keeps supplied value and source evidence`() = runBlocking {
         val selected = Instant.parse("2026-10-28T20:00:00Z")
         val recording = DebugSg11StormFallbackCatalogFixture.unavailableRecording(

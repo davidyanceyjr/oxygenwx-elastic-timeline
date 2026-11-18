@@ -1,0 +1,28 @@
+digraph OX92 {
+  graph [label="OX-92 | One declaration shape in two existing worlds\nPROPOSAL FOR PRODUCT OWNER REVIEW • 2026-11-18", labelloc=t, fontsize=20, fontname="DejaVu Sans", bgcolor="#f7fafc", pad=0.3, ranksep=0.55, nodesep=0.35];
+  node [shape=box, style="rounded,filled", fontname="DejaVu Sans", fontsize=11, color="#31546b", fillcolor="#ffffff", margin="0.16,0.12"];
+  edge [color="#42677e", fontname="DejaVu Sans", fontsize=10];
+
+  selection [label="Existing catalog selection\nplace + revision + exact selected instant", fillcolor="#dceefa"];
+  decision [label="Shared SceneWeatherDecision\nweather meaning and missing-state truth", fillcolor="#dceefa"];
+  selection -> decision;
+
+  shape [label="Common minimum declaration shape\nscene-local identity + semantic role\nordered pass + logical geometry + input boundary", fillcolor="#d9efe4"];
+  city [label="First City CANOPY\nexisting declaration-backed adapter\nexisting draw path", fillcolor="#e9f4ec"];
+  landscape [label="Minimal Open Landscape tree group\nproposed single declaration-backed adapter\nexisting drawOpenLandscapeTreeGroup path", fillcolor="#e9f4ec"];
+  decision -> city [label="same selected instant"];
+  decision -> landscape [label="same selected instant"];
+  shape -> city;
+  shape -> landscape;
+
+  facts [label="Critical forecast text and timeline access\nretain current projection and interaction ownership", fillcolor="#fff1d6"];
+  selection -> facts;
+
+  boundary [label="Boundaries\nNo new weather interpretation or fetch\nNo Park, general scene executor, pack, or world picker\nNo visual/artwork parity work; baseline appearance retained", fillcolor="#fce8e3", color="#a9685b"];
+  landscape -> boundary [style=dashed, arrowhead=none];
+
+  proof [label="Exit proof\nBoth worlds consume the same declaration shape\nOne comparable vegetation capability each\nShared selected-instant decision and critical forecast access unchanged\nFocused slice tests authorized; system/device tests excluded", fillcolor="#fff1d6"];
+  city -> proof;
+  landscape -> proof;
+  facts -> proof;
+}
