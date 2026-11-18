@@ -1,0 +1,18 @@
+digraph OX24 {
+  graph [label="OX-24 · One First City asset swap through definition data\nPROPOSED FOR OWNER REVIEW · 2026-11-18", labelloc=t, fontsize=20, fontname="DejaVu Sans", bgcolor="#f7f8f5", pad=0.35, ranksep=0.55, nodesep=0.45];
+  node [shape=box, style="rounded,filled", fillcolor="#ffffff", color="#728378", fontname="DejaVu Sans", fontsize=12, margin="0.18,0.12"];
+  edge [color="#536d62", fontname="DejaVu Sans", fontsize=10];
+  weather [label="Selected instant + shared\nSceneWeatherDecision\nUNCHANGED", fillcolor="#e5f0f4"];
+  definition [label="First City CANOPY declaration\nsame id: CANOPY · role: vegetation\nsame foreground pass + world bounds", fillcolor="#e4eddf"];
+  asset [label="Authored asset reference\nBaseline: existing canopy PNG\nVariant: one compatible canopy PNG", fillcolor="#fff0cd"];
+  adapter [label="Existing thin canopy adapter\nreads declaration and asset reference\nno weather reinterpretation", fillcolor="#e4eddf"];
+  renderer [label="Existing First City CANOPY draw pass\nloads chosen asset; same aligned draw\nother layers untouched", fillcolor="#e4eddf"];
+  evidence [label="Compare fixed selected-instant views\nchanged canopy only; same identity,\ndepth, bounds, facts and timeline", fillcolor="#f4e8eb"];
+  weather -> adapter [label="weather meaning remains external"];
+  definition -> adapter;
+  asset -> adapter [label="definition data selects"];
+  adapter -> renderer;
+  renderer -> evidence;
+  note [shape=note, fillcolor="#faf8ee", label="Boundary: no pack manifest, generic asset registry,\nsecond-world migration, or renderer copy.\nRestoring baseline changes authored reference only."];
+  note -> asset [style=dashed, arrowhead=none];
+}

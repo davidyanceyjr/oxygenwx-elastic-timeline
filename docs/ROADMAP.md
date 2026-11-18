@@ -1206,13 +1206,15 @@ The SG workstream follows the owner-directed pivot recorded above and is grounde
 **Evidence:** Cycle 151 targets `.codex/test-artifacts/151-ox38-first-city-adapter/README.md` and `.codex/history/151-ox38-first-city-adapter.md`. Do not claim unperformed checks.
 **Slice board(s):** Product-owner-approved 2026-11-18 behavior package `.codex/concepts/OX-38-first-city-canopy-adapter-behavior-board.dot`, `.svg`, and `.png`; cycle 151 records package fingerprints. UI artwork does not apply because visible output is unchanged. Approval does not activate implementation.
 
-### OX-24 — Swap one scene asset through definition data — PLANNED
+**Owner sequencing decision (2026-11-18):** The owner selected OX-24 for `oxygen-plan-next-slice` after OX-38 closed. OX-24 is the sole global `NEXT`; focused slice-specific tests are authorized. The owner clarified that the two scoped installed before/after captures required by the exit are visual evidence, with no device test cases or broader system/device matrix. Board preparation and cycle intake do not authorize implementation.
+
+### OX-24 — Swap one scene asset through definition data — DONE
 
 **Objective/scope:** Substitute one renderer-compatible asset from scene definition data in the first world, without edits to the weather interpreter or copied world renderer.
 **Depends on:** OX-38.
 **Exit:** Installed before/after captures show a changed asset using the same scene-local element identity, depth and position; restoring the original is an authored choice, not a renderer edit.
-**Evidence:** Future cycle-specific `.codex/test-artifacts/<cycle-id>/` and `.codex/history/<cycle-id>.md`; assign exact paths only when the slice is planned. Do not claim unperformed checks.
-**Slice board(s):** Objective-specific behavior board and UI artwork board pending for the affected installed states. Owner approval required.
+**Evidence:** Cycle 152 records the focused test, the two matched fixed-instant installed captures, restoration check, and limits in `.codex/test-artifacts/152-ox24-scene-asset-swap/README.md`; closeout is `.codex/history/152-ox24-scene-asset-swap.md`.
+**Slice board(s):** Product-owner-approved 2026-11-18 behavior package `.codex/concepts/OX-24-scene-asset-swap-behavior-board.dot`, `.svg`, `.png`, and UI artwork package `.codex/concepts/OX-24-scene-asset-swap-ui-board.svg`, `.png`. Cycle 152 records fingerprints. The boards constrain the substitution to the First City CANOPY path, preserving weather truth, identity, pass depth, geometry, and unrelated layers. Approval does not activate implementation.
 
 ### OX-92 — Reuse the thin scene adapter in the minimal second world — PLANNED
 

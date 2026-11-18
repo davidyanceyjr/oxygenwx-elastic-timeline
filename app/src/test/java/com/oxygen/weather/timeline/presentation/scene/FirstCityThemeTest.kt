@@ -39,6 +39,18 @@ class FirstCityThemeTest {
         assertEquals(FirstCityWorldBounds(0f, 0f, 1024f, 1536f), input.bounds)
         assertTrue(FirstCityLayer.CANOPY in composition.layerOrder)
         assertTrue(composition.weatherDecision === weatherDecision)
+        assertEquals(FirstCityCanopyAsset.OLIVE, input.asset)
+        val baseline = composition.canopyRenderInput(
+            FirstCitySemanticInventory.canopy(FirstCityCanopyAsset.BASELINE)
+        )
+        val olive = composition.canopyRenderInput(
+            FirstCitySemanticInventory.canopy(FirstCityCanopyAsset.OLIVE)
+        )
+        assertEquals(FirstCityCanopyAsset.BASELINE, baseline.asset)
+        assertEquals(FirstCityCanopyAsset.OLIVE, olive.asset)
+        assertEquals(baseline.copy(asset = FirstCityCanopyAsset.OLIVE), olive)
+        assertEquals(input, composition.canopyRenderInput(FirstCitySemanticInventory.canopy(input.asset)))
+        assertTrue(composition.weatherDecision === weatherDecision)
     }
 
     @Test fun `sun cue meets the horizon only at provider events and stays absent outside them`() {

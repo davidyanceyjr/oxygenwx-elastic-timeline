@@ -68,6 +68,8 @@ internal enum class FirstCityElementRole {
     WEATHER_FIELD,
 }
 
+internal enum class FirstCityCanopyAsset { BASELINE, OLIVE }
+
 /** One existing physical pass, with its established absolute depth and local order. */
 internal data class FirstCityPassReference(val layer: FirstCityLayer) {
     val depthGroup: FirstCityDepthGroup = requireNotNull(layer.depthGroup)
@@ -115,6 +117,7 @@ internal data class FirstCitySemanticElement(
     val role: FirstCityElementRole,
     val renderPasses: Set<FirstCityLayer>,
     val geometry: FirstCityElementGeometry? = null,
+    val canopyAsset: FirstCityCanopyAsset? = null,
 ) {
     val orderedPasses: List<FirstCityPassReference> = renderPasses
         .map(::FirstCityPassReference)
@@ -127,6 +130,19 @@ internal data class FirstCitySemanticElement(
  * Compositing-only passes intentionally have no semantic element.
  */
 internal object FirstCitySemanticInventory {
+    fun canopy(asset: FirstCityCanopyAsset) = FirstCitySemanticElement(
+        FirstCityElementId.CANOPY,
+        FirstCityElementRole.VEGETATION,
+        setOf(FirstCityLayer.CANOPY),
+        geometry = FirstCityElementGeometry(
+            x = 0f, y = 0f,
+            width = FirstCityTheme.worldWidth.toFloat(),
+            height = FirstCityTheme.worldHeight.toFloat(),
+            anchorX = 0f, anchorY = 0f, scale = 1f,
+        ),
+        canopyAsset = asset,
+    )
+
     val elements: List<FirstCitySemanticElement> = listOf(
         FirstCitySemanticElement(
             FirstCityElementId.SKY_BACKDROP,
@@ -168,20 +184,7 @@ internal object FirstCitySemanticInventory {
             FirstCityElementRole.CITY_STRUCTURE,
             setOf(FirstCityLayer.FOREGROUND_ARCHITECTURE),
         ),
-        FirstCitySemanticElement(
-            FirstCityElementId.CANOPY,
-            FirstCityElementRole.VEGETATION,
-            setOf(FirstCityLayer.CANOPY),
-            geometry = FirstCityElementGeometry(
-                x = 0f,
-                y = 0f,
-                width = FirstCityTheme.worldWidth.toFloat(),
-                height = FirstCityTheme.worldHeight.toFloat(),
-                anchorX = 0f,
-                anchorY = 0f,
-                scale = 1f,
-            ),
-        ),
+        canopy(FirstCityCanopyAsset.OLIVE),
         FirstCitySemanticElement(
             FirstCityElementId.WINDOW_DETAILS,
             FirstCityElementRole.LIGHT_DETAIL,
@@ -204,10 +207,14 @@ internal data class FirstCityCanopyRenderInput(
     val id: FirstCityElementId,
     val pass: FirstCityPassReference,
     val bounds: FirstCityWorldBounds,
+    val asset: FirstCityCanopyAsset,
 )
 
-internal fun FirstCityComposition.canopyRenderInput(): FirstCityCanopyRenderInput {
-    val declaration = requireNotNull(FirstCitySemanticInventory.forRenderPass(FirstCityLayer.CANOPY))
+internal fun FirstCityComposition.canopyRenderInput(
+    declaration: FirstCitySemanticElement = requireNotNull(
+        FirstCitySemanticInventory.forRenderPass(FirstCityLayer.CANOPY)
+    ),
+): FirstCityCanopyRenderInput {
     require(declaration.id == FirstCityElementId.CANOPY)
     require(declaration.role == FirstCityElementRole.VEGETATION)
     val pass = declaration.orderedPasses.single()
@@ -215,7 +222,8 @@ internal fun FirstCityComposition.canopyRenderInput(): FirstCityCanopyRenderInpu
     val bounds = requireNotNull(declaration.geometry).transformedBounds()
     require(bounds == FirstCityWorldBounds(0f, 0f,
         FirstCityTheme.worldWidth.toFloat(), FirstCityTheme.worldHeight.toFloat()))
-    return FirstCityCanopyRenderInput(selectedInstant, declaration.id, pass, bounds)
+    return FirstCityCanopyRenderInput(selectedInstant, declaration.id, pass, bounds,
+        requireNotNull(declaration.canopyAsset))
 }
 
 /** Small renderer contract for the catalog path; all weather choices are already resolved. */

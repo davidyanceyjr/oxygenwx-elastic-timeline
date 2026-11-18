@@ -1,0 +1,26 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="820" viewBox="0 0 1200 820">
+<defs>
+  <linearGradient id="sky" x2="0" y2="1"><stop stop-color="#669eb4"/><stop offset="1" stop-color="#e9c995"/></linearGradient>
+  <linearGradient id="ground" x2="0" y2="1"><stop stop-color="#233c4a"/><stop offset="1" stop-color="#101d2a"/></linearGradient>
+  <g id="city"><path d="M0 350V240h50v-76h52v65h44v-99h55v49h44v-83h58v133h50v-70h60v88h47v-105h67v208Z" fill="#344d5d"/><path d="M0 350V278h83v-54h80v53h72v-85h85v92h70v-65h70v131Z" fill="#263c4e"/></g>
+  <g id="leaf"><circle cx="0" cy="0" r="43"/><circle cx="44" cy="-9" r="34"/><circle cx="-40" cy="5" r="32"/></g>
+  <clipPath id="sceneClip"><rect width="464" height="440"/></clipPath>
+</defs>
+<rect width="1200" height="820" fill="#f7f8f5"/>
+<text x="60" y="56" font-family="DejaVu Sans" font-size="29" font-weight="bold" fill="#172b33">OX-24 · First City canopy asset choice</text>
+<text x="60" y="86" font-family="DejaVu Sans" font-size="16" fill="#48606a">Proposed artwork board · illustrative composition, not an installed capture</text>
+<g transform="translate(65 130)">
+ <rect width="500" height="560" rx="14" fill="white" stroke="#b4c1bf" stroke-width="2"/>
+ <text x="18" y="36" font-family="DejaVu Sans" font-size="21" fill="#172b33">A · existing canopy asset</text>
+ <g transform="translate(18 56)" clip-path="url(#sceneClip)"><rect width="464" height="440" fill="url(#sky)"/><use href="#city" transform="translate(0 0)"/><rect y="350" width="464" height="90" fill="url(#ground)"/><g fill="#173d3a"><use href="#leaf" x="5" y="378"/><use href="#leaf" x="97" y="393"/><use href="#leaf" x="183" y="412"/><use href="#leaf" x="296" y="404"/><use href="#leaf" x="425" y="380"/></g><path d="M0 417 Q200 363 464 423 V440H0Z" fill="#12332f"/></g>
+ <text x="18" y="530" font-family="DejaVu Sans" font-size="16" fill="#48606a">Deep green foreground foliage</text>
+</g>
+<g transform="translate(635 130)">
+ <rect width="500" height="560" rx="14" fill="white" stroke="#b4c1bf" stroke-width="2"/>
+ <text x="18" y="36" font-family="DejaVu Sans" font-size="21" fill="#172b33">B · proposed alternate asset</text>
+ <g transform="translate(18 56)" clip-path="url(#sceneClip)"><rect width="464" height="440" fill="url(#sky)"/><use href="#city"/><rect y="350" width="464" height="90" fill="url(#ground)"/><g fill="#587247"><use href="#leaf" x="5" y="378"/><use href="#leaf" x="97" y="393"/><use href="#leaf" x="183" y="412"/><use href="#leaf" x="296" y="404"/><use href="#leaf" x="425" y="380"/></g><path d="M0 417 Q200 363 464 423 V440H0Z" fill="#3d5e3f"/><g fill="#ba9c55"><circle cx="60" cy="347" r="5"/><circle cx="132" cy="362" r="4"/><circle cx="347" cy="373" r="5"/><circle cx="412" cy="348" r="4"/></g></g>
+ <text x="18" y="530" font-family="DejaVu Sans" font-size="16" fill="#48606a">Lighter olive foliage, restrained warm accents</text>
+</g>
+<text x="65" y="745" font-family="DejaVu Sans" font-size="17" fill="#263c45">Both states: identical sky, city, weather facts, timeline, CANOPY identity, pass depth, and geometry.</text>
+<text x="65" y="775" font-family="DejaVu Sans" font-size="16" fill="#526b72">Only the canopy artwork changes. Returning to A is an authored asset choice.</text>
+</svg>

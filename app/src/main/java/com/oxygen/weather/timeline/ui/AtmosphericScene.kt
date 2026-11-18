@@ -30,6 +30,7 @@ import com.oxygen.weather.timeline.presentation.scene.CityCloudAppearance
 import com.oxygen.weather.timeline.presentation.scene.CityPrecipitation
 import com.oxygen.weather.timeline.presentation.scene.FirstCityDepthGroup
 import com.oxygen.weather.timeline.presentation.scene.FirstCityComposition
+import com.oxygen.weather.timeline.presentation.scene.FirstCityCanopyAsset
 import com.oxygen.weather.timeline.presentation.scene.FirstCityElementId
 import com.oxygen.weather.timeline.presentation.scene.FirstCityLayer
 import com.oxygen.weather.timeline.presentation.scene.FirstCityTheme
@@ -85,7 +86,11 @@ fun CatalogAtmosphericScene(
     modifier: Modifier = Modifier,
 ) {
     val architecture = ImageBitmap.imageResource(R.drawable.sg2_city_architecture)
-    val canopy = ImageBitmap.imageResource(R.drawable.sg2_city_canopy)
+    val canopyAsset = composition.canopyRenderInput().asset
+    val canopy = ImageBitmap.imageResource(when (canopyAsset) {
+        FirstCityCanopyAsset.BASELINE -> R.drawable.sg2_city_canopy
+        FirstCityCanopyAsset.OLIVE -> R.drawable.sg2_city_canopy_olive
+    })
     val reducedMotion = !ValueAnimator.areAnimatorsEnabled()
     Canvas(modifier.fillMaxSize()) {
         composition.layerOrder.forEach { layer ->
