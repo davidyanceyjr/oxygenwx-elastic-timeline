@@ -1,6 +1,6 @@
 # Cycle plan — 160-ox30-scene-pack-builder
 
-State: PLANNED
+State: CLOSED
 Plan maturity: FINAL
 Cycle ID: `160-ox30-scene-pack-builder`
 Roadmap items: OX-30
@@ -25,7 +25,7 @@ The activation command rejects incomplete or unapproved records.
       "depends_on": [
         "OX-53"
       ],
-      "status": "PLANNED",
+      "status": "DONE",
       "exit": "One documented invocation builds a self-contained non-executable artifact from the baseline source, preserving exact manifest and PNG bytes at their required paths; successful output reports artifact path and manifest version, while rejected input reports its path and reason without reporting success.",
       "boards": {
         "behavior": {
@@ -61,10 +61,28 @@ The activation command rejects incomplete or unapproved records.
           "artifacts": []
         }
       },
-      "outcome": null,
-      "evidence": []
+      "outcome": "One documented invocation builds the baseline source into a self-contained non-executable ZIP preserving exact manifest and PNG bytes; success reports artifact path and manifest version, and rejected sources report the offending input and reason without a successful artifact.",
+      "evidence": [
+        ".codex/test-artifacts/160-ox30-scene-pack-builder/README.md",
+        ".codex/test-artifacts/160-ox30-scene-pack-builder/first-city-canopy-baseline-v2.zip",
+        "docs/SCENE_PACK_BUILDER.md"
+      ]
     }
-  ]
+  ],
+  "closeout": {
+    "closed_on": "2026-11-19",
+    "summary": "OX-30 is complete. Added and documented a local builder that validates the approved baseline manifest and asset, writes a self-contained non-executable ZIP, and reports readable success or rejection results. The baseline artifact and exact verification evidence are preserved under .codex/test-artifacts/160-ox30-scene-pack-builder/. OX-54 remains responsible for canonical pack identity and reproducibility.",
+    "verification": [
+      "python -m unittest discover -s scripts/tests -p 'test_scene_pack_builder.py' — PASS; 7 focused command-level tests.",
+      "python scripts/build_scene_pack.py --source docs/scene-pack-examples/first-city-canopy-baseline --output .codex/test-artifacts/160-ox30-scene-pack-builder/first-city-canopy-baseline-v2.zip — PASS; artifact reported with manifestVersion=2.",
+      "python -m zipfile -l .codex/test-artifacts/160-ox30-scene-pack-builder/first-city-canopy-baseline-v2.zip — PASS; exact two members listed; Python runpy warning recorded in evidence.",
+      "Direct ZIP inspection — PASS; exact payload bytes and non-executable entry modes verified, with command and output recorded in evidence README.",
+      "python scripts/dev.py workflow — PASS at ACTIVE / CLOSEOUT before archival.",
+      "git diff --check — PASS; separate trailing-whitespace scan reported none.",
+      "Final tracked and untracked implementation, test, documentation, evidence, and artifact review — PASS."
+    ],
+    "evidence_directory": ".codex/test-artifacts/160-ox30-scene-pack-builder/"
+  }
 }
 ```
 <!-- cycle-manifest:end -->
@@ -80,8 +98,8 @@ Update this record at every stage boundary. Keep its next-stage read set exact.
   "slice_ids": [
     "OX-30"
   ],
-  "stage": "REVIEW",
-  "prior_cycle_state": "PLANNED",
+  "stage": "CLOSEOUT",
+  "prior_cycle_state": "ACTIVE",
   "accepted_boards": [
     ".codex/concepts/OX-30-scene-pack-builder-behavior-board.dot",
     ".codex/concepts/OX-30-scene-pack-builder-behavior-board.svg",
@@ -93,12 +111,16 @@ Update this record at every stage boundary. Keep its next-stage read set exact.
     "Product-owner approval for the exact four-file OX-30 behavior package is recorded; all fingerprints match current files",
     "Pre-approval status wording in the companion is treated as stale under the OX-02 and OX-06 review precedents; the approved package remains unchanged",
     "UI artwork is inapplicable because the local build operation changes no visible app output",
-    "Full OX-30 plan review completed with the approved board constraints, scoped verification, evidence target, risks, and exclusions recorded"
+    "Full OX-30 plan review completed with the approved board constraints, scoped verification, evidence target, risks, and exclusions recorded",
+    "all_slice_boards_approved",
+    "final_plan_reviewed",
+    "OX-30 exit is evidenced and the slice is recorded DONE."
   ],
   "decisions": [
     "The recorded owner approval covers the unchanged fingerprinted package; do not edit the approved board files or reopen the gate for stale status wording",
     "The baseline source inventory and rejection behavior follow the approved board and OX-51 contracts",
-    "Container format, CLI shape, and output path remain implementation choices; OX-54 owns canonical pack identity and reproducibility"
+    "Container format, CLI shape, and output path remain implementation choices; OX-54 owns canonical pack identity and reproducibility",
+    "Use a stored ZIP with regular non-executable entries; make no canonical pack identity or reproducibility claim."
   ],
   "open_questions": [],
   "completed_outputs": [
@@ -106,29 +128,31 @@ Update this record at every stage boundary. Keep its next-stage read set exact.
     "Recorded product-owner approval for the unchanged four-file OX-30 behavior package and verified its fingerprints",
     "Completed full plan review and made source inventory, rejection coverage, and focused verification obligations explicit",
     "python scripts/dev.py workflow — PASS after the final plan/checkpoint update",
-    "git diff --check — PASS; the untracked plan file was also checked for trailing whitespace"
+    "git diff --check — PASS; the untracked plan file was also checked for trailing whitespace",
+    "Activated OX-30 for execution.",
+    "Closed slice OX-30 as DONE.",
+    "Implemented and documented the OX-30 local scene-pack builder; the baseline ZIP artifact preserves both required payloads exactly.",
+    "Added focused command-level acceptance checks and recorded actual evidence under .codex/test-artifacts/160-ox30-scene-pack-builder/.",
+    "Cycle closeout summary and verification archived."
   ],
-  "evidence": [],
+  "evidence": [
+    ".codex/test-artifacts/160-ox30-scene-pack-builder/README.md",
+    ".codex/test-artifacts/160-ox30-scene-pack-builder/first-city-canopy-baseline-v2.zip",
+    "docs/SCENE_PACK_BUILDER.md",
+    ".codex/history/160-ox30-scene-pack-builder.md"
+  ],
   "next_stage_read_set": [
+    "AGENTS.md",
     ".codex/current.md",
-    ".codex/README.md",
     ".codex/plans/160-ox30-scene-pack-builder.md",
-    ".codex/concepts/OX-30-scene-pack-builder-behavior-board.dot",
-    ".codex/concepts/OX-30-scene-pack-builder-behavior-board.svg",
-    ".codex/concepts/OX-30-scene-pack-builder-behavior-board.png",
-    ".codex/concepts/OX-30-scene-pack-builder-behavior-board.md",
-    ".codex/test-artifacts/159-ox53-example-pack-manifests/README.md",
     "docs/ROADMAP.md",
-    "docs/SCENE_PACK_MANIFEST_V2.md",
-    "docs/SCENE_PACK_ASSET_REFERENCES.md",
-    "docs/SCENE_PACK_RENDERER_COMPATIBILITY.md",
-    "docs/scene-pack-examples/first-city-canopy-baseline/manifest.json",
-    "docs/scene-pack-examples/first-city-canopy-baseline/assets/first-city/canopy/baseline.png",
-    "scripts/dev.py",
-    "scripts/tests/test_scene_pack_manifest_v2_examples_contract.py",
-    "scripts/tests/test_scene_pack_asset_reference_contract.py"
+    "docs/SCENE_PACK_BUILDER.md",
+    "scripts/build_scene_pack.py",
+    "scripts/tests/test_scene_pack_builder.py",
+    ".codex/test-artifacts/160-ox30-scene-pack-builder/README.md",
+    ".codex/test-artifacts/160-ox30-scene-pack-builder/first-city-canopy-baseline-v2.zip"
   ],
-  "next_action": "Leave cycle 160 PLANNED and unactivated; owner-directed activation may begin execution of OX-30 under the finalized scope"
+  "next_action": "Inspect the complete diff, confirm exact verification and evidence records, then archive cycle 160."
 }
 ```
 <!-- cycle-checkpoint:end -->
