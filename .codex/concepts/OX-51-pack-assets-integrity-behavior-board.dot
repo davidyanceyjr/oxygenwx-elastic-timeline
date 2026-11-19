@@ -1,0 +1,39 @@
+digraph OX51 {
+  graph [
+    label="OX-51 | Scene-pack asset references and integrity\nPROPOSAL FOR PRODUCT OWNER REVIEW • 2026-11-19",
+    labelloc=t,
+    fontsize=21,
+    fontname="DejaVu Sans",
+    bgcolor="#f6f9fc",
+    pad=.35,
+    ranksep=.55,
+    nodesep=.38,
+    splines=ortho
+  ];
+  node [shape=box, style="rounded,filled", fontname="DejaVu Sans", fontsize=11, color="#3e6078", fillcolor="#ffffff", margin=".18,.13"];
+  edge [fontname="DejaVu Sans", fontsize=10, color="#4a6c82", arrowsize=.75];
+
+  prior [label="ESTABLISHED · OX-20\nmanifestVersion 1 is a closed, four-field identity contract.\nFuture fields require a new manifestVersion.", fillcolor="#dceefa"];
+  source [label="REAL EXAMPLE · OX-24\nFirst City CANOPY OLIVE\n1024 × 1536 RGBA PNG\nSHA-256 of current bytes:\n60885b635567d5e4ec4d4b8d1cb6c86ed4629ec9f003d1ef134e72823869550d", fillcolor="#fff1d8"];
+  version [label="PROPOSAL · PRESERVE THE VERSION BOUNDARY\nOX-51 defines an asset-reference record separately.\nOX-53 integrates it into an asset-bearing manifest\nwith the required manifestVersion change.", fillcolor="#e9e3f3"];
+  ref [label="PROPOSED ASSET REFERENCE\nrefId: first-city-canopy-olive\npath: assets/first-city/canopy/olive.png\nmediaType: image/png\nsha256: required lowercase 64-hex digest of exact file bytes\nNo font is needed by this real variant.", fillcolor="#ddf0e4"];
+
+  pathcheck [label="PROPOSED PATH RULE\nCanonical slash-separated relative path.\nReject absolute/drive/URI paths, backslashes, empty, dot,\nor parent segments, missing files, and any resolved escape\noutside the pack root.\nOPEN FOR OWNER REVIEW: symlink policy; proposal is reject.", fillcolor="#e7f3e8"];
+  contentcheck [label="PROPOSED CONTENT RULE\nPNG is the only type needed by this example.\nReject unsupported types and missing digests.\nCompare SHA-256 over exact asset bytes; reject mismatch.\nA matching digest proves content integrity, not origin or entitlement.", fillcolor="#e7f3e8"];
+  accept [label="CONTRACT EXAMPLE ACCEPTS\nA copied OX-24 olive PNG resolves at its relative path\ninside the sample pack root and matches its declared digest.\nThis is a design-time example, not runtime loading.", fillcolor="#dff0e1"];
+  reject [label="CONTRACT EXAMPLE REJECTS\nAbsolute or escaping path · missing asset · unsupported type\nmissing digest · mismatched digest\nNo partial asset set or scene activation is implied.", fillcolor="#fbe8e3", color="#ad6c60"];
+
+  owner [shape=note, fillcolor="#f2edf7", label="PROPOSED OWNERSHIP · NO THRESHOLDS\nOX-91 resource validation enforces path and per-resource size limits before activation.\nOX-52 defines budget categories and cross-layer enforcement.\nChoose numeric thresholds only from runtime evidence."];
+  boundary [shape=note, fillcolor="#f2edf7", label="LATER WORK\nOX-30 builds packs · OX-53 finalizes complete manifests\nOX-52 sets capability/trust policy · OX-91 validates resources\nNo runtime loader, installer, UI change, Park, or weather interpretation in OX-51."];
+
+  prior -> version [label="keep v1 closed"];
+  source -> ref [label="one actual PNG"];
+  version -> ref [label="record contract"];
+  ref -> pathcheck [label="resolve from pack root"];
+  pathcheck -> contentcheck [label="confined + present", color="#39704d"];
+  pathcheck -> reject [label="absolute / escape / missing", color="#a35a50"];
+  contentcheck -> accept [label="supported + digest matches", color="#39704d"];
+  contentcheck -> reject [label="unsupported / missing / mismatch", color="#a35a50"];
+  contentcheck -> owner [style=dashed, arrowhead=none];
+  ref -> boundary [style=dotted, arrowhead=none];
+}

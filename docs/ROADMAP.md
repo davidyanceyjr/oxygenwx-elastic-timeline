@@ -1257,13 +1257,15 @@ The SG workstream follows the owner-directed pivot recorded above and is grounde
 
 **Owner sequencing decision (2026-11-19):** The owner selected OX-20 for `oxygen-plan-next-slice` after OX-19 closed. OX-19 and OX-92 are `DONE`. Board preparation and cycle intake do not approve the board or authorize implementation.
 
-### OX-51 — Define assets and integrity references for scene packs — PLANNED
+### OX-51 — Define assets and integrity references for scene packs — NEXT
 
 **Objective/scope:** Define relative, pack-root-confined asset references and supported asset/font types required by one real variant. Establish missing/mismatched digest outcomes and define which layer owns resource-size and path limits; do not pick arbitrary thresholds before runtime evidence.
 **Depends on:** OX-20, OX-24.
 **Exit:** A real example resolves every asset inside its pack root; escaped/absolute paths, unsupported asset types and missing/digest-mismatched resources have explicit reject dispositions.
-**Evidence:** Future cycle-specific `.codex/test-artifacts/<cycle-id>/` and `.codex/history/<cycle-id>.md`; assign exact paths only when the slice is planned. Do not claim unperformed checks.
-**Slice board(s):** Objective-specific behavior/contract board pending; UI artwork board only if approved scope changes visible output. Owner approval required.
+**Evidence:** Cycle 157 targets `.codex/test-artifacts/157-ox51-pack-assets-integrity/README.md` and `.codex/history/157-ox51-pack-assets-integrity.md`; no evidence is claimed yet.
+**Slice board(s):** Product-owner-approved behavior/contract package on 2026-11-19: `.codex/concepts/OX-51-pack-assets-integrity-behavior-board.dot`, `.svg`, `.png`, and `.md`; cycle 157 records fingerprints. The board governs the asset-reference fields, closed OX-20 manifest v1 boundary, canonical pack-root-confined paths and symlink rejection, exact-byte SHA-256, the OX-24 PNG example, and OX-52/OX-91 limit ownership. UI artwork does not apply because this contract/documentation slice does not change visible output. Approval does not authorize implementation.
+
+**Owner sequencing decision (2026-11-19):** After OX-20 and OX-24 closed, the owner selected OX-51 as the sole global `NEXT` for cycle 157 planning. Focused slice-specific tests are authorized. This selection starts board preparation; it does not approve the board or authorize implementation.
 
 ### OX-52 — Define renderer capability compatibility and safe rejection — PLANNED
 
