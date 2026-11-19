@@ -1247,13 +1247,15 @@ The SG workstream follows the owner-directed pivot recorded above and is grounde
 **Evidence:** Cycle 155 targets `.codex/test-artifacts/155-ox19-scene-choice-independence/` and `.codex/history/155-ox19-scene-choice-independence.md`; do not claim unperformed checks.
 **Slice board(s):** Product-owner-approved 2026-11-18 behavior package `.codex/concepts/OX-19-scene-choice-behavior-board.dot`, `.svg`, `.png`, and UI artwork `.codex/concepts/OX-19-scene-choice-ui-board.svg`; cycle 155 records fingerprints. The approved proposal adds a World control above the selected-place readout and a two-world chooser on the active catalog screen. Board approval does not activate implementation.
 
-### OX-20 — Define non-executable pack identity and manifest version — PLANNED
+### OX-20 — Define non-executable pack identity and manifest version — DONE
 
 **Objective/scope:** Define only the non-executable package identity, manifest version, world-definition reference and supported engine compatibility needed to describe existing First City/Open Landscape examples. No public editor or downloadable code.
 **Depends on:** OX-19, OX-92.
 **Exit:** One bounded versioned manifest schema has explicit valid/invalid examples and can name an existing authored world without meteorological interpretation or a Park dependency.
-**Evidence:** Future cycle-specific `.codex/test-artifacts/<cycle-id>/` and `.codex/history/<cycle-id>.md`; assign exact paths only when the slice is planned. Do not claim unperformed checks.
-**Slice board(s):** Objective-specific behavior/contract board pending; UI artwork board only if approved scope changes visible output. Owner approval required.
+**Evidence:** Cycle 156 contract review and verification are recorded in `.codex/test-artifacts/156-ox20-pack-identity-manifest/`; closeout is `.codex/history/156-ox20-pack-identity-manifest.md`.
+**Slice board(s):** Product-owner-approved 2026-11-19 behavior/contract package `.codex/concepts/OX-20-pack-identity-manifest-behavior-board.dot`, `.svg`, and `.png`; cycle 156 records fingerprints. UI artwork does not apply because this contract slice changes no visible app output. Approval does not activate implementation.
+
+**Owner sequencing decision (2026-11-19):** The owner selected OX-20 for `oxygen-plan-next-slice` after OX-19 closed. OX-19 and OX-92 are `DONE`. Board preparation and cycle intake do not approve the board or authorize implementation.
 
 ### OX-51 — Define assets and integrity references for scene packs — PLANNED
 

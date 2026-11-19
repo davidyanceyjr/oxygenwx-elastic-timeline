@@ -1,0 +1,21 @@
+digraph OX20 {
+  graph [label="OX-20 | Versioned, data-only scene-pack identity\nPROPOSAL FOR PRODUCT OWNER REVIEW • 2026-11-19", labelloc=t, fontsize=21, fontname="DejaVu Sans", bgcolor="#f6f9fc", pad=.35, ranksep=.65, nodesep=.4];
+  node [shape=box, style="rounded,filled", fontname="DejaVu Sans", fontsize=11, color="#3e6078", fillcolor="#ffffff", margin=".18,.13"];
+  edge [fontname="DejaVu Sans", fontsize=10, color="#4a6c82"];
+
+  authored [label="Existing authored worlds (OX-19, OX-92)\nFirst City / Minimal Open Landscape\nSame selected-instant weather decision", fillcolor="#dceefa"];
+  manifest [label="PROPOSED manifest v1 — data only\npackId: stable opaque package identity\nmanifestVersion: 1\nworldDefinitionRef: one named bundled definition\nengineCompatibility: supported contract version", fillcolor="#ddf0e4"];
+  accept [label="Accept as a contract example when\nall four required fields are present and well formed;\nmanifest version and engine contract are supported;\nworld reference names an existing authored world", fillcolor="#e7f3e8"];
+  reject [label="Reject as a contract example when\nidentity or world reference is absent/unknown;\nmanifest version or engine contract is unsupported;\nexecutable instructions or weather interpretation are embedded", fillcolor="#fbe8e3", color="#ad6c60"];
+  examples [label="Review examples\nVALID: first-city pack → First City definition\nVALID: open-landscape pack → Open Landscape definition\nINVALID: unknown definition / future version / missing identity\nExamples document schema; no runtime decode or activation", fillcolor="#fff1d8"];
+  invariant [label="Independent authority\nPlace, catalog revision, exact instant, forecast facts,\nprojection, and timeline remain outside pack identity", fillcolor="#dceefa"];
+  future [shape=note, fillcolor="#f2edf7", label="Deferred to later slices\nOX-51 assets, paths, digests; OX-52 capability/trust policy;\nOX-53 complete manifests; OX-30 build; OX-26 decode;\nOX-91 validation; OX-55 render; OX-57 install.\nNo Park, public editor, downloadable code, or UI change."];
+
+  authored -> manifest [label="name, do not migrate"];
+  manifest -> accept [label="supported"];
+  manifest -> reject [label="invalid / unsupported"];
+  accept -> examples;
+  reject -> examples;
+  authored -> invariant [style=dashed];
+  manifest -> future [style=dotted, arrowhead=none];
+}

@@ -1,0 +1,72 @@
+[
+  {
+    "label": "valid-first-city",
+    "expected": "valid",
+    "manifest": {
+      "packId": "first-city-sample",
+      "manifestVersion": 1,
+      "worldDefinitionRef": "first-city",
+      "engineCompatibility": 1
+    }
+  },
+  {
+    "label": "valid-minimal-open-landscape",
+    "expected": "valid",
+    "manifest": {
+      "packId": "open-landscape-sample",
+      "manifestVersion": 1,
+      "worldDefinitionRef": "minimal-open-landscape",
+      "engineCompatibility": 1
+    }
+  },
+  {
+    "label": "invalid-missing-identity",
+    "expected": "invalid",
+    "manifest": {
+      "manifestVersion": 1,
+      "worldDefinitionRef": "first-city",
+      "engineCompatibility": 1
+    }
+  },
+  {
+    "label": "invalid-unknown-world",
+    "expected": "invalid",
+    "manifest": {
+      "packId": "unknown-world-sample",
+      "manifestVersion": 1,
+      "worldDefinitionRef": "unknown-world",
+      "engineCompatibility": 1
+    }
+  },
+  {
+    "label": "invalid-unsupported-manifest-version",
+    "expected": "invalid",
+    "manifest": {
+      "packId": "future-manifest-sample",
+      "manifestVersion": 2,
+      "worldDefinitionRef": "first-city",
+      "engineCompatibility": 1
+    }
+  },
+  {
+    "label": "invalid-unsupported-engine-contract",
+    "expected": "invalid",
+    "manifest": {
+      "packId": "future-engine-sample",
+      "manifestVersion": 1,
+      "worldDefinitionRef": "first-city",
+      "engineCompatibility": 2
+    }
+  },
+  {
+    "label": "invalid-extra-weather-interpretation",
+    "expected": "invalid",
+    "manifest": {
+      "packId": "weather-rule-sample",
+      "manifestVersion": 1,
+      "worldDefinitionRef": "first-city",
+      "engineCompatibility": 1,
+      "weatherInterpretation": "replace-selected-forecast"
+    }
+  }
+]
