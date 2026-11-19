@@ -1267,13 +1267,15 @@ The SG workstream follows the owner-directed pivot recorded above and is grounde
 
 **Owner sequencing decision (2026-11-19):** After OX-20 and OX-24 closed, the owner selected OX-51 as the sole global `NEXT` for cycle 157 planning. Focused slice-specific tests are authorized. This selection starts board preparation; it does not approve the board or authorize implementation.
 
-### OX-52 — Define renderer capability compatibility and safe rejection — PLANNED
+### OX-52 — Define renderer capability compatibility and safe rejection — DONE
 
 **Objective/scope:** Define the bounded data-only trust boundary and versioned renderer capability policy. Required unknown capabilities reject; approved optional capabilities have an explicit omit/default policy. Reject executable payloads and record where decode, resource, extraction and memory budgets will be enforced. Content integrity is distinct from trusted origin and entitlement.
 **Depends on:** OX-20, OX-51, OX-36.
 **Exit:** A version/capability/trust matrix names allowed resource classes, rejection of unsafe or unsupported constructs and ownership of finite import/load budgets; free bundled scene is not entitlement-gated.
-**Evidence:** Future cycle-specific `.codex/test-artifacts/<cycle-id>/` and `.codex/history/<cycle-id>.md`; assign exact paths only when the slice is planned. Do not claim unperformed checks.
-**Slice board(s):** Objective-specific behavior/contract board pending; UI artwork board only if approved scope changes visible output. Owner approval required.
+**Evidence:** `.codex/test-artifacts/158-ox52-renderer-capability-trust/README.md`; cycle closeout history `.codex/history/158-ox52-renderer-capability-trust.md`.
+**Slice board(s):** Product-owner-approved 2026-11-19 behavior/contract package `.codex/concepts/OX-52-renderer-capability-trust-behavior-board.dot`, `.svg`, `.png`, and `.md`; cycle 158 records package fingerprints. The board constrains the OX-20 v1 closed boundary, separately versioned renderer policy, explicit optional fallbacks and fail-closed unknowns, declarative-only payloads with the evidence-backed PNG resource, integrity/origin/entitlement separation, and finite budget ownership across OX-26/OX-91/OX-57/OX-55. It leaves future manifest field spelling to OX-53 and does not expose internal Kotlin names as pack IDs. UI artwork does not apply because the slice changes no visible output. Approval does not authorize implementation.
+
+**Owner sequencing decision (2026-11-19):** After OX-51 closed, the owner selected OX-52 as the sole global `NEXT` for cycle 158 planning. Focused slice-specific tests are authorized; system and device tests are out of scope. Board preparation does not approve the board or authorize implementation.
 
 ### OX-53 — Finalize two evidence-based example pack manifests — PLANNED
 

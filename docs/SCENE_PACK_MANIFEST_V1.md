@@ -31,3 +31,11 @@ A record is a valid **v1 contract example** only when every member satisfies the
 Future envelope fields or changed required-field rules need a new `manifestVersion`; a reader of v1 must not silently treat an unknown required field as supported. A future engine contract value or capability policy needs an explicitly defined compatibility rule before it can be accepted. This document defines only the current value `1` for each version member. It does not define renderer capability IDs or optional-capability fallback behavior.
 
 This contract contains no asset paths, digests, resource types, import budgets, package builder, decoder, runtime validation, trust decision, installation, hot swap, UI, or Park reference. OX-51 owns assets and integrity references; OX-52 owns renderer capability and trust policy; OX-53 owns complete asset-bearing manifests; OX-30 owns building; OX-26 owns runtime decoding; OX-91 owns resource validation; OX-55 owns renderer instantiation; OX-57 owns installation. Their later rules must preserve this slice's separation of weather and scene identity.
+
+## Renderer policy relationship
+
+See [Scene-pack renderer compatibility and data-only trust policy](SCENE_PACK_RENDERER_COMPATIBILITY.md)
+for the separately versioned renderer capability registry and its trust and
+budget boundaries. This reference does not add a field to manifest v1 or
+change its closed four-field envelope; OX-53 owns integration under a later
+manifest version.

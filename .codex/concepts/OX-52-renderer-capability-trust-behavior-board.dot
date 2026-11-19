@@ -1,0 +1,47 @@
+digraph OX52 {
+  graph [
+    label="OX-52 | Renderer compatibility, data-only trust, and safe rejection\nPROPOSAL FOR PRODUCT OWNER REVIEW • 2026-11-19",
+    labelloc=t,
+    fontsize=18,
+    fontname="DejaVu Sans",
+    bgcolor="#f6f9fc",
+    pad=.35,
+    ranksep=.38,
+    nodesep=.42,
+    splines=polyline,
+    rankdir=TB
+  ];
+  node [shape=box, style="rounded,filled", fontname="DejaVu Sans", fontsize=12, color="#3e6078", fillcolor="#ffffff", margin=".22,.16"];
+  edge [fontname="DejaVu Sans", fontsize=10, color="#4a6c82", arrowsize=.72];
+
+  input [label="SCENE-PACK CANDIDATE\nManifest + declared data/assets\nNo pack-supplied execution", fillcolor="#fff1d8"];
+  versions [label="VERSION GATE\nOX-20 manifest v1 stays closed\nNew fields require a later manifest version\nRenderer capability registry has its own version\n(PROPOSED)", fillcolor="#dceefa"];
+  payload [label="DATA-ONLY PAYLOAD GATE\nSchema-defined declarative metadata\nRegistered asset media only\nEvidence-backed asset: image/png\nReject executable payloads and unknown types", fillcolor="#ddf0e4"];
+  capability [label="CAPABILITY GATE\nSupported required IDs → continue\nUnknown/unsupported required ID → reject\nKnown optional ID → only its registry fallback\nUnknown optional with no policy → reject (PROPOSED)", fillcolor="#e9e3f3"];
+  trust [label="SEPARATE TRUST DIMENSIONS\npackId = logical identity\nSHA-256 = byte integrity\nOrigin trust = separate provenance\nEntitlement = separate product decision\nNone implies another", fillcolor="#e8f0fa"];
+  budgets [label="FINITE BUDGET GATES · NO NUMERIC THRESHOLDS HERE\nOX-26: manifest decode/structure\nOX-91: path + per/aggregate resource limits\nOX-57: staged extraction/storage/working memory\nOX-55: candidate renderer load memory\nEach owner sets finite limits from evidence", fillcolor="#fff1d8"];
+  accept [label="VALIDATED DATA-ONLY CANDIDATE\nHandoff only after all required gates pass\nOX-36 weather decisions remain app-owned\nNo partial asset/scene activation", fillcolor="#dff0e1"];
+  reject [label="BOUNDED REJECTION\nBad version, unsupported requirement, unsafe\npayload, unknown resource, or exceeded budget\nNo code execution or partial commit/activation", fillcolor="#fbe8e3", color="#ad6c60"];
+  free [shape=note, fillcolor="#e4f1e5", label="INVARIANT\nThe bundled free scene remains available.\nPack identity, integrity, origin, and capabilities\ndo not create an entitlement gate."];
+  facts [shape=note, fillcolor="#f2edf7", label="ESTABLISHED INPUTS\nOX-20: manifest v1 is a closed identity contract.\nOX-51: SHA-256 proves byte integrity, not origin.\nOX-36: weather meaning remains in typed app decisions.\nInternal VEGETATION is not yet a public pack ID."];
+  owners [shape=note, fillcolor="#f2edf7", label="BOUNDARIES\nOX-26 decodes · OX-91 validates resources\nOX-57 stages import · OX-55 prepares renderer load\nThis slice defines policy only; later owners enforce it."];
+
+  { rank=same; capability; reject; }
+  { rank=same; trust; facts; }
+  { rank=same; budgets; owners; }
+  { rank=same; accept; free; }
+
+  input -> versions;
+  versions -> payload [label="supported schema"];
+  versions -> reject [label="unknown version / v1 extra field", color="#a35a50"];
+  payload -> capability [label="declared, non-executable data"];
+  payload -> reject [label="code / unsupported type", color="#a35a50"];
+  capability -> trust [label="requirements resolve"];
+  capability -> reject [label="required missing or unclassified", color="#a35a50"];
+  trust -> budgets [label="no inferred trust / entitlement"];
+  budgets -> accept [label="all finite limits pass", color="#39704d"];
+  budgets -> reject [label="any limit exceeded", color="#a35a50"];
+  accept -> free [style=dashed, arrowhead=none];
+  trust -> facts [style=dotted, arrowhead=none];
+  budgets -> owners [style=dotted, arrowhead=none];
+}

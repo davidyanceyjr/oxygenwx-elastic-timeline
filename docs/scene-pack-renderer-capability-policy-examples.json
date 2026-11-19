@@ -1,0 +1,264 @@
+{
+  "$comment": "OX-52 policy examples only. Every fixture_input key and synthetic capability ID below belongs to a test-only envelope; none is a proposed scene-pack manifest field, public capability ID, or OX-53 manifest example.",
+  "fixture_suite": "OX-52 renderer capability policy",
+  "examples": [
+    {
+      "case_id": "supported-version-set",
+      "fixture_input": {
+        "version_checks": {
+          "manifest_schema": {"value": 1, "supported": true},
+          "engine_contract": {"value": 1, "supported": true},
+          "renderer_policy": {"value": 1, "supported": true}
+        }
+      },
+      "expected_disposition": "accept",
+      "reason": "The three version concepts are supported independently."
+    },
+    {
+      "case_id": "unsupported-manifest-schema-version",
+      "fixture_input": {
+        "version_checks": {
+          "manifest_schema": {"value": 2, "supported": false},
+          "engine_contract": {"value": 1, "supported": true},
+          "renderer_policy": {"value": 1, "supported": true}
+        }
+      },
+      "expected_disposition": "reject",
+      "reason": "A reader does not reinterpret an unsupported manifest envelope."
+    },
+    {
+      "case_id": "unsupported-engine-contract-version",
+      "fixture_input": {
+        "version_checks": {
+          "manifest_schema": {"value": 1, "supported": true},
+          "engine_contract": {"value": 2, "supported": false},
+          "renderer_policy": {"value": 1, "supported": true}
+        }
+      },
+      "expected_disposition": "reject",
+      "reason": "An unsupported OX-20 identity-contract compatibility value rejects."
+    },
+    {
+      "case_id": "unsupported-renderer-policy-version",
+      "fixture_input": {
+        "version_checks": {
+          "manifest_schema": {"value": 1, "supported": true},
+          "engine_contract": {"value": 1, "supported": true},
+          "renderer_policy": {"value": 2, "supported": false}
+        }
+      },
+      "expected_disposition": "reject",
+      "reason": "An unsupported renderer capability registry version is not reinterpreted."
+    },
+    {
+      "case_id": "known-required-fixture-capability-supported",
+      "fixture_input": {
+        "capability_checks": [
+          {
+            "fixture_id": "test-only:required-supported",
+            "required": true,
+            "listed_in_fixture_registry": true,
+            "renderer_supports": true
+          }
+        ]
+      },
+      "expected_disposition": "accept",
+      "reason": "A required ID continues only when listed and supported; this is a synthetic fixture ID."
+    },
+    {
+      "case_id": "unknown-required-fixture-capability",
+      "fixture_input": {
+        "capability_checks": [
+          {
+            "fixture_id": "test-only:required-unknown",
+            "required": true,
+            "listed_in_fixture_registry": false,
+            "renderer_supports": false
+          }
+        ]
+      },
+      "expected_disposition": "reject",
+      "reason": "Unknown required IDs fail closed."
+    },
+    {
+      "case_id": "known-required-fixture-capability-unsupported-by-renderer",
+      "fixture_input": {
+        "capability_checks": [
+          {
+            "fixture_id": "test-only:required-not-rendered",
+            "required": true,
+            "listed_in_fixture_registry": true,
+            "renderer_supports": false
+          }
+        ]
+      },
+      "expected_disposition": "reject",
+      "reason": "A registry entry alone does not claim support from the selected renderer."
+    },
+    {
+      "case_id": "optional-fixture-capability-explicitly-omitted",
+      "fixture_input": {
+        "capability_checks": [
+          {
+            "fixture_id": "test-only:optional-omit",
+            "required": false,
+            "listed_in_fixture_registry": true,
+            "renderer_supports": true,
+            "optional_policy": {"action": "omit"}
+          }
+        ]
+      },
+      "expected_disposition": "accept",
+      "reason": "A known optional ID may be omitted only when that exact policy is explicit; this is not a registry v1 entry."
+    },
+    {
+      "case_id": "optional-fixture-capability-explicit-default",
+      "fixture_input": {
+        "capability_checks": [
+          {
+            "fixture_id": "test-only:optional-default",
+            "required": false,
+            "listed_in_fixture_registry": true,
+            "renderer_supports": true,
+            "optional_policy": {"action": "default", "value": "test-only-neutral-value"}
+          }
+        ]
+      },
+      "expected_disposition": "accept",
+      "reason": "A default must be an exact value assigned to that ID; this is not a registry v1 entry."
+    },
+    {
+      "case_id": "known-optional-fixture-capability-without-policy",
+      "fixture_input": {
+        "capability_checks": [
+          {
+            "fixture_id": "test-only:optional-no-policy",
+            "required": false,
+            "listed_in_fixture_registry": true,
+            "renderer_supports": true
+          }
+        ]
+      },
+      "expected_disposition": "reject",
+      "reason": "A known optional ID without its own explicit omit/default behavior has no generic fallback."
+    },
+    {
+      "case_id": "unknown-optional-fixture-capability-without-policy",
+      "fixture_input": {
+        "capability_checks": [
+          {
+            "fixture_id": "test-only:optional-unknown",
+            "required": false,
+            "listed_in_fixture_registry": false,
+            "renderer_supports": false
+          }
+        ]
+      },
+      "expected_disposition": "reject",
+      "reason": "An unknown optional ID with no explicit registry policy rejects."
+    },
+    {
+      "case_id": "schema-defined-declarative-metadata",
+      "fixture_input": {"payload_class": "schema_defined_declarative_metadata"},
+      "expected_disposition": "accept",
+      "reason": "Only metadata defined by the applicable contract version is accepted."
+    },
+    {
+      "case_id": "evidence-backed-image-resource",
+      "fixture_input": {"resource_media_type": "image/png"},
+      "expected_disposition": "accept",
+      "reason": "image/png is the evidence-backed registered asset type."
+    },
+    {
+      "case_id": "unsupported-font-resource",
+      "fixture_input": {"resource_media_type": "font/otf"},
+      "expected_disposition": "reject",
+      "reason": "No font media type is established by the current real variant."
+    },
+    {
+      "case_id": "unknown-resource-type",
+      "fixture_input": {"resource_media_type": "application/octet-stream"},
+      "expected_disposition": "reject",
+      "reason": "Unregistered asset media types reject."
+    },
+    {
+      "case_id": "pack-supplied-executable-payload",
+      "fixture_input": {"payload_class": "pack_supplied_executable"},
+      "expected_disposition": "reject",
+      "reason": "Scripts, bytecode, native libraries, callbacks, and other executable behavior reject."
+    },
+    {
+      "case_id": "identity-integrity-origin-entitlement-remain-separate",
+      "fixture_input": {
+        "trust_signals": {
+          "logical_identity": {"establishes": "logical_pack_identity"},
+          "content_digest": {"establishes": "exact_byte_integrity"},
+          "origin_provenance": {"establishes": "trusted_origin_only"},
+          "entitlement_decision": {"establishes": "entitlement_only"}
+        },
+        "implied_relationships": []
+      },
+      "expected_disposition": "classification_only",
+      "reason": "The example records distinct meanings and does not infer one trust signal from another."
+    },
+    {
+      "case_id": "all-finite-budget-owners-within-limits",
+      "fixture_input": {
+        "budget_checks": [
+          {"category": "manifest_decode_structure", "owner": "OX-26", "limit_is_finite": true, "over_limit": false},
+          {"category": "referenced_resources", "owner": "OX-91", "limit_is_finite": true, "over_limit": false},
+          {"category": "package_extraction", "owner": "OX-57", "limit_is_finite": true, "over_limit": false},
+          {"category": "renderer_load_memory", "owner": "OX-55", "limit_is_finite": true, "over_limit": false}
+        ]
+      },
+      "expected_disposition": "accept",
+      "reason": "Each finite budget is checked at its named owner; these fixtures set no numeric thresholds."
+    },
+    {
+      "case_id": "manifest-decode-budget-exceeded",
+      "fixture_input": {
+        "budget_checks": [
+          {"category": "manifest_decode_structure", "owner": "OX-26", "limit_is_finite": true, "over_limit": true}
+        ],
+        "reject_whole_candidate": true
+      },
+      "expected_disposition": "reject",
+      "reason": "Decode size or structural-work limits reject before a typed result is returned."
+    },
+    {
+      "case_id": "referenced-resource-budget-exceeded",
+      "fixture_input": {
+        "budget_checks": [
+          {"category": "referenced_resources", "owner": "OX-91", "limit_is_finite": true, "over_limit": true}
+        ],
+        "reject_whole_candidate": true
+      },
+      "expected_disposition": "reject",
+      "reason": "Resource limits reject the candidate before activation; no partial asset set activates."
+    },
+    {
+      "case_id": "package-extraction-budget-exceeded",
+      "fixture_input": {
+        "budget_checks": [
+          {"category": "package_extraction", "owner": "OX-57", "limit_is_finite": true, "over_limit": true}
+        ],
+        "reject_whole_candidate": true,
+        "commit_candidate": false
+      },
+      "expected_disposition": "reject",
+      "reason": "Extraction limits abort staged work before commit."
+    },
+    {
+      "case_id": "renderer-load-budget-exceeded",
+      "fixture_input": {
+        "budget_checks": [
+          {"category": "renderer_load_memory", "owner": "OX-55", "limit_is_finite": true, "over_limit": true}
+        ],
+        "reject_whole_candidate": true,
+        "activate_candidate": false
+      },
+      "expected_disposition": "reject",
+      "reason": "Renderer memory limits reject the candidate before scene activation."
+    }
+  ]
+}

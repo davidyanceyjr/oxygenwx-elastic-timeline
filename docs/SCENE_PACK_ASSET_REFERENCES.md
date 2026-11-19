@@ -47,6 +47,9 @@ owns capability and trust policy, including budget categories and their
 cross-layer enforcement. OX-51 sets no path-length, resource-size, or
 aggregate-budget thresholds.
 
+For the broader resource-class, renderer-capability, trust, and finite-budget
+policy, see [Scene-pack renderer compatibility and data-only trust policy](SCENE_PACK_RENDERER_COMPATIBILITY.md).
+
 This is a declarative contract. It does not implement pack loading, building,
 decoding, runtime validation, resource activation, rendering, or installation.
 Asset integrity remains separate from pack identity, archive identity, trusted
