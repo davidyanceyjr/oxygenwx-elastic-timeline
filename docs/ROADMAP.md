@@ -1287,13 +1287,15 @@ The SG workstream follows the owner-directed pivot recorded above and is grounde
 
 **Owner sequencing decision (2026-11-19):** After OX-52 closed, the owner requested `oxygen-plan-next-slice` for OX-53. OX-53 is the sole global `NEXT` for cycle 159 planning. Focused slice-specific tests are authorized; system and device tests are out of scope. Selection does not approve the board, finalize a plan, or authorize implementation.
 
-### OX-30 — Build one versioned declarative scene-pack artifact — PLANNED
+### OX-30 — Build one versioned declarative scene-pack artifact — NEXT
 
 **Objective/scope:** Implement a developer-facing local build operation converting one source manifest and its approved assets into one self-contained, non-executable pack. No app installation, downloader or storefront.
 **Depends on:** OX-53.
 **Exit:** One documented invocation produces a versioned pack artifact with the expected manifest and asset payload; validation failures have a readable build result.
-**Evidence:** Future cycle-specific `.codex/test-artifacts/<cycle-id>/` and `.codex/history/<cycle-id>.md`; assign exact paths only when the slice is planned. Do not claim unperformed checks.
-**Slice board(s):** Objective-specific behavior/contract board pending; UI artwork board only if approved scope changes visible output. Owner approval required.
+**Evidence:** Cycle 160 targets `.codex/test-artifacts/160-ox30-scene-pack-builder/` and `.codex/history/160-ox30-scene-pack-builder.md`; no verification is claimed yet.
+**Slice board(s):** Product-owner-approved behavior/contract package on 2026-11-19: `.codex/concepts/OX-30-scene-pack-builder-behavior-board.dot`, `.svg`, `.png`, and `.md`; cycle 160 records package fingerprints. The board governs one local declarative artifact from the OX-53 First City baseline source, source validation and readable build results, with runtime import/activation and pack-content identity left to later slices. UI artwork does not apply because this developer-facing build operation changes no visible app output. Approval does not authorize implementation.
+
+**Owner sequencing decision (2026-11-19):** The owner selected OX-30 for `oxygen-plan-next-slice` after OX-53 closed. OX-53 is the direct DONE dependency; OX-52, OX-92, and OX-24 are DONE inputs through OX-53. Focused slice-specific tests are authorized; system and device tests are out of scope. Selection and cycle intake do not approve the board or authorize implementation.
 
 ### OX-54 — Prove reproducible pack builds and a distinct variant — PLANNED
 

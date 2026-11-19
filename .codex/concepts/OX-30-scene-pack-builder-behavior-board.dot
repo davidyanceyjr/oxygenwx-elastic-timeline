@@ -1,0 +1,17 @@
+digraph OX30 {
+  graph [label="OX-30 | One declarative scene-pack build", labelloc=t, fontsize=22, fontname="DejaVu Sans", bgcolor="#f7f8fb", pad="0.3", ranksep="0.5"];
+  node [shape=box, style="rounded,filled", fillcolor=white, color="#384960", fontname="DejaVu Sans", fontsize=12, margin="0.16,0.12"];
+  edge [color="#384960", fontname="DejaVu Sans", fontsize=10];
+  source [label="Developer invocation\nOX-53 First City baseline source root\nmanifest.json + referenced PNG", fillcolor="#e5f0ff"];
+  inspect [label="Builder preflight\nRead closed manifest v2 fields\nCheck required files and OX-51 paths\nCheck image/png and exact-byte SHA-256\nReject undeclared or executable payloads"];
+  decision [shape=diamond, label="Valid source?", fillcolor="#fff4d6"];
+  pack [label="Build one self-contained artifact\nVersioned manifest at pack root\nReferenced asset at its declared relative path\nData-only payload", fillcolor="#e7f5ea"];
+  success [label="Readable success result\nArtifact path and manifest version\nDocumented one-command invocation", fillcolor="#d6efdc"];
+  failure [label="Readable failure result\nNo successful pack artifact\nIdentify rejected input and reason", fillcolor="#ffe5e1"];
+  future [label="Later slices: OX-54 canonical content identity / reproducibility;\nOX-26 typed decode; OX-91 runtime resource validation;\nOX-57 install; OX-55 renderer activation", fillcolor="#ececf3", color="#798396"];
+  source -> inspect -> decision;
+  decision -> pack [label="yes"];
+  decision -> failure [label="no"];
+  pack -> success;
+  success -> future [style=dashed, label="artifact for later proof"];
+}
