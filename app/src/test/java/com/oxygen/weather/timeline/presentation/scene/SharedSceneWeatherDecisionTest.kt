@@ -22,6 +22,25 @@ import org.junit.Test
 class SharedSceneWeatherDecisionTest {
     private val zone = ZoneId.of("America/Chicago")
 
+    @Test fun `reversible world composition keeps the precise reading and weather evidence`() = runBlocking {
+        val selected = Instant.parse("2026-10-04T15:30:00.123456789Z")
+        val reading = sg4Reading(selected)
+        val firstCity = FirstCityTheme.compose(reading, zone)
+        val landscape = MinimalOpenLandscapeTheme.compose(SceneWeatherDecision.resolve(reading, zone))
+        val returnedCity = FirstCityTheme.compose(reading, zone)
+
+        assertEquals(selected, firstCity.selectedInstant)
+        assertEquals(selected, landscape.selectedInstant)
+        assertEquals(selected, returnedCity.selectedInstant)
+        assertSame(reading, firstCity.weatherDecision.reading)
+        assertSame(reading, landscape.weatherDecision.reading)
+        assertSame(reading, returnedCity.weatherDecision.reading)
+        assertEquals(firstCity.precipitation, landscape.precipitation)
+        assertEquals(firstCity.precipitation, returnedCity.precipitation)
+        assertEquals(firstCity.weatherDecision.reading.conditions,
+            landscape.weatherDecision.reading.conditions)
+    }
+
     @Test fun `both vegetation adapters consume the shared declaration shape and decision`() = runBlocking {
         val selected = Instant.parse("2026-10-04T15:30:00Z")
         val decision = SceneWeatherDecision.resolve(sg4Reading(selected), zone)

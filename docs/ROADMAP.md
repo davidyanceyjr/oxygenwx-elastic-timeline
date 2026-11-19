@@ -1237,13 +1237,15 @@ The SG workstream follows the owner-directed pivot recorded above and is grounde
 **Slice board(s):** Product-owner-approved 2026-11-18 behavior/contract package `.codex/concepts/OX-41-park-role-composition-behavior-board.dot`, `.svg`, and `.png`; cycle 154 records package fingerprints. UI artwork does not apply because this decision slice changes no app output. Approval does not activate implementation.
 **Owner role decision (2026-11-18):** The Living Urban Park is the bundled free default (board option A). First City and Open Landscape remain available as other bundled worlds. This records product intent; it does not change the current app default or implement switching.
 
-### OX-19 — Separate scene choice from weather location and selected time — PLANNED
+**Owner sequencing decision (2026-11-18):** The owner selected OX-19 for `oxygen-plan-next-slice` after OX-41 closed. OX-19 is the sole global `NEXT`; OX-92 and OX-18 are `DONE`. Focused slice-specific tests are authorized; system and device tests are out of scope. Selection does not approve boards or authorize implementation.
+
+### OX-19 — Separate scene choice from weather location and selected time — DONE
 
 **Objective/scope:** Make world selection independent of place, active catalog revision and exact selected instant, using the two already bundled existing worlds. No Park, local pack storage, payment or Settings needed.
 **Depends on:** OX-92, OX-18.
 **Exit:** In-session switch between bundled First City and Open Landscape keeps place, catalog revision, precise instant and forecast behavior unchanged, with no switch-triggered fetch or process/Activity restart.
-**Evidence:** Future cycle-specific `.codex/test-artifacts/<cycle-id>/` and `.codex/history/<cycle-id>.md`; assign exact paths only when the slice is planned. Do not claim unperformed checks.
-**Slice board(s):** Objective-specific behavior board and UI artwork board pending for the affected installed states. Owner approval required.
+**Evidence:** Cycle 155 targets `.codex/test-artifacts/155-ox19-scene-choice-independence/` and `.codex/history/155-ox19-scene-choice-independence.md`; do not claim unperformed checks.
+**Slice board(s):** Product-owner-approved 2026-11-18 behavior package `.codex/concepts/OX-19-scene-choice-behavior-board.dot`, `.svg`, `.png`, and UI artwork `.codex/concepts/OX-19-scene-choice-ui-board.svg`; cycle 155 records fingerprints. The approved proposal adds a World control above the selected-place readout and a two-world chooser on the active catalog screen. Board approval does not activate implementation.
 
 ### OX-20 — Define non-executable pack identity and manifest version — PLANNED
 

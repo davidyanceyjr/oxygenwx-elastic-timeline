@@ -271,6 +271,16 @@ class MainActivity : ComponentActivity(), ActivityVariantDelegate.Host {
                             diagnosticOverlay = if (isDebuggable) ({
                                 variantDelegate?.MainScreenOverlay(this@MainActivity, scenePresentation.diagnostics)
                             }) else null,
+                            onWorldObservation = if (isDebuggable) ({ event ->
+                                val active = activationCoordinator.state.value.active
+                                android.util.Log.i("OX19WorldProbe", "event=$event location=${active?.location?.id} " +
+                                    "dataset=${active?.datasetId} replay=${active?.replayRecordingId} " +
+                                    "asOf=${active?.recording?.catalog?.asOf} " +
+                                    "provenance=${active?.recording?.catalog?.provenance} " +
+                                    "generation=${active?.viewGeneration} instant=${active?.selectedInstant}")
+                            }) else null,
+                            worldControlBelowDebugBanner = isDebuggable &&
+                                matchingActive.origin != CatalogOrigin.LIVE,
                         ) }
                         else -> Box(Modifier.fillMaxSize().background(Color(0xFF11263D))) {
                             Column(

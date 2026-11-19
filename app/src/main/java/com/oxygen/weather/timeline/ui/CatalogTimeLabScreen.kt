@@ -6,6 +6,7 @@ import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.gestures.awaitEachGesture
 import androidx.compose.foundation.gestures.awaitFirstDown
@@ -31,6 +32,7 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.selection.selectable
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
@@ -83,7 +85,9 @@ import com.oxygen.weather.timeline.presentation.symbol.WeatherSymbolIcon
 import com.oxygen.weather.timeline.presentation.symbol.drawWeatherSymbol
 import com.oxygen.weather.timeline.presentation.scene.FirstCityComposition
 import com.oxygen.weather.timeline.presentation.scene.FirstCityTheme
+import com.oxygen.weather.timeline.presentation.scene.MinimalOpenLandscapeTheme
 import com.oxygen.weather.timeline.presentation.scene.SceneReading
+import com.oxygen.weather.timeline.presentation.scene.SceneWeatherDecision
 import java.time.Instant
 import java.time.format.DateTimeFormatter
 import java.util.Locale
@@ -112,6 +116,8 @@ fun CatalogTimeLabScreen(
     onRefresh: (() -> Unit)? = null,
     omitOptionalCityLayers: Boolean = false,
     diagnosticOverlay: (@Composable () -> Unit)? = null,
+    onWorldObservation: ((String) -> Unit)? = null,
+    worldControlBelowDebugBanner: Boolean = false,
 ) = CatalogTimeLabScreenContent(
     presentation.timeline,
     presentation.reading,
@@ -119,6 +125,8 @@ fun CatalogTimeLabScreen(
     onSelectInstant, onReturnToNow, onBrowseCatalogs, onChooseLocation, onRefresh,
     omitOptionalCityLayers,
     diagnosticOverlay,
+    onWorldObservation,
+    worldControlBelowDebugBanner,
 )
 
 @Composable
@@ -133,9 +141,13 @@ private fun CatalogTimeLabScreenContent(
     onRefresh: (() -> Unit)?,
     omitOptionalCityLayers: Boolean = false,
     diagnosticOverlay: (@Composable () -> Unit)? = null,
+    onWorldObservation: ((String) -> Unit)? = null,
+    worldControlBelowDebugBanner: Boolean = false,
 ) {
     var precision by remember(view.generation) { mutableStateOf(false) }
     var browserOpen by remember { mutableStateOf(false) }
+    val worldChoice = remember { CatalogWorldChoice() }
+    var worldChooserOpen by remember { mutableStateOf(false) }
     val compact = with(LocalDensity.current) { fontScale >= 1.3f }
     val latestSelected by rememberUpdatedState(view.selectedInstant)
     val isRtl = LocalLayoutDirection.current == LayoutDirection.Rtl
@@ -179,7 +191,11 @@ private fun CatalogTimeLabScreenContent(
         // Keep foreground typography and pictograms proportional to the available
         // width. The atmospheric canvas already scales independently to fill it.
         val responsiveScale = (maxWidth.value / 411f).coerceIn(.75f, 1f)
-        if (composition != null) {
+        if (sceneReading != null && worldChoice.selected == CatalogWorld.OPEN_LANDSCAPE) {
+            CatalogOpenLandscapeScene(
+                MinimalOpenLandscapeTheme.compose(SceneWeatherDecision.resolve(sceneReading, view.zone)),
+            )
+        } else if (composition != null) {
             CatalogAtmosphericScene(
                 composition = composition,
                 omitOptionalCityLayers = omitOptionalCityLayers,
@@ -201,6 +217,19 @@ private fun CatalogTimeLabScreenContent(
         diagnosticOverlay?.let { content ->
             Box(Modifier.fillMaxWidth().align(Alignment.TopCenter).statusBarsPadding().padding(top = 56.dp)) {
                 content()
+            }
+        }
+        if (sceneReading != null) {
+            TextButton(
+                onClick = { onWorldObservation?.invoke("open:${worldChoice.selected.name}"); worldChooserOpen = true },
+                modifier = Modifier.align(Alignment.TopCenter).statusBarsPadding()
+                    .padding(top = if (worldControlBelowDebugBanner) 90.dp else 30.dp)
+                    .background(Color(0xDD173044), RoundedCornerShape(24.dp))
+                    .border(1.dp, Color(0xFF9ECBD8), RoundedCornerShape(24.dp))
+                    .testTag("catalogWorldControl"),
+            ) {
+                Text("World: ${worldChoice.selected.label} ▾", color = Color.White,
+                    style = TextStyle(shadow = readoutShadow))
             }
         }
         Column(
@@ -371,6 +400,46 @@ private fun CatalogTimeLabScreenContent(
                 onDismiss = { browserOpen = false },
             )
         }
+        if (worldChooserOpen) {
+            AlertDialog(
+                onDismissRequest = { worldChooserOpen = false },
+                title = { Text("Choose world") },
+                text = {
+                    Column {
+                        CatalogWorld.entries.forEach { option ->
+                            TextButton(
+                                onClick = {
+                                    worldChoice.choose(option)
+                                    worldChooserOpen = false
+                                    onWorldObservation?.invoke("selected:${option.name}")
+                                },
+                                modifier = Modifier.fillMaxWidth().testTag("catalogWorld${option.name}")
+                                    .semantics { stateDescription = if (worldChoice.selected == option) "Selected" else "Not selected" },
+                            ) {
+                                Text("${if (worldChoice.selected == option) "✓ " else ""}${option.chooserLabel}")
+                            }
+                        }
+                    }
+                },
+                confirmButton = {
+                    TextButton(onClick = { worldChooserOpen = false }) { Text("Dismiss") }
+                },
+            )
+        }
+    }
+}
+
+internal enum class CatalogWorld(val label: String, val chooserLabel: String) {
+    FIRST_CITY("First City", "First City"),
+    OPEN_LANDSCAPE("Open Landscape", "Minimal Open Landscape"),
+}
+
+internal class CatalogWorldChoice {
+    var selected by mutableStateOf(CatalogWorld.FIRST_CITY)
+        private set
+
+    fun choose(world: CatalogWorld) {
+        selected = world
     }
 }
 

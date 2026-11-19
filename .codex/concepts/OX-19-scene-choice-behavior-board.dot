@@ -1,0 +1,20 @@
+digraph OX19 {
+  graph [label="OX-19 | In-session bundled world choice (proposal for owner approval)", labelloc=t, fontsize=21, fontname="DejaVu Sans", bgcolor="#f5f8fb", pad=.35, ranksep=.65];
+  node [fontname="DejaVu Sans", fontsize=12, shape=box, style="rounded,filled", fillcolor=white, color="#46617a", margin=".18,.12"];
+  edge [fontname="DejaVu Sans", color="#46617a", fontsize=11];
+  source [label="Existing active catalog + place + precise selected instant\nOne shared selected-instant weather decision (OX-18, OX-92)", fillcolor="#dcecf9"];
+  default [label="First City visible in current app\nWorld control labels current choice", fillcolor="#e5f2e8"];
+  choices [label="Open World chooser\nFirst City / Minimal Open Landscape\nCurrent choice indicated; dismiss retains current world", fillcolor="#fff0d7"];
+  city [label="Choose First City\nRender city composition from current weather decision"];
+  open [label="Choose Minimal Open Landscape\nRender landscape composition from current weather decision"];
+  facts [label="Same place, catalog revision, exact instant, forecast facts,\nsource-time disclosure, timeline state and gestures\nNo switch-triggered fetch or process/Activity restart", fillcolor="#dcecf9"];
+  source -> default -> choices;
+  choices -> city [label="select city"];
+  choices -> open [label="select landscape"];
+  choices -> default [label="dismiss", style=dashed];
+  city -> facts;
+  open -> facts;
+  facts -> choices [label="switch again", constraint=false];
+  boundary [shape=note, fillcolor="#f7ebed", label="Scope: active catalog screen, in-session only.\nNo Park, Settings, persistence, pack storage, entitlement,\nnew provider, or meteorological interpretation.\nUI placement and appearance require separate artwork approval."];
+  facts -> boundary [style=dotted, arrowhead=none];
+}
