@@ -1277,13 +1277,15 @@ The SG workstream follows the owner-directed pivot recorded above and is grounde
 
 **Owner sequencing decision (2026-11-19):** After OX-51 closed, the owner selected OX-52 as the sole global `NEXT` for cycle 158 planning. Focused slice-specific tests are authorized; system and device tests are out of scope. Board preparation does not approve the board or authorize implementation.
 
-### OX-53 — Finalize two evidence-based example pack manifests — PLANNED
+### OX-53 — Finalize two evidence-based example pack manifests — DONE
 
 **Objective/scope:** Provide two minimal complete, evidence-based manifest examples using the existing First City and Open Landscape or an asset variant; no Park assets, mural or inspector actions required.
 **Depends on:** OX-52, OX-92, OX-24.
 **Exit:** Both examples identify manifest, version, definitions, compatible render capabilities and relative assets sufficient for a first real pack-builder proof; unresolved optional features remain deferred.
-**Evidence:** Future cycle-specific `.codex/test-artifacts/<cycle-id>/` and `.codex/history/<cycle-id>.md`; assign exact paths only when the slice is planned. Do not claim unperformed checks.
-**Slice board(s):** Objective-specific behavior/contract board pending; UI artwork board only if approved scope changes visible output. Owner approval required.
+**Evidence:** `.codex/test-artifacts/159-ox53-example-pack-manifests/README.md` records the focused verification and limits. Cycle history is `.codex/history/159-ox53-example-pack-manifests.md`; archived plan is `.codex/history/plans/159-ox53-example-pack-manifests.md`.
+**Slice board(s):** Product-owner-approved behavior/contract package on 2026-11-19: `.codex/concepts/OX-53-example-pack-manifests-behavior-board.dot`, `.svg`, `.png`, and `.md`. It governs two First City asset variants (baseline and olive), preservation of the four-field OX-20 identity envelope under a new manifest version, the renderer-policy and asset-reference fields, and required capability ID `first-city.canopy.image-png` tied to the evidenced path. No additional constraints were stated. UI artwork does not apply because this contract/example slice does not change visible output.
+
+**Owner sequencing decision (2026-11-19):** After OX-52 closed, the owner requested `oxygen-plan-next-slice` for OX-53. OX-53 is the sole global `NEXT` for cycle 159 planning. Focused slice-specific tests are authorized; system and device tests are out of scope. Selection does not approve the board, finalize a plan, or authorize implementation.
 
 ### OX-30 — Build one versioned declarative scene-pack artifact — PLANNED
 

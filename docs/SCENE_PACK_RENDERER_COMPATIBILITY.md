@@ -17,21 +17,34 @@ The three version concepts have separate meanings and acceptance rules:
 | `engineCompatibility` | OX-20 scene-pack identity-contract compatibility marker. | Value `1` continues to mean the OX-20 identity contract. It is not a renderer version and does not list supported capabilities. |
 | Renderer capability-policy version | Version of the registry that names pack-facing capability IDs, renderer support, and any exact optional-capability behavior. | It is versioned separately from both manifest schema and `engineCompatibility`. An unsupported policy version rejects the candidate. A change to a registry's IDs, support meaning, or optional behavior requires a separately identified policy version. |
 
-OX-52 defines the registry rules and the initial policy version. OX-53 owns
-the exact manifest field that will carry the policy version and the public
-capability IDs and behaviors it can support from evidenced renderer paths.
-The internal Kotlin `VEGETATION` role is a candidate source fact, not a
+OX-52 defines the registry rules and the initial policy version. OX-53 defines
+`rendererPolicyVersion` as the manifest field and selects public capability
+IDs only when their support is evidenced by an existing renderer path. The
+internal Kotlin `VEGETATION` role is a candidate source fact, not a
 pack-facing capability ID. Internal enum, class, and method names are not pack
 API. Until an ID is explicitly present in the selected registry and supported
 by a renderer path, a pack cannot require it successfully.
 
-Registry version 1 defines no optional capability entries. A later registry
-may add an optional ID only with an explicit behavior for that ID: either omit
-it or use its exactly specified fallback/default. A registry version is a
-snapshot; changing an ID's support or optional behavior requires a new policy
-version. The test-only examples use synthetic registry entries to exercise
-generic policy branches. They do not add IDs or optional entries to the public
-registry.
+## Renderer policy version 1 registry
+
+Registry version 1 contains exactly one required public capability and no
+optional entries:
+
+| Capability ID | Disposition | Evidence and support boundary |
+| --- | --- | --- |
+| `first-city.canopy.image-png` | Required and supported for the OX-53 First City examples. | OX-24 records baseline and olive `image/png` assets as alternate choices on the same existing First City CANOPY draw path. This registry entry describes that authored path at design time; it does not claim arbitrary pack files can be loaded at runtime. |
+
+The OX-53 examples declare `rendererPolicyVersion: 1` and require this
+capability for their single First City canopy image reference. The capability
+ID is public contract data; it is not derived from an internal Kotlin enum,
+class, or method name.
+
+Future registries may add an optional ID only with an explicit behavior for
+that ID: either omit it or use its exactly specified fallback/default. Each
+registry version is a snapshot; changing an ID's support or optional behavior
+requires a new policy version. The test-only examples use synthetic registry
+entries to exercise generic policy branches. They do not add IDs or optional
+entries to the public registry.
 
 ## Capability disposition
 

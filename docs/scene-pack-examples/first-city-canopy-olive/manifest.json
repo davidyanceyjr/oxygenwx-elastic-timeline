@@ -1,0 +1,18 @@
+{
+  "packId": "first-city-canopy-olive",
+  "manifestVersion": 2,
+  "worldDefinitionRef": "first-city",
+  "engineCompatibility": 1,
+  "rendererPolicyVersion": 1,
+  "requiredCapabilities": [
+    "first-city.canopy.image-png"
+  ],
+  "assetReferences": [
+    {
+      "refId": "first-city-canopy-olive",
+      "path": "assets/first-city/canopy/olive.png",
+      "mediaType": "image/png",
+      "sha256": "60885b635567d5e4ec4d4b8d1cb6c86ed4629ec9f003d1ef134e72823869550d"
+    }
+  ]
+}

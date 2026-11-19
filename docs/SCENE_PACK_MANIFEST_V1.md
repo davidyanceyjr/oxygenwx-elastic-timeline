@@ -28,7 +28,7 @@ The values in the first column are manifest contract values. `CatalogWorld` is a
 
 A record is a valid **v1 contract example** only when every member satisfies the table and the closed-envelope rule. An absent or malformed identity, unknown world reference, unsupported manifest version, or unsupported engine compatibility value is invalid. An extra member containing executable instructions or a weather interpretation is invalid under the same closed-envelope rule. No record may alter place, catalog revision, exact selected instant, forecast facts, canonical projection, or timeline ownership. The bundled free experience remains available independently of pack identity.
 
-Future envelope fields or changed required-field rules need a new `manifestVersion`; a reader of v1 must not silently treat an unknown required field as supported. A future engine contract value or capability policy needs an explicitly defined compatibility rule before it can be accepted. This document defines only the current value `1` for each version member. It does not define renderer capability IDs or optional-capability fallback behavior.
+Future envelope fields or changed required-field rules need a new `manifestVersion`; a reader of v1 must not silently treat an unknown required field as supported. A future engine contract value needs an explicitly defined compatibility rule before it can be accepted. This document defines only the current value `1` for each version member. Renderer capability IDs and their policy are defined separately; manifest v1 carries no renderer-policy version or capability declarations.
 
 This contract contains no asset paths, digests, resource types, import budgets, package builder, decoder, runtime validation, trust decision, installation, hot swap, UI, or Park reference. OX-51 owns assets and integrity references; OX-52 owns renderer capability and trust policy; OX-53 owns complete asset-bearing manifests; OX-30 owns building; OX-26 owns runtime decoding; OX-91 owns resource validation; OX-55 owns renderer instantiation; OX-57 owns installation. Their later rules must preserve this slice's separation of weather and scene identity.
 
@@ -37,5 +37,6 @@ This contract contains no asset paths, digests, resource types, import budgets, 
 See [Scene-pack renderer compatibility and data-only trust policy](SCENE_PACK_RENDERER_COMPATIBILITY.md)
 for the separately versioned renderer capability registry and its trust and
 budget boundaries. This reference does not add a field to manifest v1 or
-change its closed four-field envelope; OX-53 owns integration under a later
-manifest version.
+change its closed four-field envelope. The asset-bearing v2 example contract
+is defined in [Scene-pack manifest v2](SCENE_PACK_MANIFEST_V2.md); it leaves
+the v1 envelope and examples unchanged.

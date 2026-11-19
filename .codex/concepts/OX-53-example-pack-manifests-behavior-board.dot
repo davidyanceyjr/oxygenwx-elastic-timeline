@@ -1,0 +1,52 @@
+digraph OX53 {
+  graph [
+    label="OX-53 — Two evidence-based asset-bearing manifest examples\nBehavior / contract board",
+    labelloc=t,
+    fontsize=20,
+    fontname="DejaVu Sans",
+    rankdir=LR,
+    compound=true,
+    nodesep=0.45,
+    ranksep=0.75,
+    pad=0.25,
+    bgcolor="#f7f9fc"
+  ];
+  node [shape=box, style="rounded,filled", fontname="DejaVu Sans", fontsize=11,
+        color="#44546a", fillcolor="#ffffff", margin="0.16,0.12"];
+  edge [fontname="DejaVu Sans", fontsize=9, color="#52657a", arrowsize=0.75];
+
+  subgraph cluster_evidence {
+    label="Established input boundaries";
+    color="#b8c8d8";
+    style="rounded";
+    ox20 [label="OX-20 identity\nmanifest v1 remains closed\npackId · manifestVersion\nworldDefinitionRef · engineCompatibility"];
+    ox51 [label="OX-51 asset reference\ncanonical relative path\nimage/png · exact-byte SHA-256\nconfined to pack root"];
+    ox52 [label="OX-52 renderer policy\nseparate renderer-policy version\nunknown required capability rejects\nno generic optional fallback"];
+    evidence [label="Renderer evidence\nOX-24: First City baseline and olive\nCANOPY PNGs share one draw path\nOX-92: Open Landscape tree path\nhas no evidenced image asset"];
+  }
+
+  v2 [label="Closed manifest v2\nPreserve all four OX-20 identity fields\nAdd rendererPolicyVersion\nAdd requiredCapabilities\nAdd assetReferences", fillcolor="#e7f0ff", color="#3569a8"];
+  cap [label="Public capability ID\nfirst-city.canopy.image-png\nRequired support for the evidenced\nFirst City canopy PNG asset path\nNot an internal Kotlin identifier", fillcolor="#fff2d8", color="#c27a13"];
+
+  baseline [label="Example A · First City baseline\nworldDefinitionRef: first-city\nasset: assets/first-city/canopy/baseline.png\nmediaType: image/png · exact SHA-256"];
+  olive [label="Example B · First City olive variant\nworldDefinitionRef: first-city\nasset: assets/first-city/canopy/olive.png\nmediaType: image/png · exact SHA-256"];
+
+  check [label="Both examples must be complete\nunique valid packId\nmanifestVersion 2; engineCompatibility 1\nrenderer policy version and capability\nOX-51 reference fields and real byte digest\nno weather rules or executable payloads", fillcolor="#e8f5eb", color="#47835a"];
+  exit [label="OX-53 exit\nTwo minimal examples are sufficient\nfor a first pack-builder proof\nNo runtime builder, decoder, validator,\ninstaller, or app behavior", fillcolor="#e8f5eb", color="#47835a"];
+
+  no_ui [label="UI artwork: not applicable\nContract/example data only;\nno visible app output changes", shape=note,
+         fillcolor="#f0f2f5", color="#7a8794"];
+
+  ox20 -> v2 [label="preserve v1 identity; new envelope version"];
+  ox51 -> v2 [label="reuse reference contract"];
+  ox52 -> v2 [label="separate policy version"];
+  evidence -> cap [label="trace public support to existing path"];
+  v2 -> baseline;
+  v2 -> olive;
+  cap -> baseline;
+  cap -> olive;
+  baseline -> check;
+  olive -> check;
+  check -> exit;
+  no_ui -> exit [style=dotted, arrowhead=none];
+}

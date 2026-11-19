@@ -1,0 +1,18 @@
+{
+  "packId": "first-city-canopy-baseline",
+  "manifestVersion": 2,
+  "worldDefinitionRef": "first-city",
+  "engineCompatibility": 1,
+  "rendererPolicyVersion": 1,
+  "requiredCapabilities": [
+    "first-city.canopy.image-png"
+  ],
+  "assetReferences": [
+    {
+      "refId": "first-city-canopy-baseline",
+      "path": "assets/first-city/canopy/baseline.png",
+      "mediaType": "image/png",
+      "sha256": "480dd857a7aa4ed7d3da62c991cf04056a364fbf04554027d9f6af6628791c89"
+    }
+  ]
+}
