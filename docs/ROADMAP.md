@@ -1257,7 +1257,7 @@ The SG workstream follows the owner-directed pivot recorded above and is grounde
 
 **Owner sequencing decision (2026-11-19):** The owner selected OX-20 for `oxygen-plan-next-slice` after OX-19 closed. OX-19 and OX-92 are `DONE`. Board preparation and cycle intake do not approve the board or authorize implementation.
 
-### OX-51 — Define assets and integrity references for scene packs — NEXT
+### OX-51 — Define assets and integrity references for scene packs — DONE
 
 **Objective/scope:** Define relative, pack-root-confined asset references and supported asset/font types required by one real variant. Establish missing/mismatched digest outcomes and define which layer owns resource-size and path limits; do not pick arbitrary thresholds before runtime evidence.
 **Depends on:** OX-20, OX-24.

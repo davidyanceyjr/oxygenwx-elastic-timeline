@@ -1,0 +1,77 @@
+[
+  {
+    "label": "valid-first-city-canopy-olive",
+    "disposition": "accept",
+    "assetReference": {
+      "refId": "first-city-canopy-olive",
+      "path": "assets/first-city/canopy/olive.png",
+      "mediaType": "image/png",
+      "sha256": "60885b635567d5e4ec4d4b8d1cb6c86ed4629ec9f003d1ef134e72823869550d"
+    }
+  },
+  {
+    "label": "invalid-absolute-path",
+    "disposition": "reject",
+    "reason": "Absolute paths are not pack-root-relative.",
+    "assetReference": {
+      "refId": "invalid-absolute-path",
+      "path": "/assets/first-city/canopy/olive.png",
+      "mediaType": "image/png",
+      "sha256": "60885b635567d5e4ec4d4b8d1cb6c86ed4629ec9f003d1ef134e72823869550d"
+    }
+  },
+  {
+    "label": "invalid-escaping-path",
+    "disposition": "reject",
+    "reason": "The relative path escapes the pack root.",
+    "assetReference": {
+      "refId": "invalid-escaping-path",
+      "path": "../../outside/olive.png",
+      "mediaType": "image/png",
+      "sha256": "60885b635567d5e4ec4d4b8d1cb6c86ed4629ec9f003d1ef134e72823869550d"
+    }
+  },
+  {
+    "label": "invalid-unsupported-type",
+    "disposition": "reject",
+    "reason": "Only image/png is supported by this example.",
+    "assetReference": {
+      "refId": "invalid-unsupported-type",
+      "path": "assets/first-city/canopy/olive.png",
+      "mediaType": "image/jpeg",
+      "sha256": "60885b635567d5e4ec4d4b8d1cb6c86ed4629ec9f003d1ef134e72823869550d"
+    }
+  },
+  {
+    "label": "invalid-missing-file",
+    "disposition": "reject",
+    "reason": "The referenced file does not exist in the sample pack root.",
+    "assetReference": {
+      "refId": "invalid-missing-file",
+      "path": "assets/first-city/canopy/missing.png",
+      "mediaType": "image/png",
+      "sha256": "60885b635567d5e4ec4d4b8d1cb6c86ed4629ec9f003d1ef134e72823869550d"
+    }
+  },
+  {
+    "label": "invalid-missing-digest",
+    "disposition": "reject",
+    "reason": "sha256 is required.",
+    "assetReference": {
+      "refId": "invalid-missing-digest",
+      "path": "assets/first-city/canopy/olive.png",
+      "mediaType": "image/png"
+    }
+  },
+  {
+    "label": "invalid-mismatched-digest",
+    "disposition": "reject",
+    "reason": "The declared digest differs from the exact file bytes.",
+    "assetReference": {
+      "refId": "invalid-mismatched-digest",
+      "path": "assets/first-city/canopy/olive.png",
+      "mediaType": "image/png",
+      "sha256": "0000000000000000000000000000000000000000000000000000000000000000"
+    }
+  }
+]

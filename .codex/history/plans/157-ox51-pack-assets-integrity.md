@@ -1,6 +1,6 @@
 # Cycle plan — 157-ox51-pack-assets-integrity
 
-State: PLANNED
+State: CLOSED
 Plan maturity: FINAL
 Cycle ID: `157-ox51-pack-assets-integrity`
 Roadmap items: OX-51
@@ -26,7 +26,7 @@ The activation command rejects incomplete or unapproved records.
         "OX-20",
         "OX-24"
       ],
-      "status": "PLANNED",
+      "status": "DONE",
       "exit": "A real example resolves every asset inside its pack root; escaped or absolute paths, unsupported asset types, and missing or digest-mismatched resources have explicit reject dispositions.",
       "boards": {
         "behavior": {
@@ -62,10 +62,26 @@ The activation command rejects incomplete or unapproved records.
           "artifacts": []
         }
       },
-      "outcome": null,
-      "evidence": []
+      "outcome": "Defined the standalone asset-reference contract and labeled accept/reject examples; the exact OX-24 olive PNG is contained at its canonical sample-pack path with the declared digest. Focused checks cover every approved path rejection class, symlink entries, content type, missing resources, and digest dispositions.",
+      "evidence": [
+        ".codex/test-artifacts/157-ox51-pack-assets-integrity/README.md",
+        ".codex/test-artifacts/157-ox51-pack-assets-integrity/example-pack/assets/first-city/canopy/olive.png"
+      ]
     }
-  ]
+  ],
+  "closeout": {
+    "closed_on": "2026-11-19",
+    "summary": "OX-51 completed: documented a standalone scene-pack asset-reference contract and accepted/rejected examples, copied and verified the OX-24 olive PNG inside a sample pack, and completed the authorized focused contract checks. Manifest v1 remains closed; OX-53 owns versioned manifest integration, OX-52 trust/capability/budget policy, and OX-91 runtime resource validation and limits.",
+    "verification": [
+      "python -m unittest discover -s scripts/tests -p 'test_scene_pack_asset_reference_contract.py' — PASS; 5 focused tests.",
+      "python -m json.tool docs/scene-pack-asset-reference-examples.json — PASS.",
+      "python scripts/dev.py workflow — PASS at ACTIVE / CLOSEOUT; close validation passed at IDLE.",
+      "git diff --check — PASS.",
+      "Source and sample PNG are 1024 × 1536 RGBA; both SHA-256 digests equal 60885b635567d5e4ec4d4b8d1cb6c86ed4629ec9f003d1ef134e72823869550d.",
+      "Limit: focused checks are test-only and do not exercise a production resolver or OX-91 runtime validation. No app build, installed screenshot, device matrix, or numeric resource budgets were in scope; OX-52 and OX-91 retain their stated handoffs."
+    ],
+    "evidence_directory": ".codex/test-artifacts/157-ox51-pack-assets-integrity/"
+  }
 }
 ```
 <!-- cycle-manifest:end -->
@@ -81,8 +97,8 @@ Update this record at every stage boundary. Keep its next-stage read set exact.
   "slice_ids": [
     "OX-51"
   ],
-  "stage": "REVIEW",
-  "prior_cycle_state": "PLANNED",
+  "stage": "CLOSEOUT",
+  "prior_cycle_state": "ACTIVE",
   "accepted_boards": [
     ".codex/concepts/OX-51-pack-assets-integrity-behavior-board.dot",
     ".codex/concepts/OX-51-pack-assets-integrity-behavior-board.svg",
@@ -90,49 +106,50 @@ Update this record at every stage boundary. Keep its next-stage read set exact.
     ".codex/concepts/OX-51-pack-assets-integrity-behavior-board.md"
   ],
   "completed_gates": [
-    "Approved behavior board package recorded; UI artwork is not required.",
-    "Approved OX-51 behavior package fingerprints validate and UI artwork is not applicable.",
-    "Final plan is complete and has no unresolved owner decisions."
+    "Current pointer, ordered roster, referenced plan, and REVIEW checkpoint agree; workflow scaffold passes.",
+    "OX-20 and OX-24 dependency records and the source PNG format and SHA-256 were verified.",
+    "Product owner approved the OX-51 behavior package as shown on 2026-11-19, including symlink-entry rejection; all four recorded fingerprints match.",
+    "UI artwork is not required because this slice changes no visible app output.",
+    "Scope, observable exit, future focused verification path, evidence target, and test authorization were reviewed; the focused test module is not yet present, so execution coverage remains unverified. No tests were run.",
+    "all_slice_boards_approved",
+    "final_plan_reviewed",
+    "Observable exit met: absolute and escaping paths, unsupported types, missing files and digests, digest mismatches, every canonical path rule, root escape, and symlink entries have explicit rejection dispositions and focused checks."
   ],
   "decisions": [
-    "No owner decisions remain open; OX-51 uses the approved standalone asset-reference contract boundary and defers complete manifest integration to OX-53.",
-    "Focused slice-specific tests remain authorized for execution; this planning cycle does not run them."
+    "Owner selected option 1: the recorded approval applies to the exact fingerprinted board package and includes symlink-entry rejection despite stale proposal/open-review wording in the companion artifacts."
   ],
   "open_questions": [],
   "completed_outputs": [
-    "Substantive OX-51 plan is complete with scope, exclusions, functional invariants, the observed exit, focused authorized test path, evidence target, and later-slice handoffs.",
-    "Roadmap now records the product-owner-approved OX-51 behavior package and its constraints; the cycle manifest fingerprints all four board files.",
-    "Full plan review passed: OX-51 scope, dependencies, board constraints, invariants, compatibility, focused authorized checks, evidence target, and observable exit are consistent.",
-    "Cycle remains PLANNED; no slice is ACTIVE and no implementation or tests have run."
+    "Owner confirmed the existing fingerprint-bound board approval is authoritative as shown; board files remain unchanged.",
+    "Activated OX-51 for execution.",
+    "Closed slice OX-51 as DONE.",
+    "OX-51 exit met: normative contract and labeled examples are complete; the real OX-24 PNG resolves inside the sample pack root and its exact-byte SHA-256 matches the reference and source; focused authorized checks passed.",
+    "Cycle closeout summary and verification archived."
   ],
-  "evidence": [],
+  "evidence": [
+    ".codex/test-artifacts/157-ox51-pack-assets-integrity/README.md",
+    ".codex/test-artifacts/157-ox51-pack-assets-integrity/example-pack/assets/first-city/canopy/olive.png",
+    ".codex/history/157-ox51-pack-assets-integrity.md"
+  ],
   "next_stage_read_set": [
-    "AGENTS.md",
     ".codex/current.md",
-    ".codex/README.md",
     ".codex/plans/157-ox51-pack-assets-integrity.md",
     "docs/ROADMAP_SPECIFICATION.md",
     "docs/ROADMAP.md",
-    ".codex/concepts/OX-51-pack-assets-integrity-behavior-board.dot",
-    ".codex/concepts/OX-51-pack-assets-integrity-behavior-board.svg",
-    ".codex/concepts/OX-51-pack-assets-integrity-behavior-board.png",
-    ".codex/concepts/OX-51-pack-assets-integrity-behavior-board.md",
-    "docs/SCENE_PACK_MANIFEST_V1.md",
-    "docs/scene-pack-manifest-v1-examples.json",
-    ".codex/history/plans/156-ox20-pack-identity-manifest.md",
-    ".codex/history/plans/152-ox24-scene-asset-swap.md",
-    ".codex/test-artifacts/152-ox24-scene-asset-swap/README.md"
+    "docs/SCENE_PACK_ASSET_REFERENCES.md",
+    "docs/scene-pack-asset-reference-examples.json",
+    "scripts/tests/test_scene_pack_asset_reference_contract.py",
+    ".codex/test-artifacts/157-ox51-pack-assets-integrity/README.md",
+    ".codex/test-artifacts/157-ox51-pack-assets-integrity/example-pack/assets/first-city/canopy/olive.png"
   ],
-  "next_action": "Cycle 157 is ready for owner-directed activation at a later time; retain OX-51 as NEXT until activation is explicitly requested."
+  "next_action": "Inspect git diff --check and the complete final diff; run the final workflow and authorized verification commands; close cycle 157 with the exact result, evidence paths, limits, and OX-53/OX-52/OX-91 handoffs."
 }
 ```
 <!-- cycle-checkpoint:end -->
 
-## Scope and acceptance
-
 ## Approved board and dependencies
 
-The product owner approved `.codex/concepts/OX-51-pack-assets-integrity-behavior-board.dot` and its SVG, PNG, and Markdown companion on 2026-11-19. The cycle manifest records the SHA-256 fingerprint of each file. The board governs the `AssetReference` fields, the boundary that keeps OX-20 manifest v1 closed, canonical pack-root-confined paths with symlink rejection, per-file SHA-256 of exact bytes, the PNG-only real example, and the proposed division of limit ownership between OX-52 and OX-91. UI artwork is not applicable because this slice changes no visible app output.
+The product owner approved the current package as shown on 2026-11-19, including the `AssetReference` fields, the boundary that keeps OX-20 manifest v1 closed, canonical pack-root-confined paths with symlink rejection, per-file SHA-256 of exact bytes, the PNG-only real example, and the division of limit ownership between OX-52 and OX-91. The cycle manifest records the SHA-256 fingerprint of the DOT, SVG, PNG, and Markdown files. The package retains its proposal wording; the owner's approval is recorded here against those exact fingerprints. UI artwork is not applicable because this slice changes no visible app output.
 
 OX-20 is DONE and defines a closed, data-only identity envelope with exactly four fields. Its contract requires a new manifest version when fields or required-field rules change. OX-24 is DONE and supplies a concrete alternate First City CANOPY asset at `app/src/main/res/drawable-nodpi/sg2_city_canopy_olive.png`; it is a 1024 × 1536 RGBA PNG with current SHA-256 `60885b635567d5e4ec4d4b8d1cb6c86ed4629ec9f003d1ef134e72823869550d`. The sample will use a copy of those exact bytes. The contract keeps the asset-reference record separate for OX-53 to integrate under the required manifest-version change.
 
@@ -159,13 +176,15 @@ No changes to app or renderer code, OX-20 manifest v1, OX-24 artwork, pack build
 
 ## Observable exit
 
-The normative contract and examples describe the approved reference fields and rejection rules. The evidence sample root contains the actual OX-24 olive PNG at the referenced relative path, wholly inside that root, and its calculated SHA-256 matches the declared value. The examples explicitly reject absolute and escaping paths, unsupported types, missing files, absent digests, and mismatched digests. The contract names OX-91 as the path/resource-size enforcement layer and OX-52 as the budget-policy owner, with numeric thresholds deferred.
+The normative contract and examples describe the approved reference fields and rejection rules. The evidence sample root contains the actual OX-24 olive PNG at the referenced relative path, wholly inside that root, and its calculated SHA-256 matches the declared value. The examples explicitly reject absolute and escaping paths, unsupported types, missing files, absent digests, and mismatched digests; focused checks also cover symlink entries. The contract names OX-91 as the path/resource-size enforcement layer and OX-52 as the budget-policy owner, with numeric thresholds deferred.
 
 ## Verification authorization and evidence
 
-The owner authorized focused slice-specific tests. Add `scripts/tests/test_scene_pack_asset_reference_contract.py` as a test-only contract check, without introducing a production resolver or loader. It must verify the valid JSON example against the evidence pack root, root containment, supported PNG type, and exact-byte SHA-256; it must also check the approved absolute/escape/symlink, missing-file, unsupported-type, missing-digest, and mismatched-digest reject cases. Run only this focused test module with `python -m unittest discover -s scripts/tests -p 'test_scene_pack_asset_reference_contract.py'`.
+The owner authorized focused slice-specific tests. Add `scripts/tests/test_scene_pack_asset_reference_contract.py` as a test-only contract check, without introducing a production resolver or loader. It must verify the valid JSON example against the evidence pack root, root containment, and supported PNG type. Compute SHA-256 from the evidence sample file's bytes as read from disk; require it to match both the example reference's digest and the verified OX-24 source digest `60885b635567d5e4ec4d4b8d1cb6c86ed4629ec9f003d1ef134e72823869550d`. It must also check the approved absolute/escape/symlink, missing-file, unsupported-type, missing-digest, and mismatched-digest reject cases. Run only this focused test module with `python -m unittest discover -s scripts/tests -p 'test_scene_pack_asset_reference_contract.py'`.
 
 Also run `python -m json.tool docs/scene-pack-asset-reference-examples.json`, `python scripts/dev.py workflow`, and `git diff --check`. Record exact commands and results, the sample file path and digest, and any limitations in `.codex/test-artifacts/157-ox51-pack-assets-integrity/README.md`. The roadmap closeout target is `.codex/history/157-ox51-pack-assets-integrity.md`. No app build, installed screenshot, device acceptance, or broad system matrix applies to this documentation and contract slice.
+
+For path rejection coverage, include at least one focused input for each rule: absolute, drive-form, URI-form, backslash, empty segment, dot segment, and parent segment. Test a parent segment that would normalize within the pack root separately from a path that escapes the root, so canonical syntax rejection and root containment are both exercised. Retain the symlink-entry rejection check. The plan's invalid JSON examples need not duplicate every malformed path form; they remain illustrative examples, while the focused test covers the full path contract.
 
 ## Risks and remaining handoffs
 
