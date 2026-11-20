@@ -1319,13 +1319,15 @@ The SG workstream follows the owner-directed pivot recorded above and is grounde
 
 **Owner scope decision (2026-11-19):** OX-26 validates canonical relative path syntax from the OX-51 asset-reference contract and maps violations to `INVALID_MANIFEST`; OX-91 retains path resolution, root confinement, symlink checks, and resource inspection. The approved board package is unchanged; the plan treats lexical syntax as manifest field-value validation and keeps filesystem checks outside OX-26.
 
-### OX-91 — Validate referenced pack resources before scene activation — PLANNED
+**Owner sequencing decision (2026-11-20):** After OX-26 closed, the owner selected OX-91 as the sole global `NEXT` for cycle 163 planning. OX-26, OX-51, OX-52, and OX-54 are DONE. Focused slice-specific tests are authorized; system and device tests are out of scope. Selection starts board preparation and does not approve the board or authorize implementation.
+
+### OX-91 — Validate referenced pack resources before scene activation — DONE
 
 **Objective/scope:** Inspect a generated pack against the approved resource/trust policy: confined relative paths, allowed asset types, content identity/digest, finite resource budgets and required capability availability. Keep package validation separate from installer and entitlement.
 **Depends on:** OX-26, OX-51, OX-52, OX-54.
 **Exit:** A valid generated pack yields one validated artifact/asset set; deliberate path escape, unsupported resource, oversized input or mismatched content are rejected before any scene activation, with no partial asset state.
-**Evidence:** Future cycle-specific `.codex/test-artifacts/<cycle-id>/` and `.codex/history/<cycle-id>.md`; exact paths assigned when a cycle is planned.
-**Slice board(s):** Objective-specific behavior board pending; UI artwork board only if the approved scope changes visible output. No board approval or activation is claimed.
+**Evidence:** Cycle 163 execution evidence is preserved in `.codex/test-artifacts/163-ox91-pack-resource-validation/README.md`, including the generated baseline and olive packs, builder outputs, focused validator test output, and bounded ZIP/identity inspection; closeout `.codex/history/163-ox91-pack-resource-validation.md`; archived plan `.codex/history/plans/163-ox91-pack-resource-validation.md`.
+**Slice board(s):** Product-owner approved the four-file behavior package on 2026-11-20: `.codex/concepts/OX-91-pack-resource-validation-behavior-board.dot`, `.svg`, `.png`, and `.md`; cycle 163 records its fingerprints. The companion Markdown records the approval and the contextual status wording retained in the rendered board. The package governs exact declared-member validation, pack-root confinement and symlink rejection, registered-media validation, the 1.5 MiB per-resource and aggregate byte caps, exact-byte OX-51 digest checks, and recomputed/returned OX-54 identity before publishing one complete validated asset set. UI artwork is not applicable because the slice changes no visible output. Approval does not activate the slice.
 
 ### OX-55 — Instantiate a validated pack in the existing renderer — PLANNED
 

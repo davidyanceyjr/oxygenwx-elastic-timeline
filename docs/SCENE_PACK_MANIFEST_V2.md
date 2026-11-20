@@ -70,13 +70,17 @@ are specific to their copied files.
 The runtime field checks and OX-91 resource-validation handoff are documented
 in [Scene-pack manifest decoder](SCENE_PACK_MANIFEST_DECODER.md). OX-26 checks
 canonical relative path syntax while OX-91 resolves the path and enforces
-pack-root and resource rules; this does not change the v2 schema.
+pack-root and resource rules, as specified in
+[Scene-pack resource validation](SCENE_PACK_RESOURCE_VALIDATION.md); this
+does not change the v2 schema.
 
 ## Scope limit
 
-These examples and this contract do not implement a pack builder, decoder,
-resource validator, importer, installer, runtime renderer loader, network
-delivery, trusted-origin provider, entitlement policy, or app behavior. They
-set no numeric resource limits and make no runtime pack-loading claim. The
+These examples and this schema contract do not implement a pack builder,
+decoder, resource validator, importer, installer, runtime renderer loader,
+network delivery, trusted-origin provider, entitlement policy, or app
+behavior. The separate runtime contracts describe the decoder and resource
+validator. Numeric resource limits are owned by OX-91 and recorded in
+[Scene-pack resource validation](SCENE_PACK_RESOURCE_VALIDATION.md). The
 focused contract check verifies only the example documents and their local
 asset bytes.

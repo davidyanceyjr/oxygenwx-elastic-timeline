@@ -53,4 +53,5 @@ the same domain/version prefix, path ordering, length framing, and exact-byte
 rules to the declared payload member map. They must keep this value distinct
 from logical `packId`, per-asset integrity, and any archive-byte digest.
 Runtime decoding, resource validation, and installation remain owned by their
-separate roadmap slices.
+separate roadmap slices. OX-91's resource-validation contract describes the
+runtime identity handoff in [Scene-pack resource validation](SCENE_PACK_RESOURCE_VALIDATION.md).

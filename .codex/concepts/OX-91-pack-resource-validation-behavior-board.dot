@@ -1,0 +1,44 @@
+digraph OX91ResourceValidation {
+  graph [
+    rankdir=TB,
+    bgcolor="white",
+    pad="0.35",
+    nodesep="0.26",
+    ranksep="0.32",
+    splines=polyline,
+    fontname="Helvetica",
+    fontsize=22,
+    labelloc="t",
+    label="OX-91 | Validate referenced pack resources before scene activation\nRevised behavior board — product-owner reapproval required"
+  ];
+  node [
+    shape=box,
+    style="rounded,filled",
+    color="#34506A",
+    fillcolor="#F4F8FC",
+    fontcolor="#1E2B38",
+    fontname="Helvetica",
+    fontsize=12,
+    margin="0.18,0.12"
+  ];
+  edge [color="#526779", fontcolor="#40566A", fontname="Helvetica", fontsize=10, arrowsize=0.75];
+
+  input [label="Generated data-only pack\nroot manifest + referenced assets", fillcolor="#E8F2FC"];
+  decode [label="Decode manifest v2 with OX-26\nCheck required capability against OX-52 policy v1", fillcolor="#F4F8FC"];
+  members [label="Inspect package members and resolve every path\nRequire one root manifest and declared resources\nReject missing, escaping, ambiguous, or symlink files\nReject duplicate and undeclared file payloads", fillcolor="#F4F8FC"];
+  resources [label="Validate registered media type and resource bytes\nEnforce 1.5 MiB per-file and aggregate caps\nCompare exact OX-51 SHA-256 for every reference\nLargest current PNG: 1,386,266 bytes", fillcolor="#F4F8FC"];
+  identity [label="Recompute OX-54 identity from exact manifest and declared resource bytes\nCanonical path order; return identity with the validated result\nManifest v2 carries no contentIdentity field", fillcolor="#EAF6EE"];
+  complete [shape=diamond, style="filled", label="Did every validation gate pass?", fillcolor="#FFF7E6"];
+  validated [label="Publish one complete validated\nartifact + asset set + identity\nNo partial asset state", fillcolor="#DDF3E4", color="#39744B"];
+  handoff [label="Future OX-55 renderer handoff\nActivation is a later slice", style="rounded,dashed,filled", fillcolor="#F1F3F5", color="#71808D"];
+  reject [label="Reject the whole candidate\nwith a bounded reason\nNo validated result or activation", fillcolor="#FCE8E6", color="#A64138", fontcolor="#7F2822"];
+
+  input -> decode;
+  decode -> members;
+  members -> resources;
+  resources -> identity;
+  identity -> complete;
+  complete -> validated [label="yes", color="#39744B", fontcolor="#39744B"];
+  complete -> reject [label="no: any failed gate", color="#B64A42", fontcolor="#9B3029"];
+  validated -> handoff [style=dashed, label="later slice"];
+}
