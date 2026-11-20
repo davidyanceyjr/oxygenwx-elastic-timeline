@@ -27,6 +27,12 @@ version; a rejected source reports the offending input and reason.
 The committed First City baseline is the required supported source. The olive
 example follows the same manifest shape and may build with the same command by
 changing `--source` and `--output`, but it is not required for OX-30 acceptance.
-This local artifact is declarative data only. A successful build does not claim
-canonical pack identity, reproducibility, trusted origin, entitlement,
-renderer runtime acceptance, installation, or activation.
+This local artifact is declarative data only. OX-54 demonstrates repeatable
+content identities for the documented baseline and olive inputs. A successful
+build does not establish trusted origin, entitlement, renderer runtime
+acceptance, installation, or activation.
+
+OX-54 now reports a canonical content identity derived from the exact
+validated payload members before ZIP creation. Its byte-level definition and
+the distinction from archive/transport-byte integrity are specified in
+[`SCENE_PACK_CONTENT_IDENTITY.md`](SCENE_PACK_CONTENT_IDENTITY.md).

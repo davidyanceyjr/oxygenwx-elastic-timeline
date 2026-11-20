@@ -1297,13 +1297,15 @@ The SG workstream follows the owner-directed pivot recorded above and is grounde
 
 **Owner sequencing decision (2026-11-19):** The owner selected OX-30 for `oxygen-plan-next-slice` after OX-53 closed. OX-53 is the direct DONE dependency; OX-52, OX-92, and OX-24 are DONE inputs through OX-53. Focused slice-specific tests are authorized; system and device tests are out of scope. Selection and cycle intake do not approve the board or authorize implementation.
 
-### OX-54 — Prove reproducible pack builds and a distinct variant — PLANNED
+### OX-54 — Prove reproducible pack builds and a distinct variant — DONE
 
 **Objective/scope:** Prove repeatable builds from identical source inputs and define exactly one canonical content-identity rule (payload digest versus archive/transport digest explicitly distinguished). The builder, future validator and installer must use that same rule; variant style proof may be deferred if unrelated to identity.
 **Depends on:** OX-30.
-**Exit:** Two builds have matching documented canonical content identities with reproducible inputs, versions and declared treatment of archive metadata; reader/installer contract consumes the same identity definition.
-**Evidence:** Future cycle-specific `.codex/test-artifacts/<cycle-id>/` and `.codex/history/<cycle-id>.md`; assign exact paths only when the slice is planned. Do not claim unperformed checks.
-**Slice board(s):** Objective-specific behavior/contract board pending; UI artwork board only if approved scope changes visible output. Owner approval required.
+**Exit:** Two builds from identical documented baseline inputs have the same canonical content identity, while the supported OX-53 olive variant has a different identity. The content-digest rule, reproducible inputs/versions, and archive-metadata treatment are documented; future reader/installer contracts consume that same identity definition.
+**Evidence:** Cycle 161 targets `.codex/test-artifacts/161-ox54-reproducible-pack-builds/` and `.codex/history/161-ox54-reproducible-pack-builds.md`; archived plan target `.codex/history/plans/161-ox54-reproducible-pack-builds.md`. Do not claim unperformed checks.
+**Slice board(s):** Product-owner-approved 2026-11-19 behavior/contract package `.codex/concepts/OX-54-reproducible-pack-builds-behavior-board.dot`, `.svg`, `.png`, and `.md`. It governs a domain-versioned SHA-256 over sorted canonical member paths and exact declared payload bytes, excluding ZIP metadata; repeated baseline builds must match and the OX-53 olive variant must differ. It keeps `packId`, per-asset digest, payload identity, and archive-byte digest separate, and hands the same rule to future validator/installer contracts. No additional constraints were stated. UI artwork does not apply because this build-contract slice changes no visible app output.
+
+**Owner sequencing decision (2026-11-19):** After OX-30 closed, the owner requested `oxygen-plan-next-slice` for OX-54. OX-54 is the sole global `NEXT` for cycle 161 planning. Focused slice-specific tests are authorized; system and device tests are out of scope. Selection and cycle intake did not approve the board; the owner subsequently approved the recorded behavior package. Plan finalization remains subject to review and does not authorize implementation.
 
 ### OX-26 — Decode one generated pack manifest into a typed result — PLANNED
 

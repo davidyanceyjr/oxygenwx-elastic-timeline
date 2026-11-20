@@ -1,0 +1,69 @@
+digraph OX54 {
+  graph [
+    rankdir=TB,
+    bgcolor="white",
+    pad="0.28",
+    nodesep="0.38",
+    ranksep="0.52",
+    fontname="DejaVu Sans",
+    label="OX-54 — Reproducible pack builds and distinct variant\nBehavior / contract proposal for owner review",
+    labelloc=t,
+    fontsize=20
+  ];
+  node [shape=box, style="rounded,filled", fontname="DejaVu Sans", fontsize=11, margin="0.16,0.11", color="#36506a", fillcolor="#f4f8fc"];
+  edge [fontname="DejaVu Sans", fontsize=10, color="#536b82", arrowsize=0.8];
+
+  subgraph cluster_same {
+    label="Repeat the same source input";
+    color="#9bb7cf";
+    style="rounded";
+    fontsize=12;
+
+    baseline [label="OX-53 First City baseline\nmanifest v2 + declared PNG\nrecord exact source bytes and versions", fillcolor="#e7f2fb"];
+    build_a [label="OX-30 builder\nBuild A", fillcolor="#edf5fb"];
+    build_b [label="OX-30 builder\nBuild B from identical inputs", fillcolor="#edf5fb"];
+    payload_a [label="Extract declared payload set A\nmanifest.json + referenced PNG", fillcolor="#f7fafc"];
+    payload_b [label="Extract declared payload set B\nmanifest.json + referenced PNG", fillcolor="#f7fafc"];
+    digest_a [label="Canonical payload digest A\nproposed SHA-256 rule", fillcolor="#fff4d6", color="#a87b1d"];
+    digest_b [label="Canonical payload digest B\nproposed SHA-256 rule", fillcolor="#fff4d6", color="#a87b1d"];
+    same [label="Required result\nDigest A = Digest B", fillcolor="#e5f4e8", color="#4a8a57"];
+
+    baseline -> build_a;
+    baseline -> build_b;
+    build_a -> payload_a;
+    build_b -> payload_b;
+    payload_a -> digest_a;
+    payload_b -> digest_b;
+    digest_a -> same;
+    digest_b -> same;
+  }
+
+  subgraph cluster_variant {
+    label="Prove a distinct supported content variant";
+    color="#9bb7cf";
+    style="rounded";
+    fontsize=12;
+
+    olive [label="OX-53 First City olive variant\nits own manifest v2 + exact PNG bytes\nsame world and required renderer capability", fillcolor="#e7f2fb"];
+    build_olive [label="OX-30 builder\nBuild olive artifact", fillcolor="#edf5fb"];
+    payload_olive [label="Declared payload set\nmanifest.json + referenced olive PNG", fillcolor="#f7fafc"];
+    digest_olive [label="Canonical payload digest\nsame SHA-256 rule", fillcolor="#fff4d6", color="#a87b1d"];
+    distinct [label="Required result\nOlive digest ≠ baseline digest", fillcolor="#e5f4e8", color="#4a8a57"];
+
+    olive -> build_olive -> payload_olive -> digest_olive -> distinct;
+  }
+
+  rule [label="Proposed canonical content-identity rule\nSHA-256 over a domain/version prefix, entry count, and every canonical relative path + exact payload bytes;\nentries sorted by UTF-8 path bytes and length-framed. Include manifest and declared resources.\nExclude ZIP headers, member order, timestamps, compression, modes, and other container metadata.", fillcolor="#fff4d6", color="#a87b1d", penwidth=1.5];
+  rule -> digest_a [style=dashed, label="same rule"];
+  rule -> digest_b [style=dashed, label="same rule"];
+  rule -> digest_olive [style=dashed, label="same rule"];
+
+  meanings [label="Keep signals separate\nOX-20 packId = stable logical pack identity\nOX-51 asset SHA-256 = exact referenced-file integrity\nOX-54 payload digest = canonical content identity\nZIP-byte SHA-256, if recorded = exact archive/transport-byte integrity", fillcolor="#f0ecfa", color="#7662a6"];
+  consumer [label="Shared contract handoff\nBuilder reports the OX-54 payload digest.\nFuture validator and installer consume this exact rule; their runtime implementation stays in later slices.", fillcolor="#eaf4ef", color="#4a8a57"];
+  out_of_scope [label="Boundaries\nNo manifest-v2 field changes, runtime decode/validation/install, origin or entitlement policy, app UI, scene activation, system matrix, or device tests.", fillcolor="#f3f4f6", color="#66717d"];
+
+  same -> meanings;
+  distinct -> meanings;
+  meanings -> consumer;
+  consumer -> out_of_scope;
+}

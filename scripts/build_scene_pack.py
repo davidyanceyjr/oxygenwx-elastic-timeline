@@ -26,6 +26,7 @@ MANIFEST_MEMBERS = {
 }
 ASSET_REFERENCE_MEMBERS = {"refId", "path", "mediaType", "sha256"}
 SUPPORTED_CAPABILITY = "first-city.canopy.image-png"
+CONTENT_IDENTITY_DOMAIN = b"oxygen-scene-pack-content-v1\0"
 
 
 class BuildError(ValueError):
@@ -217,6 +218,19 @@ def _validate_source(source: Path) -> tuple[Path, bytes, bytes, int]:
     return source_root, manifest_bytes, asset_bytes, manifest["manifestVersion"]
 
 
+def _canonical_content_identity(members: dict[str, bytes]) -> str:
+    digest = hashlib.sha256()
+    digest.update(CONTENT_IDENTITY_DOMAIN)
+    digest.update(len(members).to_bytes(4, "big"))
+    for member_path, payload in sorted(members.items(), key=lambda member: member[0].encode("utf-8")):
+        path_bytes = member_path.encode("utf-8")
+        digest.update(len(path_bytes).to_bytes(4, "big"))
+        digest.update(path_bytes)
+        digest.update(len(payload).to_bytes(8, "big"))
+        digest.update(payload)
+    return f"sha256:{digest.hexdigest()}"
+
+
 def _is_within(path: Path, parent: Path) -> bool:
     try:
         path.relative_to(parent)
@@ -225,7 +239,7 @@ def _is_within(path: Path, parent: Path) -> bool:
         return False
 
 
-def build_pack(source: Path, output: Path) -> tuple[Path, int]:
+def build_pack(source: Path, output: Path) -> tuple[Path, int, str]:
     source_root, manifest_bytes, asset_bytes, manifest_version = _validate_source(source.expanduser())
     output_path = output.expanduser().resolve(strict=False)
     if _is_within(output_path, source_root):
@@ -233,6 +247,8 @@ def build_pack(source: Path, output: Path) -> tuple[Path, int]:
 
     reference = _parse_manifest(manifest_bytes)["assetReferences"][0]
     asset_name = reference["path"]
+    payload_members = {"manifest.json": manifest_bytes, asset_name: asset_bytes}
+    content_identity = _canonical_content_identity(payload_members)
     try:
         output_path.parent.mkdir(parents=True, exist_ok=True)
     except OSError as exc:
@@ -245,7 +261,7 @@ def build_pack(source: Path, output: Path) -> tuple[Path, int]:
         ) as temporary_file:
             temporary_path = Path(temporary_file.name)
         with zipfile.ZipFile(temporary_path, "w", compression=zipfile.ZIP_STORED) as archive:
-            for name, payload in (("manifest.json", manifest_bytes), (asset_name, asset_bytes)):
+            for name, payload in payload_members.items():
                 entry = zipfile.ZipInfo(name)
                 entry.compress_type = zipfile.ZIP_STORED
                 entry.create_system = 3
@@ -262,7 +278,7 @@ def build_pack(source: Path, output: Path) -> tuple[Path, int]:
             except OSError:
                 pass
 
-    return output_path, manifest_version
+    return output_path, manifest_version, content_identity
 
 
 def main(argv: list[str] | None = None) -> int:
@@ -272,12 +288,12 @@ def main(argv: list[str] | None = None) -> int:
     args = parser.parse_args(argv)
 
     try:
-        artifact, manifest_version = build_pack(args.source, args.output)
+        artifact, manifest_version, content_identity = build_pack(args.source, args.output)
     except BuildError as exc:
         print(f"Rejected: {exc}", file=sys.stderr)
         return 2
 
-    print(f"Built scene pack: {artifact} (manifestVersion={manifest_version})")
+    print(f"Built scene pack: {artifact} (manifestVersion={manifest_version}, contentIdentity={content_identity})")
     return 0
 
 
