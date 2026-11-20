@@ -1307,13 +1307,17 @@ The SG workstream follows the owner-directed pivot recorded above and is grounde
 
 **Owner sequencing decision (2026-11-19):** After OX-30 closed, the owner requested `oxygen-plan-next-slice` for OX-54. OX-54 is the sole global `NEXT` for cycle 161 planning. Focused slice-specific tests are authorized; system and device tests are out of scope. Selection and cycle intake did not approve the board; the owner subsequently approved the recorded behavior package. Plan finalization remains subject to review and does not authorize implementation.
 
-### OX-26 — Decode one generated pack manifest into a typed result — PLANNED
+**Owner sequencing decision (2026-11-19):** The owner selected OX-26 as the sole global `NEXT` after OX-54 closed. OX-30, OX-52, and OX-54 are DONE. Focused slice-specific tests are authorized; system and device tests are out of scope. Selection starts cycle 162 planning; it does not approve the board or authorize implementation.
 
-**Objective/scope:** Parse and validate manifest structure, identity, version and required renderer capability IDs from a real locally built data-only artifact. Leave asset resource inspection and path enforcement to OX-91, and do not activate or import a pack.
+### OX-26 — Decode one generated pack manifest into a typed result — DONE
+
+**Objective/scope:** Parse and validate manifest structure, identity, version, required renderer capability IDs, and canonical relative asset-path syntax from a real locally built data-only artifact. Map noncanonical path syntax to `INVALID_MANIFEST`. OX-91 owns filesystem-dependent path resolution, pack-root confinement, symlink checks, and resource inspection. Do not activate or import a pack.
 **Depends on:** OX-30, OX-52, OX-54.
 **Exit:** The real generated manifest yields a typed decoded/accepted result; malformed or version-incompatible manifests yield a bounded rejection without executing pack code.
-**Evidence:** Future cycle-specific `.codex/test-artifacts/<cycle-id>/` and `.codex/history/<cycle-id>.md`; assign exact paths only when the slice is planned. Do not claim unperformed checks.
-**Slice board(s):** Objective-specific behavior/contract board pending; UI artwork board only if approved scope changes visible output. Owner approval required.
+**Evidence:** Cycle 162 targets `.codex/test-artifacts/162-ox26-decode-pack-manifest/README.md` and `.codex/history/162-ox26-decode-pack-manifest.md`. Do not claim unperformed checks.
+**Slice board(s):** Product owner approved the objective-specific behavior/contract package on 2026-11-19: `.codex/concepts/OX-26-pack-manifest-decoder-behavior-board.dot`, `.svg`, `.png`, and `.md`; cycle 162 records current fingerprints. The board governs bounded manifest-v2 decoding from the real OX-30 artifact, typed acceptance or bounded rejection, finite input/structure work, and handoff of resource inspection and path enforcement to OX-91. UI artwork is not applicable because decoding changes no visible output. Approval does not authorize implementation.
+
+**Owner scope decision (2026-11-19):** OX-26 validates canonical relative path syntax from the OX-51 asset-reference contract and maps violations to `INVALID_MANIFEST`; OX-91 retains path resolution, root confinement, symlink checks, and resource inspection. The approved board package is unchanged; the plan treats lexical syntax as manifest field-value validation and keeps filesystem checks outside OX-26.
 
 ### OX-91 — Validate referenced pack resources before scene activation — PLANNED
 

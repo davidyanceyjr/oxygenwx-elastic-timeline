@@ -67,6 +67,11 @@ Both manifests declare `worldDefinitionRef: first-city`,
 and the one required capability listed above. Their asset paths and digests
 are specific to their copied files.
 
+The runtime field checks and OX-91 resource-validation handoff are documented
+in [Scene-pack manifest decoder](SCENE_PACK_MANIFEST_DECODER.md). OX-26 checks
+canonical relative path syntax while OX-91 resolves the path and enforces
+pack-root and resource rules; this does not change the v2 schema.
+
 ## Scope limit
 
 These examples and this contract do not implement a pack builder, decoder,

@@ -1,0 +1,46 @@
+digraph OX26 {
+  graph [
+    rankdir=TB,
+    bgcolor="white",
+    pad="0.30",
+    nodesep="0.42",
+    ranksep="0.56",
+    fontname="DejaVu Sans",
+    label="OX-26 — Decode one generated pack manifest into a typed result\nBehavior / contract board",
+    labelloc=t,
+    fontsize=20
+  ];
+  node [shape=box, style="rounded,filled", fontname="DejaVu Sans", fontsize=11, margin="0.17,0.12", color="#36506a", fillcolor="#f4f8fc"];
+  edge [fontname="DejaVu Sans", fontsize=10, color="#536b82", arrowsize=0.8];
+
+  artifact [label="Real OX-30 generated data-only ZIP\nCycle 160 First City baseline artifact\nmanifest v2 + declared PNG", fillcolor="#e7f2fb"];
+  read [label="Read root manifest.json bytes only\nNo extraction or asset read\nInput must stay within finite decode bound", fillcolor="#edf5fb"];
+  bounded [label="Bound decode work before acceptance\nFinite manifest-byte, nesting, and member-count limits\nExact numeric thresholds remain for the approved plan", fillcolor="#fff4d6", color="#a87b1d"];
+  json [label="Parse JSON as data\nReject malformed JSON and duplicate object members\nReject limit overflow with bounded reason", fillcolor="#f7fafc"];
+  shape [label="Validate the closed OX-53 manifest v2 shape\nExactly 7 top-level fields; exact types and values\nNo nulls, missing fields, extra fields, or coercions", fillcolor="#f7fafc"];
+  versions [label="Validate identity and version fields\nValid packId; worldDefinitionRef = first-city\nmanifestVersion = 2; engineCompatibility = 1\nrendererPolicyVersion = 1", fillcolor="#f7fafc"];
+  capability [label="Validate required renderer support\nAccept first-city.canopy.image-png under policy v1\nUnknown / unsupported required ID rejects", fillcolor="#f7fafc"];
+  accepted [label="Typed decoded result\nContains validated manifest data and declared references\nNo scene, weather, or storage state changes", fillcolor="#e5f4e8", color="#4a8a57"];
+  rejected [label="Bounded rejection\nSpecific invalid / unsupported / over-limit reason\nNo partial accepted result", fillcolor="#fae9e8", color="#aa5148"];
+
+  artifact -> read -> bounded -> json -> shape -> versions -> capability -> accepted;
+  read -> rejected [label="manifest unavailable / unreadable", color="#aa5148", fontcolor="#93453d"];
+  bounded -> rejected [label="limit exceeded", color="#aa5148", fontcolor="#93453d"];
+  json -> rejected [label="malformed / duplicate key", color="#aa5148", fontcolor="#93453d"];
+  shape -> rejected [label="shape or type invalid", color="#aa5148", fontcolor="#93453d"];
+  versions -> rejected [label="identity or version unsupported", color="#aa5148", fontcolor="#93453d"];
+  capability -> rejected [label="required capability unsupported", color="#aa5148", fontcolor="#93453d"];
+
+  subgraph cluster_handoff {
+    label="Later boundary — OX-91 validates resources before any activation";
+    color="#9bb7cf";
+    style="rounded";
+    fontsize=12;
+    handoff [label="Consume typed declaration later\nInspect archive resources and member inventory\nEnforce confined asset paths and resource limits\nVerify per-asset and OX-54 content identity\nDo not activate here", fillcolor="#f0ecfa", color="#7662a6"];
+  }
+  accepted -> handoff [style=dashed, label="typed handoff", color="#7662a6", fontcolor="#665493"];
+
+  scope [label="OX-26 scope boundary\nNo resource extraction, path resolution, asset-byte inspection, digest comparison, content-identity check, import, scene activation, or UI change.\nFocused OX-26 tests authorized; system and device tests out of scope.", fillcolor="#f3f4f6", color="#66717d"];
+  rejected -> scope [style=dotted, arrowhead=none];
+  handoff -> scope [style=dotted, arrowhead=none];
+}

@@ -106,7 +106,7 @@ selects values from evidence in its bounded implementation slice.
 
 | Budget category | Enforcement owner and boundary | Outcome when exceeded |
 | --- | --- | --- |
-| Manifest input size and structural work, including nesting and member counts | OX-26 bounds input and structure while decoding, before returning a typed result. | Reject the candidate at decode; do not return a partially accepted manifest. |
+| Manifest input size and structural work, including nesting and member counts | OX-26 bounds input and structure while decoding, before returning a typed result. Its current decoder uses a 16 KiB byte cap, nesting depth 4, and 128 parser tokens, based on the 487-byte, depth-3, 29-token First City baseline manifest. | Reject the candidate at decode; do not return a partially accepted manifest. |
 | Referenced resources, including pack-root confinement, allowed media, per-resource size, and aggregate resource limits | OX-91 validates paths and resources before activation. It checks resource metadata against its assigned limits before handoff to OX-55. | Reject the whole candidate before activation; do not activate a partial asset set. |
 | Package extraction, including entry count, expanded data, staged storage, and extraction working memory | OX-57 bounds staged extraction before commit. | Abort the staged import before commit; do not partially commit the candidate. |
 | Renderer load memory, including decoded assets and candidate-scene allocations | OX-55 bounds candidate loading before activation; OX-91 validates resource metadata against its assigned limits before handoff. | Reject the candidate before scene activation; keep the bundled free scene available. |
