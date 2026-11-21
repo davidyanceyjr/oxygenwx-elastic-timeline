@@ -1,6 +1,7 @@
 package com.oxygen.weather.timeline.data.debug
 
 import android.content.Intent
+import android.util.Log
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Row
@@ -52,6 +53,17 @@ import com.oxygen.weather.timeline.data.catalog.DebugActivationResult
 import com.oxygen.weather.timeline.data.catalog.LocationId
 import com.oxygen.weather.timeline.data.catalog.PlaceSearcher
 import com.oxygen.weather.timeline.data.catalog.SavedLocationResult
+import com.oxygen.weather.timeline.data.catalog.CatalogRecording
+import com.oxygen.weather.timeline.data.catalog.CatalogLocation
+import com.oxygen.weather.timeline.data.scenepack.BundledFreeThemeMetadata
+import com.oxygen.weather.timeline.data.scenepack.InstalledThemeCatalog
+import com.oxygen.weather.timeline.data.scenepack.InstalledThemeOrigin
+import com.oxygen.weather.timeline.data.scenepack.InstalledThemeValidity
+import com.oxygen.weather.timeline.data.scenepack.InstalledThemeVersion
+import com.oxygen.weather.timeline.data.scenepack.ScenePackInstallOutcome
+import com.oxygen.weather.timeline.data.scenepack.ScenePackInstaller
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.CoroutineStart
@@ -60,6 +72,7 @@ import kotlinx.coroutines.currentCoroutineContext
 import kotlinx.coroutines.ensureActive
 import java.time.Duration
 import java.time.Instant
+import java.security.MessageDigest
 
 internal enum class DiagnosticGroup {
     CATALOG, SELECTION, MISSING;
@@ -80,6 +93,7 @@ internal object DiagnosticPresetCodec {
 
 /** Debug-build request decoder. MainActivity remains the sole activation owner. */
 class CatalogPickerDelegate : ActivityVariantDelegate {
+    private var scenePackInstaller: ScenePackInstaller? = null
     private var requestError: String? = null
     private var previewFailureShownInLibrary = false
     private var entryJob: Job? = null
@@ -102,9 +116,106 @@ class CatalogPickerDelegate : ActivityVariantDelegate {
     }
 
     override fun onMainActivityNewIntent(host: ActivityVariantDelegate.Host, intent: Intent): Boolean {
+        if (intent.action == ACTION_INSTALL_SCENE_PACK) {
+            handleScenePackInstallRequest(host, intent)
+            return true
+        }
         if (!hasCatalogRequest(intent)) return false
         handleRequest(host, intent, null)
         return true
+    }
+
+    private fun handleScenePackInstallRequest(host: ActivityVariantDelegate.Host, request: Intent) {
+        val before = OX57WeatherSnapshot.capture(host.activationCoordinator.state.value)
+        val requestVersion = request.getIntExtra(EXTRA_SCENE_PACK_REQUEST_VERSION, -1)
+        val archivePath = request.getStringExtra(EXTRA_SCENE_PACK_ARCHIVE_PATH)
+        val displayName = request.getStringExtra(EXTRA_SCENE_PACK_DISPLAY_NAME)
+        val appVersion = request.getStringExtra(EXTRA_SCENE_PACK_APP_VERSION)
+        val interruptAfterFirstResourceWrite = request.getBooleanExtra(
+            EXTRA_SCENE_PACK_INTERRUPT_AFTER_FIRST_RESOURCE,
+            false,
+        )
+        val installer = synchronized(this) {
+            scenePackInstaller ?: ScenePackInstaller(host.activity.filesDir).also { scenePackInstaller = it }
+        }
+        host.activityScope.launch {
+            try {
+                require(requestVersion == SCENE_PACK_REQUEST_VERSION) {
+                    "Unsupported OX-57 debug request version"
+                }
+                require(!archivePath.isNullOrBlank()) { "Missing OX-57 local artifact path" }
+                require(!displayName.isNullOrEmpty()) { "Missing OX-57 app-owned display name" }
+                require(!appVersion.isNullOrEmpty()) { "Missing OX-57 app-owned version" }
+                val suppliedPath = java.io.File(archivePath)
+                val archiveFile = if (suppliedPath.isAbsolute) suppliedPath else {
+                    java.io.File(host.activity.filesDir, suppliedPath.path)
+                }
+
+                val installAndCatalog = withContext(Dispatchers.IO) {
+                    val result = installer.install(
+                        archiveFile = archiveFile,
+                        displayName = displayName,
+                        version = appVersion,
+                        interruptAfterFirstResourceWrite = interruptAfterFirstResourceWrite,
+                    )
+                    result to installer.queryCatalog(OX57_BUNDLED_FREE_METADATA_FIXTURE)
+                }
+                val result = installAndCatalog.first
+                val entries = installAndCatalog.second
+                val matchingPackEntries = result.packId?.let { packId ->
+                    entries.filter { it.id.value == packId && it.origin == InstalledThemeOrigin.APP_OWNED }
+                }.orEmpty()
+                val currentEntry = matchingPackEntries.singleOrNull()
+                val expectedCurrent = result.currentRegistration
+                val composerAssertionPassed = when {
+                    expectedCurrent == null -> matchingPackEntries.isEmpty()
+                    else -> matchingPackEntries.size == 1 && matchingPackEntries.single().let { entry ->
+                        entry.displayName == expectedCurrent.displayName &&
+                            entry.version == expectedCurrent.version &&
+                            entry.validity == InstalledThemeValidity.COMPATIBLE
+                    }
+                }
+                val candidateVisible = result.packId != null && matchingPackEntries.any {
+                    it.version.value == result.candidateVersion
+                }
+                val expectationSatisfied = composerAssertionPassed && when (result.outcome) {
+                    ScenePackInstallOutcome.INSTALLED -> candidateVisible
+                    ScenePackInstallOutcome.INTERRUPTED -> !candidateVisible
+                    else -> true
+                }
+                val after = OX57WeatherSnapshot.capture(host.activationCoordinator.state.value)
+                val weatherAndTimeUnchanged = before == after
+                val log = org.json.JSONObject()
+                    .put("event", "OX57Install")
+                    .put("requestVersion", requestVersion)
+                    .put("outcome", result.outcome.name)
+                    .put("packId", result.packId)
+                    .put("contentIdentity", result.contentIdentity)
+                    .put("candidateVersion", result.candidateVersion)
+                    .put("currentDisplayName", expectedCurrent?.displayName)
+                    .put("currentVersion", expectedCurrent?.version?.value)
+                    .put("compatibility", expectedCurrent?.compatibility?.name)
+                    .put("catalogOrigin", currentEntry?.origin?.name)
+                    .put("catalogValidity", currentEntry?.validity?.name)
+                    .put("candidateVisible", candidateVisible)
+                    .put("composerAssertionPassed", composerAssertionPassed)
+                    .put("bundledFreeMetadataFixtureOnly", true)
+                    .put("bundledFreeFixtureDisplayName", OX57_BUNDLED_FREE_METADATA_FIXTURE.displayName)
+                    .put("bundledFreeFixtureVersion", OX57_BUNDLED_FREE_METADATA_FIXTURE.version.value)
+                    .put("interruptAfterFirstResourceWrite", interruptAfterFirstResourceWrite)
+                    .put("weatherBefore", before.toLogJson())
+                    .put("weatherAfter", after.toLogJson())
+                    .put("weatherAndSelectedTimeUnchanged", weatherAndTimeUnchanged)
+                    .put("supersededGenerationCleanupFailed", result.supersededGenerationCleanupFailed)
+                    .put("reason", result.reason)
+                    .put("expectationSatisfied", expectationSatisfied)
+                Log.i(OX57_TAG, log.toString())
+                check(expectationSatisfied) { "OX-57 committed catalog observation did not match its installer result" }
+                check(weatherAndTimeUnchanged) { "OX-57 import changed the active weather facts or selected time" }
+            } catch (error: Exception) {
+                Log.e(OX57_TAG, "event=OX57Install requestAccepted=false reason=${error.message}", error)
+            }
+        }
     }
 
     override fun onCatalogActivationState(host: ActivityVariantDelegate.Host, state: CatalogActivationState) {
@@ -603,6 +714,18 @@ class CatalogPickerDelegate : ActivityVariantDelegate {
     }
 
     companion object {
+        private const val OX57_TAG = "OX57Install"
+        private const val SCENE_PACK_REQUEST_VERSION = 1
+        private val OX57_BUNDLED_FREE_METADATA_FIXTURE = BundledFreeThemeMetadata(
+            displayName = "Debug bundled-free fixture",
+            version = InstalledThemeVersion("ox57-debug-fixture-v1"),
+        )
+        const val ACTION_INSTALL_SCENE_PACK = "com.oxygen.weather.timeline.DEBUG_INSTALL_SCENE_PACK"
+        const val EXTRA_SCENE_PACK_REQUEST_VERSION = "ox57_request_version"
+        const val EXTRA_SCENE_PACK_ARCHIVE_PATH = "ox57_archive_path"
+        const val EXTRA_SCENE_PACK_DISPLAY_NAME = "ox57_display_name"
+        const val EXTRA_SCENE_PACK_APP_VERSION = "ox57_app_version"
+        const val EXTRA_SCENE_PACK_INTERRUPT_AFTER_FIRST_RESOURCE = "ox57_interrupt_after_first_resource"
         const val ACTION_ACTIVATE_CATALOG = "com.oxygen.weather.timeline.DEBUG_ACTIVATE_CATALOG"
         const val ACTION_SELECT_CATALOG_INSTANT = "com.oxygen.weather.timeline.DEBUG_SELECT_CATALOG_INSTANT"
         const val ACTION_ACTIVATE_OX05_DEPTH_REVIEW = "com.oxygen.weather.timeline.DEBUG_ACTIVATE_OX05_DEPTH_REVIEW"
@@ -615,6 +738,46 @@ class CatalogPickerDelegate : ActivityVariantDelegate {
         const val EXTRA_FORCE_REFRESH = "debug_catalog_force_refresh"
         const val EXTRA_SELECTED_INSTANT = "debug_catalog_selected_instant"
         const val EXTRA_SAVED_PREVIEW = "debug_catalog_saved_preview"
+    }
+}
+
+private data class OX57WeatherSnapshot(
+    val selectedLocation: CatalogLocation?,
+    val selectedLocationName: String?,
+    val origin: CatalogOrigin?,
+    val datasetId: DatasetId?,
+    val recording: CatalogRecording?,
+    val selectedInstant: Instant?,
+) {
+    fun toLogJson(): org.json.JSONObject {
+        val catalog = recording?.catalog
+        val factsDigest = catalog?.facts?.toString()?.toByteArray(Charsets.UTF_8)?.let { bytes ->
+            MessageDigest.getInstance("SHA-256").digest(bytes)
+                .joinToString("") { "%02x".format(it.toInt() and 0xff) }
+        }
+        return org.json.JSONObject()
+            .put("selectedLocationId", selectedLocation?.id?.value)
+            .put("selectedLocationName", selectedLocationName)
+            .put("origin", origin?.name)
+            .put("datasetId", datasetId?.value)
+            .put("selectedInstant", selectedInstant?.toString())
+            .put("catalogAsOf", catalog?.asOf?.toString())
+            .put("weatherFactCount", catalog?.facts?.size)
+            .put("weatherFactsSha256", factsDigest)
+    }
+
+    companion object {
+        fun capture(state: CatalogActivationState): OX57WeatherSnapshot {
+            val active = state.active
+            return OX57WeatherSnapshot(
+                selectedLocation = state.selectedLocation,
+                selectedLocationName = state.selectedLocationName,
+                origin = active?.origin,
+                datasetId = active?.datasetId,
+                recording = active?.recording,
+                selectedInstant = active?.selectedInstant,
+            )
+        }
     }
 }
 

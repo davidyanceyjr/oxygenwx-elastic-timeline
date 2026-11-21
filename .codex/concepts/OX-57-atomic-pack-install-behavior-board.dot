@@ -1,0 +1,59 @@
+digraph OX57_Atomic_Install {
+  graph [
+    label="OX-57 · Install one validated local pack atomically",
+    labelloc=t,
+    fontsize=22,
+    fontname="DejaVu Sans",
+    rankdir=TB,
+    pad=0.28,
+    nodesep=0.38,
+    ranksep=0.52,
+    splines=polyline,
+    bgcolor="#ffffff"
+  ];
+  node [shape=box, style="rounded,filled", fontname="DejaVu Sans", fontsize=12,
+        margin="0.18,0.12", color="#334155", fillcolor="#eef4ff"];
+  edge [fontname="DejaVu Sans", fontsize=10, color="#475569", arrowsize=0.8];
+
+  local [label="Device-local OX-30 artifact\nAn adapter supplies the local file\n(no picker proposed)", fillcolor="#e0f2fe"];
+  validate [label="OX-91 validates the complete package\nmanifest · confined members · media · budgets\ndigest · OX-54 content identity", fillcolor="#dbeafe"];
+  accepted [label="Complete accepted result\ntyped manifest + validated asset bytes\n+ content identity", shape=ellipse, fillcolor="#dcfce7"];
+  rejected [label="Rejected candidate\nno stage write or catalog change", color="#b91c1c", fillcolor="#fee2e2"];
+
+  metadata [label="Require app-managed catalog metadata\npackId from manifest\ndisplayName + opaque content/release version\n(version is not contentIdentity)", fillcolor="#ede9fe"];
+  limits [label="OX-57 preflight\nfinite extraction entry count, expanded bytes,\nstaged storage and working-memory limits\nexact thresholds pending plan decision", shape=diamond, fillcolor="#fef3c7"];
+  stage [label="Write validated members + metadata\nto a private, unpublished staging generation\nconfine every output beneath its pack root", fillcolor="#e0e7ff"];
+  ready [label="All staged outputs complete\nNo catalog entry points here yet", shape=ellipse, fillcolor="#dcfce7"];
+  commit [label="Atomic commit for this packId\nswitch the app-owned current-generation\nrecord only after the staged generation is complete", shape=doubleoctagon, fillcolor="#d1fae5"];
+  catalog [label="OX-31 catalog exposes one app-owned\nentry as selectable after OX-91 acceptance\nBundled-free entry remains available", fillcolor="#dcfce7"];
+
+  failure [label="Abort candidate stage\nremove incomplete staging output", color="#b91c1c", fillcolor="#fee2e2"];
+  unchanged [label="Before commit, any rejection, limit failure,\nwrite failure or interruption leaves the prior\nvalid packId generation/catalog entry and active\nscene unchanged; weather facts/time stay unchanged", color="#7f1d1d", fillcolor="#fff1f2"];
+  later [label="OX-91 establishes resource/capability compatibility.\nOX-55 still gates actual decode/load; OX-32 owns switching.\nOX-57 adds no UI or weather mutation.", shape=note, fillcolor="#f1f5f9"];
+
+  q_source [label="OWNER REVIEW\nConfirm the developer-only local-file handoff.\nA visible in-app picker would need revised scope\nand a UI artwork board.", shape=note, color="#b45309", fillcolor="#fffbeb"];
+  q_meta [label="CONTRACT INPUT\nApp-owned display name and opaque content/release\nversion are supplied separately from the closed\nOX-30 manifest and OX-54 content identity.", shape=note, color="#6d28d9", fillcolor="#f5f3ff"];
+  q_budget [label="OWNER REVIEW IN PLAN\nSelect evidence-backed numeric OX-57 extraction\nand staging limits; OX-91 validation limits\nremain separate.", shape=note, color="#b45309", fillcolor="#fffbeb"];
+  q_compat [label="OWNER REVIEW\nProposed: OX-91 acceptance marks the catalog\nentry compatible; OX-55 still gates decode/load\nbefore scene activation.", shape=note, color="#b45309", fillcolor="#fffbeb"];
+
+  local -> validate;
+  validate -> accepted [label="accepted"];
+  validate -> rejected [label="rejected", color="#b91c1c"];
+  accepted -> metadata;
+  metadata -> limits [label="complete metadata"];
+  metadata -> failure [label="missing/invalid metadata", color="#b91c1c"];
+  limits -> stage [label="within every limit"];
+  limits -> failure [label="any limit exceeded", color="#b91c1c"];
+  stage -> ready [label="all writes complete"];
+  stage -> failure [label="I/O failure or interruption", color="#b91c1c"];
+  ready -> commit;
+  commit -> catalog;
+  rejected -> unchanged;
+  failure -> unchanged;
+  catalog -> later [style=dashed, label="separate consumer boundary"];
+  catalog -> q_compat [style=dotted, arrowhead=none, color="#b45309"];
+
+  local -> q_source [style=dotted, arrowhead=none, color="#b45309"];
+  metadata -> q_meta [style=dotted, arrowhead=none, color="#6d28d9"];
+  limits -> q_budget [style=dotted, arrowhead=none, color="#b45309"];
+}

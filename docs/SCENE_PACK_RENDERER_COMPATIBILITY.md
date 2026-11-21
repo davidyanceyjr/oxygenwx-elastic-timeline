@@ -2,10 +2,10 @@
 
 This document defines the design-time policy for renderer capability
 compatibility, accepted scene-pack resource classes, trust distinctions, and
-finite import/load budgets. It assigns policy outcomes to later bounded
-implementation slices. It does not implement or claim runtime decoding,
-resource validation, package extraction, renderer loading, origin verification,
-or entitlement.
+finite import/load budgets. It records the approved OX-57 installation limits
+and the OX-55 renderer-load limit. It does not itself implement runtime
+decoding, resource validation, package extraction, renderer loading, origin
+verification, or entitlement.
 
 ## Version boundaries
 
@@ -108,7 +108,7 @@ selects values from evidence in its bounded implementation slice.
 | --- | --- | --- |
 | Manifest input size and structural work, including nesting and member counts | OX-26 bounds input and structure while decoding, before returning a typed result. Its current decoder uses a 16 KiB byte cap, nesting depth 4, and 128 parser tokens, based on the 487-byte, depth-3, 29-token First City baseline manifest. | Reject the candidate at decode; do not return a partially accepted manifest. |
 | Referenced resources, including pack-root confinement, allowed media, per-resource size, and aggregate resource limits | OX-91 accepts at most 1,572,864 bytes (1.5 MiB) of actual uncompressed bytes per resource and 1,572,864 bytes total, inclusive. The bound covers the largest current OX-53 example, the 1,386,266-byte olive PNG, with 186,598 bytes of headroom; the baseline PNG is 1,259,884 bytes. OX-91 also preflights at most 64 ZIP entries and 65,536 encoded central-directory record bytes before scanning records. See [scene-pack resource validation](SCENE_PACK_RESOURCE_VALIDATION.md). | Reject the whole candidate before activation; do not activate a partial asset set. |
-| Package extraction, including entry count, expanded data, staged storage, and extraction working memory | OX-57 bounds staged extraction before commit. | Abort the staged import before commit; do not partially commit the candidate. |
+| Package extraction, including entry count, expanded data, staged storage, and extraction working memory | OX-57 allows at most 64 materialized filesystem nodes per generation, 1,605,632 expanded-generation bytes, 1,638,400 candidate-plus-commit bytes, 3,244,032 same-pack replacement-peak bytes, and 1,622,016 package-specific working bytes. Its internal install record is capped at 32,768 bytes and each current or pending pointer at 16,384 bytes. | Abort the staged import before commit; keep any previously committed generation current and do not expose a partial candidate. |
 | Renderer load memory, including decoded assets and candidate-scene allocations | OX-55 bounds candidate loading before activation; OX-91 validates actual resource bytes against its assigned limits before handoff. | Reject the candidate before scene activation; keep the bundled free scene available. |
 
 ### OX-55 validation-build renderer load
@@ -135,6 +135,11 @@ Passing one budget does not waive another owner's boundary. Exceeding any
 limit rejects the whole candidate at the owning boundary; there is no partial
 scene activation or package commit. OX-52 defines no container, transport,
 download, or numeric budget policy.
+
+OX-57's expanded-generation, commit-bookkeeping, replacement-peak, and working
+data totals count different resources and do not combine with the OX-55 decode
+budget. Their per-component accounting is documented in [scene-pack
+installation](SCENE_PACK_INSTALLATION.md).
 
 ## Example and verification boundary
 

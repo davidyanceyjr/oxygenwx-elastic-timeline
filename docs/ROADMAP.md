@@ -1351,13 +1351,17 @@ The SG workstream follows the owner-directed pivot recorded above and is grounde
 
 **Owner cycle decision (2026-11-20):** Plan OX-31 under the requested 165r cycle identifier after cycle 165 closed with OX-56 BLOCKED. OX-31 was the sole NEXT slice at planning; the next standard numeric cycle remains 166.
 
-### OX-57 — Install one validated local pack atomically — NEXT
+### OX-57 — Install one validated local pack atomically — DONE
 
 **Objective/scope:** Import one validated data-only package through a developer/device-local path into app-owned storage using staged write and atomic catalog activation. Enforce pack-root path confinement, allowed resource types and bounded extraction/memory rules before commit; failed replacement retains the prior valid scene.
 **Depends on:** OX-31, OX-91.
 **Exit:** On device, a valid generated artifact becomes selectable in the installed catalog. A deliberately invalid/oversized/escaped package or interrupted import leaves no partial install or displaced previously valid package; weather data is unchanged.
-**Evidence:** Future cycle-specific `.codex/test-artifacts/<cycle-id>/` and `.codex/history/<cycle-id>.md`; assign exact paths only when the slice is planned. Do not claim unperformed checks.
-**Slice board(s):** Objective-specific behavior/contract board pending; UI artwork board only if approved scope changes visible output. Owner approval required.
+**Evidence:** Cycle 166 targets `.codex/test-artifacts/166-ox57-atomic-pack-install/README.md` and `.codex/history/166-ox57-atomic-pack-install.md`; archived plan target `.codex/history/plans/166-ox57-atomic-pack-install.md`. These are planning targets, not completed evidence.
+**Slice board(s):** Product owner approved the objective-specific behavior/contract package on 2026-11-20: `.codex/concepts/OX-57-atomic-pack-install-behavior-board.dot`, `.svg`, `.png`, and `.md`; cycle 166 records SHA-256 fingerprints for each file. The package covers the developer-only local `File` handoff with no visible picker, explicit app-managed display name and opaque content/release version distinct from `packId` and OX-54 identity, bounded private staging and atomic registration, and the OX-91/OX-55 compatibility and decode boundary. UI artwork does not apply. The owner-approved numeric install limits are recorded in the FINAL cycle 166 plan; plan finalization does not activate the slice or authorize implementation.
+
+**Owner sequencing decision (2026-11-20):** After cycle 165r closed OX-31 as DONE, the owner selected OX-57 as the sole global `NEXT` for cycle 166 board and plan preparation. OX-31 and OX-91 are DONE. The owner approved the exact behavior board package on 2026-11-20; at that point, the bounded plan remained in DRAFT pending budget review. Selection and board approval do not activate the slice or authorize implementation.
+
+**Owner budget decision (2026-11-21):** The owner approved OX-57's evidence-backed inclusive limits recorded in `.codex/plans/166-ox57-atomic-pack-install.md`: 64 materialized filesystem nodes per generation; 1,605,632 expanded-generation bytes; 1,638,400 candidate-plus-commit bytes; 3,244,032 same-pack replacement-peak bytes; and 1,622,016 package-specific working bytes. Cycle 166 is finalized at REVIEW and remains PLANNED; activation and implementation are not authorized by this decision.
 
 ### OX-32 — Hot-swap one installed theme during a running session — PLANNED
 
