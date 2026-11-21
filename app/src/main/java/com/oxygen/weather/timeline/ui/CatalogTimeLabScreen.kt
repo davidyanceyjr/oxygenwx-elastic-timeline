@@ -39,6 +39,7 @@ import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -59,7 +60,9 @@ import androidx.compose.ui.graphics.drawscope.rotate
 import androidx.compose.ui.graphics.nativeCanvas
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.platform.LocalDensity
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalLayoutDirection
+import androidx.compose.ui.res.imageResource
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.semantics.CustomAccessibilityAction
 import androidx.compose.ui.semantics.Role
@@ -88,6 +91,10 @@ import com.oxygen.weather.timeline.presentation.scene.FirstCityTheme
 import com.oxygen.weather.timeline.presentation.scene.MinimalOpenLandscapeTheme
 import com.oxygen.weather.timeline.presentation.scene.SceneReading
 import com.oxygen.weather.timeline.presentation.scene.SceneWeatherDecision
+import com.oxygen.weather.timeline.BuildConfig
+import com.oxygen.weather.timeline.R
+import androidx.compose.ui.graphics.ImageBitmap
+import kotlinx.coroutines.launch
 import java.time.Instant
 import java.time.format.DateTimeFormatter
 import java.util.Locale
@@ -148,6 +155,15 @@ private fun CatalogTimeLabScreenContent(
     var browserOpen by remember { mutableStateOf(false) }
     val worldChoice = remember { CatalogWorldChoice() }
     var worldChooserOpen by remember { mutableStateOf(false) }
+    var oliveImage by remember { mutableStateOf<ImageBitmap?>(null) }
+    var worldRequest by remember { mutableStateOf(0) }
+    val context = LocalContext.current
+    val scope = rememberCoroutineScope()
+    val selectedCanopyImage = when (worldChoice.selected) {
+        CatalogWorld.BASELINE_PROOF -> ImageBitmap.imageResource(R.drawable.sg2_city_canopy)
+        CatalogWorld.OLIVE_PACK -> oliveImage
+        else -> null
+    }
     val compact = with(LocalDensity.current) { fontScale >= 1.3f }
     val latestSelected by rememberUpdatedState(view.selectedInstant)
     val isRtl = LocalLayoutDirection.current == LayoutDirection.Rtl
@@ -199,11 +215,13 @@ private fun CatalogTimeLabScreenContent(
             CatalogAtmosphericScene(
                 composition = composition,
                 omitOptionalCityLayers = omitOptionalCityLayers,
+                canopyOverride = selectedCanopyImage,
             )
         } else if (sceneReading != null) {
             CatalogAtmosphericScene(
                 composition = FirstCityTheme.compose(sceneReading, view.zone),
                 omitOptionalCityLayers = omitOptionalCityLayers,
+                canopyOverride = selectedCanopyImage,
             )
         } else if (view.scene != null) {
             CatalogAtmosphericScene(
@@ -406,12 +424,29 @@ private fun CatalogTimeLabScreenContent(
                 title = { Text("Choose world") },
                 text = {
                     Column {
-                        CatalogWorld.entries.forEach { option ->
+                        CatalogWorld.entries.filter {
+                            BuildConfig.DEBUG || it !in setOf(CatalogWorld.OLIVE_PACK, CatalogWorld.BASELINE_PROOF)
+                        }.forEach { option ->
                             TextButton(
                                 onClick = {
-                                    worldChoice.choose(option)
                                     worldChooserOpen = false
-                                    onWorldObservation?.invoke("selected:${option.name}")
+                                    val request = ++worldRequest
+                                    if (option == CatalogWorld.OLIVE_PACK) {
+                                        scope.launch {
+                                            val candidate = OlivePackCandidateLoader.load(context)
+                                            if (request == worldRequest && candidate != null &&
+                                                OlivePackCandidateLoader.withinBudget(candidate)
+                                            ) {
+                                                oliveImage = candidate.image
+                                                worldChoice.choose(option)
+                                                onWorldObservation?.invoke("selected:${option.name}")
+                                            }
+                                        }
+                                    } else {
+                                        oliveImage = null
+                                        worldChoice.choose(option)
+                                        onWorldObservation?.invoke("selected:${option.name}")
+                                    }
                                 },
                                 modifier = Modifier.fillMaxWidth().testTag("catalogWorld${option.name}")
                                     .semantics { stateDescription = if (worldChoice.selected == option) "Selected" else "Not selected" },
@@ -432,6 +467,8 @@ private fun CatalogTimeLabScreenContent(
 internal enum class CatalogWorld(val label: String, val chooserLabel: String) {
     FIRST_CITY("First City", "First City"),
     OPEN_LANDSCAPE("Open Landscape", "Minimal Open Landscape"),
+    OLIVE_PACK("First City · Olive pack", "First City · Olive pack"),
+    BASELINE_PROOF("First City · Baseline proof", "First City · Baseline proof"),
 }
 
 internal class CatalogWorldChoice {

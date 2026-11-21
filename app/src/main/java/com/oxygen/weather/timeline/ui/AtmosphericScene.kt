@@ -86,11 +86,12 @@ fun CatalogAtmosphericScene(
 fun CatalogAtmosphericScene(
     composition: FirstCityComposition,
     omitOptionalCityLayers: Boolean = false,
+    canopyOverride: ImageBitmap? = null,
     modifier: Modifier = Modifier,
 ) {
     val architecture = ImageBitmap.imageResource(R.drawable.sg2_city_architecture)
     val canopyAsset = composition.canopyRenderInput().asset
-    val canopy = ImageBitmap.imageResource(when (canopyAsset) {
+    val canopy = canopyOverride ?: ImageBitmap.imageResource(when (canopyAsset) {
         FirstCityCanopyAsset.BASELINE -> R.drawable.sg2_city_canopy
         FirstCityCanopyAsset.OLIVE -> R.drawable.sg2_city_canopy_olive
     })

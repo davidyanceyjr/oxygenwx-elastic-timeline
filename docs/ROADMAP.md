@@ -1329,31 +1329,29 @@ The SG workstream follows the owner-directed pivot recorded above and is grounde
 **Evidence:** Cycle 163 execution evidence is preserved in `.codex/test-artifacts/163-ox91-pack-resource-validation/README.md`, including the generated baseline and olive packs, builder outputs, focused validator test output, and bounded ZIP/identity inspection; closeout `.codex/history/163-ox91-pack-resource-validation.md`; archived plan `.codex/history/plans/163-ox91-pack-resource-validation.md`.
 **Slice board(s):** Product-owner approved the four-file behavior package on 2026-11-20: `.codex/concepts/OX-91-pack-resource-validation-behavior-board.dot`, `.svg`, `.png`, and `.md`; cycle 163 records its fingerprints. The companion Markdown records the approval and the contextual status wording retained in the rendered board. The package governs exact declared-member validation, pack-root confinement and symlink rejection, registered-media validation, the 1.5 MiB per-resource and aggregate byte caps, exact-byte OX-51 digest checks, and recomputed/returned OX-54 identity before publishing one complete validated asset set. UI artwork is not applicable because the slice changes no visible output. Approval does not activate the slice.
 
-### OX-55 — Instantiate a validated pack in the existing renderer — PLANNED
+### OX-55 — Instantiate a validated pack in the existing renderer — DONE
 
 **Objective/scope:** Instantiate one actually built and validated data-only pack with the existing in-app renderer capabilities and shared selected-time weather. No Park, entitlement, Settings or new meteorological interpreter.
 **Depends on:** OX-91, OX-19, OX-92.
 **Exit:** An installed device capture of a real loaded package shows an alternate authored world/variant under the same selected time, place and catalog as the bundled scene; unsupported renderer requirements do not silently execute.
-**Evidence:** Future cycle-specific `.codex/test-artifacts/<cycle-id>/` and `.codex/history/<cycle-id>.md`; assign exact paths only when the slice is planned. Do not claim unperformed checks.
-**Slice board(s):** Objective-specific behavior board and UI artwork board pending for the affected installed states. Owner approval required.
+**Evidence:** Cycle 164 installed comparison, focused checks, measurement, and limits are in `.codex/test-artifacts/164-ox55-pack-renderer/README.md`; closeout is `.codex/history/164-ox55-pack-renderer.md`.
+**Slice board(s):** Product owner approved the behavior package `.codex/concepts/OX-55-pack-renderer-behavior-board-v2.dot`, `.svg`, `.png`, and `.md` on 2026-11-20 after review. It records validation-build-only visibility and the deterministic measured 8 MiB candidate gate; cycle 164 records its current package fingerprints and refreshed approval record. The former v1 behavior package is preserved for audit and superseded in the current roster. The UI artwork `.codex/concepts/OX-55-pack-renderer-ui-board.svg` and `.md` calls out the lower-foliage shift from green to muted olive and omits yellow dotted rectangles. The owner selected and approved a focused revision to both packages on 2026-11-20: a debug-only bundled BASELINE proof choice supplies the comparison while normal First City keeps its existing OLIVE drawable. Cycle 164 records the revised package fingerprints and installed evidence.
 
-### OX-56 — Recover safely from failed pack resolution — PLANNED
+**Owner sequencing decision (2026-11-20):** The owner selected OX-55 for cycle 164 planning after OX-91 closed. OX-91, OX-19, and OX-92 are DONE. Focused slice-specific tests are authorized; other test scopes require separate approval. Selection starts board preparation and does not approve boards or authorize implementation.
 
-**Objective/scope:** Fail safely at scene resolution for a missing or invalid already referenced package, choosing the bundled free world without mutating forecast state. Import-time rejections are owned by OX-91/OX-57.
-**Depends on:** OX-55, OX-91.
-**Exit:** A scoped device-local resolution failure leaves the free scene, exact selected weather and timeline operational with no partial scene commit or process failure.
-**Evidence:** Future cycle-specific `.codex/test-artifacts/<cycle-id>/` and `.codex/history/<cycle-id>.md`; assign exact paths only when the slice is planned. Do not claim unperformed checks.
-**Slice board(s):** Objective-specific behavior board and UI artwork board pending for the affected installed states. Owner approval required.
-
-### OX-31 — Define the app-managed installed-pack catalog — PLANNED
+### OX-31 — Define the app-managed installed-pack catalog — DONE
 
 **Objective/scope:** Define the application-managed installed-theme catalog abstraction for built-in free themes and compatible local packs, including stable ID/version, display name and validity status. No global filesystem scan, purchase provider or Settings UI.
 **Depends on:** OX-55, OX-20.
 **Exit:** Catalog queries represent the never-removable bundled free world and known compatible/incompatible app-owned entries distinctly, independent of weather interpretation.
-**Evidence:** Future cycle-specific `.codex/test-artifacts/<cycle-id>/` and `.codex/history/<cycle-id>.md`; assign exact paths only when the slice is planned. Do not claim unperformed checks.
-**Slice board(s):** Objective-specific behavior/contract board pending; UI artwork board only if approved scope changes visible output. Owner approval required.
+**Evidence:** Execution and manual contract review are recorded in `.codex/test-artifacts/165r-ox31-installed-pack-catalog/README.md`; cycle closeout is `.codex/history/165r-ox31-installed-pack-catalog.md`; archived plan is `.codex/history/plans/165r-ox31-installed-pack-catalog.md`.
+**Slice board(s):** Product owner approved the objective-specific behavior/contract package on 2026-11-20: `.codex/concepts/OX-31-installed-pack-catalog-behavior-board.dot`, `.svg`, `.png`, and `.md`. Cycle 165r records SHA-256 fingerprints for each file. The board covers bundled and app-owned catalog entries, compatibility validity, scope boundaries, and the version question resolved by the owner decision below. The owner confirmed approval applies to this exact package; the companion Markdown's pending-status line is stale, and the approved files remain unchanged. The companion also describes the OX-41 default-role decision as future, while the current OX-41 record is DONE; OX-31 follows the recorded decision and makes no new default choice. UI artwork is not applicable because the approved scope has no visible output change.
+**Owner catalog contract decisions (2026-11-20):** A catalog-entry version identifies the installed theme content/release revision stored in app-managed metadata; it is distinct from manifest schema, engine compatibility, renderer policy, and exact-byte identity. The app-managed value is opaque and has no ordering claim. The bundled-free version is explicit app-managed metadata supplied to the catalog composer; OX-31 defines no concrete Park revision while its content remains future work. OX-41 already records the Living Urban Park as the bundled free default; OX-31 represents that existing role without changing current scene selection or making a new default choice.
+**Sequence note (2026-11-20):** OX-31 completed the first prerequisite in the ordered OX-31 → OX-57 → OX-32 path that enables OX-56’s preserved installed-package recovery trigger. OX-57 is the next slice for board and plan preparation; its board remains pending and this status does not activate implementation.
 
-### OX-57 — Install one validated local pack atomically — PLANNED
+**Owner cycle decision (2026-11-20):** Plan OX-31 under the requested 165r cycle identifier after cycle 165 closed with OX-56 BLOCKED. OX-31 was the sole NEXT slice at planning; the next standard numeric cycle remains 166.
+
+### OX-57 — Install one validated local pack atomically — NEXT
 
 **Objective/scope:** Import one validated data-only package through a developer/device-local path into app-owned storage using staged write and atomic catalog activation. Enforce pack-root path confinement, allowed resource types and bounded extraction/memory rules before commit; failed replacement retains the prior valid scene.
 **Depends on:** OX-31, OX-91.
@@ -1368,6 +1366,25 @@ The SG workstream follows the owner-directed pivot recorded above and is grounde
 **Exit:** Installed free → alternate → free evidence proves visible scene change without Activity/process restart, weather-place/catalog/selected-instant mutation, new switch-triggered fetch or timeline/gesture regression; activation never leaves half of two scenes visible.
 **Evidence:** Future cycle-specific `.codex/test-artifacts/<cycle-id>/` and `.codex/history/<cycle-id>.md`; assign exact paths only when the slice is planned. Do not claim unperformed checks.
 **Slice board(s):** Objective-specific behavior board and UI artwork board pending for the affected installed states. Owner approval required.
+
+### OX-56 — Recover safely from failed pack resolution — BLOCKED
+
+**Objective/scope:** Fail safely at scene resolution for a missing or invalid already referenced package, choosing the current bundled First City baseline without mutating forecast state. Import-time rejections are owned by OX-91/OX-57.
+**Depends on:** OX-55, OX-91.
+**Blocked by:** OX-32 has not yet provided the in-session installed-package resolution path required to reach the approved already-referenced-package failure. Re-enter after OX-32 is DONE; record it as a direct dependency before resuming OX-56 review.
+**Exit:** A scoped device-local resolution failure leaves the bundled First City baseline, exact selected weather and timeline operational with no partial scene commit or process failure.
+**Evidence:** Cycle 165 targets `.codex/test-artifacts/165-ox56-pack-resolution-recovery/` and `.codex/history/165-ox56-pack-resolution-recovery.md`; do not claim unperformed checks.
+**Slice board(s):** Product-owner-approved behavior package on 2026-11-20: `.codex/concepts/OX-56-pack-resolution-recovery-behavior-board.dot`, `.svg`, `.png`, and `.md`; approved UI artwork package: `.codex/concepts/OX-56-pack-resolution-recovery-ui-board.svg`, `.png`, and `.md`. Cycle 165 records SHA-256 fingerprints for every package file. The behavior board limits recovery to previously referenced packages missing or invalid at resolution, preserves the OX-91/OX-55 boundaries and forecast state, and selects the complete bundled First City baseline. The artwork uses the existing World control to show `World: First City`; the owner approved that as sufficient feedback, with no cause text, banner, dialog, or blocking state. Chicago and Friday 2:37 PM are reference-capture values, not fixed forecast inputs. The owner-selected First City fallback does not revise OX-41's future Living Urban Park free-default role. No implementation or installed acceptance is claimed.
+
+**Owner sequencing decision (2026-11-20):** The owner selected OX-56 as the sole global `NEXT` after OX-55 closed. OX-55 and OX-91 are DONE. Selection started board preparation and an initial bounded draft; selection alone did not approve boards or authorize implementation.
+
+**Owner scope decision (2026-11-20):** For OX-56's current device-local resolution path, use the bundled First City baseline as the fallback target. This slice-local target does not revise OX-41's future Living Urban Park free-default decision.
+
+**Owner board approval (2026-11-20):** The product owner approved both OX-56 board packages as shown. The existing `World: First City` label is sufficient recovery feedback; no added cause explanation, banner, dialog, or blocking state is in scope. Cycle 165 records the approved package fingerprints. Approval does not finalize the plan or authorize implementation.
+
+**Owner sequencing decision (2026-11-20; superseded):** Preserve the approved already-referenced-package trigger. OX-56 follows OX-32, the first in-session installed-package resolution path. The owner later directed OX-56 to close as BLOCKED while OX-32 is unfinished; see the current blocker record above. The earlier `NEXT` selection is superseded.
+
+**Owner blocker decision (2026-11-20):** Close cycle 165 with OX-56 BLOCKED because OX-32 is still PLANNED and the current device-local flow has no already-referenced installed-package resolution path. Keep the approved OX-56 trigger and boards unchanged. Re-enter after OX-32 is DONE, then add OX-32 as an explicit dependency before review or implementation.
 
 ### OX-25 — Author the park entrance and curved-path scaffold — PLANNED
 

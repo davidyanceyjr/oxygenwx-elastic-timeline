@@ -1,0 +1,44 @@
+digraph OX56 {
+  graph [
+    label="OX-56 | Recover safely from failed pack resolution\nBehavior proposal — owner review pending; no implementation or installed acceptance claimed",
+    labelloc=t,
+    fontsize=22,
+    fontname="DejaVu Sans",
+    bgcolor="#f6f8f3",
+    pad=0.35,
+    nodesep=0.45,
+    ranksep=0.65,
+    rankdir=TB
+  ];
+  node [fontname="DejaVu Sans", fontsize=13, style="rounded,filled", color="#375344", fillcolor="#ffffff", margin="0.18,0.12"];
+  edge [fontname="DejaVu Sans", fontsize=11, color="#58705e", arrowsize=0.75];
+
+  session [shape=box, fillcolor="#e9f0f8", label="Current forecast session\nExact selected instant, place, catalog revision,\nforecast facts, and timeline are authoritative"];
+  context [shape=box, fillcolor="#e9f0f8", label="A previously referenced package is being\nresolved as the scene choice\n(not a new import or chooser attempt)"];
+  resolve [shape=diamond, fillcolor="#fff3cf", label="Package resolves\ninto a complete\nrenderable candidate?"];
+  accepted [shape=box, fillcolor="#dcf0e2", label="Complete OX-91 validated result\nand OX-55 candidate are ready"];
+  success [shape=box, fillcolor="#dcf0e2", label="Existing successful path\nAtomically commit the selected pack scene\nForecast state remains unchanged"];
+
+  missing [shape=box, fillcolor="#fce5df", label="Referenced package is missing\nat scene resolution"];
+  invalid [shape=box, fillcolor="#fce5df", label="Referenced package is invalid\nOX-91 / OX-55 returns bounded rejection"];
+  fallback [shape=box, fillcolor="#e8e6f4", label="OX-56 recovery\nDiscard the incomplete candidate; select the\ncurrently bundled First City baseline"];
+  commit [shape=box, fillcolor="#d5ece7", label="Commit the complete First City baseline\nas one scene choice\nNo partial scene or asset commit"];
+  exit [shape=box, penwidth=2, color="#28715c", fillcolor="#d5ece7", label="Exit state\nFirst City baseline is visible; the existing\nforecast readout and timeline remain operational;\nno process failure"];
+
+  forecast [shape=note, fillcolor="#fff9e7", color="#a88a46", label="Preserve exactly across recovery\n• selected forecast instant\n• place and active catalog revision\n• supplied forecast facts and their availability\n• timeline scale, selected position, and operation\nNo new fetch or app/process restart"];
+  boundary [shape=note, fillcolor="#f1f1ee", color="#8c9188", label="Outside OX-56\nNew import-time rejection remains OX-91 / OX-57.\nA failed new chooser candidate keeps OX-55's\nprevious committed scene. No install, catalog,\nsettings, entitlement, or relaunch policy change."];
+  disclosure [shape=note, fillcolor="#fff3cf", color="#b38a2e", label="UI proposal\nThe existing World control shows\n“World: First City”. No new banner or dialog\nis proposed; owner review is pending."];
+
+  session -> context -> resolve;
+  resolve -> accepted [label="yes"];
+  accepted -> success;
+  resolve -> missing [label="no file"];
+  resolve -> invalid [label="invalid / rejected"];
+  missing -> fallback;
+  invalid -> fallback;
+  fallback -> commit -> exit;
+  session -> forecast [style=dashed, arrowhead=none, label="held constant"];
+  commit -> forecast [style=dashed, arrowhead=none, label="preserved"];
+  context -> boundary [style=dotted, arrowhead=none, label="scope boundary"];
+  exit -> disclosure [style=dotted, arrowhead=none, label="visible status proposal"];
+}

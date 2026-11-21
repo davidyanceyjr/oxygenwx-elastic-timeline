@@ -1,0 +1,41 @@
+digraph OX55PackRenderer {
+  graph [
+    label="OX-55 · Instantiate one validated pack in the existing renderer\nOX-55 PROPOSED FLOW",
+    labelloc=t,
+    fontsize=21,
+    fontname="DejaVu Sans",
+    rankdir=TB,
+    bgcolor="#f6f8fb",
+    pad=0.32,
+    nodesep=0.34,
+    ranksep=0.48,
+    splines=polyline,
+    newrank=true
+  ];
+  node [shape=box, style="rounded,filled", fontname="DejaVu Sans", fontsize=12,
+        color="#456176", fillcolor="#ffffff", fontcolor="#173044", margin="0.18,0.14"];
+  edge [fontname="DejaVu Sans", fontsize=9, color="#577487", fontcolor="#36566b", arrowsize=0.8];
+
+  session [label="Existing catalog session\nSame place · catalog · selected instant\nProposed temporary World-control choice", fillcolor="#e9f2f7"];
+  artifact [label="Built OX-53 First City olive archive\nOX-91 validates via the OX-26 decoder\nComplete manifest + asset bytes + identity", fillcolor="#e5f4ed", color="#4b8b69"];
+  gate [label="OX-55 renderer gate\nPolicy v1 · first-city world\nKnown first-city.canopy.image-png only", fillcolor="#e5f4ed", color="#4b8b69"];
+  decode [label="Bounded PNG decode\nCheck dimensions before allocation\nFinite, evidence-based load-memory budget", fillcolor="#e5f4ed", color="#4b8b69"];
+  compose [label="Prepare complete CANOPY input\nReuse selected-time weather decision\nKeep identity · geometry · pass · depth", fillcolor="#e5f4ed", color="#4b8b69"];
+  renderer [label="Existing First City Canvas renderer\nDraw loaded image in the existing CANOPY slot\nNo other scene or weather layer changes", fillcolor="#e5f4ed", color="#4b8b69"];
+  capture [label="Installed comparison capture\nBundled baseline ↔ loaded olive pack\nSame place · catalog · instant · forecast facts", fillcolor="#dff0e5", color="#4b8b69", penwidth=1.5];
+  reject [label="Any validation, support, decode, or budget rejection\nNo candidate activation · no partial scene commit\nUnknown renderer requirements never execute", fillcolor="#fae9e8", color="#b45d55"];
+  preserve [label="Keep the bundled First City available\nDetailed missing/invalid package recovery is OX-56", fillcolor="#fae9e8", color="#b45d55"];
+
+  { rank=same; session; artifact; }
+  session -> artifact [label="select proposed olive proof choice"];
+  artifact -> gate [label="complete accepted result", minlen=1];
+  gate -> decode [label="known capability only"];
+  decode -> compose [label="within finite budget"];
+  compose -> renderer [label="candidate ready"];
+  renderer -> capture [label="commit after preparation"];
+
+  gate -> reject [color="#b45d55", fontcolor="#9a4942", style=dashed, label="unsupported"];
+  artifact -> reject [color="#b45d55", fontcolor="#9a4942", style=dashed, label="rejected"];
+  decode -> reject [color="#b45d55", fontcolor="#9a4942", style=dashed, label="decode / budget failure"];
+  reject -> preserve [color="#b45d55"];
+}

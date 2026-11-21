@@ -111,6 +111,26 @@ selects values from evidence in its bounded implementation slice.
 | Package extraction, including entry count, expanded data, staged storage, and extraction working memory | OX-57 bounds staged extraction before commit. | Abort the staged import before commit; do not partially commit the candidate. |
 | Renderer load memory, including decoded assets and candidate-scene allocations | OX-55 bounds candidate loading before activation; OX-91 validates actual resource bytes against its assigned limits before handoff. | Reject the candidate before scene activation; keep the bundled free scene available. |
 
+### OX-55 validation-build renderer load
+
+The First City olive proof uses an 8,388,608-byte (8 MiB) candidate-load cap.
+After OX-91 accepts the complete archive, the renderer checks the validated
+PNG header for the fixed 1024 × 1536 CANOPY dimensions. Before allocating
+pixels, it uses checked wide arithmetic to admit only
+`retained PNG bytes + (width × height × 4 ARGB_8888 bytes) + 524,288 reserve
+bytes <= 8,388,608`. The retained PNG byte array, one decoded bitmap, and a
+fixed allowance for decode and candidate preparation are counted. The
+`ImageBitmap` view shares the bitmap's pixels; the disk-backed staging file is
+outside this retained-load sum. A rejected validator result, unsupported
+renderer requirement, failed dimension/budget check, or failed decode leaves
+the committed World choice and visible scene intact.
+
+The accepted olive PNG estimates 8,202,010 bytes under this formula. The
+focused Pixel 3 XL measurement found 7,885,962 bytes of retained bytes,
+bitmap, native working peak, and Java peak; its scope and raw outputs are in
+[cycle 164 measurement evidence](../.codex/test-artifacts/164-ox55-pack-renderer/README.md).
+This cap covers the OX-55 candidate load, not total process or GPU memory.
+
 Passing one budget does not waive another owner's boundary. Exceeding any
 limit rejects the whole candidate at the owning boundary; there is no partial
 scene activation or package commit. OX-52 defines no container, transport,

@@ -1,0 +1,51 @@
+digraph OX31InstalledCatalog {
+  graph [
+    label="OX-31 — App-managed installed-theme catalog contract\nBehavior proposal · no visible UI change",
+    labelloc=t,
+    fontsize=26,
+    fontname="Arial",
+    rankdir=TB,
+    nodesep=0.35,
+    ranksep=0.55,
+    pad=0.3,
+    bgcolor="white"
+  ];
+  node [shape=box, style="rounded,filled", fontname="Arial", fontsize=14, margin="0.22,0.14", color="#475569", fillcolor="#F8FAFC"];
+  edge [fontname="Arial", fontsize=12, color="#475569", arrowsize=0.8];
+
+  subgraph cluster_sources {
+    label="App-managed catalog inputs";
+    fontsize=14;
+    fontname="Arial";
+    color="#94A3B8";
+    style="rounded";
+
+    builtin [label="Built-in free theme registration\nApp-defined stable built-in identity\nAlways present · never removable", fillcolor="#E0F2FE"];
+    appowned [label="Known app-owned pack record\nStable logical identity from OX-20 packId\nKnown compatibility disposition", fillcolor="#DCFCE7"];
+    unknown [label="Unregistered filesystem content\nNo global scan\nNot a catalog entry", fillcolor="#F1F5F9", style="rounded,filled,dashed"];
+    schema [label="OX-20 / OX-53 version fields\nmanifestVersion = envelope schema\nrendererPolicyVersion = separate policy", fillcolor="#FEF3C7"];
+
+    { rank=same; builtin; appowned; }
+    { rank=same; unknown; schema; }
+  }
+
+  query [label="Catalog query\nRead only app-managed registrations\nNo install, import, or scene activation", fillcolor="#EDE9FE"];
+  record [label="Catalog entry contract\nStable ID · version · display name\nOrigin: bundled free / app-owned\nValidity: always available / compatible / incompatible", fillcolor="#DBEAFE"];
+  result [label="Query result\nBundled free entry remains present\nKnown compatible and incompatible app-owned entries\nremain distinct", fillcolor="#DCFCE7"];
+  forecasts [label="Weather/session boundary\nNo weather interpretation\nNo place, catalog, selected-time, or forecast mutation", fillcolor="#FCE7F3"];
+  excluded [label="Outside OX-31\nGlobal filesystem scan · purchase provider\nSettings UI · installation · hot swap · recovery", fillcolor="#F1F5F9", style="rounded,filled,dashed"];
+  version_question [label="OWNER DECISION NEEDED\nWhat does catalog entry version identify?\nOX-20/53 do not define a pack release version.\nDo not reuse manifestVersion as content version.", shape=note, color="#B45309", fillcolor="#FEF3C7", penwidth=1.5];
+
+  { rank=same; record; version_question; }
+
+  builtin -> query [label="always included"];
+  appowned -> query [label="known records only"];
+  unknown -> excluded [style=dashed, label="not enumerated"];
+  schema -> appowned [label="identity / compatibility context"];
+  query -> record [label="returns typed metadata"];
+  record -> result;
+  result -> forecasts [style=dashed, label="no weather coupling"];
+  appowned -> version_question [style=dashed, label="release revision source unresolved"];
+  version_question -> record [style=dashed, color="#B45309", label="define before final plan"];
+  query -> excluded [style=dashed, label="no side effects"];
+}
