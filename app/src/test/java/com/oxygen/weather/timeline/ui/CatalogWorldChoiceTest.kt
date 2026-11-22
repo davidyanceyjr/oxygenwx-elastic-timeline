@@ -26,7 +26,7 @@ class CatalogWorldChoiceTest : CatalogCoordinatorTestSupport() {
         validity = InstalledThemeValidity.COMPATIBLE,
     )
 
-    @Test fun `world selection leaves active catalog and source request count unchanged`() = runBlocking {
+    @Test fun `park default and world selection leave active catalog and source request count unchanged`() = runBlocking {
         val sources = harness()
         val coordinator = sources.coordinator(this)
         coordinator.requestTransientLive(a, "Chicago").await()
@@ -35,9 +35,16 @@ class CatalogWorldChoiceTest : CatalogCoordinatorTestSupport() {
             sources.replay.requests.size
         val choice = CatalogWorldChoice<Unit>()
 
+        assertEquals(CatalogWorld.LIVING_URBAN_PARK, choice.selected)
+        assertEquals("Living Urban Park", choice.committed.label)
+        assertEquals("Bundled free · selected default",
+            choice.committed.detailFor(CatalogWorld.LIVING_URBAN_PARK))
+        choice.choose(CatalogWorld.FIRST_CITY)
         assertEquals(CatalogWorld.FIRST_CITY, choice.selected)
         choice.choose(CatalogWorld.OPEN_LANDSCAPE)
         assertEquals(CatalogWorld.OPEN_LANDSCAPE, choice.selected)
+        choice.choose(CatalogWorld.LIVING_URBAN_PARK)
+        assertEquals(CatalogWorld.LIVING_URBAN_PARK, choice.selected)
         choice.choose(CatalogWorld.FIRST_CITY)
         assertEquals(CatalogWorld.FIRST_CITY, choice.selected)
         assertSame(active, coordinator.state.value.active)
@@ -63,7 +70,7 @@ class CatalogWorldChoiceTest : CatalogCoordinatorTestSupport() {
         }
 
         withTimeout(2_000) { loaderStarted.await() }
-        assertEquals(CatalogWorld.FIRST_CITY, choice.committed.world)
+        assertEquals(CatalogWorld.LIVING_URBAN_PARK, choice.committed.world)
         assertNull(choice.committed.candidate)
 
         choice.choose(CatalogWorld.FIRST_CITY)

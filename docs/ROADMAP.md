@@ -73,6 +73,16 @@ The entries below preserve completed outcomes with their acceptance records, ver
 **Slice board(s) — Behavior:** Owner-approved flowchart `.codex/concepts/G.6-history-compaction-behavior-board.svg` on 2026-11-04 (editable `.dot`, review `.png`, and detailed `.md` at the same stem); no additional constraints stated. No UI artwork board applies.
 **Evidence:** `.codex/test-artifacts/100-g6-history-compaction/README.md`; `.codex/history/100-g6-history-compaction.md`; `.codex/history/plans/100-g6-history-compaction.md`.
 
+### G.7 — Make grouped-cycle and shared-board workflow explicit — PLANNED
+
+**Objective/scope:** Clarify the project planning guidance and tracker usage for executing related roadmap slices together in one dependency-ordered cycle, with a shared objective-specific board package when it makes every included slice independently reviewable. Preserve each slice's own dependency record, exit, status, authorization, and evidence; do not combine unrelated outcomes or weaken per-slice acceptance. No application behavior changes.
+**Depends on:** G.1 and G.2.
+**Exit:** `AGENTS.md`, `docs/ROADMAP_SPECIFICATION.md`, the planning skill, and cycle CLI help consistently explain grouped rosters and shared-board use; every grouped roster entry retains its own slice-level acceptance and a verifiable approval/fingerprint record for the package that covers it; the tracker continues to accept repeated slice arguments, validate dependency order, and display the complete roster; existing single-slice records remain readable; workflow and diff checks pass.
+**Evidence:** Future cycle-specific `.codex/test-artifacts/<cycle-id>/README.md` and `.codex/history/<cycle-id>.md`; assign exact paths when planned.
+**Slice board(s):** Objective-specific behavior board pending at `.codex/concepts/G.7-grouped-cycle-shared-board-behavior-board.dot`, with SVG and PNG renders. No UI artwork board applies because the slice changes project workflow documentation and command-line guidance, not app UI. Owner approval required before final plan review.
+
+**Owner direction (2026-11-22):** Keep cycle 169 limited to OX-25. Make grouped-cycle and shared-board handling explicit as a separate workflow follow-up; do not fold the workflow change into OX-25.
+
 ## WX — OxygenWX unified 44-day weather catalog and production data path
 
 The completed WX entries below record the successor catalog, location, startup, and timeline outcomes with their cycle evidence.
@@ -1395,13 +1405,15 @@ The SG workstream follows the owner-directed pivot recorded above and is grounde
 
 **Owner re-entry decision (2026-11-21):** After OX-32 closed DONE in cycle 167, the owner selected OX-56 as the sole global NEXT for cycle 168 planning. Add OX-32 as a direct dependency as required by the cycle 165 re-entry condition. Reuse the unchanged cycle 165 approved board packages and preserve their trigger, First City fallback, and UI constraints. Planning does not activate or authorize implementation.
 
-### OX-25 — Author the park entrance and curved-path scaffold — PLANNED
+### OX-25 — Author the park entrance and curved-path scaffold — DONE
 
-**Objective/scope:** Render a coarse, replaceable Living Urban Park path, entrance and distant background in one authored scene using the proven minimal element contract. Do not wait for cross-world style parity, complete weather renderers, pack import or final artwork.
+**Objective/scope:** Create the Living Urban Park world composition with a coarse distant backdrop, curved path and foreground entrance as retained scene components using the proven minimal element contract. Later Park slices add landmarks and may refine these components' geometry and visual treatment. Do not wait for cross-world style parity, complete weather renderers, pack import or final artwork.
 **Depends on:** OX-24, OX-41.
-**Exit:** An installed portrait scene has recognizable park entrance/path and distant backdrop, correct depth ordering and unchanged forecast/timeline operation; the First City route remains usable.
-**Evidence:** Future cycle-specific `.codex/test-artifacts/<cycle-id>/` and `.codex/history/<cycle-id>.md`; assign exact paths only when the slice is planned. Do not claim unperformed checks.
-**Slice board(s):** Objective-specific behavior board and UI artwork board pending for the affected installed states. Owner approval required.
+**Exit:** The installed portrait Park world uses its authored backdrop, curved path and entrance components in the app's Park composition, with recognizable placement and correct depth ordering; forecast/timeline operation is unchanged and the First City route remains usable.
+**Evidence:** Cycle 169 targets `.codex/test-artifacts/169-ox25-park-entrance-path/README.md` and `.codex/history/169-ox25-park-entrance-path.md`; do not claim unperformed checks.
+**Slice board(s):** Product-owner approved the behavior board package on 2026-11-22: `.codex/concepts/OX-25-park-entrance-path-behavior-board.dot` with its SVG and PNG renders. Product-owner approved the UI artwork package on 2026-11-22: `.codex/concepts/OX-25-park-entrance-path-ui-board.svg` and PNG review render. Cycle 169 records the exact package fingerprints. The boards use OX-41's daylight portrait landmark scope. The three components remain the Park scene foundation while their coarse artwork can evolve; the other Park landmarks remain outside OX-25.
+
+**Owner sequencing and board-approval decision (2026-11-22):** After OX-56 closed DONE, the owner selected OX-25 as the sole global `NEXT` for cycle 169 planning and approved both exact board packages listed above. OX-24 and OX-41 are DONE. Focused slice-specific tests are authorized; broad system/device matrices remain outside this slice. Board approval permits completion of the bounded plan and its review; it does not itself activate the slice or authorize implementation.
 
 ### OX-37 — Declare optional exact-data surfaces — PLANNED
 

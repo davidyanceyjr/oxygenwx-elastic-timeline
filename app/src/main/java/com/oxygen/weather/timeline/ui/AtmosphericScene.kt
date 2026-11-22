@@ -13,6 +13,7 @@ import androidx.compose.ui.graphics.Path
 import androidx.compose.ui.graphics.ImageBitmap
 import androidx.compose.ui.graphics.FilterQuality
 import androidx.compose.ui.graphics.drawscope.DrawScope
+import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.graphics.drawscope.clipRect
 import androidx.compose.ui.graphics.lerp
 import androidx.compose.ui.res.imageResource
@@ -35,6 +36,12 @@ import com.oxygen.weather.timeline.presentation.scene.FirstCityElementId
 import com.oxygen.weather.timeline.presentation.scene.FirstCityLayer
 import com.oxygen.weather.timeline.presentation.scene.FirstCityTheme
 import com.oxygen.weather.timeline.presentation.scene.FirstCityWorldBounds
+import com.oxygen.weather.timeline.presentation.scene.LivingUrbanParkComposition
+import com.oxygen.weather.timeline.presentation.scene.LivingUrbanParkDepthPass
+import com.oxygen.weather.timeline.presentation.scene.LivingUrbanParkElementId
+import com.oxygen.weather.timeline.presentation.scene.LivingUrbanParkElementRole
+import com.oxygen.weather.timeline.presentation.scene.LivingUrbanParkGeometry
+import com.oxygen.weather.timeline.presentation.scene.ParkPoint
 import com.oxygen.weather.timeline.presentation.scene.canopyRenderInput
 import com.oxygen.weather.timeline.presentation.scene.treeGroupRenderInput
 import com.oxygen.weather.timeline.presentation.scene.OpenLandscapeElementId
@@ -230,6 +237,206 @@ fun CatalogOpenLandscapeScene(
             CityPrecipitation.NONE, CityPrecipitation.STORM -> Unit
         }
     }
+}
+
+/** Living Urban Park keeps its authored elements while consuming the shared selected-time weather. */
+@Composable
+fun CatalogLivingUrbanParkScene(
+    composition: LivingUrbanParkComposition,
+    modifier: Modifier = Modifier,
+) {
+    val weather = composition.weatherDecision
+    val reducedMotion = !ValueAnimator.areAnimatorsEnabled()
+    Canvas(modifier.fillMaxSize()) {
+        val sky = weather.sky
+        if (sky == null) {
+            drawRect(
+                brush = Brush.verticalGradient(
+                    0f to Color(0xFF52697B),
+                    .58f to Color(0xFF647B89),
+                    1f to Color(0xFF82918A),
+                ),
+            )
+        } else {
+            val cloudiness = weather.clouds.coverFraction
+            val storm = weather.precipitation == CityPrecipitation.STORM
+            drawSkyPalette(sky.condition, sky.daylight, cloudiness, storm)
+            if (weather.precipitation == CityPrecipitation.RAIN) {
+                drawRect(Brush.verticalGradient(
+                    0f to Color(0xFF4B6072), .55f to Color(0xFF5F7385),
+                    1f to Color.Transparent,
+                ))
+            }
+        }
+        if (weather.clouds.visible) {
+            clipRect(bottom = size.height * CLOUD_REGION_FRACTION) {
+                drawOpenLandscapeClouds(weather.clouds, reducedMotion)
+            }
+        }
+
+        check(composition.selectedInstant == weather.selectedInstant)
+        check(composition.elements.map { it.pass } == listOf(
+            LivingUrbanParkDepthPass.BACKGROUND,
+            LivingUrbanParkDepthPass.PATH,
+            LivingUrbanParkDepthPass.FOREGROUND,
+        ))
+        composition.elements.forEach { element ->
+            when (val geometry = element.geometry) {
+                is LivingUrbanParkGeometry.Backdrop -> {
+                    check(element.id == LivingUrbanParkElementId.DISTANT_BACKDROP)
+                    check(element.role == LivingUrbanParkElementRole.DISTANT_BACKDROP)
+                    drawParkBackdrop(geometry.horizon, geometry.skyline, sky, weather.clouds.coverFraction,
+                        weather.precipitation == CityPrecipitation.STORM)
+                }
+                is LivingUrbanParkGeometry.CurvedPath -> {
+                    check(element.id == LivingUrbanParkElementId.CURVED_PATH)
+                    check(element.role == LivingUrbanParkElementRole.PATH)
+                    check(element.pass == LivingUrbanParkDepthPass.PATH)
+                    drawParkCurvedPath(geometry.leftStart, geometry.leftEdge, geometry.rightStart, geometry.rightEdge)
+                }
+                is LivingUrbanParkGeometry.Entrance -> {
+                    check(element.id == LivingUrbanParkElementId.ENTRANCE)
+                    check(element.role == LivingUrbanParkElementRole.ENTRANCE)
+                    check(element.pass == LivingUrbanParkDepthPass.FOREGROUND)
+                    drawParkEntrance(geometry.leftTop, geometry.rightTop, geometry.rightBottom, geometry.leftBottom)
+                }
+            }
+        }
+        drawRect(
+            brush = Brush.verticalGradient(
+                0f to Color.Transparent,
+                .5f to Color(0x09091828),
+                1f to Color(0xDD081626),
+            ),
+        )
+        when (weather.precipitation) {
+            CityPrecipitation.RAIN -> drawCityRainField(startsAtCloudBase = weather.clouds.visible)
+            CityPrecipitation.SNOW -> drawCitySnowField()
+            CityPrecipitation.NONE, CityPrecipitation.STORM -> Unit
+        }
+    }
+}
+
+private fun DrawScope.drawParkBackdrop(
+    horizonFraction: Float,
+    skyline: List<ParkPoint>,
+    sky: com.oxygen.weather.timeline.presentation.scene.SceneSkyDecision?,
+    cloudiness: Double?,
+    storm: Boolean,
+) {
+    val horizon = size.height * horizonFraction
+    drawRect(
+        brush = Brush.verticalGradient(
+            0f to Color(0xFF7F9A79),
+            1f to Color(0xFF526D57),
+            startY = horizon,
+            endY = size.height,
+        ),
+        topLeft = Offset(0f, horizon),
+        size = Size(size.width, size.height - horizon),
+    )
+    val daylight = sky?.daylight?.toFloat() ?: .45f
+    val farColor = lerp(Color(0xFF435D68), Color(0xFF80999A), daylight)
+    val nearColor = lerp(Color(0xFF334D59), Color(0xFF617F82), daylight)
+    val horizonColor = sky?.let { sceneHorizonColor(it.condition, it.daylight, cloudiness, storm) }
+        ?: Color(0xFF8B9D91)
+    drawRect(
+        color = horizonColor.copy(alpha = .30f),
+        topLeft = Offset(0f, horizon - size.height * .014f),
+        size = Size(size.width, size.height * .05f),
+    )
+
+    val farSkyline = Path().apply {
+        val first = skyline.first()
+        moveTo(size.width * first.x, size.height * first.y)
+        skyline.drop(1).forEach { lineTo(size.width * it.x, size.height * it.y) }
+        close()
+    }
+    drawPath(farSkyline, farColor.copy(alpha = .82f))
+    val nearSkyline = Path().apply {
+        moveTo(0f, size.height * .62f)
+        lineTo(0f, size.height * .58f)
+        lineTo(size.width * .13f, size.height * .58f)
+        lineTo(size.width * .13f, size.height * .55f)
+        lineTo(size.width * .25f, size.height * .55f)
+        lineTo(size.width * .25f, size.height * .60f)
+        lineTo(size.width * .41f, size.height * .60f)
+        lineTo(size.width * .41f, size.height * .54f)
+        lineTo(size.width * .58f, size.height * .54f)
+        lineTo(size.width * .58f, size.height * .59f)
+        lineTo(size.width * .76f, size.height * .59f)
+        lineTo(size.width * .76f, size.height * .56f)
+        lineTo(size.width, size.height * .56f)
+        lineTo(size.width, size.height * .62f)
+        close()
+    }
+    drawPath(nearSkyline, nearColor.copy(alpha = .64f))
+}
+
+private fun DrawScope.drawParkCurvedPath(
+    leftStart: ParkPoint,
+    leftEdge: List<com.oxygen.weather.timeline.presentation.scene.ParkCubicSegment>,
+    rightStart: ParkPoint,
+    rightEdge: List<com.oxygen.weather.timeline.presentation.scene.ParkCubicSegment>,
+) {
+    fun ParkPoint.offset() = Offset(size.width * x, size.height * y)
+    val path = Path().apply {
+        moveTo(leftStart.offset().x, leftStart.offset().y)
+        leftEdge.forEach { segment ->
+            val control1 = segment.control1.offset()
+            val control2 = segment.control2.offset()
+            val end = segment.end.offset()
+            cubicTo(control1.x, control1.y, control2.x, control2.y, end.x, end.y)
+        }
+        val right = rightStart.offset()
+        lineTo(right.x, right.y)
+        rightEdge.forEach { segment ->
+            val control1 = segment.control1.offset()
+            val control2 = segment.control2.offset()
+            val end = segment.end.offset()
+            cubicTo(control1.x, control1.y, control2.x, control2.y, end.x, end.y)
+        }
+        close()
+    }
+    drawPath(path, Color(0xFF6F614D).copy(alpha = .38f), style = Stroke(width = size.width * .008f))
+    drawPath(
+        path,
+        brush = Brush.verticalGradient(
+            0f to Color(0xFFB6A184).copy(alpha = .84f),
+            1f to Color(0xFF89785F).copy(alpha = .88f),
+        ),
+    )
+    drawPath(path, Color(0xFF655844).copy(alpha = .58f), style = Stroke(width = size.width * .003f))
+}
+
+private fun DrawScope.drawParkEntrance(
+    leftTop: ParkPoint,
+    rightTop: ParkPoint,
+    rightBottom: ParkPoint,
+    leftBottom: ParkPoint,
+) {
+    fun ParkPoint.offset() = Offset(size.width * x, size.height * y)
+    val corners = listOf(leftTop, rightTop, rightBottom, leftBottom).map { it.offset() }
+    val threshold = Path().apply {
+        moveTo(corners[0].x, corners[0].y)
+        corners.drop(1).forEach { lineTo(it.x, it.y) }
+        close()
+    }
+    drawPath(threshold, Color(0xFF897558))
+    drawPath(
+        threshold,
+        Color(0xFFE7D8BA),
+        style = Stroke(width = size.width * .004f),
+    )
+    val left = corners[0]
+    val right = corners[1]
+    drawLine(
+        color = Color(0xFFF0E5CC),
+        start = Offset(left.x + size.width * .012f, left.y + size.height * .018f),
+        end = Offset(right.x - size.width * .012f, right.y + size.height * .018f),
+        strokeWidth = size.width * .006f,
+        cap = androidx.compose.ui.graphics.StrokeCap.Round,
+    )
 }
 
 /** First-city catalog route. A missing weather state omits all condition marks, never implying clear. */

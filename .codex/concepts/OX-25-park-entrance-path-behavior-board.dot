@@ -1,0 +1,86 @@
+digraph OX25 {
+  graph [
+    label="OX-25 | Living Urban Park entrance + curved-path scaffold\nPROPOSED FOR PRODUCT-OWNER REVIEW | Board approval pending",
+    labelloc=t,
+    fontsize=21,
+    fontname="DejaVu Sans",
+    bgcolor="#f6f8f3",
+    pad=0.35,
+    rankdir=TB,
+    ranksep=0.65,
+    nodesep=0.42,
+    splines=polyline
+  ];
+  node [shape=box, style="rounded,filled", fillcolor="#ffffff", color="#718276", fontname="DejaVu Sans", fontsize=12, margin="0.20,0.13"];
+  edge [color="#526c60", fontname="DejaVu Sans", fontsize=10, arrowsize=0.72];
+
+  subgraph cluster_entry {
+    label="World entry | reuse the completed OX-19 choice contract";
+    color="#8aa58e";
+    style="rounded,filled";
+    fillcolor="#edf2e9";
+    fontsize=14;
+
+    default [label="Catalog screen opens on\nLiving Urban Park\nBundled free default per OX-41", fillcolor="#e0edde"];
+    chooser [label="Existing in-session\nWorld control\nNo new page or chooser redesign", fillcolor="#ffffff"];
+    first_city [label="First City remains selectable\nand renders through its existing route", fillcolor="#e5eef7"];
+    open_landscape [label="Open Landscape remains\navailable as today", fillcolor="#f3f0e8"];
+
+    default -> chooser [label="open World"];
+    chooser -> first_city [label="choose First City"];
+    chooser -> open_landscape [label="choose Open Landscape"];
+  }
+
+  subgraph cluster_inputs {
+    label="Unchanged forecast and interaction inputs";
+    color="#9aabba";
+    style="rounded,filled";
+    fillcolor="#eef3f7";
+    fontsize=14;
+
+    facts [label="Same place + catalog revision\nExact catalog-selected instant", fillcolor="#e3eef4"];
+    decision [label="Existing shared\nSceneWeatherDecision\nNo new weather interpretation", fillcolor="#e3eef4"];
+    ui [label="Forecast text + selected-time\nreadout + timeline", fillcolor="#e3eef4"];
+    facts -> decision [label="existing projection"];
+    facts -> ui;
+  }
+
+  subgraph cluster_park {
+    label="One authored Park composition | bounded OX-25 output";
+    color="#b29b79";
+    style="rounded,filled";
+    fillcolor="#f4efe5";
+    fontsize=14;
+
+    backdrop [label="PARK-OWNED BACKDROP\nDistant skyline component\nRetained in the Park scene;\ncoarse artwork can evolve", fillcolor="#e8f1f7"];
+    path [label="PARK-LOCAL ELEMENT\nCentral curved path\nStable identity + role + pass +\nlogical geometry\nRetained in the Park scene", fillcolor="#eee4d1"];
+    entrance [label="PARK-LOCAL ELEMENT\nForeground entrance threshold\nStable identity + role + pass +\nlogical geometry\nRetained in the Park scene", fillcolor="#e2e9d8"];
+    park [label="Living Urban Park\napp world composition\nlater landmarks join this scene", fillcolor="#dcebdc"];
+    weather_layer [label="Existing weather rendering\nuses the same selected instant\nand shared weather decision", fillcolor="#e3eef4"];
+    composed [label="Installed portrait scene\nPark scaffold + existing weather\nforecast facts remain readable", fillcolor="#d8ebe7"];
+
+    backdrop -> path [label="behind"];
+    path -> entrance [label="reaches threshold; entrance in front"];
+    backdrop -> park;
+    path -> park;
+    entrance -> park;
+    park -> composed;
+    weather_layer -> composed;
+  }
+
+  default -> park [label="initial bundled world"];
+  decision -> weather_layer;
+  ui -> composed [label="same selected time; existing timeline gestures"];
+  first_city_ok [label="First City route stays operational\nwithout changing forecast or timeline", fillcolor="#e5eef7"];
+  first_city -> first_city_ok [label="preserved route"];
+  composed -> acceptance [label="focused slice acceptance"];
+  first_city_ok -> acceptance;
+
+  acceptance [label="OX-25 observable exit\nInstalled Park world uses its authored backdrop,\ncurved path and entrance in the app composition;\nplacement and depth are recognizable and correct;\nforecast/timeline operate; First City remains usable.", fillcolor="#d8ebe7"];
+
+  scope [shape=note, style="filled", fillcolor="#fff9e7", color="#baaa77", label="Scope and continuity\nThis slice creates the Park world composition used by the app.\nBackdrop, curved path and entrance stay as its components;\nlater slices may refine authored geometry and artwork.\nMural/data surface, vegetation and benches, shelter,\nfinished skyline/materials, weather-renderer families,\npack import and cross-world style parity remain later work.\nConcept reference informs landmarks only; its sample readings,\nweather, logo and detailed artwork are not requirements.\nFocused OX-25 tests and installed evidence only; no broad matrix."];
+  scope -> park [style=dashed, arrowhead=none];
+
+  invariant [shape=note, style="filled", fillcolor="#eef4f5", color="#9aabba", label="Preserve OX-19: changing worlds does not change\nplace, catalog revision, exact selected instant,\nor trigger a forecast fetch / process restart.\nAtmospheric art remains decorative; forecast values\nand timeline remain the readable source of facts."];
+  invariant -> composed [style=dashed, arrowhead=none];
+}

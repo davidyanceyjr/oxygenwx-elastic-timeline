@@ -88,6 +88,7 @@ import com.oxygen.weather.timeline.presentation.symbol.WeatherSymbolIcon
 import com.oxygen.weather.timeline.presentation.symbol.drawWeatherSymbol
 import com.oxygen.weather.timeline.presentation.scene.FirstCityComposition
 import com.oxygen.weather.timeline.presentation.scene.FirstCityTheme
+import com.oxygen.weather.timeline.presentation.scene.LivingUrbanParkTheme
 import com.oxygen.weather.timeline.presentation.scene.MinimalOpenLandscapeTheme
 import com.oxygen.weather.timeline.presentation.scene.SceneReading
 import com.oxygen.weather.timeline.presentation.scene.SceneWeatherDecision
@@ -221,7 +222,11 @@ private fun CatalogTimeLabScreenContent(
         // Keep foreground typography and pictograms proportional to the available
         // width. The atmospheric canvas already scales independently to fill it.
         val responsiveScale = (maxWidth.value / 411f).coerceIn(.75f, 1f)
-        if (sceneReading != null && worldChoice.selected == CatalogWorld.OPEN_LANDSCAPE) {
+        if (sceneReading != null && worldChoice.selected == CatalogWorld.LIVING_URBAN_PARK) {
+            CatalogLivingUrbanParkScene(
+                LivingUrbanParkTheme.compose(SceneWeatherDecision.resolve(sceneReading, view.zone)),
+            )
+        } else if (sceneReading != null && worldChoice.selected == CatalogWorld.OPEN_LANDSCAPE) {
             CatalogOpenLandscapeScene(
                 MinimalOpenLandscapeTheme.compose(SceneWeatherDecision.resolve(sceneReading, view.zone)),
             )
@@ -508,6 +513,7 @@ private fun CatalogTimeLabScreenContent(
 }
 
 internal enum class CatalogWorld(val label: String, val chooserLabel: String) {
+    LIVING_URBAN_PARK("Living Urban Park", "Living Urban Park"),
     FIRST_CITY("First City", "First City"),
     OPEN_LANDSCAPE("Open Landscape", "Minimal Open Landscape"),
     OLIVE_PACK("First City · Olive pack", "First City · Olive pack"),
@@ -524,14 +530,15 @@ internal data class CatalogWorldCommittedSelection<T>(
     val observationId: String get() = installedTheme?.let { "${world.name}:${it.id.value}" } ?: world.name
 
     fun detailFor(option: CatalogWorld): String? = when {
+        option == CatalogWorld.LIVING_URBAN_PARK -> "Bundled free · selected default"
         option == CatalogWorld.FIRST_CITY -> "Bundled free"
         else -> null
     }
 }
 
 /** Owns one committed world and rejects completions superseded by a later World choice. */
-internal class CatalogWorldChoice<T> {
-    var committed by mutableStateOf(CatalogWorldCommittedSelection<T>(CatalogWorld.FIRST_CITY))
+internal class CatalogWorldChoice<T>(initialWorld: CatalogWorld = CatalogWorld.LIVING_URBAN_PARK) {
+    var committed by mutableStateOf(CatalogWorldCommittedSelection<T>(initialWorld))
         private set
 
     val selected: CatalogWorld get() = committed.world
