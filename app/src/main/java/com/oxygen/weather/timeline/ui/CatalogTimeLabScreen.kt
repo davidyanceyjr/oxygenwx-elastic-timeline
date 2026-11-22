@@ -561,11 +561,20 @@ internal class CatalogWorldChoice<T> {
         load: suspend (InstalledThemeCatalogEntry) -> T?,
         admissible: (T) -> Boolean,
     ): Boolean {
+        val wasCommittedInstalledWorld = committed.world == CatalogWorld.INSTALLED_PACK &&
+            committed.installedTheme == entry
         val requestId = ++request
-        val candidate = load(entry) ?: return false
-        if (!admissible(candidate) || requestId != request) return false
-        committed = CatalogWorldCommittedSelection(CatalogWorld.INSTALLED_PACK, entry, candidate)
-        return true
+        val candidate = load(entry)
+        if (requestId != request) return false
+        if (candidate != null && admissible(candidate)) {
+            committed = CatalogWorldCommittedSelection(CatalogWorld.INSTALLED_PACK, entry, candidate)
+            return true
+        }
+        if (wasCommittedInstalledWorld) {
+            committed = CatalogWorldCommittedSelection(CatalogWorld.FIRST_CITY)
+            return true
+        }
+        return false
     }
 }
 

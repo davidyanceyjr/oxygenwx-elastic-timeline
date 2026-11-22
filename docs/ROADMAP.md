@@ -1373,14 +1373,15 @@ The SG workstream follows the owner-directed pivot recorded above and is grounde
 
 **Owner sequencing decision (2026-11-21):** After OX-57 closed DONE, the owner explicitly selected OX-32 as the sole global `NEXT` for cycle 167 planning. OX-57, OX-19, and OX-55 are DONE. Selection does not approve the required boards, finalize the plan, activate the slice, or authorize implementation.
 
-### OX-56 — Recover safely from failed pack resolution — BLOCKED
+### OX-56 — Recover safely from failed pack resolution — DONE
 
 **Objective/scope:** Fail safely at scene resolution for a missing or invalid already referenced package, choosing the current bundled First City baseline without mutating forecast state. Import-time rejections are owned by OX-91/OX-57.
-**Depends on:** OX-55, OX-91.
-**Blocked by:** OX-32 has not yet provided the in-session installed-package resolution path required to reach the approved already-referenced-package failure. Re-enter after OX-32 is DONE; record it as a direct dependency before resuming OX-56 review.
+**Depends on:** OX-55, OX-91, OX-32.
 **Exit:** A scoped device-local resolution failure leaves the bundled First City baseline, exact selected weather and timeline operational with no partial scene commit or process failure.
-**Evidence:** Cycle 165 targets `.codex/test-artifacts/165-ox56-pack-resolution-recovery/` and `.codex/history/165-ox56-pack-resolution-recovery.md`; do not claim unperformed checks.
-**Slice board(s):** Product-owner-approved behavior package on 2026-11-20: `.codex/concepts/OX-56-pack-resolution-recovery-behavior-board.dot`, `.svg`, `.png`, and `.md`; approved UI artwork package: `.codex/concepts/OX-56-pack-resolution-recovery-ui-board.svg`, `.png`, and `.md`. Cycle 165 records SHA-256 fingerprints for every package file. The behavior board limits recovery to previously referenced packages missing or invalid at resolution, preserves the OX-91/OX-55 boundaries and forecast state, and selects the complete bundled First City baseline. The artwork uses the existing World control to show `World: First City`; the owner approved that as sufficient feedback, with no cause text, banner, dialog, or blocking state. Chicago and Friday 2:37 PM are reference-capture values, not fixed forecast inputs. The owner-selected First City fallback does not revise OX-41's future Living Urban Park free-default role. No implementation or installed acceptance is claimed.
+**Evidence:** Cycle 168 targets `.codex/test-artifacts/168-ox56-pack-resolution-recovery/README.md` and `.codex/history/168-ox56-pack-resolution-recovery.md`; the prior BLOCKED attempt is preserved in `.codex/test-artifacts/165-ox56-pack-resolution-recovery/` and `.codex/history/165-ox56-pack-resolution-recovery.md`.
+**Slice board(s):** Product-owner-approved behavior package on 2026-11-20: `.codex/concepts/OX-56-pack-resolution-recovery-behavior-board.dot`, `.svg`, `.png`, and `.md`; approved UI artwork package: `.codex/concepts/OX-56-pack-resolution-recovery-ui-board.svg`, `.png`, and `.md`. Cycle 165 records SHA-256 fingerprints for every package file. The behavior board limits recovery to previously referenced packages missing or invalid at resolution, preserves the OX-91/OX-55 boundaries and forecast state, and selects the complete bundled First City baseline. The artwork uses the existing World control to show `World: First City`; the owner approved that as sufficient feedback, with no cause text, banner, dialog, or blocking state. Chicago and Friday 2:37 PM are reference-capture values, not fixed forecast inputs. The owner-selected First City fallback does not revise OX-41's future Living Urban Park free-default role.
+
+**Execution outcome (2026-11-21):** The owner invoked `$oxygen-execute-plan` for cycle 168. Both missing-resource and invalid-content branches completed through the same in-session installed entry; the complete First City fallback preserved the active weather snapshot and the timeline remained operable. Cycle 168 records the focused verification, device evidence, and limits in `.codex/test-artifacts/168-ox56-pack-resolution-recovery/README.md`.
 
 **Owner sequencing decision (2026-11-20):** The owner selected OX-56 as the sole global `NEXT` after OX-55 closed. OX-55 and OX-91 are DONE. Selection started board preparation and an initial bounded draft; selection alone did not approve boards or authorize implementation.
 
@@ -1391,6 +1392,8 @@ The SG workstream follows the owner-directed pivot recorded above and is grounde
 **Owner sequencing decision (2026-11-20; superseded):** Preserve the approved already-referenced-package trigger. OX-56 follows OX-32, the first in-session installed-package resolution path. The owner later directed OX-56 to close as BLOCKED while OX-32 is unfinished; see the current blocker record above. The earlier `NEXT` selection is superseded.
 
 **Owner blocker decision (2026-11-20):** Close cycle 165 with OX-56 BLOCKED because OX-32 is still PLANNED and the current device-local flow has no already-referenced installed-package resolution path. Keep the approved OX-56 trigger and boards unchanged. Re-enter after OX-32 is DONE, then add OX-32 as an explicit dependency before review or implementation.
+
+**Owner re-entry decision (2026-11-21):** After OX-32 closed DONE in cycle 167, the owner selected OX-56 as the sole global NEXT for cycle 168 planning. Add OX-32 as a direct dependency as required by the cycle 165 re-entry condition. Reuse the unchanged cycle 165 approved board packages and preserve their trigger, First City fallback, and UI constraints. Planning does not activate or authorize implementation.
 
 ### OX-25 — Author the park entrance and curved-path scaffold — PLANNED
 

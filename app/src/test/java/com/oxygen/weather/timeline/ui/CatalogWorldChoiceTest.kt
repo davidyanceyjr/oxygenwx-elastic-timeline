@@ -14,9 +14,18 @@ import org.junit.Assert.assertEquals
 import org.junit.Assert.assertFalse
 import org.junit.Assert.assertNull
 import org.junit.Assert.assertSame
+import org.junit.Assert.assertTrue
 import org.junit.Test
 
 class CatalogWorldChoiceTest : CatalogCoordinatorTestSupport() {
+    private fun installedBaseline() = InstalledThemeCatalogEntry(
+        id = InstalledThemeId("first-city-canopy-baseline"),
+        version = InstalledThemeVersion("v1"),
+        displayName = "First City · Baseline pack",
+        origin = InstalledThemeOrigin.APP_OWNED,
+        validity = InstalledThemeValidity.COMPATIBLE,
+    )
+
     @Test fun `world selection leaves active catalog and source request count unchanged`() = runBlocking {
         val sources = harness()
         val coordinator = sources.coordinator(this)
@@ -43,13 +52,7 @@ class CatalogWorldChoiceTest : CatalogCoordinatorTestSupport() {
 
     @Test fun successfulOlderInstalledCandidateCannotReplaceNewerBundledChoice() = runBlocking {
         val choice = CatalogWorldChoice<String>()
-        val installed = InstalledThemeCatalogEntry(
-            id = InstalledThemeId("first-city-canopy-baseline"),
-            version = InstalledThemeVersion("v1"),
-            displayName = "First City · Baseline pack",
-            origin = InstalledThemeOrigin.APP_OWNED,
-            validity = InstalledThemeValidity.COMPATIBLE,
-        )
+        val installed = installedBaseline()
         val loaderStarted = CompletableDeferred<Unit>()
         val releaseCandidate = CompletableDeferred<String>()
         val installedRequest = async {
@@ -76,5 +79,73 @@ class CatalogWorldChoiceTest : CatalogCoordinatorTestSupport() {
         assertEquals(CatalogWorld.FIRST_CITY, choice.committed.world)
         assertEquals("First City", choice.committed.label)
         assertNull(choice.committed.candidate)
+    }
+
+    @Test fun missingCurrentInstalledResolutionFallsBackToBundledFirstCity() = runBlocking {
+        val choice = CatalogWorldChoice<String>()
+        val installed = installedBaseline()
+        assertTrue(choice.chooseInstalled(installed, { "complete installed candidate" }, { true }))
+        assertEquals(CatalogWorld.INSTALLED_PACK, choice.committed.world)
+        assertEquals(installed, choice.committed.installedTheme)
+
+        // A null candidate is the existing resolver/loader result for a missing installed asset.
+        assertTrue(choice.chooseInstalled(installed, { null }, { true }))
+        assertEquals(CatalogWorld.FIRST_CITY, choice.committed.world)
+        assertEquals("First City", choice.committed.label)
+        assertNull(choice.committed.installedTheme)
+        assertNull(choice.committed.candidate)
+    }
+
+    @Test fun invalidCurrentInstalledCandidateFallsBackToBundledFirstCity() = runBlocking {
+        val choice = CatalogWorldChoice<String>()
+        val installed = installedBaseline()
+        assertTrue(choice.chooseInstalled(installed, { "complete installed candidate" }, { true }))
+
+        assertTrue(choice.chooseInstalled(installed, { "inadmissible installed candidate" }, { false }))
+        assertEquals(CatalogWorld.FIRST_CITY, choice.committed.world)
+        assertEquals("First City", choice.committed.label)
+        assertNull(choice.committed.candidate)
+    }
+
+    @Test fun successfulCurrentInstalledResolutionKeepsTheInstalledWorld() = runBlocking {
+        val choice = CatalogWorldChoice<String>()
+        val installed = installedBaseline()
+        assertTrue(choice.chooseInstalled(installed, { "initial candidate" }, { true }))
+
+        assertTrue(choice.chooseInstalled(installed, { "resolved candidate" }, { true }))
+        assertEquals(CatalogWorld.INSTALLED_PACK, choice.committed.world)
+        assertEquals(installed, choice.committed.installedTheme)
+        assertEquals("resolved candidate", choice.committed.candidate)
+    }
+
+    @Test fun failedNewInstalledChoiceDoesNotReplaceTheCommittedWorld() = runBlocking {
+        val choice = CatalogWorldChoice<String>()
+        val before = choice.committed
+
+        assertFalse(choice.chooseInstalled(installedBaseline(), { null }, { true }))
+        assertEquals(before, choice.committed)
+    }
+
+    @Test fun failedOlderInstalledResolutionCannotReplaceNewerWorldChoice() = runBlocking {
+        val choice = CatalogWorldChoice<String>()
+        val installed = installedBaseline()
+        assertTrue(choice.chooseInstalled(installed, { "complete installed candidate" }, { true }))
+
+        val loaderStarted = CompletableDeferred<Unit>()
+        val releaseFailure = CompletableDeferred<String?>()
+        val installedRequest = async {
+            choice.chooseInstalled(installed, {
+                loaderStarted.complete(Unit)
+                releaseFailure.await()
+            }, admissible = { true })
+        }
+        withTimeout(2_000) { loaderStarted.await() }
+
+        choice.choose(CatalogWorld.OPEN_LANDSCAPE)
+        releaseFailure.complete(null)
+
+        assertFalse(withTimeout(2_000) { installedRequest.await() })
+        assertEquals(CatalogWorld.OPEN_LANDSCAPE, choice.committed.world)
+        assertEquals("Open Landscape", choice.committed.label)
     }
 }
