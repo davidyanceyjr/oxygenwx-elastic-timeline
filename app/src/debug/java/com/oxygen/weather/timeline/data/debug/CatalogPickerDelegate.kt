@@ -58,10 +58,13 @@ import com.oxygen.weather.timeline.data.catalog.CatalogLocation
 import com.oxygen.weather.timeline.data.scenepack.BundledFreeThemeMetadata
 import com.oxygen.weather.timeline.data.scenepack.InstalledThemeCatalog
 import com.oxygen.weather.timeline.data.scenepack.InstalledThemeOrigin
+import com.oxygen.weather.timeline.data.scenepack.InstalledThemeCatalogEntry
 import com.oxygen.weather.timeline.data.scenepack.InstalledThemeValidity
 import com.oxygen.weather.timeline.data.scenepack.InstalledThemeVersion
+import com.oxygen.weather.timeline.data.scenepack.ScenePackCurrentGeneration
 import com.oxygen.weather.timeline.data.scenepack.ScenePackInstallOutcome
 import com.oxygen.weather.timeline.data.scenepack.ScenePackInstaller
+import com.oxygen.weather.timeline.ui.FirstCityCanopyCandidateLoader
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import kotlinx.coroutines.launch
@@ -162,6 +165,11 @@ class CatalogPickerDelegate : ActivityVariantDelegate {
                 }
                 val result = installAndCatalog.first
                 val entries = installAndCatalog.second
+                host.publishInstalledThemeChoices(entries.filter { entry ->
+                    entry.id.value == FirstCityCanopyCandidateLoader.INSTALLED_BASELINE_PACK_ID &&
+                        entry.origin == InstalledThemeOrigin.APP_OWNED &&
+                        entry.validity == InstalledThemeValidity.COMPATIBLE
+                })
                 val matchingPackEntries = result.packId?.let { packId ->
                     entries.filter { it.id.value == packId && it.origin == InstalledThemeOrigin.APP_OWNED }
                 }.orEmpty()
@@ -216,6 +224,18 @@ class CatalogPickerDelegate : ActivityVariantDelegate {
                 Log.e(OX57_TAG, "event=OX57Install requestAccepted=false reason=${error.message}", error)
             }
         }
+    }
+
+    override fun resolveInstalledScenePack(
+        host: ActivityVariantDelegate.Host,
+        entry: InstalledThemeCatalogEntry,
+    ): ScenePackCurrentGeneration? {
+        if (entry.id.value != FirstCityCanopyCandidateLoader.INSTALLED_BASELINE_PACK_ID ||
+            entry.origin != InstalledThemeOrigin.APP_OWNED ||
+            entry.validity != InstalledThemeValidity.COMPATIBLE
+        ) return null
+        val installer = synchronized(this) { scenePackInstaller } ?: return null
+        return installer.resolveCurrentGeneration(entry)
     }
 
     override fun onCatalogActivationState(host: ActivityVariantDelegate.Host, state: CatalogActivationState) {

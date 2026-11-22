@@ -9,6 +9,8 @@ import com.oxygen.weather.timeline.data.catalog.CatalogActivationState
 import com.oxygen.weather.timeline.data.catalog.ActiveCatalogSelection
 import com.oxygen.weather.timeline.data.catalog.PlaceSearcher
 import com.oxygen.weather.timeline.data.catalog.SavedLocationRepository
+import com.oxygen.weather.timeline.data.scenepack.InstalledThemeCatalogEntry
+import com.oxygen.weather.timeline.data.scenepack.ScenePackCurrentGeneration
 import com.oxygen.weather.timeline.presentation.CatalogDiagnosticPresentation
 import com.oxygen.weather.timeline.presentation.CatalogTimelineScenePresentation
 import java.util.ServiceLoader
@@ -28,6 +30,10 @@ interface ActivityVariantDelegate {
     fun onSearchSubmission(host: Host, query: String): Boolean = false
     suspend fun beforeOrdinaryAction(host: Host) = Unit
     fun isDebugSessionActive(host: Host): Boolean = false
+    fun resolveInstalledScenePack(
+        host: Host,
+        entry: InstalledThemeCatalogEntry,
+    ): ScenePackCurrentGeneration? = null
     @Composable fun DebugSessionMenu(host: Host) = Unit
     @Composable fun MainScreenOverlay(host: Host, diagnostics: CatalogDiagnosticPresentation) = Unit
 
@@ -36,6 +42,7 @@ interface ActivityVariantDelegate {
         val activityScope: LifecycleCoroutineScope
         val savedLocations: SavedLocationRepository
         val activationCoordinator: CatalogActivationCoordinator
+        fun publishInstalledThemeChoices(entries: List<InstalledThemeCatalogEntry>) = Unit
         fun restoreStartupCatalog()
         fun setDebugSessionMenuVisible(visible: Boolean) = Unit
         fun closeLocationSelector() = Unit

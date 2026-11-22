@@ -32,6 +32,14 @@ data class ScenePackInstallResult(
     val supersededGenerationCleanupFailed: Boolean = false,
 )
 
+/** One app-owned generation resolved from its current pointer and record in the live process. */
+data class ScenePackCurrentGeneration(
+    val registration: AppOwnedThemeRegistration,
+    val manifest: ScenePackManifest,
+    val contentIdentity: String,
+    val assetBytes: ByteArray,
+)
+
 /** OX-57's finite filesystem and working-data limits, independent of OX-91 and OX-55. */
 internal object ScenePackInstallLimits {
     const val MAX_GENERATION_NODES = 64L
@@ -139,6 +147,60 @@ class ScenePackInstaller(private val appFilesDirectory: File) {
         synchronized(installLock) {
             val registrations = knownPackIds.mapNotNull(::readCurrentRegistration)
             InstalledThemeCatalog.query(bundledFreeMetadata, registrations)
+        }
+
+    /**
+     * Resolve only a registration known to this installer instance. The current-generation
+     * pointer selects the record, and that record's manifest path selects the exact asset bytes.
+     */
+    fun resolveCurrentGeneration(entry: InstalledThemeCatalogEntry): ScenePackCurrentGeneration? =
+        synchronized(installLock) {
+            val packId = entry.id.value
+            if (entry.origin != InstalledThemeOrigin.APP_OWNED ||
+                entry.validity != InstalledThemeValidity.COMPATIBLE ||
+                !PACK_ID.matches(packId) || packId !in knownPackIds
+            ) return@synchronized null
+
+            try {
+                val packRoot = File(storageRoot, packId)
+                val pointerFile = File(packRoot, CURRENT_POINTER_FILE)
+                if (!ScenePackInstallPaths.isConfined(storageRoot, packRoot) ||
+                    !ScenePackInstallPaths.isConfined(packRoot, pointerFile)
+                ) return@synchronized null
+                val pointer = readPointer(pointerFile) ?: return@synchronized null
+                val generationsRoot = File(packRoot, GENERATIONS_DIRECTORY)
+                val generationDirectory = File(generationsRoot, pointer.generationId)
+                if (!generationDirectory.isDirectory ||
+                    !ScenePackInstallPaths.isConfined(generationsRoot, generationDirectory)
+                ) return@synchronized null
+                val record = readRecord(generationDirectory, pointer.recordFileName)
+                    ?: return@synchronized null
+                val registration = record.registration
+                if (record.manifest.packId != packId || registration.packId != packId ||
+                    registration.displayName != entry.displayName || registration.version != entry.version ||
+                    registration.compatibility != AppOwnedThemeCompatibility.COMPATIBLE
+                ) return@synchronized null
+
+                val resource = ScenePackInstallPaths.resolveConfinedOutput(
+                    generationDirectory,
+                    record.manifest.assetReference.path,
+                ) ?: return@synchronized null
+                if (!resource.isFile || resource.length() > ScenePackInstallLimits.MAX_RESOURCE_BYTES) {
+                    return@synchronized null
+                }
+                val bytes = readBounded(resource, ScenePackInstallLimits.MAX_RESOURCE_BYTES.toInt())
+                val digest = MessageDigest.getInstance("SHA-256").digest(bytes).toHex()
+                if (digest != record.manifest.assetReference.sha256) return@synchronized null
+
+                ScenePackCurrentGeneration(
+                    registration = registration,
+                    manifest = record.manifest,
+                    contentIdentity = record.contentIdentity,
+                    assetBytes = bytes,
+                )
+            } catch (_: IOException) {
+                null
+            }
         }
 
     private fun installAccepted(

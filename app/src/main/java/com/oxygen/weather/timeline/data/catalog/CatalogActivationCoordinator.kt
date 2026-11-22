@@ -75,6 +75,7 @@ class CatalogActivationCoordinator(
     private val sources: CatalogSourceRegistry,
     private val clock: Clock,
     private val startupDatasetId: DatasetId = DatasetId("forecast-44d"),
+    private val onRequestStarted: (() -> Unit)? = null,
 ) {
     private val mutableState = MutableStateFlow(CatalogActivationState())
     val state: StateFlow<CatalogActivationState> = mutableState.asStateFlow()
@@ -324,6 +325,7 @@ class CatalogActivationCoordinator(
         transient: Boolean = false,
         transientName: String? = null,
     ): Deferred<DebugActivationResult> {
+        onRequestStarted?.invoke()
         sequence++
         activationTerminal = false
         val requestSequence = sequence

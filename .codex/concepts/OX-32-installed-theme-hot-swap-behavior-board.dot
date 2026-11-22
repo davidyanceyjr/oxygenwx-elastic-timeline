@@ -1,0 +1,46 @@
+digraph OX32 {
+  graph [
+    label="OX-32 | Hot-swap one installed theme during a running session\nBehavior proposal for product-owner review",
+    labelloc=t, fontsize=21, fontname="DejaVu Sans", bgcolor="#f5f8fb",
+    pad=.35, ranksep=.55, nodesep=.32, splines=polyline
+  ];
+  node [fontname="DejaVu Sans", fontsize=12, shape=box,
+    style="rounded,filled", fillcolor=white, color="#46617a", margin=".18,.12"];
+  edge [fontname="DejaVu Sans", color="#46617a", fontsize=10, arrowsize=.8];
+
+  session [label="Running session\nBundled free scene active\nWeather location, catalog revision, exact instant, facts and timeline are current",
+    fillcolor="#dcecf9"];
+  chooser [label="Open the existing World chooser\nValidation-build proof surface\nFirst City (Bundled free) + one OX-31 APP_OWNED / COMPATIBLE pack",
+    fillcolor="#fff0d7"];
+  installed [label="Select the installed pack\nUse the app-managed OX-31 entry installed by OX-57\nNo import or catalog refresh in this selection step",
+    fillcolor="#e8f3e7"];
+  candidate [label="Prepare one complete OX-55 renderer candidate\nApply the accepted capability/resource path and 8 MiB load bound\nKeep the current complete scene visible while preparing",
+    fillcolor="#e8f3e7"];
+  commit [label="Commit the prepared scene atomically\nOne active scene at the visible-frame boundary\nNever show a partial mix of old and new scene layers",
+    fillcolor="#d9eee5"];
+  pack [label="Installed pack visible\nSame Activity and process\nWeather state and timeline remain unchanged",
+    fillcolor="#dcecf9"];
+  back [label="Choose First City (Bundled free)\nReturn through the same in-session choice surface",
+    fillcolor="#fff0d7"];
+  free [label="Bundled free scene visible again\nSame location, catalog revision, exact instant, facts and timeline",
+    fillcolor="#dcecf9"];
+  rejected [label="If OX-55 candidate preparation rejects\nKeep the currently committed complete scene visible\nNo partial scene activation",
+    fillcolor="#f8e7e7", color="#9b5757"];
+
+  session -> chooser [label="open World"];
+  chooser -> installed [label="select local pack"];
+  installed -> candidate;
+  candidate -> commit [label="complete candidate"];
+  candidate -> rejected [label="unsupported / over budget / decode rejection"];
+  rejected -> chooser [label="close the selection surface", style=dashed];
+  commit -> pack [label="visible switch"];
+  pack -> back [label="open World"];
+  back -> free [label="select bundled free"];
+
+  invariants [shape=note, fillcolor="#edf4f7", color="#7893a3",
+    label="Every switch preserves: active weather location and catalog revision; exact selected instant and displayed facts; timeline state and ordinary gesture ownership.\nNo switch-triggered forecast fetch, Activity/process restart, stored theme preference, or Settings route."];
+  refs [shape=note, fillcolor="#f7ebed", color="#a7787c",
+    label="Dependencies: OX-19 scene/weather independence; OX-57 installed app-owned entry; OX-55 validated renderer and load gate; OX-31 installed catalog.\nOut of scope: OX-56 missing/invalid already-referenced-package recovery; OX-58 cold-relaunch restoration; OX-59 overlapping scrub/switch; OX-61 persistence; OX-69 Settings UI; paid packs and broad system acceptance."];
+  pack -> invariants [style=dotted, arrowhead=none];
+  free -> refs [style=dotted, arrowhead=none];
+}

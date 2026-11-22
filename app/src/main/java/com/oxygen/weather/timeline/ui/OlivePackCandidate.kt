@@ -5,6 +5,11 @@ import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import androidx.compose.ui.graphics.ImageBitmap
 import androidx.compose.ui.graphics.asImageBitmap
+import com.oxygen.weather.timeline.data.scenepack.AppOwnedThemeCompatibility
+import com.oxygen.weather.timeline.data.scenepack.InstalledThemeCatalogEntry
+import com.oxygen.weather.timeline.data.scenepack.InstalledThemeOrigin
+import com.oxygen.weather.timeline.data.scenepack.InstalledThemeValidity
+import com.oxygen.weather.timeline.data.scenepack.ScenePackCurrentGeneration
 import com.oxygen.weather.timeline.data.scenepack.ScenePackResourceValidationResult
 import com.oxygen.weather.timeline.data.scenepack.ScenePackResourceValidator
 import com.oxygen.weather.timeline.presentation.scene.FirstCityTheme
@@ -13,24 +18,27 @@ import java.io.IOException
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 
-/** A UI-owned, complete candidate. No renderer state changes until this is returned. */
-internal data class OlivePackCandidate(
+/** A complete First City CANOPY candidate. The active scene changes only after this is ready. */
+internal data class FirstCityCanopyCandidate(
     val image: ImageBitmap,
     val contentIdentity: String,
     val estimatedLoadBytes: Long,
 )
 
-internal object OlivePackCandidateLoader {
-    private const val ARCHIVE = "first-city-canopy-olive-v2.zip"
+internal object FirstCityCanopyCandidateLoader {
+    internal const val INSTALLED_BASELINE_PACK_ID = "first-city-canopy-baseline"
+
+    private const val OLIVE_PACK_ID = "first-city-canopy-olive"
+    private const val OLIVE_ARCHIVE = "first-city-canopy-olive-v2.zip"
     private const val CAPABILITY = "first-city.canopy.image-png"
     private const val CAP_BYTES = 8_388_608L
     private const val RESERVE_BYTES = 524_288L
 
-    suspend fun load(context: Context): OlivePackCandidate? = withContext(Dispatchers.IO) {
+    suspend fun loadBundledOlive(context: Context): FirstCityCanopyCandidate? = withContext(Dispatchers.IO) {
         val staged = try { File.createTempFile("ox55-", ".zip", context.cacheDir) }
             catch (_: IOException) { return@withContext null }
         val result = try {
-            context.assets.open(ARCHIVE).use { source ->
+            context.assets.open(OLIVE_ARCHIVE).use { source ->
                 staged.outputStream().use { target -> source.copyTo(target) }
             }
             ScenePackResourceValidator.validate(staged)
@@ -41,12 +49,66 @@ internal object OlivePackCandidateLoader {
         }
         val accepted = result as? ScenePackResourceValidationResult.Accepted
             ?: return@withContext null
-        prepare(accepted)
+        prepare(accepted, OLIVE_PACK_ID)
     }
 
-    internal fun prepare(accepted: ScenePackResourceValidationResult.Accepted): OlivePackCandidate? {
+    suspend fun loadInstalledBaseline(
+        entry: InstalledThemeCatalogEntry,
+        resolve: (InstalledThemeCatalogEntry) -> ScenePackCurrentGeneration?,
+    ): FirstCityCanopyCandidate? = withContext(Dispatchers.IO) {
+        if (entry.id.value != INSTALLED_BASELINE_PACK_ID ||
+            entry.origin != InstalledThemeOrigin.APP_OWNED ||
+            entry.validity != InstalledThemeValidity.COMPATIBLE
+        ) return@withContext null
+        val generation = resolve(entry) ?: return@withContext null
+        prepare(generation, entry)
+    }
+
+    /** Existing OX-55 bundled proof path. */
+    internal fun prepare(
+        accepted: ScenePackResourceValidationResult.Accepted,
+    ): FirstCityCanopyCandidate? = prepare(accepted, OLIVE_PACK_ID)
+
+    internal fun prepare(
+        accepted: ScenePackResourceValidationResult.Accepted,
+        expectedPackId: String,
+    ): FirstCityCanopyCandidate? {
         val manifest = accepted.manifest
-        if (manifest.packId != "first-city-canopy-olive" ||
+        val bytes = accepted.assetsByPath[manifest.assetReference.path] ?: return null
+        return prepare(manifest, accepted.contentIdentity, bytes, expectedPackId)
+    }
+
+    internal fun prepare(
+        generation: ScenePackCurrentGeneration,
+        entry: InstalledThemeCatalogEntry,
+    ): FirstCityCanopyCandidate? {
+        val registration = generation.registration
+        if (registration.packId != entry.id.value ||
+            registration.displayName != entry.displayName ||
+            registration.version != entry.version ||
+            registration.compatibility != AppOwnedThemeCompatibility.COMPATIBLE
+        ) return null
+        return prepare(
+            generation.manifest,
+            generation.contentIdentity,
+            generation.assetBytes,
+            entry.id.value,
+        )
+    }
+
+    internal fun withinBudget(candidate: FirstCityCanopyCandidate): Boolean =
+        candidate.estimatedLoadBytes <= CAP_BYTES
+
+    /** Read the validated PNG header and enforce the retained candidate budget before decode. */
+    internal fun admit(bytes: ByteArray): Boolean = estimate(bytes)?.let { it <= CAP_BYTES } ?: false
+
+    private fun prepare(
+        manifest: com.oxygen.weather.timeline.data.scenepack.ScenePackManifest,
+        contentIdentity: String,
+        bytes: ByteArray,
+        expectedPackId: String,
+    ): FirstCityCanopyCandidate? {
+        if (manifest.packId != expectedPackId ||
             manifest.worldDefinitionRef != "first-city" ||
             manifest.manifestVersion != 2 ||
             manifest.engineCompatibility != 1 ||
@@ -55,8 +117,6 @@ internal object OlivePackCandidateLoader {
             manifest.assetReference.mediaType != "image/png"
         ) return null
 
-        val bytes = accepted.assetsByPath[manifest.assetReference.path]
-            ?: return null
         val estimatedLoadBytes = estimate(bytes) ?: return null
         if (estimatedLoadBytes > CAP_BYTES) return null
         val bitmap = try { BitmapFactory.decodeByteArray(bytes, 0, bytes.size,
@@ -71,14 +131,8 @@ internal object OlivePackCandidateLoader {
             bitmap.recycle()
             return null
         }
-        return OlivePackCandidate(bitmap.asImageBitmap(), accepted.contentIdentity, estimatedLoadBytes)
+        return FirstCityCanopyCandidate(bitmap.asImageBitmap(), contentIdentity, estimatedLoadBytes)
     }
-
-    internal fun withinBudget(candidate: OlivePackCandidate): Boolean =
-        candidate.estimatedLoadBytes <= CAP_BYTES
-
-    /** Read the validated PNG header and enforce the retained candidate budget before decode. */
-    internal fun admit(bytes: ByteArray): Boolean = estimate(bytes)?.let { it <= CAP_BYTES } ?: false
 
     private fun estimate(bytes: ByteArray): Long? {
         if (bytes.size < 24) return null

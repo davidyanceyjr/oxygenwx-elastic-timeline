@@ -91,6 +91,10 @@ import com.oxygen.weather.timeline.presentation.scene.FirstCityTheme
 import com.oxygen.weather.timeline.presentation.scene.MinimalOpenLandscapeTheme
 import com.oxygen.weather.timeline.presentation.scene.SceneReading
 import com.oxygen.weather.timeline.presentation.scene.SceneWeatherDecision
+import com.oxygen.weather.timeline.data.scenepack.InstalledThemeCatalogEntry
+import com.oxygen.weather.timeline.data.scenepack.InstalledThemeOrigin
+import com.oxygen.weather.timeline.data.scenepack.InstalledThemeValidity
+import com.oxygen.weather.timeline.data.scenepack.ScenePackCurrentGeneration
 import com.oxygen.weather.timeline.BuildConfig
 import com.oxygen.weather.timeline.R
 import androidx.compose.ui.graphics.ImageBitmap
@@ -125,6 +129,8 @@ fun CatalogTimeLabScreen(
     diagnosticOverlay: (@Composable () -> Unit)? = null,
     onWorldObservation: ((String) -> Unit)? = null,
     worldControlBelowDebugBanner: Boolean = false,
+    installedThemeChoices: List<InstalledThemeCatalogEntry> = emptyList(),
+    resolveInstalledScenePack: ((InstalledThemeCatalogEntry) -> ScenePackCurrentGeneration?)? = null,
 ) = CatalogTimeLabScreenContent(
     presentation.timeline,
     presentation.reading,
@@ -134,6 +140,8 @@ fun CatalogTimeLabScreen(
     diagnosticOverlay,
     onWorldObservation,
     worldControlBelowDebugBanner,
+    installedThemeChoices,
+    resolveInstalledScenePack,
 )
 
 @Composable
@@ -150,20 +158,26 @@ private fun CatalogTimeLabScreenContent(
     diagnosticOverlay: (@Composable () -> Unit)? = null,
     onWorldObservation: ((String) -> Unit)? = null,
     worldControlBelowDebugBanner: Boolean = false,
+    installedThemeChoices: List<InstalledThemeCatalogEntry> = emptyList(),
+    resolveInstalledScenePack: ((InstalledThemeCatalogEntry) -> ScenePackCurrentGeneration?)? = null,
 ) {
     var precision by remember(view.generation) { mutableStateOf(false) }
     var browserOpen by remember { mutableStateOf(false) }
-    val worldChoice = remember { CatalogWorldChoice() }
+    val worldChoice = remember { CatalogWorldChoice<FirstCityCanopyCandidate>() }
     var worldChooserOpen by remember { mutableStateOf(false) }
-    var oliveImage by remember { mutableStateOf<ImageBitmap?>(null) }
-    var worldRequest by remember { mutableStateOf(0) }
+    val committedWorld = worldChoice.committed
     val context = LocalContext.current
     val scope = rememberCoroutineScope()
-    val selectedCanopyImage = when (worldChoice.selected) {
+    val selectedCanopyImage = when (committedWorld.world) {
         CatalogWorld.BASELINE_PROOF -> ImageBitmap.imageResource(R.drawable.sg2_city_canopy)
-        CatalogWorld.OLIVE_PACK -> oliveImage
+        CatalogWorld.OLIVE_PACK, CatalogWorld.INSTALLED_PACK -> committedWorld.candidate?.image
         else -> null
     }
+    val selectableInstalledThemes = if (BuildConfig.DEBUG) installedThemeChoices.filter { entry ->
+        entry.id.value == FirstCityCanopyCandidateLoader.INSTALLED_BASELINE_PACK_ID &&
+            entry.origin == InstalledThemeOrigin.APP_OWNED &&
+            entry.validity == InstalledThemeValidity.COMPATIBLE
+    } else emptyList()
     val compact = with(LocalDensity.current) { fontScale >= 1.3f }
     val latestSelected by rememberUpdatedState(view.selectedInstant)
     val isRtl = LocalLayoutDirection.current == LayoutDirection.Rtl
@@ -239,14 +253,14 @@ private fun CatalogTimeLabScreenContent(
         }
         if (sceneReading != null) {
             TextButton(
-                onClick = { onWorldObservation?.invoke("open:${worldChoice.selected.name}"); worldChooserOpen = true },
+                onClick = { onWorldObservation?.invoke("open:${committedWorld.observationId}"); worldChooserOpen = true },
                 modifier = Modifier.align(Alignment.TopCenter).statusBarsPadding()
                     .padding(top = if (worldControlBelowDebugBanner) 90.dp else 30.dp)
                     .background(Color(0xDD173044), RoundedCornerShape(24.dp))
                     .border(1.dp, Color(0xFF9ECBD8), RoundedCornerShape(24.dp))
                     .testTag("catalogWorldControl"),
             ) {
-                Text("World: ${worldChoice.selected.label} ▾", color = Color.White,
+                Text("World: ${committedWorld.label} ▾", color = Color.White,
                     style = TextStyle(shadow = readoutShadow))
             }
         }
@@ -424,34 +438,63 @@ private fun CatalogTimeLabScreenContent(
                 title = { Text("Choose world") },
                 text = {
                     Column {
-                        CatalogWorld.entries.filter {
-                            BuildConfig.DEBUG || it !in setOf(CatalogWorld.OLIVE_PACK, CatalogWorld.BASELINE_PROOF)
+                        CatalogWorld.entries.filter { option ->
+                            option != CatalogWorld.INSTALLED_PACK &&
+                                (BuildConfig.DEBUG || option !in setOf(CatalogWorld.OLIVE_PACK, CatalogWorld.BASELINE_PROOF))
                         }.forEach { option ->
                             TextButton(
                                 onClick = {
                                     worldChooserOpen = false
-                                    val request = ++worldRequest
                                     if (option == CatalogWorld.OLIVE_PACK) {
                                         scope.launch {
-                                            val candidate = OlivePackCandidateLoader.load(context)
-                                            if (request == worldRequest && candidate != null &&
-                                                OlivePackCandidateLoader.withinBudget(candidate)
-                                            ) {
-                                                oliveImage = candidate.image
-                                                worldChoice.choose(option)
-                                                onWorldObservation?.invoke("selected:${option.name}")
-                                            }
+                                            val committed = worldChoice.chooseLoaded(option, {
+                                                FirstCityCanopyCandidateLoader.loadBundledOlive(context)
+                                            }, FirstCityCanopyCandidateLoader::withinBudget)
+                                            if (committed) onWorldObservation?.invoke(
+                                                "selected:${worldChoice.committed.observationId}",
+                                            )
                                         }
                                     } else {
-                                        oliveImage = null
                                         worldChoice.choose(option)
-                                        onWorldObservation?.invoke("selected:${option.name}")
+                                        onWorldObservation?.invoke("selected:${worldChoice.committed.observationId}")
                                     }
                                 },
                                 modifier = Modifier.fillMaxWidth().testTag("catalogWorld${option.name}")
-                                    .semantics { stateDescription = if (worldChoice.selected == option) "Selected" else "Not selected" },
+                                    .semantics {
+                                        stateDescription = if (committedWorld.world == option && committedWorld.installedTheme == null)
+                                            "Selected" else "Not selected"
+                                    },
                             ) {
-                                Text("${if (worldChoice.selected == option) "✓ " else ""}${option.chooserLabel}")
+                                Column {
+                                    Text("${if (committedWorld.world == option && committedWorld.installedTheme == null) "✓ " else ""}${option.chooserLabel}")
+                                    committedWorld.detailFor(option)?.let { Text(it, fontSize = 12.sp) }
+                                }
+                            }
+                        }
+                        selectableInstalledThemes.forEach { entry ->
+                            val isSelected = committedWorld.installedTheme?.id == entry.id
+                            TextButton(
+                                onClick = {
+                                    worldChooserOpen = false
+                                    scope.launch {
+                                        val committed = worldChoice.chooseInstalled(entry, { selected ->
+                                            FirstCityCanopyCandidateLoader.loadInstalledBaseline(selected) { candidateEntry ->
+                                                resolveInstalledScenePack?.invoke(candidateEntry)
+                                            }
+                                        }, FirstCityCanopyCandidateLoader::withinBudget)
+                                        if (committed) onWorldObservation?.invoke(
+                                            "selected:${worldChoice.committed.observationId}:${worldChoice.committed.candidate?.contentIdentity}",
+                                        )
+                                    }
+                                },
+                                modifier = Modifier.fillMaxWidth()
+                                    .testTag("catalogWorldInstalled${entry.id.value}")
+                                    .semantics { stateDescription = if (isSelected) "Selected" else "Not selected" },
+                            ) {
+                                Column {
+                                    Text("${if (isSelected) "✓ " else ""}${entry.displayName}")
+                                    Text("Installed · Compatible", fontSize = 12.sp)
+                                }
                             }
                         }
                     }
@@ -469,14 +512,60 @@ internal enum class CatalogWorld(val label: String, val chooserLabel: String) {
     OPEN_LANDSCAPE("Open Landscape", "Minimal Open Landscape"),
     OLIVE_PACK("First City · Olive pack", "First City · Olive pack"),
     BASELINE_PROOF("First City · Baseline proof", "First City · Baseline proof"),
+    INSTALLED_PACK("Installed pack", "Installed pack"),
 }
 
-internal class CatalogWorldChoice {
-    var selected by mutableStateOf(CatalogWorld.FIRST_CITY)
+internal data class CatalogWorldCommittedSelection<T>(
+    val world: CatalogWorld,
+    val installedTheme: InstalledThemeCatalogEntry? = null,
+    val candidate: T? = null,
+) {
+    val label: String get() = installedTheme?.displayName ?: world.label
+    val observationId: String get() = installedTheme?.let { "${world.name}:${it.id.value}" } ?: world.name
+
+    fun detailFor(option: CatalogWorld): String? = when {
+        option == CatalogWorld.FIRST_CITY -> "Bundled free"
+        else -> null
+    }
+}
+
+/** Owns one committed world and rejects completions superseded by a later World choice. */
+internal class CatalogWorldChoice<T> {
+    var committed by mutableStateOf(CatalogWorldCommittedSelection<T>(CatalogWorld.FIRST_CITY))
         private set
 
+    val selected: CatalogWorld get() = committed.world
+    private var request = 0
+
     fun choose(world: CatalogWorld) {
-        selected = world
+        require(world != CatalogWorld.INSTALLED_PACK) { "Installed packs require a loaded candidate" }
+        request += 1
+        committed = CatalogWorldCommittedSelection(world)
+    }
+
+    suspend fun chooseLoaded(
+        world: CatalogWorld,
+        load: suspend () -> T?,
+        admissible: (T) -> Boolean,
+    ): Boolean {
+        require(world != CatalogWorld.INSTALLED_PACK) { "Installed packs require an installed catalog entry" }
+        val requestId = ++request
+        val candidate = load() ?: return false
+        if (!admissible(candidate) || requestId != request) return false
+        committed = CatalogWorldCommittedSelection(world, candidate = candidate)
+        return true
+    }
+
+    suspend fun chooseInstalled(
+        entry: InstalledThemeCatalogEntry,
+        load: suspend (InstalledThemeCatalogEntry) -> T?,
+        admissible: (T) -> Boolean,
+    ): Boolean {
+        val requestId = ++request
+        val candidate = load(entry) ?: return false
+        if (!admissible(candidate) || requestId != request) return false
+        committed = CatalogWorldCommittedSelection(CatalogWorld.INSTALLED_PACK, entry, candidate)
+        return true
     }
 }
 

@@ -68,7 +68,10 @@ interface WeatherCatalogSource {
 }
 
 /** Registry only; it neither selects an active source nor owns an active catalog. */
-class CatalogSourceRegistry(sources: Collection<WeatherCatalogSource>) {
+class CatalogSourceRegistry(
+    sources: Collection<WeatherCatalogSource>,
+    private val onSourceLoad: ((CatalogOrigin) -> Unit)? = null,
+) {
     private val byOrigin: Map<CatalogOrigin, WeatherCatalogSource> =
         Collections.unmodifiableMap(sources.associateBy { it.origin }.also { registered ->
             require(registered.size == sources.size) { "Each origin must have at most one source" }
@@ -79,6 +82,7 @@ class CatalogSourceRegistry(sources: Collection<WeatherCatalogSource>) {
     suspend fun load(origin: CatalogOrigin, request: CatalogLoadRequest): CatalogLoadResult {
         val source = requireNotNull(source(origin)) { "No source registered for $origin" }
         currentCoroutineContext().ensureActive()
+        onSourceLoad?.invoke(origin)
         val result = source.load(request)
         currentCoroutineContext().ensureActive()
         val catalog = when (result) {

@@ -1,0 +1,101 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1660" height="900" viewBox="0 0 1660 900">
+  <defs>
+    <linearGradient id="panelSky" x2="0" y2="1"><stop stop-color="#214b68"/><stop offset=".72" stop-color="#81a9b6"/><stop offset="1" stop-color="#c3d0c9"/></linearGradient>
+    <linearGradient id="sceneNight" x2="0" y2="1"><stop stop-color="#214b68"/><stop offset=".72" stop-color="#668b9c"/><stop offset="1" stop-color="#c3d0c9"/></linearGradient>
+    <filter id="shadow" x="-15%" y="-15%" width="130%" height="130%"><feDropShadow dx="0" dy="5" stdDeviation="7" flood-color="#142939" flood-opacity=".22"/></filter>
+    <marker id="arrow" markerWidth="9" markerHeight="9" refX="7" refY="4.5" orient="auto"><path d="M0 0L9 4.5L0 9Z" fill="#4b7287"/></marker>
+    <g id="city" fill="#2e4c5a" opacity=".94">
+      <path d="M0 335h32V260h36v75h20V235h52v100h20V280h34v55h24v-86h40v86h20v-60h28v60h24v-38h30v38H0z"/>
+      <path d="M0 335q52-18 98-3t92 0t88 3t82-2v84H0z" fill="#405c54"/>
+    </g>
+    <g id="canopyOlive" fill="#87936c">
+      <circle cx="45" cy="383" r="34"/><circle cx="86" cy="367" r="42"/><circle cx="127" cy="383" r="34"/>
+      <circle cx="229" cy="386" r="37"/><circle cx="270" cy="365" r="44"/><circle cx="314" cy="385" r="35"/>
+    </g>
+    <g id="canopyGreen" fill="#527c59">
+      <circle cx="45" cy="383" r="34"/><circle cx="86" cy="367" r="42"/><circle cx="127" cy="383" r="34"/>
+      <circle cx="229" cy="386" r="37"/><circle cx="270" cy="365" r="44"/><circle cx="314" cy="385" r="35"/>
+    </g>
+    <g id="timeline" stroke="#c8e0e6" stroke-width="2">
+      <path d="M24 511H336"/><path d="M48 502v18M86 505v12M124 502v18M162 505v12M200 502v18M238 505v12M276 502v18M314 505v12"/>
+      <path d="M180 489v42" stroke="#ffe08a" stroke-width="4"/>
+    </g>
+    <g id="weatherText" font-family="DejaVu Sans, sans-serif" text-anchor="middle" fill="#fff">
+      <text x="180" y="161" font-size="15" letter-spacing="1.6">CHICAGO</text>
+      <text x="180" y="191" font-size="18">Sunny</text>
+      <text x="180" y="248" font-size="48" font-weight="600">67°</text>
+      <text x="180" y="276" font-size="14">Feels like 61° · Wind 10 mph</text>
+      <text x="180" y="557" font-size="14">Fri · 2:37 PM</text>
+      <text x="180" y="581" font-size="12">FORECAST TIMELINE</text>
+    </g>
+  </defs>
+
+  <rect width="1660" height="900" fill="#f3f6f8"/>
+  <text x="44" y="48" font-family="DejaVu Sans, sans-serif" font-size="27" font-weight="700" fill="#233a49">OX-32 · installed theme hot-swap</text>
+  <text x="44" y="78" font-family="DejaVu Sans, sans-serif" font-size="15" fill="#526d7d">UI artwork proposal · existing World chooser in the validation build · no Settings or import surface</text>
+
+  <!-- State A: bundled free scene -->
+  <g transform="translate(44 137)" filter="url(#shadow)">
+    <rect width="360" height="630" rx="28" fill="#102638" stroke="#324f61" stroke-width="3"/>
+    <rect x="7" y="7" width="346" height="616" rx="23" fill="url(#panelSky)"/>
+    <text x="180" y="34" font-family="DejaVu Sans, sans-serif" font-size="12" text-anchor="middle" fill="#f5fbff" letter-spacing="1">DEMO DATA</text>
+    <rect x="58" y="52" width="244" height="42" rx="21" fill="#173044" stroke="#9ecbd8" stroke-width="2"/>
+    <text x="180" y="79" font-family="DejaVu Sans, sans-serif" font-size="15" text-anchor="middle" fill="#fff">World: First City ▾</text>
+    <use href="#city"/>
+    <use href="#canopyOlive"/>
+    <use href="#weatherText"/>
+    <use href="#timeline"/>
+  </g>
+  <text x="224" y="798" font-family="DejaVu Sans, sans-serif" font-size="17" text-anchor="middle" font-weight="700" fill="#314f60">1 · Bundled free scene</text>
+
+  <!-- State B: same screen behind the chooser -->
+  <g transform="translate(447 137)" filter="url(#shadow)">
+    <rect width="360" height="630" rx="28" fill="#102638" stroke="#324f61" stroke-width="3"/>
+    <rect x="7" y="7" width="346" height="616" rx="23" fill="url(#panelSky)"/>
+    <text x="180" y="34" font-family="DejaVu Sans, sans-serif" font-size="12" text-anchor="middle" fill="#f5fbff" letter-spacing="1">DEMO DATA</text>
+    <rect x="58" y="52" width="244" height="42" rx="21" fill="#173044" stroke="#9ecbd8" stroke-width="2"/>
+    <text x="180" y="79" font-family="DejaVu Sans, sans-serif" font-size="15" text-anchor="middle" fill="#fff">World: First City ▾</text>
+    <use href="#city"/><use href="#canopyOlive"/><use href="#weatherText"/><use href="#timeline"/>
+    <rect x="7" y="7" width="346" height="616" rx="23" fill="#061724" opacity=".62"/>
+    <rect x="34" y="193" width="292" height="250" rx="20" fill="#fbfdfe" stroke="#b6c9d1" stroke-width="2"/>
+    <text x="58" y="231" font-family="DejaVu Sans, sans-serif" font-size="20" font-weight="700" fill="#243d4c">Choose world</text>
+    <rect x="50" y="250" width="260" height="62" rx="12" fill="#e9f3f5" stroke="#7da8b6" stroke-width="2"/>
+    <text x="68" y="277" font-family="DejaVu Sans, sans-serif" font-size="16" font-weight="700" fill="#173d51">✓ First City</text>
+    <text x="68" y="298" font-family="DejaVu Sans, sans-serif" font-size="12" fill="#527080">Bundled free</text>
+    <rect x="50" y="324" width="260" height="78" rx="12" fill="#fff" stroke="#9bb0b9" stroke-width="2"/>
+    <text x="68" y="353" font-family="DejaVu Sans, sans-serif" font-size="14" font-weight="600" fill="#263f50">First City · Baseline pack</text>
+    <text x="68" y="378" font-family="DejaVu Sans, sans-serif" font-size="12" fill="#527080">Installed · Compatible</text>
+    <text x="180" y="426" font-family="DejaVu Sans, sans-serif" font-size="12" text-anchor="middle" fill="#587282">Dismiss keeps First City</text>
+  </g>
+  <text x="627" y="798" font-family="DejaVu Sans, sans-serif" font-size="17" text-anchor="middle" font-weight="700" fill="#314f60">2 · Choose the installed compatible pack</text>
+
+  <!-- State C: installed alternate, identical layout and canopy geometry -->
+  <g transform="translate(850 137)" filter="url(#shadow)">
+    <rect width="360" height="630" rx="28" fill="#102638" stroke="#324f61" stroke-width="3"/>
+    <rect x="7" y="7" width="346" height="616" rx="23" fill="url(#panelSky)"/>
+    <text x="180" y="34" font-family="DejaVu Sans, sans-serif" font-size="12" text-anchor="middle" fill="#f5fbff" letter-spacing="1">DEMO DATA</text>
+    <rect x="20" y="52" width="320" height="42" rx="21" fill="#173044" stroke="#9ecbd8" stroke-width="2"/>
+    <text x="180" y="79" font-family="DejaVu Sans, sans-serif" font-size="13" text-anchor="middle" fill="#fff">World: First City · Baseline pack ▾</text>
+    <use href="#city"/><use href="#canopyGreen"/><use href="#weatherText"/><use href="#timeline"/>
+  </g>
+  <text x="1030" y="798" font-family="DejaVu Sans, sans-serif" font-size="17" text-anchor="middle" font-weight="700" fill="#314f60">3 · Installed pack active</text>
+
+  <!-- State D: returned bundled free scene -->
+  <g transform="translate(1253 137)" filter="url(#shadow)">
+    <rect width="360" height="630" rx="28" fill="#102638" stroke="#324f61" stroke-width="3"/>
+    <rect x="7" y="7" width="346" height="616" rx="23" fill="url(#panelSky)"/>
+    <text x="180" y="34" font-family="DejaVu Sans, sans-serif" font-size="12" text-anchor="middle" fill="#f5fbff" letter-spacing="1">DEMO DATA</text>
+    <rect x="58" y="52" width="244" height="42" rx="21" fill="#173044" stroke="#9ecbd8" stroke-width="2"/>
+    <text x="180" y="79" font-family="DejaVu Sans, sans-serif" font-size="15" text-anchor="middle" fill="#fff">World: First City ▾</text>
+    <use href="#city"/><use href="#canopyOlive"/><use href="#weatherText"/><use href="#timeline"/>
+  </g>
+  <text x="1433" y="798" font-family="DejaVu Sans, sans-serif" font-size="17" text-anchor="middle" font-weight="700" fill="#314f60">4 · Return to free</text>
+
+  <path d="M412 452H438" stroke="#4b7287" stroke-width="4" marker-end="url(#arrow)"/>
+  <path d="M815 452H841" stroke="#4b7287" stroke-width="4" marker-end="url(#arrow)"/>
+  <path d="M1218 452H1244" stroke="#4b7287" stroke-width="4" marker-end="url(#arrow)"/>
+
+  <rect x="44" y="824" width="1572" height="52" rx="12" fill="#e6eef2" stroke="#c3d2d9"/>
+  <text x="64" y="846" font-family="DejaVu Sans, sans-serif" font-size="13" fill="#425d6c">Proposal: use the existing validation-build World control. Scene geometry, place, forecast readout, selected instant and timeline stay fixed; only the canopy appearance changes.</text>
+  <text x="64" y="866" font-family="DejaVu Sans, sans-serif" font-size="12" fill="#637b88">Schematic artwork; weather values are illustrative. No import picker, Settings, saved theme, invalid-pack state, or overlapping scrub/switch is proposed.</text>
+</svg>

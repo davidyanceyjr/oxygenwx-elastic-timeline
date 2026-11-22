@@ -63,8 +63,10 @@ import com.oxygen.weather.timeline.data.catalog.SimulatedCatalogSource
 import com.oxygen.weather.timeline.data.catalog.RecordedCatalogSource
 import com.oxygen.weather.timeline.data.catalog.LiveCatalogRepository
 import com.oxygen.weather.timeline.data.openmeteo.OpenMeteoCatalogSource
+import com.oxygen.weather.timeline.data.scenepack.InstalledThemeCatalogEntry
 import kotlinx.coroutines.launch
 import android.content.Intent
+import java.util.concurrent.atomic.AtomicLong
 
 /** Standalone experiment. Does not replace Oxygen Weather's production Home pager. */
 class MainActivity : ComponentActivity(), ActivityVariantDelegate.Host {
@@ -81,10 +83,15 @@ class MainActivity : ComponentActivity(), ActivityVariantDelegate.Host {
     private var pendingForegroundUpdate: LocationId? = null
     private var pendingForegroundLoadingObserved = false
     private var pendingForegroundError by mutableStateOf<String?>(null)
+    private var installedThemeChoices by mutableStateOf(emptyList<InstalledThemeCatalogEntry>())
+    private var debugCoordinatorRequestCount: AtomicLong? = null
+    private var debugSourceLoadCount: AtomicLong? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         val isDebuggable = applicationInfo.flags and ApplicationInfo.FLAG_DEBUGGABLE != 0
+        debugCoordinatorRequestCount = if (isDebuggable) AtomicLong() else null
+        debugSourceLoadCount = if (isDebuggable) AtomicLong() else null
         variantDelegate = ActivityVariantDelegate.load(classLoader)
         catalogDatabase = Room.databaseBuilder(
             applicationContext,
@@ -101,7 +108,9 @@ class MainActivity : ComponentActivity(), ActivityVariantDelegate.Host {
             OpenMeteoCatalogSource(),
             SimulatedCatalogSource(),
             RecordedCatalogSource(null),
-        ))
+        ), onSourceLoad = if (isDebuggable) ({ _ ->
+            debugSourceLoadCount?.incrementAndGet()
+        }) else null)
         val clock = Clock.systemUTC()
         val liveCatalogRepository = LiveCatalogRepository(catalogSources, catalogStorage, clock)
         activationCoordinator = CatalogActivationCoordinator(
@@ -111,6 +120,9 @@ class MainActivity : ComponentActivity(), ActivityVariantDelegate.Host {
             liveRepository = liveCatalogRepository,
             sources = catalogSources,
             clock = clock,
+            onRequestStarted = if (isDebuggable) ({
+                debugCoordinatorRequestCount?.incrementAndGet()
+            }) else null,
         )
         lifecycleScope.launch {
             activationCoordinator.state.collect { state ->
@@ -277,10 +289,16 @@ class MainActivity : ComponentActivity(), ActivityVariantDelegate.Host {
                                     "dataset=${active?.datasetId} replay=${active?.replayRecordingId} " +
                                     "asOf=${active?.recording?.catalog?.asOf} " +
                                     "provenance=${active?.recording?.catalog?.provenance} " +
-                                    "generation=${active?.viewGeneration} instant=${active?.selectedInstant}")
+                                    "generation=${active?.viewGeneration} instant=${active?.selectedInstant} " +
+                                    "coordinatorRequests=${debugCoordinatorRequestCount?.get()} " +
+                                    "sourceLoadCalls=${debugSourceLoadCount?.get()}")
                             }) else null,
                             worldControlBelowDebugBanner = isDebuggable &&
                                 matchingActive.origin != CatalogOrigin.LIVE,
+                            installedThemeChoices = if (isDebuggable) installedThemeChoices else emptyList(),
+                            resolveInstalledScenePack = if (isDebuggable) {
+                                { entry -> variantDelegate?.resolveInstalledScenePack(this@MainActivity, entry) }
+                            } else null,
                         ) }
                         else -> Box(Modifier.fillMaxSize().background(Color(0xFF11263D))) {
                             Column(
@@ -359,6 +377,10 @@ class MainActivity : ComponentActivity(), ActivityVariantDelegate.Host {
     }
 
     override fun restoreStartupCatalog() = activationCoordinator.restoreStartup()
+
+    override fun publishInstalledThemeChoices(entries: List<InstalledThemeCatalogEntry>) {
+        installedThemeChoices = entries
+    }
 
     override fun onNewIntent(intent: Intent) {
         super.onNewIntent(intent)

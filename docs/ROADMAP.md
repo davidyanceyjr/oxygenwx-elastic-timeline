@@ -1363,13 +1363,15 @@ The SG workstream follows the owner-directed pivot recorded above and is grounde
 
 **Owner budget decision (2026-11-21):** The owner approved OX-57's evidence-backed inclusive limits recorded in `.codex/plans/166-ox57-atomic-pack-install.md`: 64 materialized filesystem nodes per generation; 1,605,632 expanded-generation bytes; 1,638,400 candidate-plus-commit bytes; 3,244,032 same-pack replacement-peak bytes; and 1,622,016 package-specific working bytes. Cycle 166 is finalized at REVIEW and remains PLANNED; activation and implementation are not authorized by this decision.
 
-### OX-32 — Hot-swap one installed theme during a running session — PLANNED
+### OX-32 — Hot-swap one installed theme during a running session — DONE
 
 **Objective/scope:** Atomically switch an active bundled/free scene to a validated locally installed pack and back in the same Activity/process, without touching active weather location, catalog revision, exact selected instant, currently displayed facts or timeline gesture ownership; no switch-triggered forecast fetch. Prove this on the first implemented hot swap, not a later remediation slice.
 **Depends on:** OX-57, OX-19, OX-55.
 **Exit:** Installed free → alternate → free evidence proves visible scene change without Activity/process restart, weather-place/catalog/selected-instant mutation, new switch-triggered fetch or timeline/gesture regression; activation never leaves half of two scenes visible.
-**Evidence:** Future cycle-specific `.codex/test-artifacts/<cycle-id>/` and `.codex/history/<cycle-id>.md`; assign exact paths only when the slice is planned. Do not claim unperformed checks.
-**Slice board(s):** Objective-specific behavior board and UI artwork board pending for the affected installed states. Owner approval required.
+**Evidence:** Cycle 167 targets `.codex/test-artifacts/167-ox32-installed-theme-hot-swap/README.md` and `.codex/history/167-ox32-installed-theme-hot-swap.md`; do not claim unperformed checks.
+**Slice board(s):** Product-owner approved both packages on 2026-11-21: behavior `.codex/concepts/OX-32-installed-theme-hot-swap-behavior-board.dot`, `.svg`, `.png`, and `.md`; UI artwork `.codex/concepts/OX-32-installed-theme-hot-swap-ui-board.svg`, `.png`, and `.md`. Cycle 167 records each file fingerprint. The behavior board governs a same-process free → installed-compatible-pack → free transition, OX-55 candidate preparation and atomic activation, weather/timeline invariants, and explicit exclusions. The artwork uses the existing validation-build World chooser and shows bundled, chooser, installed, and returned-free states. Approval does not finalize or activate the plan.
+
+**Owner sequencing decision (2026-11-21):** After OX-57 closed DONE, the owner explicitly selected OX-32 as the sole global `NEXT` for cycle 167 planning. OX-57, OX-19, and OX-55 are DONE. Selection does not approve the required boards, finalize the plan, activate the slice, or authorize implementation.
 
 ### OX-56 — Recover safely from failed pack resolution — BLOCKED
 
