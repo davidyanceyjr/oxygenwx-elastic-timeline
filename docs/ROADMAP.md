@@ -73,15 +73,17 @@ The entries below preserve completed outcomes with their acceptance records, ver
 **Slice board(s) — Behavior:** Owner-approved flowchart `.codex/concepts/G.6-history-compaction-behavior-board.svg` on 2026-11-04 (editable `.dot`, review `.png`, and detailed `.md` at the same stem); no additional constraints stated. No UI artwork board applies.
 **Evidence:** `.codex/test-artifacts/100-g6-history-compaction/README.md`; `.codex/history/100-g6-history-compaction.md`; `.codex/history/plans/100-g6-history-compaction.md`.
 
-### G.7 — Make grouped-cycle and shared-board workflow explicit — PLANNED
+### G.7 — Make grouped-cycle and shared-board workflow explicit — DONE
 
 **Objective/scope:** Clarify the project planning guidance and tracker usage for executing related roadmap slices together in one dependency-ordered cycle, with a shared objective-specific board package when it makes every included slice independently reviewable. Preserve each slice's own dependency record, exit, status, authorization, and evidence; do not combine unrelated outcomes or weaken per-slice acceptance. No application behavior changes.
 **Depends on:** G.1 and G.2.
 **Exit:** `AGENTS.md`, `docs/ROADMAP_SPECIFICATION.md`, the planning skill, and cycle CLI help consistently explain grouped rosters and shared-board use; every grouped roster entry retains its own slice-level acceptance and a verifiable approval/fingerprint record for the package that covers it; the tracker continues to accept repeated slice arguments, validate dependency order, and display the complete roster; existing single-slice records remain readable; workflow and diff checks pass.
-**Evidence:** Future cycle-specific `.codex/test-artifacts/<cycle-id>/README.md` and `.codex/history/<cycle-id>.md`; assign exact paths when planned.
-**Slice board(s):** Objective-specific behavior board pending at `.codex/concepts/G.7-grouped-cycle-shared-board-behavior-board.dot`, with SVG and PNG renders. No UI artwork board applies because the slice changes project workflow documentation and command-line guidance, not app UI. Owner approval required before final plan review.
+**Evidence:** Cycle 170 targets `.codex/test-artifacts/170-g7-grouped-cycle-shared-board/README.md`; closeout `.codex/history/170-g7-grouped-cycle-shared-board.md`; archived plan `.codex/history/plans/170-g7-grouped-cycle-shared-board.md`.
+**Slice board(s) — Behavior:** Product-owner approved 2026-11-22 with no additional constraints: `.codex/concepts/G.7-grouped-cycle-shared-board-behavior-board.dot` and its `.svg`/`.png` renders plus `.md` contract. It governs related-outcome grouping, independent slice reviewability, shared-package approval, and per-slice approval/fingerprint records. The companion retains its review-stage banner and question as submitted; the cycle decision resolves them, and the fingerprinted files remain unchanged. No UI artwork applies because this slice changes project workflow documentation and CLI guidance, not app UI.
 
 **Owner direction (2026-11-22):** Keep cycle 169 limited to OX-25. Make grouped-cycle and shared-board handling explicit as a separate workflow follow-up; do not fold the workflow change into OX-25.
+
+**Owner sequencing decision (2026-11-22):** At the owner's direction through `$oxygen-plan-next-slice G.7`, G.7 is the sole global `NEXT` for cycle 170 planning. The behavior board's approval is recorded separately above; this selection does not activate implementation.
 
 ## WX — OxygenWX unified 44-day weather catalog and production data path
 

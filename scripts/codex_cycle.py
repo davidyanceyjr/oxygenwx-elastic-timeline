@@ -942,10 +942,29 @@ def main() -> None:
     parser = argparse.ArgumentParser(description="Oxygen Time Lab cycle and checkpoint tracker")
     sub = parser.add_subparsers(dest="command", required=True)
 
-    start = sub.add_parser("start", help="Create a PLANNED cycle with one or more roadmap slices")
+    start = sub.add_parser(
+        "start",
+        help="Create a PLANNED cycle for related, dependency-ordered roadmap slices",
+        description=(
+            "Create one bounded cycle for related roadmap slices that share an objective. "
+            "Repeat --slice in dependency order: the first slice must be the sole eligible NEXT, "
+            "later slices must be PLANNED, in-cycle dependencies must come first, and external "
+            "dependencies must be resolved before activation. Use separate cycles for unrelated outcomes. "
+            "Every slice keeps its own acceptance, exit, authorization, status, and evidence. A shared "
+            "board package is allowed only when each covered slice remains independently reviewable; "
+            "record its approval and file fingerprints separately on each covered slice entry."
+        ),
+        epilog=(
+            'Example: codex_cycle.py start --id 171-related --slice A.1 --slice A.2 '
+            '--objective "One shared bounded objective"'
+        ),
+    )
     start.add_argument("--id", required=True)
-    start.add_argument("--roadmap", "--slice", dest="slice", action="append", required=True)
-    start.add_argument("--objective", required=True)
+    start.add_argument(
+        "--roadmap", "--slice", dest="slice", action="append", required=True,
+        help="Roadmap slice ID; repeat for each roster entry in dependency order (alias: --roadmap)",
+    )
+    start.add_argument("--objective", required=True, help="Shared bounded objective for the related roster")
     start.set_defaults(func=_cmd_start)
 
     activate = sub.add_parser("activate", help="Activate the first eligible slice after plan and board gates")

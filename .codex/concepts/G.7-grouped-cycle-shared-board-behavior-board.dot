@@ -1,0 +1,62 @@
+digraph G {
+  graph [
+    rankdir=TB,
+    bgcolor="#ffffff",
+    pad="0.28",
+    nodesep="0.34",
+    ranksep="0.48",
+    splines=polyline,
+    fontname="DejaVu Sans",
+    fontsize=20,
+    labelloc=t,
+    label="G.7 — Grouped cycles and shared board packages\nBehavior board · owner review draft"
+  ];
+  node [
+    shape=box,
+    style="rounded,filled",
+    color="#35556f",
+    fillcolor="#f2f7fb",
+    fontname="DejaVu Sans",
+    fontsize=11,
+    margin="0.16,0.10"
+  ];
+  edge [
+    color="#5c7488",
+    fontname="DejaVu Sans",
+    fontsize=9,
+    arrowsize=0.75
+  ];
+
+  start [shape=oval, fillcolor="#e5f2ea", label="Choose the next roadmap work"];
+  related [shape=diamond, fillcolor="#fff7df", label="Related outcomes with\none bounded objective?", margin="0.12,0.07"];
+  separate [fillcolor="#fff1e8", label="Use separate cycles\nKeep unrelated outcomes apart"];
+  roster [label="Build an ordered roster\nRepeat --slice for each ID; show the full roster\nFirst slice: sole NEXT; later slices: PLANNED"];
+  deps [shape=diamond, fillcolor="#fff7df", label="Dependencies resolved\nand correctly ordered?", margin="0.12,0.07"];
+  fixdeps [fillcolor="#fff1e8", label="Stop intake until corrected\nIn-cycle dependencies go earlier\nExternal dependencies must be resolved"];
+  strategy [shape=diamond, fillcolor="#fff7df", label="Can one package make\nevery slice independently reviewable?", margin="0.12,0.07"];
+  shared [label="Shared board package\nShows each slice's own behavior\nand acceptance boundary"];
+  per_slice [label="Separate board packages\nOne independently reviewable package\nfor each slice"];
+  approve [fillcolor="#e8f0fb", label="Owner reviews the actual package(s)\nRecord approval and file fingerprints\nfor every covered roster entry"];
+  plan [label="Draft one cycle plan\nKeep each slice's dependencies, exit,\nauthorization, status, and evidence"];
+  gate [shape=diamond, fillcolor="#fff7df", label="Every required board\napproved and plan reviewed?", margin="0.12,0.07"];
+  wait [fillcolor="#fff1e8", label="Remain PLANNED\nResolve open board or plan gates"];
+  activate [fillcolor="#e5f2ea", label="Activate the first eligible slice\nOnly one slice ACTIVE at a time"];
+  execute [label="Execute in dependency order\nClose each slice on its own exit\nand record its own outcome/evidence"];
+  done [shape=oval, fillcolor="#e5f2ea", label="Close when every roster slice\nhas a completed or recorded terminal outcome"];
+  start -> related;
+  related -> roster [label="yes"];
+  related -> separate [label="no"];
+  roster -> deps;
+  deps -> strategy [label="yes"];
+  deps -> fixdeps [label="no"];
+  strategy -> shared [label="yes"];
+  strategy -> per_slice [label="no"];
+  shared -> approve;
+  per_slice -> approve;
+  approve -> plan;
+  plan -> gate;
+  gate -> activate [label="yes"];
+  gate -> wait [label="no"];
+  activate -> execute;
+  execute -> done;
+}

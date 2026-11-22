@@ -22,15 +22,25 @@ and every slice ID in plan and history metadata, and use the cycle ID in the
 plan, evidence, and history paths. This keeps roadmap state distinct from the
 execution chronology while preserving a traceable record across the Git diff.
 
-A cycle contains one or more stable slice IDs in dependency order. A single
-slice remains the default when outcomes are unrelated. Each roster entry keeps
-its own objective, dependencies, approved board package, exit, authorized
-verification, status, outcome, and evidence. In-cycle dependencies must appear
-earlier in the roster; dependencies outside it must already be resolved. At
-most one roster slice is `ACTIVE`. Later slices remain `PLANNED` until all
-dependencies are complete and they are selected as the next eligible item.
-Cycle 117 is the initial single-slice compatibility example; it does not imply
-that unrelated existing roadmap work belongs in one cycle.
+A cycle contains one or more stable slice IDs in dependency order. Group slices
+only when they are related and share one bounded objective; keep unrelated
+outcomes in separate cycles. The first roster entry must be the sole eligible
+`NEXT` slice and later entries must be `PLANNED`. In-cycle dependencies appear
+earlier in the roster, and dependencies outside it are resolved before
+activation. Each roster entry keeps its own objective, dependencies, approved
+board package, exit, acceptance, authorized verification, status, outcome, and
+evidence. At most one roster slice is `ACTIVE`. Later slices remain `PLANNED`
+until all dependencies are complete and they are selected as the next eligible
+item. Cycle 117 is the initial single-slice compatibility example; it does not
+imply that unrelated existing roadmap work belongs in one cycle.
+
+One approved board package may cover multiple roster slices only when the
+package makes every covered slice's behavior and acceptance independently
+reviewable. The owner reviews the complete package once. Record that approval
+and the complete package file fingerprints separately on every covered roster
+entry, using the same package files and approval details for each entry. A
+shared package never combines slice exits, acceptance, authorization, status,
+outcome, or evidence.
 
 ## Cycle state and workflow checkpoints
 
@@ -71,9 +81,10 @@ The cycle plan carries a versioned JSON roster and checkpoint between explicit
 IDs, dependency order, one active slice, per-slice approvals and exits, pointer
 consistency, checkpoint fields, and roadmap statuses. It preserves readability
 of existing single-slice records; closed historical records are not rewritten.
-Record a content fingerprint for every file in an approved board package. A
-changed or missing approved input invalidates that approval until it is reviewed
-and recorded again.
+Record a content fingerprint for every file in an approved board package on
+each covered slice entry. For a shared package, repeat the same complete file
+list and approval details in each entry. A changed or missing approved input
+invalidates that approval until it is reviewed and recorded again.
 
 Roadmap changes do not silently expand an active slice. Scope or ordering changes are recorded in the active plan/history and reflected in the roadmap before dependent work proceeds.
 
