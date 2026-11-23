@@ -1437,6 +1437,10 @@ The SG workstream follows the owner-directed pivot recorded above and is grounde
 
 These groupings do not merge slice acceptance. Cycle 171 is complete. The owner selected OX-43 as the sole `NEXT` and OX-44 as the second `PLANNED` slice for cycle 172. The product owner approved the shared behavior and UI artwork board package on 2026-11-22; cycle 172 records the complete package fingerprints separately for both slices. Board approval does not authorize implementation.
 
+**Owner sequencing decision (2026-11-22):** The owner selected OX-12 as the sole `NEXT` and OX-12A as the second `PLANNED` slice for cycle 173, following the dependency-ordered grouping above. This records the slice order; the required board approvals are recorded on each slice below, and implementation remains unactivated.
+
+**Owner-directed ambiguity resolution (2026-11-22):** The owner selected temperature in the current Imperial display unit (`°F`) and confirmed the supported/unavailable resolution. Temperature is supplied at its supported source-valid time or unavailable; do not carry or interpolate temperature. Keep eligible carried conditions as their separate existing evidence, with original source time. The OX-12 and OX-12A exits below are narrowed to supported/unavailable temperature plus source-valid-time preservation.
+
 ### OX-42 — Place the park mural wall and data-surface anchor — DONE
 
 **Objective/scope:** Add a left-wall mural surface with declared data-surface identity, plane, anchor and reserved text area; do not bind or paint a forecast measurement yet.
@@ -1469,21 +1473,21 @@ These groupings do not merge slice acceptance. Cycle 171 is complete. The owner 
 **Evidence:** Cycle 171 targets `.codex/test-artifacts/171-park-mural-foundation/README.md` and `ox-85-pixel-3-xl-portrait.png` for the measured Pixel 3 XL portrait exit; do not claim unperformed checks. Cycle closeout target: `.codex/history/171-park-mural-foundation.md`.
 **Slice board(s):** Covered by the product-owner-approved cycle 171 shared behavior package `.codex/concepts/OX-171-park-mural-foundation-behavior-board.dot` with SVG/PNG renders and Markdown contract. Cycle 171 records this package fingerprint on OX-85. Temporary-object UI artwork is at `.codex/concepts/OX-171-park-mural-foundation-ui-artwork-board.svg` with PNG render; no separate UI-board approval is required per the owner's 2026-11-22 direction.
 
-### OX-12 — Expose one exact selected-time forecast binding — PLANNED
+### OX-12 — Expose one exact selected-time forecast binding — DONE
 
-**Objective/scope:** Create a typed exact selected-time reading from the existing canonical projection, with original source-valid time, supported/carried/unavailable meaning and display unit; no mural structure is required.
+**Objective/scope:** Create a typed exact selected-time temperature reading from the existing canonical projection, preserving the selected instant, original source-valid time, field support and display unit (`°F`); temperature is supported or unavailable and is never carried or interpolated. No mural structure is required. Eligible carried conditions remain separate field evidence.
 **Depends on:** OX-04, OX-03.
-**Exit:** For one selected measurement, supplied, eligible carried and unavailable projections give one consistent value/evidence contract usable by both central readout and a future surface, without fabricated interpolation.
-**Evidence:** Future cycle-specific `.codex/test-artifacts/<cycle-id>/` and `.codex/history/<cycle-id>.md`; assign exact paths only when the slice is planned. Do not claim unperformed checks.
-**Slice board(s):** Objective-specific behavior/contract board pending; UI artwork board only if approved scope changes visible output. Owner approval required.
+**Exit:** For selected temperature, a supported source sample and an unavailable projection produce one consistent value/evidence contract usable by the central readout and future surface, preserving the source-valid time and `°F` display unit where supported. Missing temperature stays unavailable; no value is carried or interpolated. Existing eligible carried-condition evidence remains separate and retains its original source time.
+**Evidence:** Cycle 173 targets `.codex/test-artifacts/173-selected-time-mural-reading/README.md`; cycle closeout target `.codex/history/173-selected-time-mural-reading.md`. Do not claim unperformed checks.
+**Slice board(s):** Product owner approved the shared cycle 173 behavior package on 2026-11-22: `.codex/concepts/OX-173-selected-time-mural-reading-behavior-board.dot` with SVG/PNG renders and Markdown contract. The package governs field-scoped canonical temperature selection, `°F` projection, source-valid-time preservation, and supported/unavailable behavior without temperature carry or interpolation. Cycle 173 records these complete package fingerprints separately on OX-12 and OX-12A. OX-12 changes no visible output and has no UI artwork requirement.
 
-### OX-12A — Paint the selected reading on the park mural — PLANNED
+### OX-12A — Paint the selected reading on the park mural — DONE
 
-**Objective/scope:** Render one canonical exact selected reading on the authored Park mural, preserving units, original sample time and explicit unavailable state from the first usable implementation. Keep the central readout primary and accessible; never independently infer units or data.
+**Objective/scope:** Render the canonical exact selected-time temperature on the authored Park mural, preserving its `°F` unit, original sample time and explicit unavailable state. Keep the central readout primary and accessible; never independently infer units or data, and never carry or interpolate temperature. Eligible carried-condition evidence remains separate from the mural temperature binding.
 **Depends on:** OX-12, OX-42, OX-37.
-**Exit:** Installed portrait supported, carried and unavailable cases show a wall-integrated reading whose values/units and unavailable meaning match the central authoritative binding; no invented missing value appears.
-**Evidence:** Future cycle-specific `.codex/test-artifacts/<cycle-id>/` and `.codex/history/<cycle-id>.md`; assign exact paths only when the slice is planned. Do not claim unperformed checks.
-**Slice board(s):** Objective-specific behavior board and UI artwork board pending for the affected installed states. Owner approval required.
+**Exit:** Installed portrait supported and unavailable temperature cases show a wall-integrated reading whose values, `°F` unit, source-valid time and unavailable meaning match the canonical central binding; no invented or carried temperature appears. Existing eligible condition carry remains field-specific and its original source time stays disclosed in the central experience.
+**Evidence:** Cycle 173 targets `.codex/test-artifacts/173-selected-time-mural-reading/README.md`; cycle closeout target `.codex/history/173-selected-time-mural-reading.md`. Do not claim unperformed checks.
+**Slice board(s):** Product owner approved the shared cycle 173 behavior package on 2026-11-22: `.codex/concepts/OX-173-selected-time-mural-reading-behavior-board.dot` with SVG/PNG renders and Markdown contract, plus UI artwork `.codex/concepts/OX-173-selected-time-mural-reading-ui-artwork-board.svg` with PNG review render. The behavior board governs the same OX-12 binding and independently reviews OX-12A's Park-surface consumption and exits. The artwork board governs supported and unavailable temperature appearance within the existing mural reservation, with the central readout primary. Cycle 173 records complete behavior and artwork package fingerprints on OX-12A.
 
 ### OX-07 — Extract the First City cloud rendering capability — PLANNED
 

@@ -1,0 +1,72 @@
+digraph OX173 {
+  graph [
+    label="CYCLE 173 | EXACT SELECTED-TIME MURAL TEMPERATURE\nPROPOSED SHARED BEHAVIOR BOARD — PRODUCT-OWNER APPROVAL PENDING",
+    labelloc=t,
+    fontsize=22,
+    fontname="DejaVu Sans",
+    rankdir=TB,
+    compound=true,
+    splines=polyline,
+    nodesep=0.32,
+    ranksep=0.48,
+    pad=0.3,
+    bgcolor="#fbfaf7"
+  ];
+
+  node [shape=box, style="rounded,filled", fillcolor="#ffffff", color="#65766d", fontname="DejaVu Sans", fontsize=11, margin="0.16,0.11"];
+  edge [color="#526c60", fontname="DejaVu Sans", fontsize=9, arrowsize=0.7];
+
+  selected [label="AUTHORITATIVE INPUT\nExact selected Instant from the catalog timeline\nZoom and animation do not retarget it", fillcolor="#e6eff3", color="#708a97"];
+
+  subgraph cluster_12 {
+    label="OX-12 | Expose one exact selected-time forecast binding";
+    color="#8ca9b2";
+    style="rounded,filled";
+    fillcolor="#f1f6f7";
+    fontsize=14;
+
+    prereq12 [label="RESOLVED DEPENDENCIES\nOX-04 selected-time/evidence rules\nOX-03 canonical presentation projection", fillcolor="#e2edf1"];
+    lookup [label="PROPOSED FIELD-SCOPED LOOKUP\nTEMPERATURE_C at the selected instant\nUse only that field's own expected support", fillcolor="#fff7e7", color="#b49b5a"];
+    supported [shape=diamond, style="filled", label="Supported\ntemperature fact?", fillcolor="#fffdf5", color="#b49b5a", margin="0.12,0.08"];
+    project [label="SUPPORTED RESULT\nProject canonical °C through the existing\nImperial forecast projection → display °F\nRetain sourceValidTime separately from selection", fillcolor="#edf5ed", color="#82a184"];
+    unavailable [label="UNAVAILABLE RESULT\nNo supported temperature at this selection\nExpose unavailable; never substitute zero", fillcolor="#f7eded", color="#b77c78"];
+    typed [label="OX-12 TYPED BINDING\nselectedInstant + temperature value/state\n+ displayUnit + nullable sourceValidTime\nOne contract for central readout and future surface", fillcolor="#eaf1fa", color="#7894b6"];
+    exit12 [label="OX-12 EXIT\nSupported and unavailable temperature projections\nshare one truthful contract; source time is retained;\nno temperature carry or interpolation", fillcolor="#dcecdf", color="#6c9b72"];
+
+    prereq12 -> lookup;
+    lookup -> supported;
+    supported -> project [label="yes"];
+    supported -> unavailable [label="no"];
+    project -> typed;
+    unavailable -> typed;
+    typed -> exit12;
+  }
+
+  subgraph cluster_12a {
+    label="OX-12A | Paint the selected reading on the Park mural";
+    color="#b49a78";
+    style="rounded,filled";
+    fillcolor="#f8f4ed";
+    fontsize=14;
+
+    prereq12a [label="RESOLVED PARK INPUTS\nOX-37 MURAL surface + opaque binding reference\nOX-42 wall plane + reserved region", fillcolor="#efe8dc"];
+    bind [label="PROPOSED SURFACE BINDING\nResolve CANONICAL_SELECTED_VALUE to the OX-12 value\nDo not select a second instant or forecast field", fillcolor="#fff7e7", color="#b49b5a"];
+    render_supported [label="SUPPORTED STATE\nPaint the projected temperature and explicit °F\nRetain the original source-valid time on the mural", fillcolor="#edf5ed", color="#82a184"];
+    render_missing [label="UNAVAILABLE STATE\nPaint explicit temperature-unavailable text\nNo number, zero, carried value, or interpolation", fillcolor="#f7eded", color="#b77c78"];
+    hierarchy [label="EXPERIENCE BOUNDARY\nCentral readout remains primary and accessible\nMural is secondary; timeline keeps time authority", fillcolor="#eaf1fa", color="#7894b6"];
+    exit12a [label="OX-12A EXIT\nInstalled portrait supported/unavailable cases match\nthe central binding's value, unit, source time,\nand unavailable meaning", fillcolor="#dcecdf", color="#6c9b72"];
+
+    prereq12a -> bind;
+    bind -> render_supported [label="value present"];
+    bind -> render_missing [label="unavailable"];
+    render_supported -> hierarchy;
+    render_missing -> hierarchy;
+    hierarchy -> exit12a;
+  }
+
+  carried [shape=note, style="filled", label="SEPARATE EXISTING EVIDENCE\nEligible interior condition carry remains field-specific\nand keeps its original source time. It does not supply,\nreplace, or change temperature.", fillcolor="#f8f5e9", color="#b49b5a"];
+  out [shape=note, style="filled", label="OUT OF SCOPE\nTemperature carry/interpolation; condition binding on the mural;\nunit inference in drawing; other worlds; finished mural materials;\ncamera/typography polish; broad accessibility/system acceptance.", fillcolor="#f8eeee", color="#b07c76"];
+
+  selected -> lookup [lhead=cluster_12];
+  typed -> bind [ltail=cluster_12, lhead=cluster_12a, label="same binding"];
+}

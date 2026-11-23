@@ -1,5 +1,7 @@
 package com.oxygen.weather.timeline.ui
 
+import android.graphics.Paint
+import android.graphics.Typeface
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.runtime.Composable
@@ -15,7 +17,9 @@ import androidx.compose.ui.graphics.FilterQuality
 import androidx.compose.ui.graphics.drawscope.DrawScope
 import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.graphics.drawscope.clipRect
+import androidx.compose.ui.graphics.drawscope.drawIntoCanvas
 import androidx.compose.ui.graphics.lerp
+import androidx.compose.ui.graphics.nativeCanvas
 import androidx.compose.ui.res.imageResource
 import com.oxygen.weather.timeline.presentation.atmosphere.AtmosphereInput
 import com.oxygen.weather.timeline.presentation.atmosphere.AtmospherePreview
@@ -23,6 +27,8 @@ import com.oxygen.weather.timeline.presentation.atmosphere.DepictionKind
 import com.oxygen.weather.timeline.presentation.atmosphere.SceneVisualState
 import com.oxygen.weather.timeline.presentation.atmosphere.SceneVisualStateMapper
 import com.oxygen.weather.timeline.presentation.SkyFrame
+import com.oxygen.weather.timeline.presentation.SelectedTemperatureAvailability
+import com.oxygen.weather.timeline.presentation.SelectedTemperatureBinding
 import com.oxygen.weather.timeline.data.PrecipitationAmount
 import com.oxygen.weather.timeline.data.SkyCondition
 import com.oxygen.weather.timeline.presentation.scene.CityTreatment
@@ -52,9 +58,13 @@ import com.oxygen.weather.timeline.presentation.scene.OpenLandscapePass
 import com.oxygen.weather.timeline.presentation.scene.MinimalOpenLandscapeComposition
 import com.oxygen.weather.timeline.presentation.scene.SceneReading
 import java.time.ZoneId
+import java.time.format.DateTimeFormatter
+import java.util.Locale
 import com.oxygen.weather.timeline.R
 import android.animation.ValueAnimator
 import kotlin.math.PI
+import kotlin.math.min
+import kotlin.math.roundToInt
 import kotlin.math.sin
 
 private const val CLOUD_REGION_FRACTION = .33f
@@ -246,6 +256,8 @@ fun CatalogOpenLandscapeScene(
 @Composable
 fun CatalogLivingUrbanParkScene(
     composition: LivingUrbanParkComposition,
+    temperatureBinding: SelectedTemperatureBinding,
+    locationTimeZone: ZoneId,
     modifier: Modifier = Modifier,
 ) {
     val weather = composition.weatherDecision
@@ -278,6 +290,7 @@ fun CatalogLivingUrbanParkScene(
         }
 
         check(composition.selectedInstant == weather.selectedInstant)
+        check(temperatureBinding.selectedInstant == composition.selectedInstant)
         check(composition.elements.map { it.pass } == listOf(
             LivingUrbanParkDepthPass.BACKGROUND,
             LivingUrbanParkDepthPass.MURAL_WALL,
@@ -297,7 +310,7 @@ fun CatalogLivingUrbanParkScene(
                     check(element.pass == LivingUrbanParkDepthPass.MURAL_WALL)
                     val surface = requireNotNull(element.dataSurface)
                     check(surface.id == geometry.surfaceId)
-                    drawParkMuralWall(surface)
+                    drawParkMuralWall(surface, temperatureBinding, locationTimeZone)
                 }
                 is LivingUrbanParkGeometry.Tree -> {
                     check(element.id in setOf(
@@ -453,7 +466,11 @@ private fun DrawScope.drawParkCurvedPath(
     drawPath(path, Color(0xFF655844).copy(alpha = .58f), style = Stroke(width = size.width * .003f))
 }
 
-private fun DrawScope.drawParkMuralWall(surface: LivingUrbanParkDataSurfaceDeclaration) {
+private fun DrawScope.drawParkMuralWall(
+    surface: LivingUrbanParkDataSurfaceDeclaration,
+    temperatureBinding: SelectedTemperatureBinding,
+    locationTimeZone: ZoneId,
+) {
     fun ParkPoint.offset() = Offset(size.width * x, size.height * y)
     fun ParkQuadrilateral.path() = Path().apply {
         moveTo(topLeft.offset().x, topLeft.offset().y)
@@ -470,6 +487,65 @@ private fun DrawScope.drawParkMuralWall(surface: LivingUrbanParkDataSurfaceDecla
     val reservedRegion = surface.reservedRegion.path()
     drawPath(reservedRegion, Color(0xFFF4F3EA))
     drawPath(reservedRegion, Color(0xFFA07F5D), style = Stroke(width = size.width * .003f))
+
+    val region = surface.reservedRegion
+    val centerX = size.width * listOf(
+        region.topLeft.x, region.topRight.x, region.bottomRight.x, region.bottomLeft.x,
+    ).average().toFloat()
+    val regionTop = size.height * min(region.topLeft.y, region.topRight.y)
+    val regionBottom = size.height * maxOf(region.bottomLeft.y, region.bottomRight.y)
+    val regionHeight = regionBottom - regionTop
+    val regionWidth = size.width * min(
+        region.topRight.x - region.topLeft.x,
+        region.bottomRight.x - region.bottomLeft.x,
+    )
+    val maxTextWidth = regionWidth * .88f
+    val validTimeFormat = DateTimeFormatter.ofPattern("h:mm a", Locale.US)
+
+    fun drawLine(text: String, heightFraction: Float, sizeFraction: Float, color: Int) {
+        val paint = Paint(Paint.ANTI_ALIAS_FLAG).apply {
+            this.color = color
+            textAlign = Paint.Align.CENTER
+            typeface = Typeface.create(Typeface.SANS_SERIF, Typeface.BOLD)
+            textSize = regionWidth * sizeFraction
+            val measured = measureText(text)
+            if (measured > maxTextWidth) textSize *= maxTextWidth / measured
+        }
+        drawIntoCanvas { canvas ->
+            canvas.nativeCanvas.drawText(
+                text,
+                centerX,
+                regionTop + regionHeight * heightFraction,
+                paint,
+            )
+        }
+    }
+
+    when (temperatureBinding.availability) {
+        SelectedTemperatureAvailability.SUPPORTED -> {
+            val measurement = requireNotNull(temperatureBinding.measurement)
+            val sourceValidTime = requireNotNull(temperatureBinding.sourceValidTime)
+            drawLine("TEMP", .20f, .17f, android.graphics.Color.rgb(75, 88, 79))
+            drawLine(
+                "${measurement.displayValue.roundToInt()}${measurement.displayUnit}",
+                .46f,
+                .31f,
+                android.graphics.Color.rgb(42, 61, 54),
+            )
+            drawLine("VALID", .68f, .17f, android.graphics.Color.rgb(75, 88, 79))
+            drawLine(
+                sourceValidTime.atZone(locationTimeZone).format(validTimeFormat),
+                .88f,
+                .20f,
+                android.graphics.Color.rgb(42, 61, 54),
+            )
+        }
+        SelectedTemperatureAvailability.UNAVAILABLE -> {
+            drawLine("TEMP", .28f, .17f, android.graphics.Color.rgb(75, 88, 79))
+            drawLine("UNAVAILABLE", .56f, .22f, android.graphics.Color.rgb(42, 61, 54))
+            drawLine("NO VALUE", .83f, .17f, android.graphics.Color.rgb(75, 88, 79))
+        }
+    }
 }
 
 private fun DrawScope.drawParkTree(frame: ParkElementGeometry) {

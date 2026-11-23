@@ -2,6 +2,7 @@ package com.oxygen.weather.timeline.presentation
 
 import com.oxygen.weather.timeline.data.SampleForecast
 import com.oxygen.weather.timeline.data.catalog.*
+import com.oxygen.weather.timeline.presentation.scene.SceneEvidence
 import java.time.Instant
 import java.time.LocalDate
 import java.time.ZoneId
@@ -45,6 +46,60 @@ class CanonicalForecastProjectionTest {
         assertEquals("54°", second.temperature)
         assertNull(second.apparentTemperature)
         assertEquals("0%", second.humidity)
+    }
+
+    @Test
+    fun selectedTemperatureBindingRetainsItsSampleTimeAndDoesNotCarryMissingTemperature() {
+        val date = LocalDate.parse("2026-10-28")
+        val ten = date.atTime(10, 0).atZone(zone).toInstant()
+        val eleven = ten.plusSeconds(3600)
+        val twelve = ten.plusSeconds(7200)
+        val support = mapOf(date to mapOf(
+            CatalogField.TEMPERATURE_C to ExpectedFieldSupport.Points(setOf(ten, eleven, twelve)),
+            CatalogField.CONDITIONS to ExpectedFieldSupport.Points(setOf(ten, eleven, twelve)),
+        ))
+        val (catalog, _) = snapshot(date, listOf(
+            CanonicalWeatherFacts(ten, conditions = setOf(WeatherCondition.RAIN), temperatureC = 10.0),
+            CanonicalWeatherFacts(twelve, conditions = setOf(WeatherCondition.CLEAR), temperatureC = 12.0),
+        ), support)
+        val active = ActiveCatalogSelection(
+            location = catalog.location,
+            recording = CatalogRecording(catalog, support),
+            origin = CatalogOrigin.LIVE,
+            datasetId = catalog.datasetId,
+            replayRecordingId = null,
+            delivery = CatalogActivationDelivery.SOURCE,
+            freshness = CatalogFreshness.FRESH,
+            storedAt = null,
+            selectedInstant = ten.plusSeconds(900),
+            viewGeneration = 1L,
+        )
+
+        val supported = CatalogTimelinePresenter(active).scenePresentation(
+            CatalogActivationState(active = active),
+        )
+        val supportedBinding = requireNotNull(supported.timeline.selectedTemperatureBinding)
+        assertEquals(ten.plusSeconds(900), supportedBinding.selectedInstant)
+        assertEquals(SelectedTemperatureAvailability.SUPPORTED, supportedBinding.availability)
+        assertEquals(10.0, supportedBinding.measurement!!.canonicalValue, 0.0)
+        assertEquals(50.0, supportedBinding.measurement.displayValue, 0.0)
+        assertEquals("°F", supportedBinding.measurement.displayUnit)
+        assertEquals(ten, supportedBinding.sourceValidTime)
+        assertEquals("50°", supported.timeline.temperature)
+
+        val missingActive = active.copy(selectedInstant = eleven.plusSeconds(900))
+        val missing = CatalogTimelinePresenter(missingActive).scenePresentation(
+            CatalogActivationState(active = missingActive),
+        )
+        val missingBinding = requireNotNull(missing.timeline.selectedTemperatureBinding)
+        assertEquals(eleven.plusSeconds(900), missingBinding.selectedInstant)
+        assertEquals(SelectedTemperatureAvailability.UNAVAILABLE, missingBinding.availability)
+        assertNull(missingBinding.measurement)
+        assertNull(missingBinding.sourceValidTime)
+        assertNull(missing.timeline.temperature)
+        assertEquals(SceneEvidence.EXPECTED_MISSING, missing.reading.conditions!!.evidence)
+        assertEquals(ten, missing.reading.conditions.sourceValidTime)
+        assertTrue(missing.timeline.conditionSourceDisclosure!!.contains("10:00 AM"))
     }
 
     @Test

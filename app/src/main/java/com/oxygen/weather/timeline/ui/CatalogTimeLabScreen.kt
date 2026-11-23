@@ -81,6 +81,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.oxygen.weather.timeline.presentation.CatalogTimelineView
 import com.oxygen.weather.timeline.presentation.CatalogTimelineScenePresentation
+import com.oxygen.weather.timeline.presentation.SelectedTemperatureBinding
 import com.oxygen.weather.timeline.presentation.CompassDirection
 import com.oxygen.weather.timeline.presentation.InstantTimeAxis
 import com.oxygen.weather.timeline.presentation.symbol.WeatherSymbolId
@@ -224,7 +225,9 @@ private fun CatalogTimeLabScreenContent(
         val responsiveScale = (maxWidth.value / 411f).coerceIn(.75f, 1f)
         if (sceneReading != null && worldChoice.selected == CatalogWorld.LIVING_URBAN_PARK) {
             CatalogLivingUrbanParkScene(
-                LivingUrbanParkTheme.compose(SceneWeatherDecision.resolve(sceneReading, view.zone)),
+                composition = LivingUrbanParkTheme.compose(SceneWeatherDecision.resolve(sceneReading, view.zone)),
+                temperatureBinding = requireNotNull(view.selectedTemperatureBinding),
+                locationTimeZone = view.zone,
             )
         } else if (sceneReading != null && worldChoice.selected == CatalogWorld.OPEN_LANDSCAPE) {
             CatalogOpenLandscapeScene(

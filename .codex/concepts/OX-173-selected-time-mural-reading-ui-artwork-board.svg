@@ -1,0 +1,173 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1880" height="1180" viewBox="0 0 1880 1180">
+  <defs>
+    <linearGradient id="sky" x2="0" y2="1">
+      <stop offset="0" stop-color="#3d83aa"/>
+      <stop offset=".62" stop-color="#8eb7c3"/>
+      <stop offset="1" stop-color="#778c72"/>
+    </linearGradient>
+    <linearGradient id="ground" x2="0" y2="1">
+      <stop offset="0" stop-color="#72886b"/>
+      <stop offset="1" stop-color="#193d3d"/>
+    </linearGradient>
+    <linearGradient id="path" x2="0" y2="1">
+      <stop offset="0" stop-color="#8f826e"/>
+      <stop offset="1" stop-color="#4a514c"/>
+    </linearGradient>
+    <filter id="shadow" x="-20%" y="-20%" width="140%" height="150%">
+      <feDropShadow dx="0" dy="8" stdDeviation="12" flood-color="#233139" flood-opacity=".17"/>
+    </filter>
+    <style>
+      .ui { font-family: 'DejaVu Sans', sans-serif; }
+      .title { font: 700 34px 'DejaVu Sans', sans-serif; fill: #243c39; }
+      .sub { font: 400 17px 'DejaVu Sans', sans-serif; fill: #52645d; }
+      .state { font: 700 19px 'DejaVu Sans', sans-serif; fill: #344c44; letter-spacing: 1px; }
+      .note { font: 400 15px 'DejaVu Sans', sans-serif; fill: #58655d; }
+      .small { font: 600 10px 'DejaVu Sans', sans-serif; fill: #42534a; }
+      .phoneText { font-family: 'DejaVu Sans', sans-serif; fill: #f7f8f7; }
+      .wallLabel { font: 700 7px 'DejaVu Sans', sans-serif; fill: #536054; letter-spacing: .7px; }
+      .wallValue { font: 700 15px 'DejaVu Sans', sans-serif; fill: #263b37; }
+      .wallMeta { font: 600 6.5px 'DejaVu Sans', sans-serif; fill: #566057; }
+    </style>
+  </defs>
+
+  <rect width="1880" height="1180" fill="#f5f2e9"/>
+  <text x="64" y="70" class="title">OX-12A · Selected temperature on the Park mural</text>
+  <text x="66" y="104" class="sub">PROPOSED UI ARTWORK BOARD · CYCLE 173 · PRODUCT-OWNER APPROVAL PENDING</text>
+  <rect x="64" y="126" width="1752" height="2" fill="#d4d0c5"/>
+
+  <text x="82" y="170" class="state">SUPPORTED TEMPERATURE</text>
+  <text x="842" y="170" class="state">TEMPERATURE UNAVAILABLE</text>
+  <text x="82" y="196" class="note">Wall value, °F unit, and original sample time follow one binding.</text>
+  <text x="842" y="196" class="note">Explicit missing state; no zero, carry, or interpolated value.</text>
+
+  <!-- Supported state phone -->
+  <g filter="url(#shadow)">
+    <rect x="78" y="220" width="620" height="835" rx="34" fill="#10283a"/>
+    <rect x="96" y="238" width="584" height="799" rx="23" fill="url(#sky)"/>
+  </g>
+  <g class="ui">
+    <text x="119" y="268" font-size="15" class="phoneText">9:41</text>
+    <text x="598" y="268" font-size="14" class="phoneText" text-anchor="end">●  ▰  100%</text>
+    <rect x="124" y="291" width="528" height="43" rx="22" fill="#f0f6f6"/>
+    <text x="388" y="319" font-size="17" font-weight="700" fill="#24737b" text-anchor="middle">DEMO DATA · synthetic forecast</text>
+    <rect x="245" y="349" width="286" height="49" rx="24" fill="#173d56" stroke="#a6d0d5" stroke-width="2"/>
+    <text x="388" y="381" font-size="18" fill="#f5f8f8" text-anchor="middle">World: Living Urban Park</text>
+
+    <text x="388" y="444" font-size="22" font-weight="700" class="phoneText" text-anchor="middle">Selected location</text>
+    <text x="388" y="480" font-size="19" font-weight="600" class="phoneText" text-anchor="middle">clear</text>
+    <text x="388" y="560" font-size="78" font-weight="300" class="phoneText" text-anchor="middle">48°</text>
+
+    <!-- Distant skyline and park ground -->
+    <path d="M96 610 H680 V837 H96 Z" fill="url(#ground)"/>
+    <path d="M96 617 L166 588 L221 606 L221 680 L96 680 Z" fill="#74857c" opacity=".82"/>
+    <path d="M221 603 L275 574 L321 604 L321 697 L221 697 Z" fill="#657e78" opacity=".82"/>
+    <path d="M330 613 L380 584 L438 603 L438 688 L330 688 Z" fill="#71887d" opacity=".82"/>
+    <path d="M448 601 L507 574 L558 599 L558 699 L448 699 Z" fill="#617d77" opacity=".82"/>
+    <path d="M557 612 L616 588 L680 605 L680 694 L557 694 Z" fill="#71857b" opacity=".82"/>
+
+    <!-- Park mural: existing left wall plane and reserved region -->
+    <path d="M108 588 L205 570 L205 773 L108 791 Z" fill="#a6a99d" stroke="#6e7971" stroke-width="3"/>
+    <path d="M124 623 L190 612 L190 731 L124 742 Z" fill="#f4f3ea" stroke="#a07f5d" stroke-width="2"/>
+    <text x="157" y="646" class="wallLabel" text-anchor="middle">TEMP</text>
+    <text x="157" y="672" class="wallValue" text-anchor="middle">48°F</text>
+    <text x="157" y="692" class="wallMeta" text-anchor="middle">VALID</text>
+    <text x="157" y="704" class="wallMeta" text-anchor="middle">12:00 PM</text>
+
+    <!-- Curved park path, benches and entrance -->
+    <path d="M333 837 C306 778 305 716 351 678 C394 643 419 627 417 610 L484 610 C493 655 460 703 456 746 C451 783 465 811 482 837 Z" fill="url(#path)" stroke="#514e43" stroke-width="3"/>
+    <path d="M291 744 l69 0 l-11 13 l-73 0z" fill="#625c4f" stroke="#aaa08b" stroke-width="2"/>
+    <path d="M518 754 l67 0 l-10 13 l-70 0z" fill="#625c4f" stroke="#aaa08b" stroke-width="2"/>
+    <path d="M305 838 L337 803 L469 803 L501 838 Z" fill="#3b3b38" stroke="#ada899" stroke-width="4"/>
+    <path d="M324 825 H482" stroke="#8b8980" stroke-width="4" stroke-linecap="round"/>
+
+    <!-- Existing secondary forecast row and selected timeline -->
+    <text x="389" y="603" font-size="12" class="phoneText" text-anchor="middle">Precip 25%  ·  Wind 0 mph</text>
+    <rect x="96" y="858" width="584" height="179" rx="0 0 23 23" fill="#0c2236" opacity=".88"/>
+    <text x="146" y="891" font-size="16" class="phoneText" text-anchor="middle">TUE</text>
+    <text x="250" y="891" font-size="16" class="phoneText" text-anchor="middle">WED</text>
+    <text x="354" y="891" font-size="20" font-weight="700" fill="#f8d477" text-anchor="middle">THU</text>
+    <text x="458" y="891" font-size="16" class="phoneText" text-anchor="middle">FRI</text>
+    <text x="562" y="891" font-size="16" class="phoneText" text-anchor="middle">SAT</text>
+    <path d="M96 916 H680" stroke="#9cabb4" stroke-width="1.5" opacity=".55"/>
+    <circle cx="354" cy="916" r="7" fill="#f5d277"/>
+    <text x="354" y="967" font-size="27" font-weight="700" fill="#f6d276" text-anchor="middle">48°</text>
+    <rect x="296" y="986" width="116" height="31" rx="16" fill="#233d54"/>
+    <text x="354" y="1007" font-size="15" fill="#f5d88d" text-anchor="middle">12:00 PM</text>
+    <text x="388" y="1029" font-size="8" fill="#cbd5da" text-anchor="middle">Illustrative specimen content; installed value comes from the binding.</text>
+  </g>
+
+  <!-- Unavailable state phone -->
+  <g filter="url(#shadow)">
+    <rect x="838" y="220" width="620" height="835" rx="34" fill="#10283a"/>
+    <rect x="856" y="238" width="584" height="799" rx="23" fill="url(#sky)"/>
+  </g>
+  <g class="ui">
+    <text x="879" y="268" font-size="15" class="phoneText">9:41</text>
+    <text x="1358" y="268" font-size="14" class="phoneText" text-anchor="end">●  ▰  100%</text>
+    <rect x="884" y="291" width="528" height="43" rx="22" fill="#f0f6f6"/>
+    <text x="1148" y="319" font-size="17" font-weight="700" fill="#24737b" text-anchor="middle">DEMO DATA · synthetic forecast</text>
+    <rect x="1005" y="349" width="286" height="49" rx="24" fill="#173d56" stroke="#a6d0d5" stroke-width="2"/>
+    <text x="1148" y="381" font-size="18" fill="#f5f8f8" text-anchor="middle">World: Living Urban Park</text>
+
+    <text x="1148" y="444" font-size="22" font-weight="700" class="phoneText" text-anchor="middle">Selected location</text>
+    <text x="1148" y="480" font-size="19" font-weight="600" class="phoneText" text-anchor="middle">clear</text>
+    <text x="1148" y="560" font-size="78" font-weight="300" class="phoneText" text-anchor="middle">—</text>
+
+    <path d="M856 610 H1440 V837 H856 Z" fill="url(#ground)"/>
+    <path d="M856 617 L926 588 L981 606 L981 680 L856 680 Z" fill="#74857c" opacity=".82"/>
+    <path d="M981 603 L1035 574 L1081 604 L1081 697 L981 697 Z" fill="#657e78" opacity=".82"/>
+    <path d="M1090 613 L1140 584 L1198 603 L1198 688 L1090 688 Z" fill="#71887d" opacity=".82"/>
+    <path d="M1208 601 L1267 574 L1318 599 L1318 699 L1208 699 Z" fill="#617d77" opacity=".82"/>
+    <path d="M1317 612 L1376 588 L1440 605 L1440 694 L1317 694 Z" fill="#71857b" opacity=".82"/>
+
+    <path d="M868 588 L965 570 L965 773 L868 791 Z" fill="#a6a99d" stroke="#6e7971" stroke-width="3"/>
+    <path d="M884 623 L950 612 L950 731 L884 742 Z" fill="#f4f3ea" stroke="#a07f5d" stroke-width="2"/>
+    <text x="917" y="646" class="wallLabel" text-anchor="middle">TEMP</text>
+    <text x="917" y="671" font-size="7.5" font-weight="700" fill="#536054" text-anchor="middle">UNAVAILABLE</text>
+    <text x="917" y="694" class="wallMeta" text-anchor="middle">NO VALUE</text>
+
+    <path d="M1093 837 C1066 778 1065 716 1111 678 C1154 643 1179 627 1177 610 L1244 610 C1253 655 1220 703 1216 746 C1211 783 1225 811 1242 837 Z" fill="url(#path)" stroke="#514e43" stroke-width="3"/>
+    <path d="M1051 744 l69 0 l-11 13 l-73 0z" fill="#625c4f" stroke="#aaa08b" stroke-width="2"/>
+    <path d="M1278 754 l67 0 l-10 13 l-70 0z" fill="#625c4f" stroke="#aaa08b" stroke-width="2"/>
+    <path d="M1065 838 L1097 803 L1229 803 L1261 838 Z" fill="#3b3b38" stroke="#ada899" stroke-width="4"/>
+    <path d="M1084 825 H1242" stroke="#8b8980" stroke-width="4" stroke-linecap="round"/>
+
+    <text x="1148" y="603" font-size="12" class="phoneText" text-anchor="middle">Precip 25%  ·  Wind 0 mph</text>
+    <rect x="856" y="858" width="584" height="179" fill="#0c2236" opacity=".88"/>
+    <text x="906" y="891" font-size="16" class="phoneText" text-anchor="middle">TUE</text>
+    <text x="1010" y="891" font-size="16" class="phoneText" text-anchor="middle">WED</text>
+    <text x="1114" y="891" font-size="20" font-weight="700" fill="#f8d477" text-anchor="middle">THU</text>
+    <text x="1218" y="891" font-size="16" class="phoneText" text-anchor="middle">FRI</text>
+    <text x="1322" y="891" font-size="16" class="phoneText" text-anchor="middle">SAT</text>
+    <path d="M856 916 H1440" stroke="#9cabb4" stroke-width="1.5" opacity=".55"/>
+    <circle cx="1114" cy="916" r="7" fill="#f5d277"/>
+    <text x="1114" y="967" font-size="27" font-weight="700" fill="#f6d276" text-anchor="middle">—</text>
+    <rect x="1056" y="986" width="116" height="31" rx="16" fill="#233d54"/>
+    <text x="1114" y="1007" font-size="15" fill="#f5d88d" text-anchor="middle">1:00 PM</text>
+    <text x="1148" y="1029" font-size="8" fill="#cbd5da" text-anchor="middle">Central readout stays primary; accessible text names unavailability.</text>
+  </g>
+
+  <!-- Review notes -->
+  <g class="ui">
+    <rect x="1500" y="230" width="310" height="360" rx="18" fill="#fffdf8" stroke="#c8c2b4" stroke-width="2"/>
+    <text x="1530" y="274" font-size="19" font-weight="700" fill="#354a41">Binding rules</text>
+    <circle cx="1537" cy="312" r="5" fill="#6c9b72"/><text x="1553" y="318" class="note">One selected Instant</text>
+    <circle cx="1537" cy="350" r="5" fill="#6c9b72"/><text x="1553" y="356" class="note">Same canonical temperature</text>
+    <circle cx="1537" cy="388" r="5" fill="#6c9b72"/><text x="1553" y="394" class="note">Unit shown as °F</text>
+    <circle cx="1537" cy="426" r="5" fill="#6c9b72"/><text x="1553" y="432" class="note">Original valid time retained</text>
+    <circle cx="1537" cy="464" r="5" fill="#b77c78"/><text x="1553" y="470" class="note">No carry or interpolation</text>
+    <circle cx="1537" cy="502" r="5" fill="#6c9b72"/><text x="1553" y="508" class="note">Mural stays secondary</text>
+    <text x="1530" y="555" font-size="12" fill="#737d76">Artwork values are specimens.</text>
+
+    <rect x="1500" y="620" width="310" height="240" rx="18" fill="#e8efeb" stroke="#bdc9c0" stroke-width="2"/>
+    <text x="1530" y="664" font-size="19" font-weight="700" fill="#354a41">Scope boundary</text>
+    <text x="1530" y="704" class="note">The mural mirrors the typed</text>
+    <text x="1530" y="730" class="note">binding. It does not read a</text>
+    <text x="1530" y="756" class="note">new forecast field or own</text>
+    <text x="1530" y="782" class="note">selection, time, or gestures.</text>
+    <text x="1530" y="824" font-size="12" fill="#737d76">Not an installed acceptance capture.</text>
+  </g>
+
+  <rect x="64" y="1090" width="1752" height="1.5" fill="#d4d0c5"/>
+  <text x="68" y="1125" class="note">Proposed appearance in the existing mural reservation. Final installed readability and camera fit remain measured in the later OX-21 slice.</text>
+</svg>

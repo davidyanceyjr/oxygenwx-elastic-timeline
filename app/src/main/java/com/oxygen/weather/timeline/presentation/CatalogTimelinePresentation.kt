@@ -111,7 +111,22 @@ private fun CanonicalWeatherFacts.supportsValue(field: CatalogField): Boolean = 
     CatalogField.VISIBILITY_KM -> visibilityKm != null
 }
 
-/** Values and labels that may cross into Compose. No recording or source fact is exposed. */
+enum class SelectedTemperatureAvailability { SUPPORTED, UNAVAILABLE }
+
+/** One authoritative selected time paired with its independent temperature sample evidence. */
+data class SelectedTemperatureBinding(
+    val selectedInstant: Instant,
+    val availability: SelectedTemperatureAvailability,
+    val measurement: PresentedMeasurement?,
+    val sourceValidTime: Instant?,
+) {
+    init {
+        require((measurement == null) == (sourceValidTime == null))
+        require((availability == SelectedTemperatureAvailability.SUPPORTED) == (measurement != null))
+    }
+}
+
+/** Values and labels that may cross into Compose. No catalog recording or source fact is exposed. */
 data class CatalogTimelineView(
     val generation: Long,
     val selectedInstant: Instant,
@@ -145,6 +160,8 @@ data class CatalogTimelineView(
     val loading: Boolean,
     val error: String?,
     val conditionEventSourceTime: Instant? = null,
+    /** Null only for source-compatible manually constructed views outside the catalog presenter. */
+    val selectedTemperatureBinding: SelectedTemperatureBinding? = null,
 )
 
 /** Facts and the single catalog composition share the authoritative selected instant. */
@@ -342,11 +359,24 @@ class CatalogTimelinePresenter(private val active: ActiveCatalogSelection) {
         val humidityFact = pointFactAt(selected, CatalogField.RELATIVE_HUMIDITY_PERCENT)
         val windSpeedFact = pointFactAt(selected, CatalogField.WIND_SPEED_KPH)
         val windDirectionFact = pointFactAt(selected, CatalogField.WIND_DIRECTION_DEGREES)
-        val temperaturePresentation = temperatureFact?.let { source ->
-            CanonicalForecastProjection.project(
-                catalog, window, source.validTime, ForecastDisplayUnits.IMPERIAL,
-            ).factSample
-        }
+        val temperatureBinding = temperatureFact?.let { source ->
+            val measurement = requireNotNull(
+                CanonicalForecastProjection.project(
+                    catalog, window, source.validTime, ForecastDisplayUnits.IMPERIAL,
+                ).factSample?.temperature,
+            )
+            SelectedTemperatureBinding(
+                selectedInstant = selected,
+                availability = SelectedTemperatureAvailability.SUPPORTED,
+                measurement = measurement,
+                sourceValidTime = source.validTime,
+            )
+        } ?: SelectedTemperatureBinding(
+            selectedInstant = selected,
+            availability = SelectedTemperatureAvailability.UNAVAILABLE,
+            measurement = null,
+            sourceValidTime = null,
+        )
         val windPresentation = windSpeedFact?.let { source ->
             CanonicalForecastProjection.project(
                 catalog, window, source.validTime, ForecastDisplayUnits.IMPERIAL,
@@ -413,7 +443,7 @@ class CatalogTimelinePresenter(private val active: ActiveCatalogSelection) {
             factTimeLabel = conditionSourceDisclosure ?: sourceFactTime?.let(::formatTime),
             conditionSourceDisclosure = conditionSourceDisclosure,
             sourceTimeDisclosure = sourceTimeDisclosure,
-            temperature = temperaturePresentation?.temperature?.let { "${it.displayValue.rounded()}°" },
+            temperature = temperatureBinding.measurement?.let { "${it.displayValue.rounded()}°" },
             apparentTemperature = apparentTemperaturePresentation?.apparentTemperature?.let { "${it.displayValue.rounded()}°" },
             humidity = humidityFact?.relativeHumidityPercent?.let { "${it.rounded()}%" },
             condition = projected.selectedEvent?.accessibleName
@@ -456,6 +486,7 @@ class CatalogTimelinePresenter(private val active: ActiveCatalogSelection) {
             loading = state.loading,
             error = state.lastError,
             conditionEventSourceTime = projected.selectedEvent?.sourceTime,
+            selectedTemperatureBinding = temperatureBinding,
         )
     }
 
