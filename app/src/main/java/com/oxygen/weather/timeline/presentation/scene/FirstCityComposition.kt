@@ -70,6 +70,17 @@ internal enum class FirstCityElementRole {
 
 internal enum class FirstCityCanopyAsset { BASELINE, OLIVE }
 
+/** First City's cloud depth is authored per pass and remains independent of cloud meaning. */
+internal data class FirstCityCloudRenderStyle(
+    val depthGroup: FirstCityDepthGroup,
+) : SceneCloudRenderStyle
+
+/** First City's existing rain field is anchored to its foreground precipitation pass. */
+internal object FirstCityRainRenderStyle : SceneRainRenderStyle
+
+/** First City's existing snow field keeps its foreground precipitation placement. */
+internal object FirstCitySnowRenderStyle : SceneSnowRenderStyle
+
 /** One existing physical pass, with its established absolute depth and local order. */
 internal data class FirstCityPassReference(val layer: FirstCityLayer) {
     val depthGroup: FirstCityDepthGroup = requireNotNull(layer.depthGroup)
@@ -218,6 +229,46 @@ internal fun FirstCitySemanticElement.canopyDeclaration():
         orderedPasses.single(), requireNotNull(geometry))
 }
 
+internal fun FirstCitySemanticElement.cloudDeclaration(
+    layer: FirstCityLayer,
+): SceneElementDeclaration<FirstCityElementId, FirstCityPassReference, SceneCloudRenderStyle> {
+    require(id == FirstCityElementId.CLOUD_COVER)
+    require(role == FirstCityElementRole.CLOUD_FIELD)
+    val pass = orderedPasses.single { it.layer == layer }
+    return SceneElementDeclaration(
+        id = id,
+        role = SceneElementRole.CLOUD_FIELD,
+        pass = pass,
+        geometry = FirstCityCloudRenderStyle(pass.depthGroup),
+    )
+}
+
+internal fun FirstCitySemanticElement.rainDeclaration():
+    SceneElementDeclaration<FirstCityElementId, FirstCityPassReference, SceneRainRenderStyle> {
+    require(id == FirstCityElementId.PRECIPITATION_FIELD)
+    require(role == FirstCityElementRole.WEATHER_FIELD)
+    val pass = orderedPasses.single { it.layer == FirstCityLayer.PRECIPITATION }
+    return SceneElementDeclaration(
+        id = id,
+        role = SceneElementRole.RAIN_FIELD,
+        pass = pass,
+        geometry = FirstCityRainRenderStyle,
+    )
+}
+
+internal fun FirstCitySemanticElement.snowDeclaration():
+    SceneElementDeclaration<FirstCityElementId, FirstCityPassReference, SceneSnowRenderStyle> {
+    require(id == FirstCityElementId.PRECIPITATION_FIELD)
+    require(role == FirstCityElementRole.WEATHER_FIELD)
+    val pass = orderedPasses.single { it.layer == FirstCityLayer.PRECIPITATION }
+    return SceneElementDeclaration(
+        id = id,
+        role = SceneElementRole.SNOW_FIELD,
+        pass = pass,
+        geometry = FirstCitySnowRenderStyle,
+    )
+}
+
 internal fun resolveFirstCityCanopy(
     weatherDecision: SceneWeatherDecision,
     declaration: SceneElementDeclaration<FirstCityElementId, FirstCityPassReference, FirstCityElementGeometry>,
@@ -241,6 +292,34 @@ internal fun FirstCityComposition.canopyRenderInput(
     return resolveFirstCityCanopy(weatherDecision, declaration.canopyDeclaration(),
         requireNotNull(declaration.canopyAsset))
 }
+
+internal fun FirstCityComposition.cloudRenderInput(
+    layer: FirstCityLayer,
+    declaration: FirstCitySemanticElement = requireNotNull(
+        FirstCitySemanticInventory.forRenderPass(layer)
+    ),
+): SceneCloudRenderInput<FirstCityElementId, FirstCityPassReference> = resolveSceneCloudRenderInput(
+    weatherDecision,
+    declaration.cloudDeclaration(layer),
+)
+
+internal fun FirstCityComposition.rainRenderInput(
+    declaration: FirstCitySemanticElement = requireNotNull(
+        FirstCitySemanticInventory.forRenderPass(FirstCityLayer.PRECIPITATION)
+    ),
+): SceneRainRenderInput<FirstCityElementId, FirstCityPassReference> = resolveSceneRainRenderInput(
+    weatherDecision,
+    declaration.rainDeclaration(),
+)
+
+internal fun FirstCityComposition.snowRenderInput(
+    declaration: FirstCitySemanticElement = requireNotNull(
+        FirstCitySemanticInventory.forRenderPass(FirstCityLayer.PRECIPITATION)
+    ),
+): SceneSnowRenderInput<FirstCityElementId, FirstCityPassReference> = resolveSceneSnowRenderInput(
+    weatherDecision,
+    declaration.snowDeclaration(),
+)
 
 /** Small renderer contract for the catalog path; all weather choices are already resolved. */
 data class FirstCityComposition(

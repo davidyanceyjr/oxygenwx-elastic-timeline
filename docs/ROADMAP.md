@@ -1432,7 +1432,7 @@ The SG workstream follows the owner-directed pivot recorded above and is grounde
 - **Cycle 171 — Park mural foundation:** OX-37 → OX-42 → OX-85. OX-35, OX-04, OX-25, and OX-41 are DONE; OX-42 depends on OX-37; OX-85 depends on OX-42.
 - **Cycle 172 — Park Landmarks:** OX-43 → OX-44 share the bounded placement of the vegetation/bench and shelter set; each retains its own placement and occlusion exit.
 - **Exact selected-time mural reading:** OX-12 → OX-12A. The data contract and visible mural reading share one behavior board; OX-12A still has its own visual exit and depends on OX-12, OX-42, and OX-37.
-- **Reusable weather rendering across worlds:** OX-07 → (OX-45 and OX-08 → OX-46) → OX-47. The shared board must make cloud extraction, second-world cloud use, rain/snow extraction, and the cross-world depth/unknown-state proof independently reviewable.
+- **Cycle 174 — Reusable weather rendering across worlds:** roster order OX-07 → OX-45 → OX-08 → OX-46 → OX-47; dependency edges OX-07 → {OX-45, OX-08}, OX-08 → OX-46, and {OX-45, OX-46} → OX-47. The shared board must make cloud extraction, second-world cloud use, rain/snow extraction, and the cross-world depth/unknown-state proof independently reviewable.
 - **Separate outcomes:** OX-09 remains a repeat-selection reproducibility slice; OX-96 remains a renderer/package measurement slice and should precede further Park polish; OX-29 remains its own TEST slice.
 
 These groupings do not merge slice acceptance. Cycle 171 is complete. The owner selected OX-43 as the sole `NEXT` and OX-44 as the second `PLANNED` slice for cycle 172. The product owner approved the shared behavior and UI artwork board package on 2026-11-22; cycle 172 records the complete package fingerprints separately for both slices. Board approval does not authorize implementation.
@@ -1440,6 +1440,10 @@ These groupings do not merge slice acceptance. Cycle 171 is complete. The owner 
 **Owner sequencing decision (2026-11-22):** The owner selected OX-12 as the sole `NEXT` and OX-12A as the second `PLANNED` slice for cycle 173, following the dependency-ordered grouping above. This records the slice order; the required board approvals are recorded on each slice below, and implementation remains unactivated.
 
 **Owner-directed ambiguity resolution (2026-11-22):** The owner selected temperature in the current Imperial display unit (`°F`) and confirmed the supported/unavailable resolution. Temperature is supplied at its supported source-valid time or unavailable; do not carry or interpolate temperature. Keep eligible carried conditions as their separate existing evidence, with original source time. The OX-12 and OX-12A exits below are narrowed to supported/unavailable temperature plus source-valid-time preservation.
+
+**Owner sequencing decision (2026-11-22):** The owner selected the reusable weather-rendering group for cycle `174-weather-rendering-across-worlds`, with OX-07 as the sole `NEXT` slice and OX-45, OX-08, OX-46, and OX-47 as `PLANNED` follow-ups in that roster order. OX-45 and OX-08 both follow OX-07, with no dependency between them; OX-46 follows OX-08, and OX-47 follows both OX-45 and OX-46. This records cycle intake and slice order; it does not activate the cycle or authorize implementation.
+
+**Owner board approval (2026-11-22):** The product owner approved the complete shared behavior and UI artwork packages for cycle 174. Their complete paths and SHA-256 fingerprints are recorded separately on OX-07, OX-45, OX-08, OX-46, and OX-47 in `.codex/plans/174-weather-rendering-across-worlds.md`. The behavior and conceptual artwork boards make each slice's states and exit independently reviewable; the artwork is not installed acceptance evidence. Approval clears the board gate but does not finalize or activate the plan or authorize implementation.
 
 ### OX-42 — Place the park mural wall and data-surface anchor — DONE
 
@@ -1489,45 +1493,45 @@ These groupings do not merge slice acceptance. Cycle 171 is complete. The owner 
 **Evidence:** Cycle 173 targets `.codex/test-artifacts/173-selected-time-mural-reading/README.md`; cycle closeout target `.codex/history/173-selected-time-mural-reading.md`. Do not claim unperformed checks.
 **Slice board(s):** Product owner approved the shared cycle 173 behavior package on 2026-11-22: `.codex/concepts/OX-173-selected-time-mural-reading-behavior-board.dot` with SVG/PNG renders and Markdown contract, plus UI artwork `.codex/concepts/OX-173-selected-time-mural-reading-ui-artwork-board.svg` with PNG review render. The behavior board governs the same OX-12 binding and independently reviews OX-12A's Park-surface consumption and exits. The artwork board governs supported and unavailable temperature appearance within the existing mural reservation, with the central readout primary. Cycle 173 records complete behavior and artwork package fingerprints on OX-12A.
 
-### OX-07 — Extract the First City cloud rendering capability — PLANNED
+### OX-07 — Extract the First City cloud rendering capability — DONE
 
 **Objective/scope:** Place current First City cloud drawing behind a typed reusable renderer entry that consumes resolved cloud decisions plus world-authored style. Preserve existing visual output and avoid rewriting the overall Canvas.
 **Depends on:** OX-36, OX-38.
 **Exit:** Installed First City day/rain comparison shows no unapproved visual change; the capability can be called from a declared cloud element.
-**Evidence:** Future cycle-specific `.codex/test-artifacts/<cycle-id>/` and `.codex/history/<cycle-id>.md`; assign exact paths only when the slice is planned. Do not claim unperformed checks.
-**Slice board(s):** Objective-specific behavior board and UI artwork board pending for the affected installed states. Owner approval required.
+**Evidence:** Cycle 174 targets `.codex/test-artifacts/174-weather-rendering-across-worlds/README.md` and `.codex/history/174-weather-rendering-across-worlds.md`; do not claim unperformed checks.
+**Slice board(s):** The product owner approved the shared cycle 174 behavior package `.codex/concepts/OX-174-reusable-weather-rendering-behavior-board.dot` with SVG/PNG renders and Markdown contract, plus UI artwork `.codex/concepts/OX-174-reusable-weather-rendering-ui-artwork-board.svg` with PNG review render, on 2026-11-22. Cycle 174 records the complete package fingerprints separately for OX-07. The boards independently show this slice's behavior and appearance gates; the conceptual UI artwork is not installed evidence.
 
-### OX-45 — Use clouds in a second world and verify the upper bound — PLANNED
+### OX-45 — Use clouds in a second world and verify the upper bound — DONE
 
 **Objective/scope:** Invoke the reusable cloud renderer from Minimal Open Landscape, which already exists, rather than waiting for Park art. Verify the mandatory upper-third cloud constraint including blur, shadow and movement for affected states.
 **Depends on:** OX-07, OX-92, OX-04.
 **Exit:** Installed two-world samples share weather decisions; all visible cloud output in checked states remains in the top 33% of the atmospheric scene viewport; unknown cloud coverage is not fabricated.
-**Evidence:** Future cycle-specific `.codex/test-artifacts/<cycle-id>/` and `.codex/history/<cycle-id>.md`; assign exact paths only when the slice is planned. Do not claim unperformed checks.
-**Slice board(s):** Objective-specific behavior board and UI artwork board pending for the affected installed states. Owner approval required.
+**Evidence:** Cycle 174 targets `.codex/test-artifacts/174-weather-rendering-across-worlds/README.md` and `.codex/history/174-weather-rendering-across-worlds.md`; do not claim unperformed checks.
+**Slice board(s):** The product owner approved the shared cycle 174 behavior package `.codex/concepts/OX-174-reusable-weather-rendering-behavior-board.dot` with SVG/PNG renders and Markdown contract, plus UI artwork `.codex/concepts/OX-174-reusable-weather-rendering-ui-artwork-board.svg` with PNG review render, on 2026-11-22. Cycle 174 records the complete package fingerprints separately for OX-45. The boards independently show this slice's behavior and appearance gates; the conceptual UI artwork is not installed evidence.
 
-### OX-08 — Extract the reusable rain rendering capability — PLANNED
+### OX-08 — Extract the reusable rain rendering capability — DONE
 
 **Objective/scope:** Extract existing rain drawing behind a declared precipitation-element renderer. Keep OX-03 cloud-origin placement when visible clouds exist and the documented no-cloud fallback when applicable; no new rainfall-rate inference.
 **Depends on:** OX-07, OX-36, OX-04.
 **Exit:** Focused installed First City supported-rain and dry comparisons preserve baseline behavior and selected-time reading; rain is callable from the scene declaration.
-**Evidence:** Future cycle-specific `.codex/test-artifacts/<cycle-id>/` and `.codex/history/<cycle-id>.md`; assign exact paths only when the slice is planned. Do not claim unperformed checks.
-**Slice board(s):** Objective-specific behavior board and UI artwork board pending for the affected installed states. Owner approval required.
+**Evidence:** Cycle 174 targets `.codex/test-artifacts/174-weather-rendering-across-worlds/README.md` and `.codex/history/174-weather-rendering-across-worlds.md`; do not claim unperformed checks.
+**Slice board(s):** The product owner approved the shared cycle 174 behavior package `.codex/concepts/OX-174-reusable-weather-rendering-behavior-board.dot` with SVG/PNG renders and Markdown contract, plus UI artwork `.codex/concepts/OX-174-reusable-weather-rendering-ui-artwork-board.svg` with PNG review render, on 2026-11-22. Cycle 174 records the complete package fingerprints separately for OX-08. The boards independently show this slice's behavior and appearance gates; the conceptual UI artwork is not installed evidence.
 
-### OX-46 — Extract the reusable snow rendering capability — PLANNED
+### OX-46 — Extract the reusable snow rendering capability — DONE
 
 **Objective/scope:** Move snow drawing behind its own compatible precipitation capability, reusing only evidenced rain interfaces. Do not introduce a generalized particle runtime.
 **Depends on:** OX-08, OX-36.
 **Exit:** Installed snow and no-snow comparisons show correct OX-18-driven state and unchanged essential data access in the existing world.
-**Evidence:** Future cycle-specific `.codex/test-artifacts/<cycle-id>/` and `.codex/history/<cycle-id>.md`; assign exact paths only when the slice is planned. Do not claim unperformed checks.
-**Slice board(s):** Objective-specific behavior board and UI artwork board pending for the affected installed states. Owner approval required.
+**Evidence:** Cycle 174 targets `.codex/test-artifacts/174-weather-rendering-across-worlds/README.md` and `.codex/history/174-weather-rendering-across-worlds.md`; do not claim unperformed checks.
+**Slice board(s):** The product owner approved the shared cycle 174 behavior package `.codex/concepts/OX-174-reusable-weather-rendering-behavior-board.dot` with SVG/PNG renders and Markdown contract, plus UI artwork `.codex/concepts/OX-174-reusable-weather-rendering-ui-artwork-board.svg` with PNG review render, on 2026-11-22. Cycle 174 records the complete package fingerprints separately for OX-46. The boards independently show this slice's behavior and appearance gates; the conceptual UI artwork is not installed evidence.
 
-### OX-47 — Prove cross-world precipitation depth and unknown states — PLANNED
+### OX-47 — Prove cross-world precipitation depth and unknown states — DONE
 
 **Objective/scope:** Wire reusable rain and snow capabilities into the existing minimal second world with declared precipitation depths and scene-specific placement. Park occlusion polish belongs to Park art states, not this reusable proof.
 **Depends on:** OX-45, OX-46, OX-92, OX-04.
 **Exit:** Installed two-world supplied rain/snow, dry and unavailable cases preserve depth, source truth, responsiveness and essential exact forecast access; no Park composition dependency.
-**Evidence:** Future cycle-specific `.codex/test-artifacts/<cycle-id>/` and `.codex/history/<cycle-id>.md`; assign exact paths only when the slice is planned. Do not claim unperformed checks.
-**Slice board(s):** Objective-specific behavior board and UI artwork board pending for the affected installed states. Owner approval required.
+**Evidence:** Cycle 174 targets `.codex/test-artifacts/174-weather-rendering-across-worlds/README.md` and `.codex/history/174-weather-rendering-across-worlds.md`; do not claim unperformed checks.
+**Slice board(s):** The product owner approved the shared cycle 174 behavior package `.codex/concepts/OX-174-reusable-weather-rendering-behavior-board.dot` with SVG/PNG renders and Markdown contract, plus UI artwork `.codex/concepts/OX-174-reusable-weather-rendering-ui-artwork-board.svg` with PNG review render, on 2026-11-22. Cycle 174 records the complete package fingerprints separately for OX-47. The boards independently show this slice's behavior and appearance gates; the conceptual UI artwork is not installed evidence.
 
 ### OX-09 — Make repeat selections produce repeatable scenes — PLANNED
 

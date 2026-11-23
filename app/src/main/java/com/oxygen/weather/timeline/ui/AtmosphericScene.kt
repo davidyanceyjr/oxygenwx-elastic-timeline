@@ -39,7 +39,11 @@ import com.oxygen.weather.timeline.presentation.scene.FirstCityDepthGroup
 import com.oxygen.weather.timeline.presentation.scene.FirstCityComposition
 import com.oxygen.weather.timeline.presentation.scene.FirstCityCanopyAsset
 import com.oxygen.weather.timeline.presentation.scene.FirstCityElementId
+import com.oxygen.weather.timeline.presentation.scene.FirstCityCloudRenderStyle
+import com.oxygen.weather.timeline.presentation.scene.FirstCityRainRenderStyle
+import com.oxygen.weather.timeline.presentation.scene.FirstCitySnowRenderStyle
 import com.oxygen.weather.timeline.presentation.scene.FirstCityLayer
+import com.oxygen.weather.timeline.presentation.scene.FirstCityPassReference
 import com.oxygen.weather.timeline.presentation.scene.FirstCityTheme
 import com.oxygen.weather.timeline.presentation.scene.FirstCityWorldBounds
 import com.oxygen.weather.timeline.presentation.scene.LivingUrbanParkComposition
@@ -55,8 +59,17 @@ import com.oxygen.weather.timeline.presentation.scene.canopyRenderInput
 import com.oxygen.weather.timeline.presentation.scene.treeGroupRenderInput
 import com.oxygen.weather.timeline.presentation.scene.OpenLandscapeElementId
 import com.oxygen.weather.timeline.presentation.scene.OpenLandscapePass
+import com.oxygen.weather.timeline.presentation.scene.OpenLandscapeCloudRenderStyle
+import com.oxygen.weather.timeline.presentation.scene.OpenLandscapeRainRenderStyle
+import com.oxygen.weather.timeline.presentation.scene.OpenLandscapeSnowRenderStyle
 import com.oxygen.weather.timeline.presentation.scene.MinimalOpenLandscapeComposition
 import com.oxygen.weather.timeline.presentation.scene.SceneReading
+import com.oxygen.weather.timeline.presentation.scene.SceneCloudRenderInput
+import com.oxygen.weather.timeline.presentation.scene.SceneRainRenderInput
+import com.oxygen.weather.timeline.presentation.scene.SceneSnowRenderInput
+import com.oxygen.weather.timeline.presentation.scene.cloudRenderInput
+import com.oxygen.weather.timeline.presentation.scene.rainRenderInput
+import com.oxygen.weather.timeline.presentation.scene.snowRenderInput
 import java.time.ZoneId
 import java.time.format.DateTimeFormatter
 import java.util.Locale
@@ -142,11 +155,13 @@ fun CatalogAtmosphericScene(
                 FirstCityLayer.LUNAR_CUE -> if (composition.moonCue.visible) {
                     drawCityTimeCue(composition.moonCue, composition.treatment)
                 }
-                FirstCityLayer.BACKGROUND_CLOUDS -> drawCityDepthCloudLayer(
-                    clouds = composition.clouds,
-                    depth = FirstCityDepthGroup.BACKGROUND,
-                    reducedMotion = reducedMotion,
-                )
+                FirstCityLayer.BACKGROUND_CLOUDS -> {
+                    val input = composition.cloudRenderInput(layer)
+                    check(input.selectedInstant == composition.selectedInstant)
+                    check(input.id == FirstCityElementId.CLOUD_COVER)
+                    check(input.pass.layer == layer)
+                    drawCloudRenderer(input, reducedMotion)
+                }
                 FirstCityLayer.BACKGROUND_ARCHITECTURE -> {
                     composition.sky?.let { sky ->
                         val cloudiness = composition.clouds.coverFraction
@@ -167,11 +182,13 @@ fun CatalogAtmosphericScene(
                         composition.clouds.coverFraction,
                     )
                 }
-                FirstCityLayer.MIDDLE_GROUND_CLOUDS -> drawCityDepthCloudLayer(
-                    clouds = composition.clouds,
-                    depth = FirstCityDepthGroup.MIDDLE_GROUND,
-                    reducedMotion = reducedMotion,
-                )
+                FirstCityLayer.MIDDLE_GROUND_CLOUDS -> {
+                    val input = composition.cloudRenderInput(layer)
+                    check(input.selectedInstant == composition.selectedInstant)
+                    check(input.id == FirstCityElementId.CLOUD_COVER)
+                    check(input.pass.layer == layer)
+                    drawCloudRenderer(input, reducedMotion)
+                }
                 FirstCityLayer.FOREGROUND_ARCHITECTURE -> drawCityForegroundLayer(architecture)
                 FirstCityLayer.CANOPY -> {
                     val input = composition.canopyRenderInput()
@@ -194,10 +211,20 @@ fun CatalogAtmosphericScene(
                         ),
                     )
                     when (composition.precipitation) {
-                        CityPrecipitation.RAIN -> drawCityRainField(
-                            startsAtCloudBase = composition.clouds.visible,
-                        )
-                        CityPrecipitation.SNOW -> drawCitySnowField()
+                        CityPrecipitation.RAIN -> {
+                            val input = composition.rainRenderInput()
+                            check(input.selectedInstant == composition.selectedInstant)
+                            check(input.id == FirstCityElementId.PRECIPITATION_FIELD)
+                            check(input.pass.layer == FirstCityLayer.PRECIPITATION)
+                            drawRainRenderer(input)
+                        }
+                        CityPrecipitation.SNOW -> {
+                            val input = composition.snowRenderInput()
+                            check(input.selectedInstant == composition.selectedInstant)
+                            check(input.id == FirstCityElementId.PRECIPITATION_FIELD)
+                            check(input.pass.layer == FirstCityLayer.PRECIPITATION)
+                            drawSnowRenderer(input)
+                        }
                         CityPrecipitation.NONE, CityPrecipitation.STORM -> Unit
                     }
                 }
@@ -235,7 +262,13 @@ fun CatalogOpenLandscapeScene(
                 ))
             }
         }
-        if (weather.clouds.visible) drawOpenLandscapeClouds(weather.clouds, reducedMotion)
+        val cloudInput = composition.cloudRenderInput()
+        if (cloudInput.decision.visible) {
+            check(cloudInput.selectedInstant == composition.selectedInstant)
+            check(cloudInput.id == OpenLandscapeElementId.CLOUD_COVER)
+            check(cloudInput.pass == OpenLandscapePass.CLOUDS)
+            drawCloudRenderer(cloudInput, reducedMotion)
+        }
         drawOpenLandscapeTerrain()
         val treeInput = composition.treeGroupRenderInput()
         check(treeInput.selectedInstant == composition.selectedInstant)
@@ -245,8 +278,20 @@ fun CatalogOpenLandscapeScene(
             scale = treeInput.geometry.scale)
         drawOpenLandscapeTreeGroup(centerX = .78f, scale = .92f)
         when (weather.precipitation) {
-            CityPrecipitation.RAIN -> drawCityRainField(startsAtCloudBase = weather.clouds.visible)
-            CityPrecipitation.SNOW -> drawCitySnowField()
+            CityPrecipitation.RAIN -> {
+                val input = composition.rainRenderInput()
+                check(input.selectedInstant == composition.selectedInstant)
+                check(input.id == OpenLandscapeElementId.PRECIPITATION_FIELD)
+                check(input.pass == OpenLandscapePass.PRECIPITATION)
+                drawRainRenderer(input)
+            }
+            CityPrecipitation.SNOW -> {
+                val input = composition.snowRenderInput()
+                check(input.selectedInstant == composition.selectedInstant)
+                check(input.id == OpenLandscapeElementId.PRECIPITATION_FIELD)
+                check(input.pass == OpenLandscapePass.PRECIPITATION)
+                drawSnowRenderer(input)
+            }
             CityPrecipitation.NONE, CityPrecipitation.STORM -> Unit
         }
     }
@@ -834,8 +879,69 @@ private fun DrawScope.drawCityStars(treatment: CityTreatment) {
     }
 }
 
+/** Dispatches a declared cloud pass with its shared decision and world-authored style. */
+private fun DrawScope.drawCloudRenderer(
+    input: SceneCloudRenderInput<*, *>,
+    reducedMotion: Boolean,
+) {
+    when (val style = input.style) {
+        is FirstCityCloudRenderStyle -> {
+            check(input.id == FirstCityElementId.CLOUD_COVER)
+            val pass = input.pass as? FirstCityPassReference
+                ?: error("First City cloud rendering requires a declared First City pass")
+            check(pass.layer == FirstCityLayer.BACKGROUND_CLOUDS ||
+                pass.layer == FirstCityLayer.MIDDLE_GROUND_CLOUDS)
+            check(pass.depthGroup == style.depthGroup)
+            drawCityDepthCloudLayer(input.decision, style.depthGroup, reducedMotion)
+        }
+        is OpenLandscapeCloudRenderStyle -> {
+            check(input.id == OpenLandscapeElementId.CLOUD_COVER)
+            check(input.pass == OpenLandscapePass.CLOUDS)
+            drawOpenLandscapeClouds(input.decision, reducedMotion, style)
+        }
+    }
+}
+
+/** Draws rain from a declared field while keeping its origin tied to the shared cloud decision. */
+private fun DrawScope.drawRainRenderer(input: SceneRainRenderInput<*, *>) {
+    check(input.decision.precipitation == CityPrecipitation.RAIN)
+    when (input.style) {
+        FirstCityRainRenderStyle -> {
+            check(input.id == FirstCityElementId.PRECIPITATION_FIELD)
+            val pass = input.pass as? FirstCityPassReference
+                ?: error("First City rain rendering requires its declared precipitation pass")
+            check(pass.layer == FirstCityLayer.PRECIPITATION)
+            drawCityRainField(startsAtCloudBase = input.decision.clouds.visible)
+        }
+        OpenLandscapeRainRenderStyle -> {
+            check(input.id == OpenLandscapeElementId.PRECIPITATION_FIELD)
+            check(input.pass == OpenLandscapePass.PRECIPITATION)
+            drawCityRainField(startsAtCloudBase = input.decision.clouds.visible)
+        }
+    }
+}
+
+/** Draws snow from its own declaration while leaving meaning in the shared weather decision. */
+private fun DrawScope.drawSnowRenderer(input: SceneSnowRenderInput<*, *>) {
+    check(input.decision.precipitation == CityPrecipitation.SNOW)
+    when (input.style) {
+        FirstCitySnowRenderStyle -> {
+            check(input.id == FirstCityElementId.PRECIPITATION_FIELD)
+            val pass = input.pass as? FirstCityPassReference
+                ?: error("First City snow rendering requires its declared precipitation pass")
+            check(pass.layer == FirstCityLayer.PRECIPITATION)
+            drawCitySnowField()
+        }
+        OpenLandscapeSnowRenderStyle -> {
+            check(input.id == OpenLandscapeElementId.PRECIPITATION_FIELD)
+            check(input.pass == OpenLandscapePass.PRECIPITATION)
+            drawCitySnowField()
+        }
+    }
+}
+
 /**
- * Draws one of the two owner-directed cloud depths from the same typed cloud decision.
+ * Draws one of First City's two owner-directed cloud depths from the shared typed decision.
  * The rain and snow poses use overlapping small-to-medium clusters within the top third.
  */
 private fun DrawScope.drawCityDepthCloudLayer(
@@ -965,7 +1071,11 @@ private fun DrawScope.drawCityCloudBank(
     drawPath(bank, color)
 }
 
-private fun DrawScope.drawOpenLandscapeClouds(clouds: CityCloudDecision, reducedMotion: Boolean) {
+private fun DrawScope.drawOpenLandscapeClouds(
+    clouds: CityCloudDecision,
+    reducedMotion: Boolean,
+    style: OpenLandscapeCloudRenderStyle = OpenLandscapeCloudRenderStyle.DEFAULT,
+) {
     val cover = clouds.coverFraction?.toFloat()?.coerceIn(0f, 1f) ?: return
     if (cover <= .01f || size.width <= 0f) return
     val day = clouds.daylight.toFloat().coerceIn(0f, 1f)
@@ -977,19 +1087,16 @@ private fun DrawScope.drawOpenLandscapeClouds(clouds: CityCloudDecision, reduced
         CityCloudAppearance.GENERAL -> (cover * .62f).coerceIn(.18f, .58f)
     }
     val drift = if (reducedMotion) 0f else
-        (.018f * sin(((clouds.localHour - 6.0) / 12.0) * PI)).toFloat()
-    val banks = listOf(-.015f, .235f, .485f, .735f)
+        (style.driftAmplitude * sin(((clouds.localHour - 6.0) / 12.0) * PI)).toFloat()
     clipRect(left = 0f, top = 0f, right = size.width, bottom = size.height * CLOUD_REGION_FRACTION) {
-        banks.forEachIndexed { index, x ->
-            val width = size.width * (if (index % 2 == 0) .29f else .27f)
-            val height = size.height * (if (index % 2 == 0) .16f else .145f)
+        style.bankPlacements.forEach { placement ->
             drawCityCloudBank(
-                x = size.width * (x + drift),
-                y = size.height * if (index % 2 == 0) .025f else .075f,
-                width = width,
-                height = height,
-                color = base.copy(alpha = alpha * if (index == 0 || index == banks.lastIndex) .9f else 1f),
-                mirrored = index % 2 == 1,
+                x = size.width * (placement.xFraction + drift),
+                y = size.height * placement.yFraction,
+                width = size.width * placement.widthFraction,
+                height = size.height * placement.heightFraction,
+                color = base.copy(alpha = alpha * placement.opacityMultiplier),
+                mirrored = placement.mirrored,
             )
         }
     }

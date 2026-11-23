@@ -1,0 +1,45 @@
+digraph OX174ReusableWeatherRendering {
+  graph [
+    rankdir=TB,
+    bgcolor="#F7F9FC",
+    pad="0.28",
+    nodesep="0.38",
+    ranksep="0.62",
+    splines=polyline,
+    newrank=true,
+    fontname="DejaVu Sans",
+    fontsize=18,
+    labelloc=t,
+    label="CYCLE 174 · REUSABLE WEATHER RENDERING ACROSS WORLDS\nPROPOSED BOARD PACKAGE · OWNER REVIEW PENDING"
+  ];
+  node [shape=box, style="rounded,filled", fontname="DejaVu Sans", fontsize=12,
+        color="#334155", fontcolor="#142033", penwidth=1.35, margin="0.18,0.12"];
+  edge [fontname="DejaVu Sans", fontsize=10, color="#40536B", fontcolor="#334155",
+        penwidth=1.4, arrowsize=0.75];
+
+  source [fillcolor="#E8EEF7", label="One selected catalog instant T\nSceneReading retains per-field evidence\nand original source-valid times"];
+  decision [fillcolor="#DCEBFA", color="#2463A5", penwidth=2,
+            label="SceneWeatherDecision\nsole owner of weather interpretation\nshared by First City and Open Landscape"];
+  source -> decision [label="resolve once"];
+
+  ox07 [fillcolor="#EAF4FC", color="#6D9FC8", label="OX-07 · First City cloud extraction\nExisting cloud drawing behind a typed reusable\nrenderer entry; resolved cloud decision +\nworld-authored style through a declared element.\nExit: day/rain output preserved; callable capability."];
+  ox45 [fillcolor="#EAF4FC", color="#6D9FC8", label="OX-45 · cloud use in second world\nCall that capability from existing Minimal Open\nLandscape. Keep all visible cloud output inside the\ntop 33%, including blur, shadow and movement.\nUnknown cloud cover creates no cloud claim."];
+  ox08 [fillcolor="#FFF5E6", color="#CE9C52", label="OX-08 · rain extraction\nDeclared precipitation-element renderer. Preserve\nOX-03 cloud-base origin when visible clouds exist;\notherwise preserve the established no-cloud origin.\nRain is illustrative, never a rate inference."];
+  ox46 [fillcolor="#FFF5E6", color="#CE9C52", label="OX-46 · snow extraction\nA separate compatible snow capability; reuse only\nrain interfaces evidenced by OX-08. Preserve the\nOX-18-driven snow/no-snow state and essential facts.\nNo generalized particle runtime."];
+
+  ox47 [fillcolor="#F0ECFA", color="#7654A5", penwidth=1.8,
+        label="OX-47 · cross-world precipitation proof\nWire rain and snow into Minimal Open Landscape with declared scene-specific depths.\nReview supplied rain, supplied snow, dry and unavailable states in both worlds.\nKeep world-authored order and placement; preserve exact T, source truth, responsiveness\nand essential forecast access. Unavailable condition adds no condition-derived marks;\nindependently supported cloud cover remains independently eligible."];
+
+  note [shape=note, fillcolor="#FFF4CC", color="#C49425", fontsize=11,
+        label="Global boundaries\n• Solid arrows show declared slice dependencies. Cycle roster: OX-07 → OX-45 → OX-08 → OX-46 → OX-47; OX-45 is not an OX-08 prerequisite.\n• A chance is not rain or a measured amount/rate. Missing is not clear or zero.\n• Keep First City depth/order and the existing open-landscape scene composition. Rain/snow may extend below the cloud-only top-third bound.\n• These diagrams are proposed design artifacts, not implementation or installed acceptance evidence."];
+
+  decision -> ox07 [label="resolved cloud decisions"];
+  ox07 -> ox45 [label="declared dependency"];
+  ox07 -> ox08 [label="declared dependency"];
+  ox08 -> ox46 [label="declared dependency"];
+  ox45 -> ox47 [label="declared dependency"];
+  ox46 -> ox47 [label="declared dependency"];
+  { rank=same; ox45; ox08; }
+  ox45 -> ox08 [style=invis, weight=10];
+  ox47 -> note [style=invis];
+}
