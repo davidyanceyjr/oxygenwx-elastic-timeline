@@ -1,0 +1,64 @@
+digraph OX172_Park_Landmarks {
+  graph [
+    rankdir=TB,
+    bgcolor="#F5F8F5",
+    pad="0.35",
+    nodesep="0.42",
+    ranksep="0.58",
+    splines=ortho,
+    fontname="DejaVu Sans",
+    fontsize=20,
+    labelloc=t,
+    label="OX-172 | Park Landmarks\nShared behavior proposal for OX-43 and OX-44 | Owner review pending"
+  ];
+  node [fontname="DejaVu Sans", fontsize=11, color="#58736A", penwidth=1.3, style="rounded,filled", margin="0.17,0.12"];
+  edge [fontname="DejaVu Sans", fontsize=9, color="#54766A", penwidth=1.3, arrowsize=0.75];
+
+  base [shape=box, fillcolor="#E3EEE8", label="Established Park base\nOX-25: backdrop, curved path, entrance\nCycle 171: left mural wall + blank reserved region\nOX-85: portrait safe areas\nOX-41: approved landmark map"];
+  invariants [shape=box, fillcolor="#FFF4D8", color="#B08A3E", label="Shared invariants\nExact selected time, weather decisions, central forecast facts,\nand timeline remain unchanged and readable.\nNo landmark covers the mural's reserved blank region."];
+  base -> invariants;
+
+  subgraph cluster_43 {
+    label="OX-43 | Vegetation and benches";
+    color="#6F9A70";
+    fontname="DejaVu Sans";
+    fontsize=14;
+    style="rounded,filled";
+    fillcolor="#EDF5EA";
+    penwidth=1.4;
+
+    a1 [shape=box, fillcolor="#FFFFFF", label="Add a small Park-owned set\nProposal for review: 2 trees + 2 benches\nUse simple placeholders if finished art is unavailable"];
+    a2 [shape=box, fillcolor="#FFFFFF", label="Declare identity, role, logical bounds,\nanchors, and depth group using the OX-35 contract\nArrange the set to frame the curved path"];
+    a3 [shape=box, fillcolor="#FFFFFF", label="Check natural depth and occlusion\nKeep the mural area, central readout,\nand timeline unobstructed"];
+    ax [shape=box, fillcolor="#DCEEDD", color="#56845D", penwidth=1.8, label="OX-43 exit\nInstalled Park evidence shows tree/bench placement\nand natural depth without covering the essential\nreadout or timeline."];
+
+    a1 -> a2 -> a3 -> ax;
+  }
+
+  subgraph cluster_44 {
+    label="OX-44 | Streetcar shelter";
+    color="#BB9460";
+    fontname="DejaVu Sans";
+    fontsize=14;
+    style="rounded,filled";
+    fillcolor="#FBF3E6";
+    penwidth=1.4;
+
+    b1 [shape=box, fillcolor="#FFFFFF", label="Add one coarse historic streetcar shelter\nUse the approved OX-41 composition anchor\nThis slice does not depend on OX-43"];
+    b2 [shape=box, fillcolor="#FFFFFF", label="Declare shelter identity, role, geometry,\nand layer order\nKeep it behind the curved path as mapped"];
+    b3 [shape=box, fillcolor="#FFFFFF", label="Check stable placement and occlusion\nagainst the path, entrance, and background\nPreserve central forecast access"];
+    bx [shape=box, fillcolor="#F8E8CB", color="#AA7E40", penwidth=1.8, label="OX-44 exit\nInstalled scene demonstrates stable shelter placement\nand correct basic occlusion against the path, entrance,\nand background without blocking central forecast access."];
+
+    b1 -> b2 -> b3 -> bx;
+  }
+
+  invariants -> a1;
+  invariants -> b1;
+
+  cycle [shape=box, fillcolor="#E7EAF2", color="#667596", label="Cycle 172 closure\nRecord evidence and outcome separately for OX-43 and OX-44.\nThe shared objective does not merge their exits or imply dependency."];
+  ax -> cycle;
+  bx -> cycle;
+
+  note [shape=note, fillcolor="#FFFFFF", color="#98A69D", label="Proposal boundaries\nDaylight portrait Park state only.\nNo mural reading, camera adaptation, forecast logic, controls,\nfinished asset requirement, or broad accessibility matrix.\nThis board is not installed acceptance evidence."];
+  cycle -> note [style=dashed, arrowhead=none, color="#87968D"];
+}

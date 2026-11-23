@@ -1417,45 +1417,57 @@ The SG workstream follows the owner-directed pivot recorded above and is grounde
 
 **Owner sequencing and board-approval decision (2026-11-22):** After OX-56 closed DONE, the owner selected OX-25 as the sole global `NEXT` for cycle 169 planning and approved both exact board packages listed above. OX-24 and OX-41 are DONE. Focused slice-specific tests are authorized; broad system/device matrices remain outside this slice. Board approval permits completion of the bounded plan and its review; it does not itself activate the slice or authorize implementation.
 
-### OX-37 — Declare optional exact-data surfaces — PLANNED
+### OX-37 — Declare optional exact-data surfaces — DONE
 
 **Objective/scope:** Declare an optional data-surface anchor and canonical exact-binding reference only when preparing the Park mural. Decorative worlds need not carry it; no forecast conversion is allowed inside drawing.
 **Depends on:** OX-35, OX-04.
 **Exit:** One declared wall surface can opt into one exact-value binding without imposing data surfaces on First City/Open Landscape or implementing mural rendering.
-**Evidence:** Future cycle-specific `.codex/test-artifacts/<cycle-id>/` and `.codex/history/<cycle-id>.md`; assign exact paths only when the slice is planned. Do not claim unperformed checks.
-**Slice board(s):** Objective-specific behavior/contract board pending; UI artwork board only if approved scope changes visible output. Owner approval required.
+**Evidence:** Cycle 171 targets `.codex/test-artifacts/171-park-mural-foundation/README.md` for the source contract and focused Park composition test; do not claim unperformed checks. Cycle closeout target: `.codex/history/171-park-mural-foundation.md`.
+**Slice board(s):** Product owner approved the shared cycle 171 behavior package on 2026-11-22: `.codex/concepts/OX-171-park-mural-foundation-behavior-board.dot`, its SVG/PNG renders, and `.md` contract. Cycle 171 records the same complete package and approval separately on OX-37, OX-42, and OX-85. OX-37 itself changes no UI output.
 
-### OX-42 — Place the park mural wall and data-surface anchor — PLANNED
+**Owner grouping and board-approval decision (2026-11-22):** Use cycle 171 for grouped OX work; no separate G.8 slice is being added. The dependency-ordered cycle 171 roster is OX-37 → OX-42 → OX-85 under the bounded objective of establishing the Park mural's declared data surface, reserved wall region, and initial portrait safe areas. The slices keep separate exits. The product owner approved one shared behavior-board package, and cycle 171 records its complete file fingerprints separately on every covered slice. Per the owner's direction, the accompanying UI artwork uses temporary scene objects and does not require separate UI-board approval. Board approval does not itself activate or authorize implementation.
+
+**Scene, data, and weather grouping map (planning guidance; cycle IDs are assigned as groups are planned):**
+
+- **Cycle 171 — Park mural foundation:** OX-37 → OX-42 → OX-85. OX-35, OX-04, OX-25, and OX-41 are DONE; OX-42 depends on OX-37; OX-85 depends on OX-42.
+- **Cycle 172 — Park Landmarks:** OX-43 → OX-44 share the bounded placement of the vegetation/bench and shelter set; each retains its own placement and occlusion exit.
+- **Exact selected-time mural reading:** OX-12 → OX-12A. The data contract and visible mural reading share one behavior board; OX-12A still has its own visual exit and depends on OX-12, OX-42, and OX-37.
+- **Reusable weather rendering across worlds:** OX-07 → (OX-45 and OX-08 → OX-46) → OX-47. The shared board must make cloud extraction, second-world cloud use, rain/snow extraction, and the cross-world depth/unknown-state proof independently reviewable.
+- **Separate outcomes:** OX-09 remains a repeat-selection reproducibility slice; OX-96 remains a renderer/package measurement slice and should precede further Park polish; OX-29 remains its own TEST slice.
+
+These groupings do not merge slice acceptance. Cycle 171 is complete. The owner selected OX-43 as the sole `NEXT` and OX-44 as the second `PLANNED` slice for cycle 172. The product owner approved the shared behavior and UI artwork board package on 2026-11-22; cycle 172 records the complete package fingerprints separately for both slices. Board approval does not authorize implementation.
+
+### OX-42 — Place the park mural wall and data-surface anchor — DONE
 
 **Objective/scope:** Add a left-wall mural surface with declared data-surface identity, plane, anchor and reserved text area; do not bind or paint a forecast measurement yet.
 **Depends on:** OX-25, OX-37.
 **Exit:** Installed portrait evidence identifies the mural plane and a non-occluded reserved data region; no exact-reading or typography claim is made.
-**Evidence:** Future cycle-specific `.codex/test-artifacts/<cycle-id>/` and `.codex/history/<cycle-id>.md`; assign exact paths only when the slice is planned. Do not claim unperformed checks.
-**Slice board(s):** Objective-specific behavior board and UI artwork board pending for the affected installed states. Owner approval required.
+**Evidence:** Cycle 171 targets `.codex/test-artifacts/171-park-mural-foundation/README.md` and `ox-42-park-wall-installed.png` for the scoped installed portrait exit; do not claim unperformed checks. Cycle closeout target: `.codex/history/171-park-mural-foundation.md`.
+**Slice board(s):** Covered by the product-owner-approved cycle 171 shared behavior package `.codex/concepts/OX-171-park-mural-foundation-behavior-board.dot` with SVG/PNG renders and Markdown contract. Cycle 171 records this package fingerprint on OX-42. Temporary-object UI artwork is at `.codex/concepts/OX-171-park-mural-foundation-ui-artwork-board.svg` with PNG render; no separate UI-board approval is required per the owner's 2026-11-22 direction.
 
-### OX-43 — Place park vegetation and bench elements — PLANNED
+### OX-43 — Place park vegetation and bench elements — DONE
 
 **Objective/scope:** Place a small declared set of trees and benches into their approved depth groups, with logical bounds and occlusion. Use placeholders if finished artwork is not ready.
 **Depends on:** OX-25, OX-35.
 **Exit:** Installed park evidence shows tree/bench placement and natural depth ordering without covering the essential readout or timeline.
-**Evidence:** Future cycle-specific `.codex/test-artifacts/<cycle-id>/` and `.codex/history/<cycle-id>.md`; assign exact paths only when the slice is planned. Do not claim unperformed checks.
-**Slice board(s):** Objective-specific behavior board and UI artwork board pending for the affected installed states. Owner approval required.
+**Evidence:** Cycle 172 targets `.codex/test-artifacts/172-park-landmarks/README.md` and `ox-43-vegetation-benches-portrait.png`; do not claim unperformed checks. Cycle closeout target: `.codex/history/172-park-landmarks.md`.
+**Slice board(s):** Product owner approved the shared cycle 172 behavior package `.codex/concepts/OX-172-park-landmarks-behavior-board.dot` with SVG/PNG renders and Markdown contract, plus UI artwork `.codex/concepts/OX-172-park-landmarks-ui-artwork-board.svg` with PNG review render, on 2026-11-22. Cycle 172 records the same complete package fingerprints separately for OX-43 and OX-44.
 
-### OX-44 — Place the park streetcar shelter element — PLANNED
+### OX-44 — Place the park streetcar shelter element — DONE
 
 **Objective/scope:** Place a coarse historic streetcar shelter at its approved anchor with declared identity and layer order. Use existing path/entrance geometry, not a dependency on finished trees or mural artwork.
 **Depends on:** OX-25, OX-41.
 **Exit:** Installed scene demonstrates stable shelter placement and correct basic occlusion against the path, entrance and background without blocking central forecast access.
-**Evidence:** Future cycle-specific `.codex/test-artifacts/<cycle-id>/` and `.codex/history/<cycle-id>.md`; assign exact paths only when the slice is planned. Do not claim unperformed checks.
-**Slice board(s):** Objective-specific behavior board and UI artwork board pending for the affected installed states. Owner approval required.
+**Evidence:** Cycle 172 targets `.codex/test-artifacts/172-park-landmarks/README.md` and `ox-44-streetcar-shelter-portrait.png`; do not claim unperformed checks. Cycle closeout target: `.codex/history/172-park-landmarks.md`.
+**Slice board(s):** Product owner approved the shared cycle 172 behavior package `.codex/concepts/OX-172-park-landmarks-behavior-board.dot` with SVG/PNG renders and Markdown contract, plus UI artwork `.codex/concepts/OX-172-park-landmarks-ui-artwork-board.svg` with PNG review render, on 2026-11-22. Cycle 172 records the same complete package fingerprints separately for OX-43 and OX-44.
 
-### OX-85 — Establish the initial portrait camera and safe areas — PLANNED
+### OX-85 — Establish the initial portrait camera and safe areas — DONE
 
 **Objective/scope:** Establish the initial portrait camera and essential timeline/central-readout safe areas against the coarse park entrance, path and mural plane; optional shelter/trees can be fitted later without redesigning this contract.
 **Depends on:** OX-25, OX-42, OX-41.
 **Exit:** Installed Pixel 3 XL portrait evidence records logical crop, viewport/insets and non-obstructed central weather/timeline access, with a recognizable park and reserved mural plane.
-**Evidence:** Future cycle-specific `.codex/test-artifacts/<cycle-id>/` and `.codex/history/<cycle-id>.md`; assign exact paths only when the slice is planned. Do not claim unperformed checks.
-**Slice board(s):** Objective-specific behavior board and UI artwork board pending for the affected installed states. Owner approval required.
+**Evidence:** Cycle 171 targets `.codex/test-artifacts/171-park-mural-foundation/README.md` and `ox-85-pixel-3-xl-portrait.png` for the measured Pixel 3 XL portrait exit; do not claim unperformed checks. Cycle closeout target: `.codex/history/171-park-mural-foundation.md`.
+**Slice board(s):** Covered by the product-owner-approved cycle 171 shared behavior package `.codex/concepts/OX-171-park-mural-foundation-behavior-board.dot` with SVG/PNG renders and Markdown contract. Cycle 171 records this package fingerprint on OX-85. Temporary-object UI artwork is at `.codex/concepts/OX-171-park-mural-foundation-ui-artwork-board.svg` with PNG render; no separate UI-board approval is required per the owner's 2026-11-22 direction.
 
 ### OX-12 — Expose one exact selected-time forecast binding — PLANNED
 

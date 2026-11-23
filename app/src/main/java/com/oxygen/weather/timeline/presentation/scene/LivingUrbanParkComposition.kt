@@ -4,20 +4,32 @@ import java.time.Instant
 
 internal enum class LivingUrbanParkElementId {
     DISTANT_BACKDROP,
+    MURAL_WALL,
+    STREETCAR_SHELTER,
+    TREE_LEFT,
+    TREE_RIGHT,
     CURVED_PATH,
     ENTRANCE,
+    BENCH_LEFT,
+    BENCH_RIGHT,
 }
 
 internal enum class LivingUrbanParkElementRole {
     DISTANT_BACKDROP,
+    MURAL_WALL,
+    STREETCAR_SHELTER,
+    VEGETATION,
     PATH,
     ENTRANCE,
+    BENCH,
 }
 
 internal enum class LivingUrbanParkDepthPass(val backToFrontOrder: Int) {
     BACKGROUND(0),
-    PATH(1),
-    FOREGROUND(2),
+    MURAL_WALL(1),
+    PARK_LANDMARKS(2),
+    PATH(3),
+    FOREGROUND(4),
 }
 
 internal data class ParkPoint(val x: Float, val y: Float) {
@@ -33,7 +45,85 @@ internal data class ParkCubicSegment(
     val end: ParkPoint,
 )
 
+/** Normalized scene-relative rectangle size for a Park landmark. */
+internal data class ParkElementSize(val width: Float, val height: Float) {
+    init {
+        require(width.isFinite() && width > 0f && width <= 1f)
+        require(height.isFinite() && height > 0f && height <= 1f)
+    }
+}
+
+internal data class ParkElementBounds(
+    val topLeft: ParkPoint,
+    val bottomRight: ParkPoint,
+) {
+    init {
+        require(bottomRight.x > topLeft.x)
+        require(bottomRight.y > topLeft.y)
+    }
+}
+
+/**
+ * A Park-local landmark rectangle. Position and size use normalized scene coordinates;
+ * anchor is the normalized point within the rectangle attached to position.
+ */
+internal data class ParkElementGeometry(
+    val position: ParkPoint,
+    val size: ParkElementSize,
+    val anchor: ParkPoint,
+) {
+    val bounds: ParkElementBounds
+        get() {
+            val left = position.x - anchor.x * size.width
+            val top = position.y - anchor.y * size.height
+            return ParkElementBounds(
+                topLeft = ParkPoint(left, top),
+                bottomRight = ParkPoint(left + size.width, top + size.height),
+            )
+        }
+
+    init {
+        // ParkPoint construction in the derived value also enforces the scene's 0..1 bounds.
+        bounds
+    }
+}
+
+/** A four-corner Park-local plane expressed in normalized scene coordinates. */
+internal data class ParkQuadrilateral(
+    val topLeft: ParkPoint,
+    val topRight: ParkPoint,
+    val bottomRight: ParkPoint,
+    val bottomLeft: ParkPoint,
+)
+
+internal enum class LivingUrbanParkDataSurfaceId {
+    MURAL,
+}
+
+/** Opaque Park-owned slot identity; OX-12 supplies the selected-reading semantics. */
+internal enum class LivingUrbanParkExactBindingReference {
+    CANONICAL_SELECTED_VALUE,
+}
+
+internal data class LivingUrbanParkDataSurfaceDeclaration(
+    val id: LivingUrbanParkDataSurfaceId,
+    val plane: ParkQuadrilateral,
+    val anchor: ParkPoint,
+    val reservedRegion: ParkQuadrilateral,
+    val bindingReference: LivingUrbanParkExactBindingReference,
+)
+
 internal sealed interface LivingUrbanParkGeometry {
+    data class MuralWall(
+        val surfaceId: LivingUrbanParkDataSurfaceId,
+    ) : LivingUrbanParkGeometry
+
+    data class Tree(val frame: ParkElementGeometry) : LivingUrbanParkGeometry
+
+    data class Bench(val frame: ParkElementGeometry) : LivingUrbanParkGeometry
+
+    data class StreetcarShelter(val frame: ParkElementGeometry) : LivingUrbanParkGeometry
+
     data class Backdrop(
         val horizon: Float,
         val skyline: List<ParkPoint>,
@@ -55,12 +145,12 @@ internal sealed interface LivingUrbanParkGeometry {
         }
     }
 
-    data class Entrance(
+        data class Entrance(
         val leftTop: ParkPoint,
         val rightTop: ParkPoint,
         val rightBottom: ParkPoint,
         val leftBottom: ParkPoint,
-    ) : LivingUrbanParkGeometry
+        ) : LivingUrbanParkGeometry
 }
 
 /** Park-owned declarations keep their identity and semantics separate from vegetation adapters. */
@@ -69,6 +159,7 @@ internal data class LivingUrbanParkElementDeclaration(
     val role: LivingUrbanParkElementRole,
     val pass: LivingUrbanParkDepthPass,
     val geometry: LivingUrbanParkGeometry,
+    val dataSurface: LivingUrbanParkDataSurfaceDeclaration? = null,
 )
 
 internal object LivingUrbanParkSemanticInventory {
@@ -89,6 +180,67 @@ internal object LivingUrbanParkSemanticInventory {
                     ParkPoint(.73f, .53f), ParkPoint(.73f, .49f), ParkPoint(.81f, .49f),
                     ParkPoint(.81f, .56f), ParkPoint(.91f, .56f), ParkPoint(.91f, .51f),
                     ParkPoint(1f, .51f), ParkPoint(1f, .61f),
+                ),
+            ),
+        ),
+        LivingUrbanParkElementDeclaration(
+            id = LivingUrbanParkElementId.MURAL_WALL,
+            role = LivingUrbanParkElementRole.MURAL_WALL,
+            pass = LivingUrbanParkDepthPass.MURAL_WALL,
+            geometry = LivingUrbanParkGeometry.MuralWall(LivingUrbanParkDataSurfaceId.MURAL),
+            dataSurface = LivingUrbanParkDataSurfaceDeclaration(
+                id = LivingUrbanParkDataSurfaceId.MURAL,
+                plane = ParkQuadrilateral(
+                    topLeft = ParkPoint(.02f, .35f),
+                    topRight = ParkPoint(.18f, .33f),
+                    bottomRight = ParkPoint(.18f, .56f),
+                    bottomLeft = ParkPoint(.02f, .58f),
+                ),
+                anchor = ParkPoint(.02f, .58f),
+                reservedRegion = ParkQuadrilateral(
+                    topLeft = ParkPoint(.05f, .39f),
+                    topRight = ParkPoint(.15f, .38f),
+                    bottomRight = ParkPoint(.15f, .50f),
+                    bottomLeft = ParkPoint(.05f, .51f),
+                ),
+                bindingReference = LivingUrbanParkExactBindingReference.CANONICAL_SELECTED_VALUE,
+            ),
+        ),
+        LivingUrbanParkElementDeclaration(
+            id = LivingUrbanParkElementId.STREETCAR_SHELTER,
+            role = LivingUrbanParkElementRole.STREETCAR_SHELTER,
+            pass = LivingUrbanParkDepthPass.PARK_LANDMARKS,
+            geometry = LivingUrbanParkGeometry.StreetcarShelter(
+                ParkElementGeometry(
+                    // The approved OX-172 art places this frame at x=122,y=244,w=82,h=83
+                    // in its 240x570 Park viewBox; retain that coarse anchor proportionally.
+                    position = ParkPoint(.679167f, .573684f),
+                    size = ParkElementSize(.341667f, .145614f),
+                    anchor = ParkPoint(.5f, 1f),
+                ),
+            ),
+        ),
+        LivingUrbanParkElementDeclaration(
+            id = LivingUrbanParkElementId.TREE_LEFT,
+            role = LivingUrbanParkElementRole.VEGETATION,
+            pass = LivingUrbanParkDepthPass.PARK_LANDMARKS,
+            geometry = LivingUrbanParkGeometry.Tree(
+                ParkElementGeometry(
+                    position = ParkPoint(.115f, .825f),
+                    size = ParkElementSize(.20f, .16f),
+                    anchor = ParkPoint(.5f, 1f),
+                ),
+            ),
+        ),
+        LivingUrbanParkElementDeclaration(
+            id = LivingUrbanParkElementId.TREE_RIGHT,
+            role = LivingUrbanParkElementRole.VEGETATION,
+            pass = LivingUrbanParkDepthPass.PARK_LANDMARKS,
+            geometry = LivingUrbanParkGeometry.Tree(
+                ParkElementGeometry(
+                    position = ParkPoint(.885f, .68f),
+                    size = ParkElementSize(.20f, .16f),
+                    anchor = ParkPoint(.5f, 1f),
                 ),
             ),
         ),
@@ -118,6 +270,30 @@ internal object LivingUrbanParkSemanticInventory {
                 rightTop = ParkPoint(.57f, .765f),
                 rightBottom = ParkPoint(.59f, .795f),
                 leftBottom = ParkPoint(.33f, .795f),
+            ),
+        ),
+        LivingUrbanParkElementDeclaration(
+            id = LivingUrbanParkElementId.BENCH_LEFT,
+            role = LivingUrbanParkElementRole.BENCH,
+            pass = LivingUrbanParkDepthPass.FOREGROUND,
+            geometry = LivingUrbanParkGeometry.Bench(
+                ParkElementGeometry(
+                    position = ParkPoint(.145f, .835f),
+                    size = ParkElementSize(.28f, .065f),
+                    anchor = ParkPoint(.5f, 1f),
+                ),
+            ),
+        ),
+        LivingUrbanParkElementDeclaration(
+            id = LivingUrbanParkElementId.BENCH_RIGHT,
+            role = LivingUrbanParkElementRole.BENCH,
+            pass = LivingUrbanParkDepthPass.FOREGROUND,
+            geometry = LivingUrbanParkGeometry.Bench(
+                ParkElementGeometry(
+                    position = ParkPoint(.855f, .835f),
+                    size = ParkElementSize(.28f, .065f),
+                    anchor = ParkPoint(.5f, 1f),
+                ),
             ),
         ),
     )

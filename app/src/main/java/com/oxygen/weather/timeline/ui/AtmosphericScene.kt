@@ -37,11 +37,14 @@ import com.oxygen.weather.timeline.presentation.scene.FirstCityLayer
 import com.oxygen.weather.timeline.presentation.scene.FirstCityTheme
 import com.oxygen.weather.timeline.presentation.scene.FirstCityWorldBounds
 import com.oxygen.weather.timeline.presentation.scene.LivingUrbanParkComposition
+import com.oxygen.weather.timeline.presentation.scene.LivingUrbanParkDataSurfaceDeclaration
 import com.oxygen.weather.timeline.presentation.scene.LivingUrbanParkDepthPass
 import com.oxygen.weather.timeline.presentation.scene.LivingUrbanParkElementId
 import com.oxygen.weather.timeline.presentation.scene.LivingUrbanParkElementRole
 import com.oxygen.weather.timeline.presentation.scene.LivingUrbanParkGeometry
+import com.oxygen.weather.timeline.presentation.scene.ParkElementGeometry
 import com.oxygen.weather.timeline.presentation.scene.ParkPoint
+import com.oxygen.weather.timeline.presentation.scene.ParkQuadrilateral
 import com.oxygen.weather.timeline.presentation.scene.canopyRenderInput
 import com.oxygen.weather.timeline.presentation.scene.treeGroupRenderInput
 import com.oxygen.weather.timeline.presentation.scene.OpenLandscapeElementId
@@ -277,11 +280,52 @@ fun CatalogLivingUrbanParkScene(
         check(composition.selectedInstant == weather.selectedInstant)
         check(composition.elements.map { it.pass } == listOf(
             LivingUrbanParkDepthPass.BACKGROUND,
+            LivingUrbanParkDepthPass.MURAL_WALL,
+            LivingUrbanParkDepthPass.PARK_LANDMARKS,
+            LivingUrbanParkDepthPass.PARK_LANDMARKS,
+            LivingUrbanParkDepthPass.PARK_LANDMARKS,
             LivingUrbanParkDepthPass.PATH,
+            LivingUrbanParkDepthPass.FOREGROUND,
+            LivingUrbanParkDepthPass.FOREGROUND,
             LivingUrbanParkDepthPass.FOREGROUND,
         ))
         composition.elements.forEach { element ->
             when (val geometry = element.geometry) {
+                is LivingUrbanParkGeometry.MuralWall -> {
+                    check(element.id == LivingUrbanParkElementId.MURAL_WALL)
+                    check(element.role == LivingUrbanParkElementRole.MURAL_WALL)
+                    check(element.pass == LivingUrbanParkDepthPass.MURAL_WALL)
+                    val surface = requireNotNull(element.dataSurface)
+                    check(surface.id == geometry.surfaceId)
+                    drawParkMuralWall(surface)
+                }
+                is LivingUrbanParkGeometry.Tree -> {
+                    check(element.id in setOf(
+                        LivingUrbanParkElementId.TREE_LEFT,
+                        LivingUrbanParkElementId.TREE_RIGHT,
+                    ))
+                    check(element.role == LivingUrbanParkElementRole.VEGETATION)
+                    check(element.pass == LivingUrbanParkDepthPass.PARK_LANDMARKS)
+                    check(element.dataSurface == null)
+                    drawParkTree(geometry.frame)
+                }
+                is LivingUrbanParkGeometry.StreetcarShelter -> {
+                    check(element.id == LivingUrbanParkElementId.STREETCAR_SHELTER)
+                    check(element.role == LivingUrbanParkElementRole.STREETCAR_SHELTER)
+                    check(element.pass == LivingUrbanParkDepthPass.PARK_LANDMARKS)
+                    check(element.dataSurface == null)
+                    drawParkStreetcarShelter(geometry.frame)
+                }
+                is LivingUrbanParkGeometry.Bench -> {
+                    check(element.id in setOf(
+                        LivingUrbanParkElementId.BENCH_LEFT,
+                        LivingUrbanParkElementId.BENCH_RIGHT,
+                    ))
+                    check(element.role == LivingUrbanParkElementRole.BENCH)
+                    check(element.pass == LivingUrbanParkDepthPass.FOREGROUND)
+                    check(element.dataSurface == null)
+                    drawParkBench(geometry.frame)
+                }
                 is LivingUrbanParkGeometry.Backdrop -> {
                     check(element.id == LivingUrbanParkElementId.DISTANT_BACKDROP)
                     check(element.role == LivingUrbanParkElementRole.DISTANT_BACKDROP)
@@ -407,6 +451,115 @@ private fun DrawScope.drawParkCurvedPath(
         ),
     )
     drawPath(path, Color(0xFF655844).copy(alpha = .58f), style = Stroke(width = size.width * .003f))
+}
+
+private fun DrawScope.drawParkMuralWall(surface: LivingUrbanParkDataSurfaceDeclaration) {
+    fun ParkPoint.offset() = Offset(size.width * x, size.height * y)
+    fun ParkQuadrilateral.path() = Path().apply {
+        moveTo(topLeft.offset().x, topLeft.offset().y)
+        lineTo(topRight.offset().x, topRight.offset().y)
+        lineTo(bottomRight.offset().x, bottomRight.offset().y)
+        lineTo(bottomLeft.offset().x, bottomLeft.offset().y)
+        close()
+    }
+
+    val wall = surface.plane.path()
+    drawPath(wall, Color(0xFFA6A99D))
+    drawPath(wall, Color(0xFF6E7971), style = Stroke(width = size.width * .004f))
+
+    val reservedRegion = surface.reservedRegion.path()
+    drawPath(reservedRegion, Color(0xFFF4F3EA))
+    drawPath(reservedRegion, Color(0xFFA07F5D), style = Stroke(width = size.width * .003f))
+}
+
+private fun DrawScope.drawParkTree(frame: ParkElementGeometry) {
+    val bounds = frame.bounds
+    val left = size.width * bounds.topLeft.x
+    val top = size.height * bounds.topLeft.y
+    val width = size.width * (bounds.bottomRight.x - bounds.topLeft.x)
+    val height = size.height * (bounds.bottomRight.y - bounds.topLeft.y)
+    val centerX = left + width * .5f
+
+    drawRect(
+        color = Color(0xFF795D43),
+        topLeft = Offset(centerX - width * .055f, top + height * .52f),
+        size = Size(width * .11f, height * .48f),
+    )
+    drawCircle(Color(0xFF567661), radius = width * .30f, center = Offset(centerX, top + height * .31f))
+    drawCircle(Color(0xFF6F8D6E), radius = width * .22f, center = Offset(left + width * .29f, top + height * .40f))
+    drawCircle(Color(0xFF789573), radius = width * .22f, center = Offset(left + width * .71f, top + height * .40f))
+    drawCircle(Color(0xFF789573), radius = width * .19f, center = Offset(centerX, top + height * .20f))
+}
+
+private fun DrawScope.drawParkBench(frame: ParkElementGeometry) {
+    val bounds = frame.bounds
+    val left = size.width * bounds.topLeft.x
+    val top = size.height * bounds.topLeft.y
+    val width = size.width * (bounds.bottomRight.x - bounds.topLeft.x)
+    val height = size.height * (bounds.bottomRight.y - bounds.topLeft.y)
+    val seatLeft = left + width * .12f
+    val seatWidth = width * .76f
+    val slatHeight = height * .12f
+
+    drawRect(Color(0xFF805D3E), Offset(seatLeft, top + height * .27f), Size(seatWidth, slatHeight))
+    drawRect(Color(0xFF805D3E), Offset(seatLeft, top + height * .43f), Size(seatWidth, slatHeight))
+    drawRect(Color(0xFF805D3E), Offset(seatLeft, top + height * .59f), Size(seatWidth, slatHeight))
+    drawRect(Color(0xFF5F5140), Offset(left + width * .20f, top + height * .68f), Size(width * .07f, height * .27f))
+    drawRect(Color(0xFF5F5140), Offset(left + width * .73f, top + height * .68f), Size(width * .07f, height * .27f))
+    drawRect(Color(0xFF5F5140), Offset(left + width * .13f, top + height * .91f), Size(width * .74f, height * .07f))
+}
+
+private fun DrawScope.drawParkStreetcarShelter(frame: ParkElementGeometry) {
+    val bounds = frame.bounds
+    val left = size.width * bounds.topLeft.x
+    val top = size.height * bounds.topLeft.y
+    val width = size.width * (bounds.bottomRight.x - bounds.topLeft.x)
+    val height = size.height * (bounds.bottomRight.y - bounds.topLeft.y)
+    fun point(x: Float, y: Float) = Offset(left + width * (x / 110f), top + height * (y / 100f))
+    val roof = Path().apply {
+        moveTo(point(5f, 30f).x, point(5f, 30f).y)
+        lineTo(point(54f, 4f).x, point(54f, 4f).y)
+        lineTo(point(105f, 30f).x, point(105f, 30f).y)
+        lineTo(point(98f, 37f).x, point(98f, 37f).y)
+        lineTo(point(12f, 37f).x, point(12f, 37f).y)
+        close()
+    }
+    drawPath(roof, Color(0xFF846C52))
+    drawPath(roof, Color(0xFF5E584B), style = Stroke(width = width * (2f / 110f)))
+
+    val eaves = Path().apply {
+        moveTo(point(13f, 37f).x, point(13f, 37f).y)
+        lineTo(point(97f, 37f).x, point(97f, 37f).y)
+        lineTo(point(94f, 43f).x, point(94f, 43f).y)
+        lineTo(point(16f, 43f).x, point(16f, 43f).y)
+        close()
+    }
+    drawPath(eaves, Color(0xFFC5AE81))
+    val postWidth = width * (5f / 110f)
+    listOf(20f, 52f, 89f).forEach { x ->
+        val start = point(x, 43f)
+        val end = point(x, 88f)
+        drawLine(Color(0xFF6D6759), start, end, strokeWidth = postWidth)
+    }
+    drawRect(
+        color = Color(0x7BD8E0D5),
+        topLeft = point(18f, 53f),
+        size = Size(width * (73f / 110f), height * (31f / 100f)),
+    )
+    drawRect(
+        color = Color(0xFF8C8D7C),
+        topLeft = point(18f, 53f),
+        size = Size(width * (73f / 110f), height * (31f / 100f)),
+        style = Stroke(width = width * (2f / 110f)),
+    )
+    val platform = Path().apply {
+        moveTo(point(14f, 89f).x, point(14f, 89f).y)
+        lineTo(point(96f, 89f).x, point(96f, 89f).y)
+        lineTo(point(101f, 96f).x, point(101f, 96f).y)
+        lineTo(point(9f, 96f).x, point(9f, 96f).y)
+        close()
+    }
+    drawPath(platform, Color(0xFFA8997F))
 }
 
 private fun DrawScope.drawParkEntrance(

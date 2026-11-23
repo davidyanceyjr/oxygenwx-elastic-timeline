@@ -1,0 +1,169 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1900" height="1230" viewBox="0 0 1900 1230">
+  <defs>
+    <linearGradient id="sky" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#B7D1D2"/>
+      <stop offset="0.62" stop-color="#E3D5B9"/>
+      <stop offset="1" stop-color="#C9C5A4"/>
+    </linearGradient>
+    <linearGradient id="readout" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#FCFDF8" stop-opacity="0.96"/>
+      <stop offset="1" stop-color="#E8F0E7" stop-opacity="0.96"/>
+    </linearGradient>
+    <clipPath id="screenClip">
+      <rect x="0" y="0" width="240" height="570" rx="20"/>
+    </clipPath>
+    <symbol id="backdrop" viewBox="0 0 240 570">
+      <rect width="240" height="570" fill="url(#sky)"/>
+      <path d="M0 215 L0 178 L23 178 L23 160 L43 160 L43 189 L63 189 L63 151 L84 151 L84 181 L106 181 L106 166 L129 166 L129 188 L148 188 L148 146 L170 146 L170 177 L190 177 L190 159 L212 159 L212 187 L240 187 L240 215 Z" fill="#829795" opacity="0.76"/>
+      <path d="M0 215 L0 197 L20 197 L20 184 L39 184 L39 204 L60 204 L60 190 L82 190 L82 207 L108 207 L108 190 L133 190 L133 205 L158 205 L158 187 L182 187 L182 204 L205 204 L205 192 L225 192 L225 205 L240 205 L240 245 L0 245 Z" fill="#617D78" opacity="0.92"/>
+      <rect y="235" width="240" height="335" fill="#91A887"/>
+      <path d="M0 245 C43 238 78 249 116 244 C158 238 201 247 240 240 L240 270 L0 270 Z" fill="#B0B89A"/>
+      <path d="M0 278 C58 266 95 280 139 273 C178 267 208 275 240 268 L240 570 L0 570 Z" fill="#8FA584" opacity="0.72"/>
+      <text x="13" y="25" font-family="DejaVu Sans, sans-serif" font-size="9" font-weight="700" letter-spacing="1.2" fill="#304A43">LIVING URBAN PARK · DAYLIGHT</text>
+    </symbol>
+    <symbol id="mural" viewBox="0 0 240 570">
+      <path d="M8 256 L63 249 L63 370 L8 381 Z" fill="#A6AAA0" stroke="#69776D" stroke-width="2"/>
+      <path d="M13 260 L58 254 L58 365 L13 374 Z" fill="#BCC1B4" opacity="0.62"/>
+      <path d="M20 280 L52 276 L52 331 L20 335 Z" fill="#F5F2E6" stroke="#9A7957" stroke-width="2" stroke-dasharray="5 4"/>
+      <text x="36" y="307" text-anchor="middle" font-family="DejaVu Sans, sans-serif" font-size="5.8" font-weight="700" fill="#71614E">BLANK</text>
+    </symbol>
+    <symbol id="path" viewBox="0 0 240 570">
+      <path d="M111 239 C100 286 163 310 142 361 C120 408 93 450 72 510 L180 510 C159 452 174 412 149 361 C130 322 177 282 151 239 Z" fill="#D9C49B"/>
+      <path d="M111 239 C100 286 163 310 142 361 C120 408 93 450 72 510" fill="none" stroke="#9B896C" stroke-width="2" opacity="0.7"/>
+      <path d="M151 239 C177 282 130 322 149 361 C174 412 159 452 180 510" fill="none" stroke="#9B896C" stroke-width="2" opacity="0.7"/>
+    </symbol>
+    <symbol id="entrance" viewBox="0 0 240 570">
+      <path d="M80 387 Q126 405 173 385" fill="none" stroke="#756248" stroke-width="10" stroke-linecap="round" opacity="0.88"/>
+      <path d="M80 384 Q126 402 173 382" fill="none" stroke="#D0B78A" stroke-width="5" stroke-linecap="round"/>
+    </symbol>
+    <symbol id="tree" viewBox="0 0 60 100">
+      <path d="M27 56 L25 99 L37 99 L34 55 Z" fill="#795D43"/>
+      <circle cx="30" cy="31" r="22" fill="#567661"/>
+      <circle cx="17" cy="42" r="16" fill="#6F8D6E"/>
+      <circle cx="44" cy="42" r="16" fill="#789573"/>
+      <circle cx="30" cy="20" r="15" fill="#789573"/>
+      <path d="M30 58 L30 93" stroke="#A68A62" stroke-width="2" opacity="0.5"/>
+    </symbol>
+    <symbol id="bench" viewBox="0 0 90 48">
+      <path d="M8 15 L82 15 M8 23 L82 23 M12 12 L78 12" fill="none" stroke="#805D3E" stroke-width="5" stroke-linecap="round"/>
+      <path d="M18 27 L16 46 M71 27 L74 46" fill="none" stroke="#5F5140" stroke-width="5" stroke-linecap="round"/>
+      <path d="M12 47 L79 47" fill="none" stroke="#5F5140" stroke-width="3"/>
+    </symbol>
+    <symbol id="shelter" viewBox="0 0 110 100">
+      <path d="M5 30 L54 4 L105 30 L98 37 L12 37 Z" fill="#846C52" stroke="#5E584B" stroke-width="2"/>
+      <path d="M13 37 L97 37 L94 43 L16 43 Z" fill="#C5AE81"/>
+      <path d="M20 43 L20 88 M52 43 L52 88 M89 43 L89 88" stroke="#6D6759" stroke-width="5"/>
+      <path d="M18 53 L91 53 L91 84 L18 84 Z" fill="#D8E0D5" fill-opacity="0.48" stroke="#8C8D7C" stroke-width="2"/>
+      <path d="M14 89 L96 89 L101 96 L9 96 Z" fill="#A8997F"/>
+    </symbol>
+    <symbol id="forecastCard" viewBox="0 0 240 570">
+      <rect x="49" y="62" width="142" height="80" rx="11" fill="url(#readout)" stroke="#A9B7AC" stroke-width="1.5"/>
+      <text x="120" y="86" text-anchor="middle" font-family="DejaVu Sans, sans-serif" font-size="8" font-weight="700" letter-spacing="0.7" fill="#314B43">CENTRAL FORECAST FACTS</text>
+      <text x="120" y="105" text-anchor="middle" font-family="DejaVu Sans, sans-serif" font-size="8" fill="#61746A">remain visible here</text>
+      <text x="120" y="124" text-anchor="middle" font-family="DejaVu Sans, sans-serif" font-size="7" fill="#89968D">no sample values shown</text>
+    </symbol>
+    <symbol id="timeline" viewBox="0 0 240 570">
+      <rect x="13" y="500" width="214" height="53" rx="12" fill="#F6F8F3" stroke="#82948A" stroke-width="1.5"/>
+      <path d="M31 522 L210 522" stroke="#71847A" stroke-width="2"/>
+      <path d="M40 515 L40 529 M72 517 L72 527 M104 515 L104 529 M136 517 L136 527 M168 515 L168 529 M200 515 L200 529" stroke="#71847A" stroke-width="1.5"/>
+      <circle cx="136" cy="522" r="5" fill="#E9C45F" stroke="#FFFFFF" stroke-width="2"/>
+      <text x="120" y="545" text-anchor="middle" font-family="DejaVu Sans, sans-serif" font-size="7" fill="#5E7167">EXISTING TIMELINE · SELECTED TIME UNCHANGED</text>
+    </symbol>
+  </defs>
+
+  <rect width="1900" height="1230" fill="#F5F8F5"/>
+  <text x="58" y="58" font-family="DejaVu Sans, sans-serif" font-size="34" font-weight="700" fill="#263D36">OX-172 · Park Landmarks</text>
+  <text x="60" y="92" font-family="DejaVu Sans, sans-serif" font-size="17" fill="#60756A">UI artwork proposal · daylight portrait · placeholder forms · approval pending</text>
+  <rect x="1500" y="39" width="340" height="43" rx="21" fill="#FFF1D5" stroke="#D4A348" stroke-width="1.5"/>
+  <text x="1670" y="66" text-anchor="middle" font-family="DejaVu Sans, sans-serif" font-size="13" font-weight="700" fill="#805E25">PROPOSAL · NOT INSTALLED EVIDENCE</text>
+
+  <g id="panel-base">
+    <rect x="40" y="130" width="440" height="960" rx="22" fill="#FFFFFF" stroke="#BCCAC0" stroke-width="2"/>
+    <text x="62" y="170" font-family="DejaVu Sans, sans-serif" font-size="19" font-weight="700" fill="#304A41">BASE · CYCLE 171</text>
+    <text x="62" y="198" font-family="DejaVu Sans, sans-serif" font-size="13" fill="#708078">Established mural + portrait scaffold</text>
+    <rect x="131" y="238" width="258" height="592" rx="30" fill="#253A35"/>
+    <g transform="translate(140 249)" clip-path="url(#screenClip)">
+      <use href="#backdrop" width="240" height="570"/>
+      <use href="#mural" width="240" height="570"/>
+      <use href="#path" width="240" height="570"/>
+      <use href="#entrance" width="240" height="570"/>
+      <use href="#forecastCard" width="240" height="570"/>
+      <use href="#timeline" width="240" height="570"/>
+    </g>
+    <rect x="140" y="249" width="240" height="570" rx="20" fill="none" stroke="#D4E1D7" stroke-width="2"/>
+    <text x="260" y="870" text-anchor="middle" font-family="DejaVu Sans, sans-serif" font-size="15" font-weight="700" fill="#3A5549">Blank mural region remains reserved</text>
+    <text x="260" y="898" text-anchor="middle" font-family="DejaVu Sans, sans-serif" font-size="14" fill="#728279">No trees, benches, or shelter yet</text>
+    <text x="260" y="925" text-anchor="middle" font-family="DejaVu Sans, sans-serif" font-size="13" fill="#87938B">The reference state keeps central facts and timeline clear.</text>
+  </g>
+
+  <g id="panel-ox43">
+    <rect x="500" y="130" width="440" height="960" rx="22" fill="#FFFFFF" stroke="#A8C2A3" stroke-width="2"/>
+    <text x="522" y="170" font-family="DejaVu Sans, sans-serif" font-size="19" font-weight="700" fill="#304A41">OX-43 · TREES + BENCHES</text>
+    <text x="522" y="198" font-family="DejaVu Sans, sans-serif" font-size="13" fill="#708078">Small placeholder set · proposed count</text>
+    <rect x="591" y="238" width="258" height="592" rx="30" fill="#253A35"/>
+    <g transform="translate(600 249)" clip-path="url(#screenClip)">
+      <use href="#backdrop" width="240" height="570"/>
+      <use href="#mural" width="240" height="570"/>
+      <use href="#tree" x="4" y="378" width="48" height="84"/>
+      <use href="#tree" x="190" y="300" width="46" height="86"/>
+      <use href="#path" width="240" height="570"/>
+      <use href="#entrance" width="240" height="570"/>
+      <use href="#bench" x="2" y="440" width="66" height="36"/>
+      <use href="#bench" x="174" y="440" width="64" height="36"/>
+      <use href="#forecastCard" width="240" height="570"/>
+      <use href="#timeline" width="240" height="570"/>
+    </g>
+    <rect x="600" y="249" width="240" height="570" rx="20" fill="none" stroke="#D4E1D7" stroke-width="2"/>
+    <text x="720" y="870" text-anchor="middle" font-family="DejaVu Sans, sans-serif" font-size="15" font-weight="700" fill="#3A5549">2 trees + 2 benches frame the path</text>
+    <text x="720" y="898" text-anchor="middle" font-family="DejaVu Sans, sans-serif" font-size="14" fill="#728279">Each stays outside the fact and timeline areas.</text>
+    <text x="720" y="925" text-anchor="middle" font-family="DejaVu Sans, sans-serif" font-size="13" fill="#87938B">Placeholder color and geometry are review proposals.</text>
+  </g>
+
+  <g id="panel-ox44">
+    <rect x="960" y="130" width="440" height="960" rx="22" fill="#FFFFFF" stroke="#D3BC94" stroke-width="2"/>
+    <text x="982" y="170" font-family="DejaVu Sans, sans-serif" font-size="19" font-weight="700" fill="#304A41">OX-44 · STREETCAR SHELTER</text>
+    <text x="982" y="198" font-family="DejaVu Sans, sans-serif" font-size="13" fill="#708078">Coarse historic form · independent slice view</text>
+    <rect x="1051" y="238" width="258" height="592" rx="30" fill="#253A35"/>
+    <g transform="translate(1060 249)" clip-path="url(#screenClip)">
+      <use href="#backdrop" width="240" height="570"/>
+      <use href="#mural" width="240" height="570"/>
+      <use href="#shelter" x="122" y="244" width="82" height="83"/>
+      <use href="#path" width="240" height="570"/>
+      <use href="#entrance" width="240" height="570"/>
+      <use href="#forecastCard" width="240" height="570"/>
+      <use href="#timeline" width="240" height="570"/>
+    </g>
+    <rect x="1060" y="249" width="240" height="570" rx="20" fill="none" stroke="#D4E1D7" stroke-width="2"/>
+    <text x="1180" y="870" text-anchor="middle" font-family="DejaVu Sans, sans-serif" font-size="15" font-weight="700" fill="#3A5549">Shelter sits behind the curved path</text>
+    <text x="1180" y="898" text-anchor="middle" font-family="DejaVu Sans, sans-serif" font-size="14" fill="#728279">Stable against path, entrance, and background.</text>
+    <text x="1180" y="925" text-anchor="middle" font-family="DejaVu Sans, sans-serif" font-size="13" fill="#87938B">It does not require the OX-43 objects.</text>
+  </g>
+
+  <g id="panel-group">
+    <rect x="1420" y="130" width="440" height="960" rx="22" fill="#FFFFFF" stroke="#B7B9D0" stroke-width="2"/>
+    <text x="1442" y="170" font-family="DejaVu Sans, sans-serif" font-size="19" font-weight="700" fill="#304A41">GROUP COMPOSITION</text>
+    <text x="1442" y="198" font-family="DejaVu Sans, sans-serif" font-size="13" fill="#708078">Placement reference · exits remain separate</text>
+    <rect x="1511" y="238" width="258" height="592" rx="30" fill="#253A35"/>
+    <g transform="translate(1520 249)" clip-path="url(#screenClip)">
+      <use href="#backdrop" width="240" height="570"/>
+      <use href="#mural" width="240" height="570"/>
+      <use href="#shelter" x="122" y="244" width="82" height="83"/>
+      <use href="#tree" x="4" y="378" width="48" height="84"/>
+      <use href="#tree" x="190" y="300" width="46" height="86"/>
+      <use href="#path" width="240" height="570"/>
+      <use href="#entrance" width="240" height="570"/>
+      <use href="#bench" x="2" y="440" width="66" height="36"/>
+      <use href="#bench" x="174" y="440" width="64" height="36"/>
+      <use href="#forecastCard" width="240" height="570"/>
+      <use href="#timeline" width="240" height="570"/>
+    </g>
+    <rect x="1520" y="249" width="240" height="570" rx="20" fill="none" stroke="#D4E1D7" stroke-width="2"/>
+    <text x="1640" y="870" text-anchor="middle" font-family="DejaVu Sans, sans-serif" font-size="15" font-weight="700" fill="#3A5549">Both landmark sets share one composition</text>
+    <text x="1640" y="898" text-anchor="middle" font-family="DejaVu Sans, sans-serif" font-size="14" fill="#728279">The grouped view does not make OX-44 depend on OX-43.</text>
+    <text x="1640" y="925" text-anchor="middle" font-family="DejaVu Sans, sans-serif" font-size="13" fill="#87938B">Installed evidence still proves each slice's own exit.</text>
+  </g>
+
+  <rect x="40" y="1120" width="1820" height="70" rx="18" fill="#E5EEE8" stroke="#BCCAC0" stroke-width="1.5"/>
+  <text x="68" y="1150" font-family="DejaVu Sans, sans-serif" font-size="14" font-weight="700" fill="#3A5549">VISUAL INVARIANTS</text>
+  <text x="68" y="1174" font-family="DejaVu Sans, sans-serif" font-size="13" fill="#61756B">Readout and timeline remain visible · mural reservation stays blank · selected time and forecast meaning do not change · no final artwork is claimed</text>
+</svg>

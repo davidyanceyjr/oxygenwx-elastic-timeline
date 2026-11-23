@@ -1,0 +1,123 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1600" height="1100" viewBox="0 0 1600 1100" role="img" aria-labelledby="title desc">
+  <title id="title">OX-171 Park mural foundation UI artwork board</title>
+  <desc id="desc">A temporary portrait mockup shows the existing Park scaffold, a blank reserved mural area, and protected central forecast and timeline regions. OX-37, OX-42, and OX-85 are labeled separately.</desc>
+  <defs>
+    <linearGradient id="page" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#f7faf6"/>
+      <stop offset="1" stop-color="#eaf0e9"/>
+    </linearGradient>
+    <linearGradient id="sky" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#bbd0d2"/>
+      <stop offset="1" stop-color="#e2e7dd"/>
+    </linearGradient>
+    <style>
+      text { font-family: 'DejaVu Sans', Arial, sans-serif; fill: #24372f; }
+      .muted { fill: #5c7066; }
+      .heading { font-size: 34px; font-weight: 700; }
+      .subheading { font-size: 18px; }
+      .label { font-size: 18px; font-weight: 700; }
+      .small { font-size: 15px; }
+      .tiny { font-size: 13px; }
+      .callout { fill: #ffffff; stroke: #aab9ad; stroke-width: 2; }
+      .leader { fill: none; stroke: #657c6e; stroke-width: 2; }
+    </style>
+    <clipPath id="phoneScreen"><rect x="450" y="190" width="470" height="780" rx="30"/></clipPath>
+  </defs>
+
+  <rect width="1600" height="1100" fill="url(#page)"/>
+  <text x="58" y="62" class="heading">OX-171 · Park mural foundation</text>
+  <text x="60" y="96" class="subheading muted">UI artwork proposal · temporary objects · no separate UI-board approval required by owner direction</text>
+
+  <!-- Portrait viewport mockup -->
+  <rect x="430" y="166" width="510" height="830" rx="48" fill="#293b37"/>
+  <rect x="450" y="190" width="470" height="780" rx="30" fill="#f6f8f4"/>
+  <g clip-path="url(#phoneScreen)">
+    <rect x="450" y="190" width="470" height="780" fill="url(#sky)"/>
+    <rect x="450" y="466" width="470" height="504" fill="#9eb18e"/>
+    <rect x="450" y="475" width="470" height="50" fill="#7e9791" opacity=".45"/>
+    <!-- Coarse distant skyline carried forward from OX-25; generic blocks only. -->
+    <path d="M450 486 L450 431 L495 431 L495 394 L534 394 L534 450 L572 450 L572 376 L616 376 L616 443 L655 443 L655 405 L693 405 L693 466 L737 466 L737 388 L784 388 L784 450 L826 450 L826 416 L870 416 L870 486 Z" fill="#768c89" opacity=".8"/>
+    <path d="M450 493 L450 461 L500 461 L500 438 L552 438 L552 469 L599 469 L599 437 L648 437 L648 461 L699 461 L699 445 L754 445 L754 470 L806 470 L806 449 L860 449 L860 494 Z" fill="#5e7975" opacity=".85"/>
+
+    <!-- Coarse wall mass and deliberately blank data region. -->
+    <path d="M469 617 L469 524 L636 524 L636 660 L469 660 Z" fill="#a6a99d" stroke="#6e7971" stroke-width="3"/>
+    <path d="M469 524 L636 524 L620 500 L489 500 Z" fill="#c4c7bb" stroke="#6e7971" stroke-width="3"/>
+    <rect x="491" y="545" width="123" height="83" rx="4" fill="#f4f3ea" stroke="#a07f5d" stroke-width="3" stroke-dasharray="8 6"/>
+    <text x="552" y="579" class="tiny" text-anchor="middle">RESERVED DATA</text>
+    <text x="552" y="599" class="tiny" text-anchor="middle">AREA · BLANK</text>
+
+    <!-- Curved path and open entrance threshold carried forward from OX-25. -->
+    <path d="M580 846 C647 785 673 726 650 670 C631 624 665 573 715 531 L762 531 C702 587 675 627 695 671 C721 732 700 793 640 846 Z" fill="#d4c7ae" stroke="#b7a98f" stroke-width="3"/>
+    <path d="M573 762 C599 774 630 777 653 765 L664 780 C634 797 596 795 564 779 Z" fill="#bfad8b" stroke="#9d8e72" stroke-width="2"/>
+
+    <!-- Existing fact hierarchy remains neutral; no sample weather/value is invented. -->
+    <rect x="565" y="265" width="300" height="156" rx="14" fill="#fbfcf8" fill-opacity=".92" stroke="#aab7ac" stroke-width="2"/>
+    <text x="715" y="303" class="label" text-anchor="middle">EXISTING CENTRAL</text>
+    <text x="715" y="329" class="label" text-anchor="middle">FORECAST FACTS</text>
+    <text x="715" y="357" class="small muted" text-anchor="middle">kept primary and visible</text>
+    <text x="715" y="386" class="tiny muted" text-anchor="middle">no weather value shown in this proposal</text>
+
+    <!-- Timeline remains at the bottom and inside its protected area. -->
+    <rect x="481" y="862" width="408" height="75" rx="15" fill="#f8faf6" fill-opacity=".96" stroke="#84988b" stroke-width="2"/>
+    <line x1="510" y1="892" x2="860" y2="892" stroke="#718276" stroke-width="3"/>
+    <g stroke="#718276" stroke-width="2">
+      <line x1="528" y1="882" x2="528" y2="902"/><line x1="582" y1="885" x2="582" y2="899"/>
+      <line x1="636" y1="882" x2="636" y2="902"/><line x1="690" y1="885" x2="690" y2="899"/>
+      <line x1="744" y1="882" x2="744" y2="902"/><line x1="798" y1="885" x2="798" y2="899"/>
+      <line x1="850" y1="882" x2="850" y2="902"/>
+    </g>
+    <text x="685" y="925" class="tiny muted" text-anchor="middle">existing timeline · protected bottom region</text>
+
+    <!-- Logical viewport inset/safe area proposal. -->
+    <rect x="470" y="210" width="430" height="740" rx="20" fill="none" stroke="#347b6c" stroke-width="3" stroke-dasharray="10 8"/>
+  </g>
+
+  <text x="685" y="1019" class="small muted" text-anchor="middle">Temporary portrait scene mockup · not an installed screenshot</text>
+
+  <!-- Review annotations -->
+  <rect x="63" y="177" width="315" height="139" rx="16" class="callout"/>
+  <text x="87" y="213" class="label">OX-37 · OPTIONAL SURFACE</text>
+  <text x="87" y="245" class="small">One Park-only declared data surface.</text>
+  <text x="87" y="271" class="small">No data surface requirement elsewhere.</text>
+  <path d="M378 249 C424 249 444 369 511 544" class="leader"/>
+
+  <rect x="63" y="355" width="315" height="157" rx="16" class="callout"/>
+  <text x="87" y="391" class="label">OX-42 · MURAL WALL</text>
+  <text x="87" y="423" class="small">Temporary wall plane and anchor.</text>
+  <text x="87" y="449" class="small">Reserved reading region stays blank.</text>
+  <text x="87" y="475" class="small">No value or typography is approved.</text>
+  <path d="M378 433 C425 433 443 560 470 580" class="leader"/>
+
+  <rect x="63" y="550" width="315" height="175" rx="16" class="callout"/>
+  <text x="87" y="586" class="label">OX-85 · PORTRAIT FIT</text>
+  <text x="87" y="618" class="small">Dashed outline marks the proposed</text>
+  <text x="87" y="644" class="small">logical viewport/safe-area boundary.</text>
+  <text x="87" y="670" class="small">Central facts and timeline stay clear.</text>
+  <path d="M378 653 C420 653 439 769 470 821" class="leader"/>
+
+  <rect x="1005" y="184" width="520" height="210" rx="18" class="callout"/>
+  <text x="1032" y="224" class="label">PROTECTED INFORMATION HIERARCHY</text>
+  <text x="1032" y="261" class="small">The selected forecast remains primary; the mural region</text>
+  <text x="1032" y="288" class="small">does not replace the central facts or timeline.</text>
+  <text x="1032" y="327" class="small muted">No sample temperature, condition, units, or time is shown.</text>
+  <text x="1032" y="359" class="small muted">No trees, shelter, finished skyline, or mural artwork yet.</text>
+
+  <rect x="1005" y="424" width="520" height="182" rx="18" class="callout"/>
+  <text x="1032" y="464" class="label">TEMPORARY OBJECTS</text>
+  <text x="1032" y="501" class="small">• Generic wall mass, reserved blank panel, and path.</text>
+  <text x="1032" y="529" class="small">• Generic skyline blocks carried from the scaffold.</text>
+  <text x="1032" y="557" class="small">• Neutral forecast and timeline placeholders.</text>
+  <text x="1032" y="585" class="small">All geometry and color are proposals, not final art.</text>
+
+  <rect x="1005" y="638" width="520" height="204" rx="18" fill="#fffaf0" stroke="#bd9e5b" stroke-width="2"/>
+  <text x="1032" y="678" class="label">OUT OF SCOPE FOR CYCLE 171</text>
+  <text x="1032" y="716" class="small">OX-12 exact selected-time binding and OX-12A mural reading.</text>
+  <text x="1032" y="744" class="small">Final mural typography/materials, trees, benches, shelter,</text>
+  <text x="1032" y="772" class="small">weather renderer changes, and broad accessibility acceptance.</text>
+  <text x="1032" y="814" class="small muted">Installed portrait evidence remains a later slice exit.</text>
+
+  <text x="1005" y="901" class="small muted">Inherited scaffold: OX-25 Park background, path, entrance.</text>
+  <text x="1005" y="930" class="small muted">Composition role: OX-41 Living Urban Park is bundled free default.</text>
+  <text x="1005" y="979" class="tiny muted">Per owner direction, this UI artwork board does not need a separate approval.</text>
+  <text x="1005" y="1006" class="tiny muted">The shared behavior-board approval is pending. Artwork is not installed acceptance.</text>
+</svg>

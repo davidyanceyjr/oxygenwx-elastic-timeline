@@ -1,0 +1,84 @@
+digraph OX171 {
+  graph [
+    label="OX-171 | Park mural foundation\nPROPOSED SHARED BEHAVIOR BOARD — OWNER APPROVAL PENDING",
+    labelloc=t,
+    fontsize=20,
+    fontname="DejaVu Sans",
+    bgcolor="#f7f8f5",
+    pad=0.35,
+    rankdir=TB,
+    ranksep=0.62,
+    nodesep=0.42,
+    splines=polyline
+  ];
+  node [shape=box, style="rounded,filled", fillcolor="#ffffff", color="#6b7c72", fontname="DejaVu Sans", fontsize=12, margin="0.20,0.13"];
+  edge [color="#526c60", fontname="DejaVu Sans", fontsize=10, arrowsize=0.72];
+
+  start [label="BOUNDARY | First Park mural foundation\nNo selected-time reading is bound or painted in this group", fillcolor="#e8eef2", color="#708797"];
+
+  subgraph cluster_37 {
+    label="OX-37 | Declare optional exact-data surface";
+    color="#7f9b85";
+    style="rounded,filled";
+    fillcolor="#edf3eb";
+    fontsize=14;
+
+    prereq37 [label="DONE INPUTS\nOX-35 element geometry/anchors\nOX-04 evidence and unknown-state rules", fillcolor="#e3edf3"];
+    declare [label="PROPOSED CONTRACT\nPark mural may declare one data-surface identity\nwith plane, anchor, reserved region, and one\ncanonical exact-binding reference", fillcolor="#fff8e5", color="#b39b54"];
+    exclude37 [shape=note, style="filled", label="No data-surface requirement for First City/Open Landscape.\nNo drawing-time forecast conversion or weather inference.\nBinding semantics remain owned by OX-12.", fillcolor="#fffdf4", color="#b39b54"];
+    exit37 [label="OX-37 EXIT\nOne wall surface can opt into one exact-value binding;\nother worlds need no surface; mural rendering is not implemented.", fillcolor="#dcecdf"];
+
+    prereq37 -> declare;
+    declare -> exit37;
+    exclude37 -> declare [style=dashed, arrowhead=none];
+  }
+
+  subgraph cluster_42 {
+    label="OX-42 | Place the Park mural wall and anchor";
+    color="#9b8a6f";
+    style="rounded,filled";
+    fillcolor="#f4f0e7";
+    fontsize=14;
+
+    prereq42 [label="DONE / IN-CYCLE INPUTS\nOX-25 Park scaffold is DONE\nOX-37 surface declaration precedes placement", fillcolor="#e3edf3"];
+    place [label="PROPOSED SCENE OBJECT\nAdd the left-wall mural plane and declared anchor\nReserve a non-occluded data region", fillcolor="#fff8e5", color="#b39b54"];
+    blank [label="Reserved region remains blank\nNo measured value, unit, source time,\nunsupported state, or typography yet", fillcolor="#f5f3ee", color="#9b8a6f"];
+    exit42 [label="OX-42 EXIT\nInstalled portrait evidence shows the mural plane\nand readable reserved region; no exact reading claimed.", fillcolor="#dcecdf"];
+
+    prereq42 -> place;
+    place -> blank;
+    blank -> exit42;
+  }
+
+  subgraph cluster_85 {
+    label="OX-85 | Establish initial portrait camera and safe areas";
+    color="#7d91a1";
+    style="rounded,filled";
+    fillcolor="#edf2f5";
+    fontsize=14;
+
+    prereq85 [label="DONE / IN-CYCLE INPUTS\nOX-25 Park scaffold and OX-41 composition map\nOX-42 mural plane precedes camera fit", fillcolor="#e3edf3"];
+    camera [label="PROPOSED PORTRAIT CONTRACT\nRecord logical crop, viewport/insets, and safe areas\nfor the coarse Park scene and blank mural region", fillcolor="#fff8e5", color="#b39b54"];
+    preserve [label="Keep central weather facts and timeline\nvisible and unobstructed; the Park stays recognizable", fillcolor="#eef5f1"];
+    exit85 [label="OX-85 EXIT\nInstalled Pixel 3 XL portrait evidence records the crop,\nviewport/insets, clear central content, recognizable Park,\nand reserved mural plane.", fillcolor="#dcecdf"];
+
+    prereq85 -> camera;
+    camera -> preserve;
+    preserve -> exit85;
+  }
+
+  start -> prereq37;
+  exit37 -> prereq42 [label="in-cycle dependency"];
+  exit42 -> prereq85 [label="in-cycle dependency"];
+
+  park_base [label="INHERITED OX-25/OX-41 CONSTRAINTS\nKeep the coarse backdrop, path, and entrance.\nMural is a later landmark; its reference art does not\napprove literal readings, weather, or finished details.", shape=note, style="filled", fillcolor="#f2f4f4", color="#8c9aa0"];
+  park_base -> place [style=dashed, arrowhead=none];
+  park_base -> camera [style=dashed, arrowhead=none];
+
+  invariant [label="SHARED INVARIANTS\nExact selected-time authority remains unchanged.\nSupported facts stay textual; missing/unsupported evidence is never zero or invented.\nDecorative scene content cannot cover the central readout or timeline.", shape=note, style="filled", fillcolor="#eef4f5", color="#879aa1"];
+  invariant -> exit42 [style=dashed, arrowhead=none];
+  invariant -> exit85 [style=dashed, arrowhead=none];
+
+  later [label="OUT OF SCOPE\nOX-12/OX-12A exact binding and painted reading; final mural materials/typography;\nOX-43 vegetation/benches; OX-44 shelter; weather renderer work; broad system acceptance.", shape=note, style="filled", fillcolor="#f8eeee", color="#b07c76"];
+  later -> start [style=dashed, arrowhead=none];
+}
