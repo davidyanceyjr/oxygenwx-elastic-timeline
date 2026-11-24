@@ -39,6 +39,8 @@ import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
 import com.oxygen.weather.timeline.ActivityVariantDelegate
+import com.oxygen.weather.timeline.SELECTED_THEME_PACK_ID
+import com.oxygen.weather.timeline.SELECTED_THEME_PREFERENCES
 import com.oxygen.weather.timeline.data.catalog.ActiveCatalogSelection
 import com.oxygen.weather.timeline.presentation.CatalogDiagnosticPresentation
 import com.oxygen.weather.timeline.presentation.CatalogTimelineScenePresentation
@@ -56,6 +58,9 @@ import com.oxygen.weather.timeline.data.catalog.SavedLocationResult
 import com.oxygen.weather.timeline.data.catalog.CatalogRecording
 import com.oxygen.weather.timeline.data.catalog.CatalogLocation
 import com.oxygen.weather.timeline.data.scenepack.BundledFreeThemeMetadata
+import com.oxygen.weather.timeline.data.scenepack.AppOwnedThemeAvailability
+import com.oxygen.weather.timeline.data.scenepack.AppOwnedThemeCompatibility
+import com.oxygen.weather.timeline.data.scenepack.AppOwnedThemeRegistration
 import com.oxygen.weather.timeline.data.scenepack.InstalledThemeCatalog
 import com.oxygen.weather.timeline.data.scenepack.InstalledThemeOrigin
 import com.oxygen.weather.timeline.data.scenepack.InstalledThemeCatalogEntry
@@ -111,6 +116,7 @@ class CatalogPickerDelegate : ActivityVariantDelegate {
     private var selectedPreset by mutableStateOf<String?>(null)
 
     override fun onMainActivityCreated(host: ActivityVariantDelegate.Host, intent: Intent): Boolean {
+        restoreInstalledThemeChoices(host, intent)
         if (!hasCatalogRequest(intent)) return false
         startCatalogColdLaunch(host.activationCoordinator) { participant ->
             handleRequest(host, intent, participant)
@@ -138,9 +144,7 @@ class CatalogPickerDelegate : ActivityVariantDelegate {
             EXTRA_SCENE_PACK_INTERRUPT_AFTER_FIRST_RESOURCE,
             false,
         )
-        val installer = synchronized(this) {
-            scenePackInstaller ?: ScenePackInstaller(host.activity.filesDir).also { scenePackInstaller = it }
-        }
+        val installer = installerFor(host)
         host.activityScope.launch {
             try {
                 require(requestVersion == SCENE_PACK_REQUEST_VERSION) {
@@ -161,15 +165,15 @@ class CatalogPickerDelegate : ActivityVariantDelegate {
                         version = appVersion,
                         interruptAfterFirstResourceWrite = interruptAfterFirstResourceWrite,
                     )
-                    result to installer.queryCatalog(OX57_BUNDLED_FREE_METADATA_FIXTURE)
+                    Triple(
+                        result,
+                        installer.queryCatalog(OX57_BUNDLED_FREE_METADATA_FIXTURE),
+                        installer.queryCatalog(InstalledThemeCatalog.BUNDLED_FREE_ROLE_METADATA),
+                    )
                 }
                 val result = installAndCatalog.first
                 val entries = installAndCatalog.second
-                host.publishInstalledThemeChoices(entries.filter { entry ->
-                    entry.id.value == FirstCityCanopyCandidateLoader.INSTALLED_BASELINE_PACK_ID &&
-                        entry.origin == InstalledThemeOrigin.APP_OWNED &&
-                        entry.validity == InstalledThemeValidity.COMPATIBLE
-                })
+                host.publishThemeCatalog(installAndCatalog.third)
                 val matchingPackEntries = result.packId?.let { packId ->
                     entries.filter { it.id.value == packId && it.origin == InstalledThemeOrigin.APP_OWNED }
                 }.orEmpty()
@@ -184,7 +188,7 @@ class CatalogPickerDelegate : ActivityVariantDelegate {
                     }
                 }
                 val candidateVisible = result.packId != null && matchingPackEntries.any {
-                    it.version.value == result.candidateVersion
+                    it.version?.value == result.candidateVersion
                 }
                 val expectationSatisfied = composerAssertionPassed && when (result.outcome) {
                     ScenePackInstallOutcome.INSTALLED -> candidateVisible
@@ -209,7 +213,7 @@ class CatalogPickerDelegate : ActivityVariantDelegate {
                     .put("composerAssertionPassed", composerAssertionPassed)
                     .put("bundledFreeMetadataFixtureOnly", true)
                     .put("bundledFreeFixtureDisplayName", OX57_BUNDLED_FREE_METADATA_FIXTURE.displayName)
-                    .put("bundledFreeFixtureVersion", OX57_BUNDLED_FREE_METADATA_FIXTURE.version.value)
+                    .put("bundledFreeFixtureVersion", OX57_BUNDLED_FREE_METADATA_FIXTURE.version?.value)
                     .put("interruptAfterFirstResourceWrite", interruptAfterFirstResourceWrite)
                     .put("weatherBefore", before.toLogJson())
                     .put("weatherAfter", after.toLogJson())
@@ -663,6 +667,103 @@ class CatalogPickerDelegate : ActivityVariantDelegate {
         requestJob.start()
     }
 
+    private fun installerFor(host: ActivityVariantDelegate.Host): ScenePackInstaller = synchronized(this) {
+        scenePackInstaller ?: ScenePackInstaller(host.activity.filesDir).also { scenePackInstaller = it }
+    }
+
+    private fun restoreInstalledThemeChoices(host: ActivityVariantDelegate.Host, intent: Intent) {
+        val catalog = installerFor(host).restoreCatalog(InstalledThemeCatalog.BUNDLED_FREE_ROLE_METADATA)
+        val fixtureCatalog = applyOx62AvailabilityFixture(host, intent, catalog)
+        val catalogForChoices = fixtureCatalog?.entries ?: catalog
+        host.publishThemeCatalog(catalogForChoices)
+        val entries = org.json.JSONArray().apply {
+            catalog.forEach { entry ->
+                put(org.json.JSONObject()
+                    .put("id", entry.id.value)
+                    .put("version", entry.version?.value ?: org.json.JSONObject.NULL)
+                    .put("displayName", entry.displayName)
+                    .put("origin", entry.origin.name)
+                    .put("validity", entry.validity.name))
+            }
+        }
+        Log.i(
+            OX58_TAG,
+            org.json.JSONObject()
+                .put("event", "catalogRestoredAtMainActivityCreate")
+                .put("processId", android.os.Process.myPid())
+                .put("bundledFreeRoleRevisionAssigned", catalog.single { it.origin == InstalledThemeOrigin.BUNDLED_FREE }.version != null)
+                .put("restoredAppOwnedCount", catalog.count { it.origin == InstalledThemeOrigin.APP_OWNED })
+                .put("catalogEntries", entries)
+                .toString(),
+        )
+        fixtureCatalog?.let { fixture ->
+            Log.i(OX62_TAG, fixture.toLogJson().toString())
+        }
+    }
+
+    /**
+     * Applies an in-memory catalog-boundary fixture for OX-62 cold-launch acceptance.
+     * It never edits the durable install record or the saved selection preference.
+     */
+    private fun applyOx62AvailabilityFixture(
+        host: ActivityVariantDelegate.Host,
+        intent: Intent,
+        restoredCatalog: List<InstalledThemeCatalogEntry>,
+    ): Ox62AvailabilityFixture? {
+        val requestedState = intent.getStringExtra(EXTRA_OX62_AVAILABILITY_FIXTURE) ?: return null
+        val state = Ox62UnavailableState.entries.firstOrNull { it.wireValue == requestedState }
+            ?: error("Unknown OX-62 availability fixture: $requestedState")
+        val preferences = host.activity.getSharedPreferences(
+            SELECTED_THEME_PREFERENCES,
+            android.content.Context.MODE_PRIVATE,
+        )
+        val savedPackId = preferences.getString(SELECTED_THEME_PACK_ID, null)
+            ?: error("OX-62 availability fixture requires a saved installed-theme key")
+        check(savedPackId == FirstCityCanopyCandidateLoader.INSTALLED_BASELINE_PACK_ID) {
+            "OX-62 availability fixture expects the controlled baseline pack key"
+        }
+        val savedEntry = restoredCatalog.singleOrNull { entry ->
+            entry.id.value == savedPackId &&
+                entry.origin == InstalledThemeOrigin.APP_OWNED &&
+                entry.validity == InstalledThemeValidity.COMPATIBLE
+        } ?: error("OX-62 fixture setup requires the selected compatible pack in the restored catalog")
+
+        val appOwnedRegistrations = restoredCatalog
+            .filter { it.origin == InstalledThemeOrigin.APP_OWNED }
+            .filterNot { entry -> state == Ox62UnavailableState.MISSING && entry.id.value == savedPackId }
+            .map { entry ->
+                val isSavedEntry = entry.id.value == savedPackId
+                AppOwnedThemeRegistration(
+                    packId = entry.id.value,
+                    version = requireNotNull(entry.version) {
+                        "OX-62 app-owned registrations require an app-managed version"
+                    },
+                    displayName = entry.displayName,
+                    compatibility = when {
+                        isSavedEntry && state == Ox62UnavailableState.INCOMPATIBLE ->
+                            AppOwnedThemeCompatibility.INCOMPATIBLE
+                        entry.validity == InstalledThemeValidity.INCOMPATIBLE ->
+                            AppOwnedThemeCompatibility.INCOMPATIBLE
+                        else -> AppOwnedThemeCompatibility.COMPATIBLE
+                    },
+                    availability = if (isSavedEntry && state == Ox62UnavailableState.DISABLED) {
+                        AppOwnedThemeAvailability.DISABLED
+                    } else AppOwnedThemeAvailability.ENABLED,
+                )
+            }
+        val fixtureEntries = InstalledThemeCatalog.query(
+            InstalledThemeCatalog.BUNDLED_FREE_ROLE_METADATA,
+            appOwnedRegistrations,
+        )
+        return Ox62AvailabilityFixture(
+            state = state,
+            savedPackId = savedPackId,
+            sourceEntry = savedEntry,
+            entries = fixtureEntries,
+            savedKeyRetained = preferences.getString(SELECTED_THEME_PACK_ID, null) == savedPackId,
+        )
+    }
+
     private fun beginSessionEntry(host: ActivityVariantDelegate.Host) {
         cancelPendingEntry()
         val generation = entryGeneration
@@ -735,6 +836,8 @@ class CatalogPickerDelegate : ActivityVariantDelegate {
 
     companion object {
         private const val OX57_TAG = "OX57Install"
+        private const val OX58_TAG = "OX58CatalogRestore"
+        private const val OX62_TAG = "OX62Availability"
         private const val SCENE_PACK_REQUEST_VERSION = 1
         private val OX57_BUNDLED_FREE_METADATA_FIXTURE = BundledFreeThemeMetadata(
             displayName = "Debug bundled-free fixture",
@@ -746,6 +849,7 @@ class CatalogPickerDelegate : ActivityVariantDelegate {
         const val EXTRA_SCENE_PACK_DISPLAY_NAME = "ox57_display_name"
         const val EXTRA_SCENE_PACK_APP_VERSION = "ox57_app_version"
         const val EXTRA_SCENE_PACK_INTERRUPT_AFTER_FIRST_RESOURCE = "ox57_interrupt_after_first_resource"
+        const val EXTRA_OX62_AVAILABILITY_FIXTURE = "ox62_availability_fixture"
         const val ACTION_ACTIVATE_CATALOG = "com.oxygen.weather.timeline.DEBUG_ACTIVATE_CATALOG"
         const val ACTION_SELECT_CATALOG_INSTANT = "com.oxygen.weather.timeline.DEBUG_SELECT_CATALOG_INSTANT"
         const val ACTION_ACTIVATE_OX05_DEPTH_REVIEW = "com.oxygen.weather.timeline.DEBUG_ACTIVATE_OX05_DEPTH_REVIEW"
@@ -759,6 +863,40 @@ class CatalogPickerDelegate : ActivityVariantDelegate {
         const val EXTRA_SELECTED_INSTANT = "debug_catalog_selected_instant"
         const val EXTRA_SAVED_PREVIEW = "debug_catalog_saved_preview"
     }
+}
+
+private enum class Ox62UnavailableState(val wireValue: String) {
+    MISSING("missing"),
+    DISABLED("disabled"),
+    INCOMPATIBLE("incompatible"),
+}
+
+private data class Ox62AvailabilityFixture(
+    val state: Ox62UnavailableState,
+    val savedPackId: String,
+    val sourceEntry: InstalledThemeCatalogEntry,
+    val entries: List<InstalledThemeCatalogEntry>,
+    val savedKeyRetained: Boolean,
+) {
+    fun toLogJson() = org.json.JSONObject()
+        .put("event", "controlledColdLaunchAvailabilityFixture")
+        .put("fixture", state.wireValue)
+        .put("savedPackId", savedPackId)
+        .put("sourceCatalogValidity", sourceEntry.validity.name)
+        .put("catalogContainsSavedEntry", entries.any { it.id.value == savedPackId })
+        .put("catalogStatus", entries.singleOrNull { it.id.value == savedPackId }?.validity?.name ?: "MISSING")
+        .put("savedKeyRetained", savedKeyRetained)
+        .put("durableInstallStateChanged", false)
+        .put("catalogEntries", org.json.JSONArray().apply {
+            entries.forEach { entry ->
+                put(org.json.JSONObject()
+                    .put("id", entry.id.value)
+                    .put("version", entry.version?.value ?: org.json.JSONObject.NULL)
+                    .put("displayName", entry.displayName)
+                    .put("origin", entry.origin.name)
+                    .put("validity", entry.validity.name))
+            }
+        })
 }
 
 private data class OX57WeatherSnapshot(

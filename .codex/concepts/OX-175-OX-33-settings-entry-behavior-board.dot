@@ -1,0 +1,28 @@
+digraph OX33SettingsEntry {
+  graph [rankdir=TB, bgcolor="#f6f8f7", pad=0.30, nodesep=0.42, ranksep=0.60,
+    labelloc=t, label="OX-33 supplement • Settings entry and truthful catalog rows",
+    fontname="Helvetica", fontsize=22, fontcolor="#173044"];
+  node [shape=box, style="rounded,filled", color="#7893a0", fillcolor="#ffffff",
+    penwidth=1.2, fontname="Helvetica", fontsize=12, fontcolor="#173044",
+    margin="0.18,0.12"];
+  edge [color="#496574", penwidth=1.4, arrowsize=0.8, fontname="Helvetica",
+    fontsize=11, fontcolor="#334e5c"];
+
+  forecast [fillcolor="#e8f2f6", label="F0 • Existing forecast screen\nWorld control remains in place. A visible gear beside World is labeled\nfor accessibility as ‘Settings’. Weather facts and timeline remain visible."];
+  settings [fillcolor="#e8f5ed", label="S1 • Read-only Settings list\nEntries come from explicit app-managed catalog records.\nNo selection, downloads, checkout, or shared-storage scan."];
+  bundle [fillcolor="#f1f6ed", label="Bundled-free role\nID: living-urban-park • Name: Living Urban Park\nStatus: Included · Free; active label follows committed world.\nVersion is absent until bundled Park content has a real revision."];
+  owned [fillcolor="#f1f6ed", label="App-owned registrations\nRetain app-managed version and display name in the catalog.\nSettings shows display name and Compatible, Incompatible, or Disabled.\nShow Active only for the currently committed installed theme."];
+  back [fillcolor="#e8f2f6", label="F1 • Return to the same forecast screen\nBack control and system back dismiss Settings.\nCatalog presentation makes no world, location, forecast, or time change."];
+  boundary [shape=note, style="filled", color="#b27a18", fillcolor="#fff7e6",
+    label="No row activates a theme. Missing saved IDs have no catalog row.\nThe debug bundled-free fixture label/version is never user-facing.\nOX-69 owns theme selection; OX-83 owns update/removal UI."];
+
+  forecast -> settings [label="tap gear"];
+  settings -> bundle [label="render catalog role"];
+  settings -> owned [label="render registered entries"];
+  bundle -> back [style=invis, weight=2];
+  owned -> back [style=invis, weight=2];
+  settings -> back [label="back / system back"];
+  {rank=same; bundle; owned;}
+  {rank=same; back; boundary;}
+  back -> boundary [style=dashed, arrowhead=none];
+}

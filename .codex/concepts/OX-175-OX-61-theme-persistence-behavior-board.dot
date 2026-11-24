@@ -1,0 +1,52 @@
+digraph OX61ThemePersistence {
+  graph [
+    label="Cycle 175 • OX-61 only\nPersist and restore the app-owned theme selection\nExecution resolution supplement",
+    labelloc=t, labeljust=l, fontsize=22, fontname="Helvetica",
+    rankdir=LR, splines=ortho, nodesep=0.45, ranksep=0.7, pad=0.35,
+    bgcolor="#f5f7fa"
+  ];
+  node [shape=box, style="rounded,filled", fontname="Helvetica", fontsize=11,
+        color="#53677d", fillcolor="#ffffff", margin="0.16,0.11", penwidth=1.2];
+  edge [color="#536a83", penwidth=1.35, arrowsize=0.75, fontname="Helvetica", fontsize=9];
+
+  subgraph cluster_switch {
+    label="Same-session selection • inherited OX-32 contract";
+    color="#93b7d6"; style="rounded"; penwidth=1.3; fontsize=12; fontname="Helvetica";
+    current [label="Current world and\nactive forecast context"];
+    candidate [label="User chooses a compatible\napp-owned catalog entry"];
+    prepare [label="OX-32 prepares and\natomically activates it"];
+    saved [label="After successful commit, save\nstable packId selection key"];
+    same [label="Same place, catalog revision,\nselected instant, facts, and\ntimeline state during switch", fillcolor="#e7f3eb", color="#5c9270"];
+    failed_new [label="A different choice fails: keep the\nprevious saved key and world", fillcolor="#fff2dc", color="#bf8c38"];
+    failed_active [label="Reload of the active installed entry fails:\nfall back to bundled First City; retain\nthe saved key for retry", fillcolor="#fff2dc", color="#bf8c38"];
+    current -> candidate -> prepare;
+    prepare -> saved [label="committed"];
+    saved -> same;
+    prepare -> failed_new [label="not committed; different entry"];
+    prepare -> failed_active [label="not committed; same active entry"];
+  }
+
+  subgraph cluster_launch {
+    label="Cold launch • OX-58 catalog restore plus OX-61 selection restore";
+    color="#93c4a7"; style="rounded"; penwidth=1.3; fontsize=12; fontname="Helvetica";
+    startup [label="Existing weather startup path\nrestores forecast access"];
+    catalog [label="OX-58 reconstructs current\napp-owned registrations privately"];
+    key [label="Read saved packId key from\napp-private selection storage"];
+    match [shape=diamond, style=filled, fillcolor="#eef5fa", label="Same ID is present\nand compatible?"];
+    resolve [label="Resolve current committed\ngeneration through OX-57"];
+    activate [label="Reuse OX-32 candidate load\nand atomic activation"];
+    restored [label="Saved installed world is visible\nForecast stays available", fillcolor="#e7f3eb", color="#5c9270"];
+    missing [label="Unavailable or incompatible key\nbelongs to OX-62; do not erase it here", fillcolor="#fff2dc", color="#bf8c38"];
+    boundary [shape=note, style=filled, fillcolor="#fff5e3", color="#bf8c38",
+      label="The stored key contains theme identity only.\nLocation, catalog revision, selected instant, facts,\nand timeline scale use the existing startup path.\nNo cross-process continuity claim for those values."];
+    startup -> catalog;
+    catalog -> key;
+    key -> match;
+    match -> resolve [label="yes"];
+    resolve -> activate -> restored;
+    match -> missing [label="no"];
+    key -> boundary [style=dashed, arrowhead=none];
+  }
+
+  same -> startup [style=dashed, label="process ends"];
+}

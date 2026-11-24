@@ -68,7 +68,7 @@ internal enum class FirstCityElementRole {
     WEATHER_FIELD,
 }
 
-internal enum class FirstCityCanopyAsset { BASELINE, OLIVE }
+enum class FirstCityCanopyAsset { BASELINE, OLIVE }
 
 /** First City's cloud depth is authored per pass and remains independent of cloud meaning. */
 internal data class FirstCityCloudRenderStyle(
@@ -285,12 +285,11 @@ internal fun resolveFirstCityCanopy(
 }
 
 internal fun FirstCityComposition.canopyRenderInput(
-    declaration: FirstCitySemanticElement = requireNotNull(
-        FirstCitySemanticInventory.forRenderPass(FirstCityLayer.CANOPY)
-    ),
+    declaration: FirstCitySemanticElement? = null,
 ): FirstCityCanopyRenderInput {
-    return resolveFirstCityCanopy(weatherDecision, declaration.canopyDeclaration(),
-        requireNotNull(declaration.canopyAsset))
+    val selectedDeclaration = declaration ?: FirstCitySemanticInventory.canopy(canopyAsset)
+    return resolveFirstCityCanopy(weatherDecision, selectedDeclaration.canopyDeclaration(),
+        requireNotNull(selectedDeclaration.canopyAsset))
 }
 
 internal fun FirstCityComposition.cloudRenderInput(
@@ -329,6 +328,7 @@ data class FirstCityComposition(
     val moonCue: CityCueDecision,
     val hasWeatherState: Boolean,
     val layerOrder: List<FirstCityLayer>,
+    val canopyAsset: FirstCityCanopyAsset = FirstCityCanopyAsset.OLIVE,
 ) {
     val selectedInstant: Instant get() = weatherDecision.selectedInstant
     val sky: SceneSkyDecision? get() = weatherDecision.sky

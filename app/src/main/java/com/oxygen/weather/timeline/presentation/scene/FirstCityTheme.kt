@@ -45,11 +45,18 @@ object FirstCityTheme {
     )
 
     /** Compatibility entry point; all weather meaning is resolved by the shared decision seam. */
-    fun compose(reading: SceneReading, zone: ZoneId): FirstCityComposition =
-        compose(SceneWeatherDecision.resolve(reading, zone), zone)
+    fun compose(
+        reading: SceneReading,
+        zone: ZoneId,
+        canopyAsset: FirstCityCanopyAsset = FirstCityCanopyAsset.OLIVE,
+    ): FirstCityComposition = compose(SceneWeatherDecision.resolve(reading, zone), zone, canopyAsset)
 
     /** Compose the city-local treatment, cues, and layers from shared weather meaning. */
-    fun compose(weatherDecision: SceneWeatherDecision, zone: ZoneId): FirstCityComposition {
+    fun compose(
+        weatherDecision: SceneWeatherDecision,
+        zone: ZoneId,
+        canopyAsset: FirstCityCanopyAsset = FirstCityCanopyAsset.OLIVE,
+    ): FirstCityComposition {
         val reading = weatherDecision.reading
         val treatment = treatment(reading, zone)
         val sky = weatherDecision.sky
@@ -96,6 +103,7 @@ object FirstCityTheme {
             moonCue = moonCue,
             hasWeatherState = hasWeatherState,
             layerOrder = layerOrder,
+            canopyAsset = canopyAsset,
         )
     }
 

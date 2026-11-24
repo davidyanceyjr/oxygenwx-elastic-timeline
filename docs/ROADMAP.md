@@ -1435,6 +1435,8 @@ The SG workstream follows the owner-directed pivot recorded above and is grounde
 - **Cycle 174 — Reusable weather rendering across worlds:** roster order OX-07 → OX-45 → OX-08 → OX-46 → OX-47; dependency edges OX-07 → {OX-45, OX-08}, OX-08 → OX-46, and {OX-45, OX-46} → OX-47. The shared board must make cloud extraction, second-world cloud use, rain/snow extraction, and the cross-world depth/unknown-state proof independently reviewable.
 - **Separate outcomes:** OX-09 remains a repeat-selection reproducibility slice; OX-96 remains a renderer/package measurement slice and should precede further Park polish; OX-29 remains its own TEST slice.
 
+**Owner sequencing decision (2026-11-23):** At the owner's request, group OX-09, OX-96, OX-29, OX-58, OX-61, OX-62, OX-33, OX-69, OX-78, OX-98, OX-73, OX-39, OX-40, OX-79, OX-93, OX-59, and OX-60 in cycle 175 under the bounded objective of establishing local scene-pack platform and cross-world readiness. Preserve each slice's independent outcome and acceptance. OX-09 is the sole `NEXT` and first roster entry; the remaining slices stay `PLANNED` in the requested dependency-valid order. At intake, this selection started board preparation only; it did not itself approve boards, finalize or activate the plan, or authorize implementation.
+
 These groupings do not merge slice acceptance. Cycle 171 is complete. The owner selected OX-43 as the sole `NEXT` and OX-44 as the second `PLANNED` slice for cycle 172. The product owner approved the shared behavior and UI artwork board package on 2026-11-22; cycle 172 records the complete package fingerprints separately for both slices. Board approval does not authorize implementation.
 
 **Owner sequencing decision (2026-11-22):** The owner selected OX-12 as the sole `NEXT` and OX-12A as the second `PLANNED` slice for cycle 173, following the dependency-ordered grouping above. This records the slice order; the required board approvals are recorded on each slice below, and implementation remains unactivated.
@@ -1533,142 +1535,129 @@ These groupings do not merge slice acceptance. Cycle 171 is complete. The owner 
 **Evidence:** Cycle 174 targets `.codex/test-artifacts/174-weather-rendering-across-worlds/README.md` and `.codex/history/174-weather-rendering-across-worlds.md`; do not claim unperformed checks.
 **Slice board(s):** The product owner approved the shared cycle 174 behavior package `.codex/concepts/OX-174-reusable-weather-rendering-behavior-board.dot` with SVG/PNG renders and Markdown contract, plus UI artwork `.codex/concepts/OX-174-reusable-weather-rendering-ui-artwork-board.svg` with PNG review render, on 2026-11-22. Cycle 174 records the complete package fingerprints separately for OX-47. The boards independently show this slice's behavior and appearance gates; the conceptual UI artwork is not installed evidence.
 
-### OX-09 — Make repeat selections produce repeatable scenes — PLANNED
+### OX-09 — Make repeat selections produce repeatable scenes — DONE
 
 **Objective/scope:** Inspect reproducibility for the existing procedural elements on repeat selection and across scene/world changes. Apply stable seeds only where actual re-randomization is demonstrated; do not construct speculative cache machinery.
 **Depends on:** OX-38, OX-92.
 **Exit:** Evidence records the sampled repeat-selection result and either a proven no-change disposition or a scoped stable-seed correction with visually equivalent motion/selection meaning.
-**Evidence:** Future cycle-specific `.codex/test-artifacts/<cycle-id>/` and `.codex/history/<cycle-id>.md`; assign exact paths only when the slice is planned. Do not claim unperformed checks.
-**Slice board(s):** Objective-specific behavior board and UI artwork board pending for the affected installed states. Owner approval required.
-
-### OX-96 — Measure the first loaded pack and renderer baseline — PLANNED
+**Evidence:** Planned target `.codex/test-artifacts/175-pack-platform-readiness/OX-09-repeatability.md` and `.codex/history/175-pack-platform-readiness.md`; these are targets, not completed evidence. Do not claim unperformed checks.
+**Slice board(s):** Cycle 175's owner-approved shared behavior package `.codex/concepts/OX-175-pack-platform-readiness-behavior-board.dot` with SVG/PNG renders and companion contract, plus OX-09-only supplement `.codex/concepts/OX-175-OX-09-repeatability-behavior-board.dot` with SVG/PNG renders and companion contract. The product owner approved the supplement on 2026-11-23; the complete package fingerprints are recorded on OX-09 in the cycle 175 roster manifest. The shared UI artwork package `.codex/concepts/OX-175-pack-platform-readiness-ui-artwork-board.svg` with PNG render and companion contract is supplemented for OX-09 by `.codex/concepts/OX-175-OX-09-repeatability-ui-artwork-board.svg` with PNG render and companion contract. The owner approved this revised LIVE-state package on 2026-11-23 after display and review. Together the packages cover same-world repeats across First City and Open Landscape, the world switch, and return to First City while preserving the selected instant; LIVE states do not require or add a `DEMO DATA` badge or provenance UI. Their artwork is conceptual, not installed acceptance evidence.
+### OX-96 — Measure the first loaded pack and renderer baseline — DONE
 
 **Objective/scope:** Record focused selected-instant evaluation, first valid packaged-world rendering and one in-session theme-switch cost before Park polish. Do not implement caching or global performance refactoring in this measurement slice.
 **Depends on:** OX-55, OX-32.
 **Exit:** Reference-device measurements distinguish initial package/scene resolution, first frame and in-session switch from ordinary selected-time rendering; any bottleneck is recorded as observed, not assumed.
-**Evidence:** Future cycle-specific `.codex/test-artifacts/<cycle-id>/` and `.codex/history/<cycle-id>.md`; exact paths assigned when a cycle is planned.
-**Slice board(s):** Objective-specific behavior board pending; UI artwork board only if the approved scope changes visible output. No board approval or activation is claimed.
-
-### OX-29 — TEST: free-world and local pack build/import proof — PLANNED
+**Evidence:** Planned target `.codex/test-artifacts/175-pack-platform-readiness/OX-96-baseline.md` and `.codex/history/175-pack-platform-readiness.md`; these are targets, not completed evidence. Do not claim unperformed checks.
+**Slice board(s):** Cycle 175's owner-approved shared behavior package .codex/concepts/OX-175-pack-platform-readiness-behavior-board.dot, .codex/concepts/OX-175-pack-platform-readiness-behavior-board.svg, .codex/concepts/OX-175-pack-platform-readiness-behavior-board.png, and .codex/concepts/OX-175-pack-platform-readiness-behavior-board.md; its companion contract makes OX-96's behavior and exit independently reviewable. Product-owner approval is recorded for this slice in cycle 175's roster manifest. UI artwork is not applicable under the current slice scope, which does not change visible output.
+### OX-29 — TEST: free-world and local pack build/import proof — DONE
 
 **Objective/scope:** Independently test the free bundled scene, local pack builder/validator, valid and invalid developer-local imports, and first weather-preserving hot swap without any commerce provider or Park art prerequisite.
 **Depends on:** OX-57, OX-55, OX-56, OX-32.
 **Exit:** Installed matrix records free/no-purchase availability, reproducible local artifact import/validation, invalid rejection, alternate-world rendering and no-restart weather-truth-preserving switch; pass/fail/not-run cases are explicit.
-**Evidence:** Future cycle-specific `.codex/test-artifacts/<cycle-id>/` and `.codex/history/<cycle-id>.md`; assign exact paths only when the slice is planned. Do not claim unperformed checks.
-**Slice board(s):** Objective-specific TEST/coverage behavior board pending; UI artwork board only if the approved work changes visual presentation. Owner approval required.
-
-### OX-58 — Restore installed catalog entries after relaunch — PLANNED
+**Evidence:** Planned target `.codex/test-artifacts/175-pack-platform-readiness/OX-29-local-pack-proof.md` and `.codex/history/175-pack-platform-readiness.md`; these are targets, not completed evidence. Do not claim unperformed checks.
+**Slice board(s):** Cycle 175's owner-approved shared behavior package .codex/concepts/OX-175-pack-platform-readiness-behavior-board.dot, .codex/concepts/OX-175-pack-platform-readiness-behavior-board.svg, .codex/concepts/OX-175-pack-platform-readiness-behavior-board.png, and .codex/concepts/OX-175-pack-platform-readiness-behavior-board.md; its companion contract makes OX-29's behavior and exit independently reviewable. Product-owner approval is recorded for this slice in cycle 175's roster manifest. UI artwork is not applicable under the current slice scope, which does not change visible output.
+### OX-58 — Restore installed catalog entries after relaunch — DONE
 
 **Objective/scope:** Prove durable on-device app-owned catalog restoration rather than only in-memory visibility; keep this separate from remembered active-theme selection.
 **Depends on:** OX-57.
 **Exit:** After a cold relaunch, the same installed pack identity/version is discovered and the always-available bundled free entry remains; no transient memory-only catalog suffices.
-**Evidence:** Future cycle-specific `.codex/test-artifacts/<cycle-id>/` and `.codex/history/<cycle-id>.md`; assign exact paths only when the slice is planned. Do not claim unperformed checks.
-**Slice board(s):** Objective-specific behavior/contract board pending; UI artwork board only if approved scope changes visible output. Owner approval required.
+**Evidence:** Planned target `.codex/test-artifacts/175-pack-platform-readiness/OX-58-catalog-restoration.md` and `.codex/history/175-pack-platform-readiness.md`; these are targets, not completed evidence. Do not claim unperformed checks.
+**Slice board(s):** Cycle 175's owner-approved shared behavior package .codex/concepts/OX-175-pack-platform-readiness-behavior-board.dot, .codex/concepts/OX-175-pack-platform-readiness-behavior-board.svg, .codex/concepts/OX-175-pack-platform-readiness-behavior-board.png, and .codex/concepts/OX-175-pack-platform-readiness-behavior-board.md; its companion contract makes OX-58's behavior and exit independently reviewable. Product-owner approval is recorded for this slice in cycle 175's roster manifest. UI artwork is not applicable under the current slice scope, which does not change visible output.
+### OX-61 — Persist and restore the chosen installed theme — DONE
 
-### OX-61 — Persist and restore the chosen installed theme — PLANNED
-
-**Objective/scope:** Store a stable pack/variant selection key independently of place and forecast state, and restore a still-available compatible choice on launch. Do not implement Settings UI.
+**Objective/scope:** Store the stable app-owned pack ID after a compatible installed theme commits, independently of place and forecast state; restore a matching available compatible entry on launch. Explicit selection of a non-installed world clears the installed-theme key. A different failed candidate leaves the current world and key unchanged; a failed reload of the active installed entry keeps the existing First City fallback and saved key. Same-session switching retains OX-32 invariants. Do not persist location, catalog revision, selected instant, forecast facts, or timeline scale across process death, and do not implement Settings UI.
 **Depends on:** OX-32, OX-58.
-**Exit:** Installed selection survives a cold launch and reconstitutes the same world without changing weather facts or requiring a purchase provider.
-**Evidence:** Future cycle-specific `.codex/test-artifacts/<cycle-id>/` and `.codex/history/<cycle-id>.md`; assign exact paths only when the slice is planned. Do not claim unperformed checks.
-**Slice board(s):** Objective-specific behavior board and UI artwork board pending for the affected installed states. Owner approval required.
-
-### OX-62 — Restore the free world when the chosen theme is unavailable — PLANNED
+**Exit:** A previously selected compatible app-owned theme is restored after a cold launch and forecast access remains available through normal startup. Same-session switching preserves OX-32's place, catalog, selected-instant, forecast-fact, and timeline invariants; OX-61 does not claim those weather/time values survive process death and does not require a purchase provider.
+**Evidence:** Planned target `.codex/test-artifacts/175-pack-platform-readiness/OX-61-selection-restoration.md` and `.codex/history/175-pack-platform-readiness.md`; these are targets, not completed evidence. Do not claim unperformed checks.
+**Slice board(s):** The owner-approved cycle 175 shared behavior and UI artwork packages remain the common baseline. OX-61's selected-theme-only cold-launch boundary is clarified by `.codex/concepts/OX-175-OX-61-theme-persistence-behavior-board.dot` (with SVG/PNG renders and Markdown contract) and `.codex/concepts/OX-175-OX-61-theme-persistence-ui-board.svg` (with PNG review render and Markdown contract). The owner selected this acceptance boundary on 2026-11-23; the complete shared-plus-supplement fingerprints and approval are recorded on OX-61 in the cycle manifest.
+### OX-62 — Restore the free world when the chosen theme is unavailable — DONE
 
 **Objective/scope:** Recover from missing/disabled/incompatible active theme at relaunch using a controlled unavailable-entry fixture; do not require future update/removal UX OX-83. Keep the bundled free scene always available.
 **Depends on:** OX-61, OX-56.
 **Exit:** Cold launch with a previously selected theme unavailable shows safe free-world fallback, truthful catalog status and unchanged forecast access, with no commerce dependency.
-**Evidence:** Future cycle-specific `.codex/test-artifacts/<cycle-id>/` and `.codex/history/<cycle-id>.md`; assign exact paths only when the slice is planned. Do not claim unperformed checks.
-**Slice board(s):** Objective-specific behavior board and UI artwork board pending for the affected installed states. Owner approval required.
+**Evidence:** Planned target `.codex/test-artifacts/175-pack-platform-readiness/OX-62-unavailable-selection.md` and `.codex/history/175-pack-platform-readiness.md`; these are targets, not completed evidence. Do not claim unperformed checks.
+**Slice board(s):** Cycle 175's owner-approved shared behavior package .codex/concepts/OX-175-pack-platform-readiness-behavior-board.dot, .codex/concepts/OX-175-pack-platform-readiness-behavior-board.svg, .codex/concepts/OX-175-pack-platform-readiness-behavior-board.png, and .codex/concepts/OX-175-pack-platform-readiness-behavior-board.md; its companion contract makes OX-62's behavior and exit independently reviewable. Product-owner approval is recorded for this slice in cycle 175's roster manifest. UI artwork package .codex/concepts/OX-175-pack-platform-readiness-ui-artwork-board.svg with PNG review render .codex/concepts/OX-175-pack-platform-readiness-ui-artwork-board.png and companion .codex/concepts/OX-175-pack-platform-readiness-ui-artwork-board.md covers OX-62's affected states; Product-owner approval is recorded for this slice in cycle 175's roster manifest.
+### OX-33 — List installed compatible themes in application Settings — DONE
 
-### OX-33 — List installed compatible themes in application Settings — PLANNED
-
-**Objective/scope:** Add a bounded Jetpack Compose Settings theme list backed by the app-managed catalog, showing the free bundled world, installed alternate names and active/incompatible status. Do not implement selection mechanics, downloads or checkout.
+**Objective/scope:** Add a visible gear beside World that opens a read-only Jetpack Compose Settings theme list backed by the app-managed catalog, showing the bundled-free role, installed alternate names, active state, and distinct compatible/incompatible/disabled status. Do not implement selection mechanics, downloads, checkout, or shared-storage scans.
 **Depends on:** OX-31, OX-58.
 **Exit:** Installed Settings capture lists catalog-backed theme entries with correct compatible/active labels and accessible text; it does not scan shared device storage.
-**Evidence:** Future cycle-specific `.codex/test-artifacts/<cycle-id>/` and `.codex/history/<cycle-id>.md`; assign exact paths only when the slice is planned. Do not claim unperformed checks.
-**Slice board(s):** Objective-specific behavior board and UI artwork board pending for the affected installed states. Owner approval required.
-
-### OX-69 — Select themes from Settings using the existing hot-swap path — PLANNED
+**Evidence:** Planned target `.codex/test-artifacts/175-pack-platform-readiness/OX-33-settings-catalog.md` and `.codex/history/175-pack-platform-readiness.md`; these are targets, not completed evidence. Do not claim unperformed checks.
+**Slice board(s):** Cycle 175's owner-approved shared behavior package .codex/concepts/OX-175-pack-platform-readiness-behavior-board.dot, .codex/concepts/OX-175-pack-platform-readiness-behavior-board.svg, .codex/concepts/OX-175-pack-platform-readiness-behavior-board.png, and .codex/concepts/OX-175-pack-platform-readiness-behavior-board.md; its companion contract makes OX-33's behavior and exit independently reviewable. Product-owner approval is recorded for this slice in cycle 175's roster manifest. UI artwork package .codex/concepts/OX-175-pack-platform-readiness-ui-artwork-board.svg with PNG review render .codex/concepts/OX-175-pack-platform-readiness-ui-artwork-board.png and companion .codex/concepts/OX-175-pack-platform-readiness-ui-artwork-board.md covers OX-33's affected states; Product-owner approval is recorded for this slice in cycle 175's roster manifest.
+**Owner resolution (2026-11-23):** The owner approved the OX-33 supplements `.codex/concepts/OX-175-OX-33-settings-entry-behavior-board.dot` and `.svg`/`.png`/`.md`, plus `.codex/concepts/OX-175-OX-33-settings-entry-ui-artwork-board.svg` and `.png`/`.md`. The gear beside World opens Settings; the list is read-only. The bundled-free Living Urban Park role has no content-version value until a real Park revision exists; app-owned pack versions remain required. Cycle 175 records refreshed fingerprints for OX-33 only.
+### OX-69 — Select themes from Settings using the existing hot-swap path — DONE
 
 **Objective/scope:** Wire the Settings choice to OX-32 switching and OX-61 persistence; indicate active state, disable invalid choices, and preserve returning to the normal forecast. Do not duplicate scene-loading logic.
 **Depends on:** OX-33, OX-32, OX-61, OX-62.
 **Exit:** On device, selecting free and installed themes from Settings switches the displayed world without restart, persists across relaunch and makes fallback/disabled status clear with accessible actions.
-**Evidence:** Future cycle-specific `.codex/test-artifacts/<cycle-id>/` and `.codex/history/<cycle-id>.md`; assign exact paths only when the slice is planned. Do not claim unperformed checks.
-**Slice board(s):** Objective-specific behavior board and UI artwork board pending for the affected installed states. Owner approval required.
-
-### OX-78 — TEST: verify hot-swap, persistence and recovery — PLANNED
+**Evidence:** `.codex/test-artifacts/175-pack-platform-readiness/OX-69-settings-switch.md` and `OX-69-interaction.txt`, with installed screenshots, UI hierarchies, process/activity records, preferences, and world-probe logs. Cycle closeout is recorded in `.codex/history/175-pack-platform-readiness.md`.
+**Slice board(s):** Cycle 175's owner-approved shared behavior package .codex/concepts/OX-175-pack-platform-readiness-behavior-board.dot, .codex/concepts/OX-175-pack-platform-readiness-behavior-board.svg, .codex/concepts/OX-175-pack-platform-readiness-behavior-board.png, and .codex/concepts/OX-175-pack-platform-readiness-behavior-board.md; its companion contract makes OX-69's behavior and exit independently reviewable. Product-owner approval is recorded for this slice in cycle 175's roster manifest. UI artwork package .codex/concepts/OX-175-pack-platform-readiness-ui-artwork-board.svg with PNG review render .codex/concepts/OX-175-pack-platform-readiness-ui-artwork-board.png and companion .codex/concepts/OX-175-pack-platform-readiness-ui-artwork-board.md covers OX-69's affected states; Product-owner approval is recorded for this slice in cycle 175's roster manifest.
+### OX-78 — TEST: verify hot-swap, persistence and recovery — DONE
 
 **Objective/scope:** Exercise repeat in-session theme switches, cold restoration, missing selected packs and recovery across approved device/launch conditions.
 **Depends on:** OX-29, OX-61, OX-62, OX-69.
 **Exit:** Installed evidence records selection continuity, no restart and fallback behavior with explicit pass/fail/not-run outcomes.
-**Evidence:** Future cycle-specific `.codex/test-artifacts/<cycle-id>/` and `.codex/history/<cycle-id>.md`; assign exact paths only when the slice is planned. Do not claim unperformed checks.
-**Slice board(s):** Objective-specific TEST/coverage behavior board pending; UI artwork board only if the approved work changes visual presentation. Owner approval required.
+**Evidence:** `.codex/test-artifacts/175-pack-platform-readiness/OX-78-switch-recovery.md`, `OX-78-scenarios.csv`, `OX-78-recovery.png`, and `OX-78-process-launch.txt`, with linked installed screenshots, hierarchies, logs, process/activity records, and preference snapshots. Cycle closeout is recorded in `.codex/history/175-pack-platform-readiness.md`.
+**Slice board(s):** Cycle 175's owner-approved shared behavior package .codex/concepts/OX-175-pack-platform-readiness-behavior-board.dot, .codex/concepts/OX-175-pack-platform-readiness-behavior-board.svg, .codex/concepts/OX-175-pack-platform-readiness-behavior-board.png, and .codex/concepts/OX-175-pack-platform-readiness-behavior-board.md; its companion contract makes OX-78's behavior and exit independently reviewable. Product-owner approval is recorded for this slice in cycle 175's roster manifest. UI artwork is not applicable under the current slice scope, which does not change visible output.
+### OX-98 — TEST: core installed-theme choice accessibility — DONE
 
-### OX-98 — TEST: core installed-theme choice accessibility — PLANNED
-
-**Objective/scope:** Verify theme list announcements, disabled/unavailable statuses, focus order, selection activation and preserved exact weather access in the bundled and one installed world. No Park/Moon completion or payment provider required.
+**Objective/scope:** Verify accessible theme-list labels/status, focus order, selection activation and preserved exact weather access in the bundled and one installed world. No Park/Moon completion or payment provider required.
 **Depends on:** OX-69, OX-61, OX-62.
 **Exit:** Installed accessibility evidence covers the app-managed Settings theme list, active selection, disabled status, switch and recovery with actual pass/fail/not-run outcomes.
-**Evidence:** Future cycle-specific `.codex/test-artifacts/<cycle-id>/` and `.codex/history/<cycle-id>.md`; exact paths assigned when a cycle is planned.
-**Slice board(s):** Objective-specific behavior board pending; UI artwork board only if the approved scope changes visible output. No board approval or activation is claimed.
-
-### OX-73 — Measure theme-switch and restore costs — PLANNED
+**Owner scope decision (2026-11-23):** Spoken labels/actions are out of scope for OX-98 and remain not verified. Accessibility hierarchy and focus evidence do not substantiate audible output; OX-93 must preserve this limitation without claiming speech acceptance.
+**Evidence:** `.codex/test-artifacts/175-pack-platform-readiness/OX-98-accessibility.md` and `.codex/test-artifacts/175-pack-platform-readiness/OX-98-focus-log.txt` record the installed Pixel accessibility pass and spoken-output limitation; cycle closeout will be recorded in `.codex/history/175-pack-platform-readiness.md`.
+**Slice board(s):** Cycle 175's owner-approved shared behavior package .codex/concepts/OX-175-pack-platform-readiness-behavior-board.dot, .codex/concepts/OX-175-pack-platform-readiness-behavior-board.svg, .codex/concepts/OX-175-pack-platform-readiness-behavior-board.png, and .codex/concepts/OX-175-pack-platform-readiness-behavior-board.md; its companion contract makes OX-98's behavior and exit independently reviewable. Product-owner approval is recorded for this slice in cycle 175's roster manifest. UI artwork is not applicable under the current slice scope, which does not change visible output.
+### OX-73 — Measure theme-switch and restore costs — DONE
 
 **Objective/scope:** Measure repeated valid-pack switch and cold restore independently of final Park art. Report memory, latency and actual observed resource issues; do not automatically redesign catalog compilation.
 **Depends on:** OX-32, OX-61, OX-96.
 **Exit:** Measured same-session switches and cold restore produce observed costs with a retain/follow-up decision; any new optimization requires its own bounded approved slice.
-**Evidence:** Future cycle-specific `.codex/test-artifacts/<cycle-id>/` and `.codex/history/<cycle-id>.md`; assign exact paths only when the slice is planned. Do not claim unperformed checks.
-**Slice board(s):** Objective-specific behavior/contract board pending; UI artwork board only if approved scope changes visible output. Owner approval required.
+**Evidence:** `.codex/test-artifacts/175-pack-platform-readiness/OX-73-switch-costs.md`, `OX-73-timings.csv`, `OX-73-memory.csv`, `OX-73-cold-restore.csv`, `OX-73-device.txt`, the linked OX-96 baseline, and the retained switch/cold-restore traces; cycle closeout will be recorded in `.codex/history/175-pack-platform-readiness.md`.
+**Slice board(s):** Cycle 175's owner-approved shared behavior package .codex/concepts/OX-175-pack-platform-readiness-behavior-board.dot, .codex/concepts/OX-175-pack-platform-readiness-behavior-board.svg, .codex/concepts/OX-175-pack-platform-readiness-behavior-board.png, and .codex/concepts/OX-175-pack-platform-readiness-behavior-board.md; its companion contract makes OX-73's behavior and exit independently reviewable. Product-owner approval is recorded for this slice in cycle 175's roster manifest. UI artwork is not applicable under the current slice scope, which does not change visible output.
+### OX-39 — Swap one visual treatment through definition data — DONE
 
-### OX-39 — Swap one visual treatment through definition data — PLANNED
-
-**Objective/scope:** Allow one existing rendering capability to consume an alternate visual style/treatment declared in the scene definition. Avoid an arbitrary plugin renderer or unrestricted shader framework.
+**Objective/scope:** Allow one existing rendering capability to consume a definition-declared alternate visual treatment. For First City CANOPY, the owner-selected pair is the existing baseline `sg2_city_canopy` and olive `sg2_city_canopy_olive` assets; preserve CANOPY identity, role, pass, geometry, weather input, and forecast facts.
 **Depends on:** OX-24, OX-36.
 **Exit:** Two styles render from the same selected weather input with unchanged weather facts, element identity and depth; installed captures distinguish the treatment.
-**Evidence:** Future cycle-specific `.codex/test-artifacts/<cycle-id>/` and `.codex/history/<cycle-id>.md`; assign exact paths only when the slice is planned. Do not claim unperformed checks.
-**Slice board(s):** Objective-specific behavior board and UI artwork board pending for the affected installed states. Owner approval required.
-
-### OX-40 — Prove substitution parity across the existing worlds — PLANNED
+**Evidence:** `.codex/test-artifacts/175-pack-platform-readiness/OX-39-visual-treatment.md`, `OX-39-baseline.png`, `OX-39-alternate-treatment.png`, and matching hierarchy captures. The cycle closeout will be recorded in `.codex/history/175-pack-platform-readiness.md`.
+**Slice board(s):** Cycle 175's owner-approved shared behavior package .codex/concepts/OX-175-pack-platform-readiness-behavior-board.dot, .codex/concepts/OX-175-pack-platform-readiness-behavior-board.svg, .codex/concepts/OX-175-pack-platform-readiness-behavior-board.png, and .codex/concepts/OX-175-pack-platform-readiness-behavior-board.md; its companion contract makes OX-39's behavior and exit independently reviewable. OX-39's owner-approved treatment supplement is .codex/concepts/OX-175-OX-39-canopy-treatment-behavior-board.dot, .svg, .png, and .md, fingerprinted for OX-39 only. The UI artwork package .codex/concepts/OX-175-pack-platform-readiness-ui-artwork-board.svg with PNG review render .codex/concepts/OX-175-pack-platform-readiness-ui-artwork-board.png and companion .codex/concepts/OX-175-pack-platform-readiness-ui-artwork-board.md covers OX-39's affected states; Product-owner approval is recorded for this slice in cycle 175's roster manifest.
+### OX-40 — Prove substitution parity across the existing worlds — DONE
 
 **Objective/scope:** Compare a supported equivalent role across two already existing worlds and record actual substitution parity and capability gaps. Do not require those worlds to have identical content or add Park artwork.
 **Depends on:** OX-39, OX-92.
 **Exit:** Installed comparisons of the affected scene element(s) preserve shared weather meaning, forecast access and unknown-state handling in both existing worlds; unsupported capabilities are documented rather than silently assumed.
-**Evidence:** Future cycle-specific `.codex/test-artifacts/<cycle-id>/` and `.codex/history/<cycle-id>.md`; assign exact paths only when the slice is planned. Do not claim unperformed checks.
-**Slice board(s):** Objective-specific behavior board and UI artwork board pending for the affected installed states. Owner approval required.
-
-### OX-79 — TEST: verify weather truth and source support across packs — PLANNED
+**Evidence:** `.codex/test-artifacts/175-pack-platform-readiness/OX-40-cross-world-comparison.md`, with installed supported-rain and carried-rain/missing-cover captures and matching hierarchies for First City and Open Landscape, plus device/build and activation records. Cycle closeout will be recorded in `.codex/history/175-pack-platform-readiness.md`.
+**Slice board(s):** Cycle 175's owner-approved shared behavior package .codex/concepts/OX-175-pack-platform-readiness-behavior-board.dot, .codex/concepts/OX-175-pack-platform-readiness-behavior-board.svg, .codex/concepts/OX-175-pack-platform-readiness-behavior-board.png, and .codex/concepts/OX-175-pack-platform-readiness-behavior-board.md; its companion contract makes OX-40's behavior and exit independently reviewable. Product-owner approval is recorded for this slice in cycle 175's roster manifest. UI artwork package .codex/concepts/OX-175-pack-platform-readiness-ui-artwork-board.svg with PNG review render .codex/concepts/OX-175-pack-platform-readiness-ui-artwork-board.png and companion .codex/concepts/OX-175-pack-platform-readiness-ui-artwork-board.md covers OX-40's affected states; Product-owner approval is recorded for this slice in cycle 175's roster manifest.
+### OX-79 — TEST: verify weather truth and source support across packs — DONE
 
 **Objective/scope:** Verify supported, carried and unavailable weather semantics and exact selected-time forecast fact parity across bundled and installed worlds. Use established existing-world routes; do not wait for Moon detail, Park mural art or paid launch.
 **Depends on:** OX-78, OX-36, OX-40, OX-12.
 **Exit:** A scoped installed cross-pack matrix identifies exact selected instant, source validity, units, supported/missing interpretation and unchanged weather/catalog during switching with pass/fail/not-run per scenario.
-**Evidence:** Future cycle-specific `.codex/test-artifacts/<cycle-id>/` and `.codex/history/<cycle-id>.md`; assign exact paths only when the slice is planned. Do not claim unperformed checks.
-**Slice board(s):** Objective-specific TEST/coverage behavior board pending; UI artwork board only if the approved work changes visual presentation. Owner approval required.
-
-### OX-93 — TEST: record first-generation local platform readiness — PLANNED
+**Evidence:** `.codex/test-artifacts/175-pack-platform-readiness/OX-79-weather-truth.md`, the six-cell `.csv` matrix, structured snapshots, screenshots, matching hierarchies, world-probe logs, device record, and hierarchy comparison. Cycle closeout will be recorded in `.codex/history/175-pack-platform-readiness.md`.
+**Slice board(s):** Cycle 175's owner-approved shared behavior package .codex/concepts/OX-175-pack-platform-readiness-behavior-board.dot, .codex/concepts/OX-175-pack-platform-readiness-behavior-board.svg, .codex/concepts/OX-175-pack-platform-readiness-behavior-board.png, and .codex/concepts/OX-175-pack-platform-readiness-behavior-board.md; its companion contract makes OX-79's behavior and exit independently reviewable. Product-owner approval is recorded for this slice in cycle 175's roster manifest. UI artwork is not applicable under the current slice scope, which does not change visible output.
+### OX-93 — TEST: record first-generation local platform readiness — DONE
 
 **Objective/scope:** Reconcile independent build/import, weather-safe live switching, persisted theme selection, installed catalog, Settings and core accessibility/performance evidence. Decide the local theming-platform milestone separately from Park artwork and paid distribution; owner approval is not assumed.
 **Depends on:** OX-29, OX-78, OX-79, OX-98, OX-73.
 **Exit:** Owner-facing readiness matrix distinguishes proven core platform capabilities, failed/not-run items and outstanding blockers; an owner decision is explicitly recorded or remains pending without claiming release approval.
-**Evidence:** Future cycle-specific `.codex/test-artifacts/<cycle-id>/` and `.codex/history/<cycle-id>.md`; exact paths assigned when a cycle is planned.
-**Slice board(s):** Objective-specific behavior board pending; UI artwork board only if the approved scope changes visible output. No board approval or activation is claimed.
-
-### OX-59 — Prove theme-switch and timeline-scrub interleaving — PLANNED
+**Evidence:** `.codex/test-artifacts/175-pack-platform-readiness/OX-93-readiness.md` and `.codex/test-artifacts/175-pack-platform-readiness/OX-93-dependency-index.md`; the owner milestone decision remains pending. Cycle closeout will be recorded in `.codex/history/175-pack-platform-readiness.md`.
+**Slice board(s):** Cycle 175's owner-approved shared behavior package .codex/concepts/OX-175-pack-platform-readiness-behavior-board.dot, .codex/concepts/OX-175-pack-platform-readiness-behavior-board.svg, .codex/concepts/OX-175-pack-platform-readiness-behavior-board.png, and .codex/concepts/OX-175-pack-platform-readiness-behavior-board.md; its companion contract makes OX-93's behavior and exit independently reviewable. Product-owner approval is recorded for this slice in cycle 175's roster manifest. UI artwork is not applicable under the current slice scope, which does not change visible output.
+### OX-59 — Prove theme-switch and timeline-scrub interleaving — DONE
 
 **Objective/scope:** Exercise one bounded overlap between active timeline scrubbing and theme switching to establish coherent selected-instant ownership in the currently installed world. This is a distinct interaction proof, not postponed correction of OX-32 basic invariants.
 **Depends on:** OX-32.
 **Exit:** An installed focused scrub/switch sequence produces one coherent final selected instant and one active scene with no stale selection or gesture theft; the same contract already holds on ordinary OX-32 swaps.
-**Evidence:** Future cycle-specific `.codex/test-artifacts/<cycle-id>/` and `.codex/history/<cycle-id>.md`; assign exact paths only when the slice is planned. Do not claim unperformed checks.
-**Slice board(s):** Objective-specific behavior board and UI artwork board pending for the affected installed states. Owner approval required.
-
-### OX-60 — Manage theme-specific visual resources across swaps — PLANNED
+**Outcome:** PASS for one owner-selected installed overlap: hold the timeline scrub while a second touch selects the installed OX29 baseline, then release the scrub pointer. The installed scene committed and retained the exact scrub instant after release. This is one Pixel 3 XL interaction only.
+**Evidence:** `.codex/test-artifacts/175-pack-platform-readiness/OX-59-scrub-switch.md`, `OX-59-event-order.txt`, before/scrub-held/installed-while-held/after screenshots and hierarchies, and `OX-59-world-probe.log` under that evidence directory.
+**Slice board(s):** Cycle 175's owner-approved shared behavior package .codex/concepts/OX-175-pack-platform-readiness-behavior-board.dot, .codex/concepts/OX-175-pack-platform-readiness-behavior-board.svg, .codex/concepts/OX-175-pack-platform-readiness-behavior-board.png, and .codex/concepts/OX-175-pack-platform-readiness-behavior-board.md; its companion contract makes OX-59's behavior and exit independently reviewable. Product-owner approval is recorded for this slice in cycle 175's roster manifest. UI artwork package .codex/concepts/OX-175-pack-platform-readiness-ui-artwork-board.svg with PNG review render .codex/concepts/OX-175-pack-platform-readiness-ui-artwork-board.png and companion .codex/concepts/OX-175-pack-platform-readiness-ui-artwork-board.md covers OX-59's affected states; Product-owner approval is recorded for this slice in cycle 175's roster manifest.
+### OX-60 — Manage theme-specific visual resources across swaps — DONE
 
 **Objective/scope:** Bound lifecycle ownership for activated assets, transformed hit regions and scene-specific animation state when one theme is replaced. Do not introduce an unrelated caching/graphics framework.
 **Depends on:** OX-32.
 **Exit:** Repeated free ↔ alternate switching leaves no stale visual layers or old-theme interactive targets; affected resource ownership is inspectable on device.
-**Evidence:** Future cycle-specific `.codex/test-artifacts/<cycle-id>/` and `.codex/history/<cycle-id>.md`; assign exact paths only when the slice is planned. Do not claim unperformed checks.
-**Slice board(s):** Objective-specific behavior board and UI artwork board pending for the affected installed states. Owner approval required.
-
+**Outcome:** PASS on the owner-selected five Living Urban Park ↔ installed OX29-baseline-test round trips (10 transitions) on one Pixel 3 XL. Ten screenshot/hierarchy pairs show only the active scene and retain the exact OX-05 forecast and shared controls. The inspected scene path has no scene-owned hit target, recorded as not applicable under the owner's decision. Resource ownership is documented. Heap/cache release is not measured; the planned MP4 is a screenshot montage, and the original 117.72-second partial recording is preserved.
+**Evidence:** `.codex/test-artifacts/175-pack-platform-readiness/OX-60-resource-lifecycle.md`, `OX-60-resource-ownership.txt`, `OX-60-target-audit.txt`, `OX-60-event-order.txt`, `OX-60-transition-contact-sheet.png`, ten transition screenshots/hierarchies, `OX-60-free-alternate-free.mp4` (still-image montage), `OX-60-screenrecord-partial-117s.mp4`, and `OX-60-final-state.png`.
+**Slice board(s):** Cycle 175's owner-approved shared behavior package .codex/concepts/OX-175-pack-platform-readiness-behavior-board.dot, .codex/concepts/OX-175-pack-platform-readiness-behavior-board.svg, .codex/concepts/OX-175-pack-platform-readiness-behavior-board.png, and .codex/concepts/OX-175-pack-platform-readiness-behavior-board.md; its companion contract makes OX-60's behavior and exit independently reviewable. Product-owner approval is recorded for this slice in cycle 175's roster manifest. UI artwork package .codex/concepts/OX-175-pack-platform-readiness-ui-artwork-board.svg with PNG review render .codex/concepts/OX-175-pack-platform-readiness-ui-artwork-board.png and companion .codex/concepts/OX-175-pack-platform-readiness-ui-artwork-board.md covers OX-60's affected states; Product-owner approval is recorded for this slice in cycle 175's roster manifest.
 ### OX-48 — Polish mural source-time and carried-state disclosure — PLANNED
 
 **Objective/scope:** Refine wall-integrated source-valid-time, carried-state and demo/unavailable disclosure typography and placement without changing the truthful binding already implemented by OX-12A.

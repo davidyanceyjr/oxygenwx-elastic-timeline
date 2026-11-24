@@ -2,6 +2,7 @@ package com.oxygen.weather.timeline.ui
 
 import android.graphics.Paint
 import android.graphics.Rect
+import androidx.activity.compose.BackHandler
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.Canvas
@@ -34,6 +35,7 @@ import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.selection.selectable
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.AlertDialog
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
@@ -65,6 +67,7 @@ import androidx.compose.ui.platform.LocalLayoutDirection
 import androidx.compose.ui.res.imageResource
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.semantics.CustomAccessibilityAction
+import androidx.compose.ui.semantics.clearAndSetSemantics
 import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.semantics.customActions
@@ -131,8 +134,10 @@ fun CatalogTimeLabScreen(
     diagnosticOverlay: (@Composable () -> Unit)? = null,
     onWorldObservation: ((String) -> Unit)? = null,
     worldControlBelowDebugBanner: Boolean = false,
-    installedThemeChoices: List<InstalledThemeCatalogEntry> = emptyList(),
+    themeCatalogEntries: List<InstalledThemeCatalogEntry> = emptyList(),
     resolveInstalledScenePack: ((InstalledThemeCatalogEntry) -> ScenePackCurrentGeneration?)? = null,
+    selectedInstalledThemeId: String? = null,
+    onInstalledThemeSelectionChanged: ((String?) -> Unit)? = null,
 ) = CatalogTimeLabScreenContent(
     presentation.timeline,
     presentation.reading,
@@ -142,8 +147,10 @@ fun CatalogTimeLabScreen(
     diagnosticOverlay,
     onWorldObservation,
     worldControlBelowDebugBanner,
-    installedThemeChoices,
+    themeCatalogEntries,
     resolveInstalledScenePack,
+    selectedInstalledThemeId,
+    onInstalledThemeSelectionChanged,
 )
 
 @Composable
@@ -160,11 +167,15 @@ private fun CatalogTimeLabScreenContent(
     diagnosticOverlay: (@Composable () -> Unit)? = null,
     onWorldObservation: ((String) -> Unit)? = null,
     worldControlBelowDebugBanner: Boolean = false,
-    installedThemeChoices: List<InstalledThemeCatalogEntry> = emptyList(),
+    themeCatalogEntries: List<InstalledThemeCatalogEntry> = emptyList(),
     resolveInstalledScenePack: ((InstalledThemeCatalogEntry) -> ScenePackCurrentGeneration?)? = null,
+    selectedInstalledThemeId: String? = null,
+    onInstalledThemeSelectionChanged: ((String?) -> Unit)? = null,
 ) {
     var precision by remember(view.generation) { mutableStateOf(false) }
     var browserOpen by remember { mutableStateOf(false) }
+    var settingsOpen by remember { mutableStateOf(false) }
+    BackHandler(enabled = settingsOpen) { settingsOpen = false }
     val worldChoice = remember { CatalogWorldChoice<FirstCityCanopyCandidate>() }
     var worldChooserOpen by remember { mutableStateOf(false) }
     val committedWorld = worldChoice.committed
@@ -175,11 +186,65 @@ private fun CatalogTimeLabScreenContent(
         CatalogWorld.OLIVE_PACK, CatalogWorld.INSTALLED_PACK -> committedWorld.candidate?.image
         else -> null
     }
-    val selectableInstalledThemes = if (BuildConfig.DEBUG) installedThemeChoices.filter { entry ->
+    val selectableInstalledThemes = if (BuildConfig.DEBUG) themeCatalogEntries.filter { entry ->
         entry.id.value == FirstCityCanopyCandidateLoader.INSTALLED_BASELINE_PACK_ID &&
             entry.origin == InstalledThemeOrigin.APP_OWNED &&
             entry.validity == InstalledThemeValidity.COMPATIBLE
     } else emptyList()
+    var restoredInstalledThemeId by remember { mutableStateOf<String?>(null) }
+    val onInstalledThemeCommitted: (InstalledThemeCatalogEntry) -> Unit = { entry ->
+        restoredInstalledThemeId = entry.id.value
+        onInstalledThemeSelectionChanged?.invoke(entry.id.value)
+    }
+    val selectCatalogTheme: (InstalledThemeCatalogEntry) -> Unit = { entry ->
+        when (entry.origin) {
+            InstalledThemeOrigin.BUNDLED_FREE -> {
+                if (entry.validity == InstalledThemeValidity.ALWAYS_AVAILABLE) {
+                    worldChoice.choose(CatalogWorld.LIVING_URBAN_PARK)
+                    onInstalledThemeSelectionChanged?.invoke(null)
+                    onWorldObservation?.invoke("selected:${worldChoice.committed.observationId}")
+                }
+            }
+            InstalledThemeOrigin.APP_OWNED -> {
+                if (selectableInstalledThemes.any { it.id == entry.id }) {
+                    scope.launch {
+                        val committed = worldChoice.chooseInstalled(
+                            entry,
+                            { selected ->
+                                FirstCityCanopyCandidateLoader.loadInstalledBaseline(selected) { candidateEntry ->
+                                    resolveInstalledScenePack?.invoke(candidateEntry)
+                                }
+                            },
+                            FirstCityCanopyCandidateLoader::withinBudget,
+                            onCommitted = onInstalledThemeCommitted,
+                        )
+                        if (committed) onWorldObservation?.invoke(
+                            "selected:${worldChoice.committed.observationId}:${worldChoice.committed.candidate?.contentIdentity}",
+                        )
+                    }
+                }
+            }
+        }
+    }
+    LaunchedEffect(selectedInstalledThemeId, selectableInstalledThemes) {
+        val savedId = selectedInstalledThemeId ?: return@LaunchedEffect
+        if (restoredInstalledThemeId == savedId) return@LaunchedEffect
+        val entry = selectableInstalledThemes.firstOrNull { it.id.value == savedId }
+            ?: return@LaunchedEffect
+        val restored = worldChoice.chooseInstalled(
+            entry,
+            { selected ->
+                FirstCityCanopyCandidateLoader.loadInstalledBaseline(selected) { candidateEntry ->
+                    resolveInstalledScenePack?.invoke(candidateEntry)
+                }
+            },
+            FirstCityCanopyCandidateLoader::withinBudget,
+            onCommitted = onInstalledThemeCommitted,
+        )
+        if (restored) onWorldObservation?.invoke(
+            "restored:${worldChoice.committed.observationId}:${worldChoice.committed.candidate?.contentIdentity}",
+        )
+    }
     val compact = with(LocalDensity.current) { fontScale >= 1.3f }
     val latestSelected by rememberUpdatedState(view.selectedInstant)
     val isRtl = LocalLayoutDirection.current == LayoutDirection.Rtl
@@ -260,16 +325,40 @@ private fun CatalogTimeLabScreenContent(
             }
         }
         if (sceneReading != null) {
-            TextButton(
-                onClick = { onWorldObservation?.invoke("open:${committedWorld.observationId}"); worldChooserOpen = true },
+            Row(
                 modifier = Modifier.align(Alignment.TopCenter).statusBarsPadding()
-                    .padding(top = if (worldControlBelowDebugBanner) 90.dp else 30.dp)
-                    .background(Color(0xDD173044), RoundedCornerShape(24.dp))
-                    .border(1.dp, Color(0xFF9ECBD8), RoundedCornerShape(24.dp))
-                    .testTag("catalogWorldControl"),
+                    .padding(top = if (worldControlBelowDebugBanner) 90.dp else 30.dp),
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.spacedBy(6.dp),
             ) {
-                Text("World: ${committedWorld.label} ▾", color = Color.White,
-                    style = TextStyle(shadow = readoutShadow))
+                TextButton(
+                    onClick = { onWorldObservation?.invoke("open:${committedWorld.observationId}"); worldChooserOpen = true },
+                    modifier = Modifier
+                        .background(Color(0xDD173044), RoundedCornerShape(24.dp))
+                        .border(1.dp, Color(0xFF9ECBD8), RoundedCornerShape(24.dp))
+                        .testTag("catalogWorldControl"),
+                ) {
+                    Text("World: ${committedWorld.label} ▾", color = Color.White,
+                        style = TextStyle(shadow = readoutShadow))
+                }
+                IconButton(
+                    onClick = { settingsOpen = true },
+                    modifier = Modifier
+                        .size(48.dp)
+                        .background(Color(0xDD173044), RoundedCornerShape(18.dp))
+                        .border(1.dp, Color(0xFF9ECBD8), RoundedCornerShape(18.dp))
+                        .clearAndSetSemantics {
+                            contentDescription = "Settings"
+                            role = Role.Button
+                            onClick(label = "Open Settings") {
+                                settingsOpen = true
+                                true
+                            }
+                        }
+                        .testTag("catalogSettingsControl"),
+                ) {
+                    Text("⚙", color = Color.White, fontSize = 21.sp)
+                }
             }
         }
         Column(
@@ -458,12 +547,16 @@ private fun CatalogTimeLabScreenContent(
                                             val committed = worldChoice.chooseLoaded(option, {
                                                 FirstCityCanopyCandidateLoader.loadBundledOlive(context)
                                             }, FirstCityCanopyCandidateLoader::withinBudget)
-                                            if (committed) onWorldObservation?.invoke(
-                                                "selected:${worldChoice.committed.observationId}",
-                                            )
+                                            if (committed) {
+                                                onInstalledThemeSelectionChanged?.invoke(null)
+                                                onWorldObservation?.invoke(
+                                                    "selected:${worldChoice.committed.observationId}",
+                                                )
+                                            }
                                         }
                                     } else {
                                         worldChoice.choose(option)
+                                        onInstalledThemeSelectionChanged?.invoke(null)
                                         onWorldObservation?.invoke("selected:${worldChoice.committed.observationId}")
                                     }
                                 },
@@ -489,7 +582,8 @@ private fun CatalogTimeLabScreenContent(
                                             FirstCityCanopyCandidateLoader.loadInstalledBaseline(selected) { candidateEntry ->
                                                 resolveInstalledScenePack?.invoke(candidateEntry)
                                             }
-                                        }, FirstCityCanopyCandidateLoader::withinBudget)
+                                        }, FirstCityCanopyCandidateLoader::withinBudget,
+                                            onCommitted = onInstalledThemeCommitted)
                                         if (committed) onWorldObservation?.invoke(
                                             "selected:${worldChoice.committed.observationId}:${worldChoice.committed.candidate?.contentIdentity}",
                                         )
@@ -510,6 +604,16 @@ private fun CatalogTimeLabScreenContent(
                 confirmButton = {
                     TextButton(onClick = { worldChooserOpen = false }) { Text("Dismiss") }
                 },
+            )
+        }
+        if (settingsOpen) {
+            CatalogSettingsScreen(
+                catalogEntries = themeCatalogEntries,
+                activeInstalledThemeId = committedWorld.installedTheme?.id?.value,
+                bundledFreeThemeActive = committedWorld.world == CatalogWorld.LIVING_URBAN_PARK &&
+                    committedWorld.installedTheme == null,
+                onBack = { settingsOpen = false },
+                onSelectTheme = selectCatalogTheme,
             )
         }
     }
@@ -570,6 +674,7 @@ internal class CatalogWorldChoice<T>(initialWorld: CatalogWorld = CatalogWorld.L
         entry: InstalledThemeCatalogEntry,
         load: suspend (InstalledThemeCatalogEntry) -> T?,
         admissible: (T) -> Boolean,
+        onCommitted: ((InstalledThemeCatalogEntry) -> Unit)? = null,
     ): Boolean {
         val wasCommittedInstalledWorld = committed.world == CatalogWorld.INSTALLED_PACK &&
             committed.installedTheme == entry
@@ -578,6 +683,7 @@ internal class CatalogWorldChoice<T>(initialWorld: CatalogWorld = CatalogWorld.L
         if (requestId != request) return false
         if (candidate != null && admissible(candidate)) {
             committed = CatalogWorldCommittedSelection(CatalogWorld.INSTALLED_PACK, entry, candidate)
+            onCommitted?.invoke(entry)
             return true
         }
         if (wasCommittedInstalledWorld) {

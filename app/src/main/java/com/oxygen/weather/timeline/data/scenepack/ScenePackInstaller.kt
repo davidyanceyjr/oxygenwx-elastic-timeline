@@ -114,8 +114,9 @@ internal object ScenePackInstallLimits {
 
 /**
  * Installs only complete OX-91 accepted values. The app-private per-pack current pointer is the
- * sole selector for a committed generation; this class never discovers registrations by scanning
- * staging folders. Cold-relaunch enumeration remains outside OX-57.
+ * sole selector for a committed generation. OX-58 restores catalog registrations by enumerating
+ * only direct pack roots in private storage and reading each committed pointer and record; it does
+ * not discover registrations in staging or generation folders.
  */
 class ScenePackInstaller(private val appFilesDirectory: File) {
     private val installLock = Any()
@@ -142,10 +143,29 @@ class ScenePackInstaller(private val appFilesDirectory: File) {
         }
     }
 
-    /** The query remains explicit: only IDs installed by this live process are considered. */
+    /** Query registrations known to this instance after install or restoreCatalog. */
     fun queryCatalog(bundledFreeMetadata: BundledFreeThemeMetadata): List<InstalledThemeCatalogEntry> =
         synchronized(installLock) {
             val registrations = knownPackIds.mapNotNull(::readCurrentRegistration)
+            InstalledThemeCatalog.query(bundledFreeMetadata, registrations)
+        }
+
+    /** Restore only registrations selected by committed per-pack pointers under app-private storage. */
+    fun restoreCatalog(bundledFreeMetadata: BundledFreeThemeMetadata): List<InstalledThemeCatalogEntry> =
+        synchronized(installLock) {
+            knownPackIds.clear()
+            val registrations = mutableListOf<AppOwnedThemeRegistration>()
+            storageRoot.listFiles().orEmpty().forEach { packRoot ->
+                if (!packRoot.isDirectory ||
+                    !PACK_ID.matches(packRoot.name) ||
+                    Files.isSymbolicLink(packRoot.toPath()) ||
+                    !ScenePackInstallPaths.isConfined(storageRoot, packRoot)
+                ) return@forEach
+
+                val registration = readCurrentRegistration(packRoot.name) ?: return@forEach
+                knownPackIds += packRoot.name
+                registrations += registration
+            }
             InstalledThemeCatalog.query(bundledFreeMetadata, registrations)
         }
 

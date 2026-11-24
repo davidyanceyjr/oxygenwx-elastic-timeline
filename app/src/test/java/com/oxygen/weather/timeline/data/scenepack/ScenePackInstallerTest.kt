@@ -42,11 +42,11 @@ class ScenePackInstallerTest {
         val bundled = catalog.single { it.id == InstalledThemeCatalog.BUNDLED_FREE_THEME_ID }
         val installed = catalog.single { it.id == InstalledThemeId("pack-atomic") }
         assertEquals("Debug bundled-free fixture", bundled.displayName)
-        assertEquals("ox57-debug-fixture-v1", bundled.version.value)
+        assertEquals("ox57-debug-fixture-v1", bundled.version?.value)
         assertEquals(InstalledThemeOrigin.APP_OWNED, installed.origin)
         assertEquals(InstalledThemeValidity.COMPATIBLE, installed.validity)
         assertEquals("OX-57 local test data", installed.displayName)
-        assertEquals("ox57-installed-test-v1", installed.version.value)
+        assertEquals("ox57-installed-test-v1", installed.version?.value)
         assertNoBundledFixtureValuesInStorage(appFiles)
 
         val resource = File(appFiles, "installed-scene-packs/pack-atomic/generations")
@@ -80,9 +80,9 @@ class ScenePackInstallerTest {
             BundledFreeThemeMetadata("Debug bundled-free fixture", InstalledThemeVersion("ox57-debug-fixture-v1")),
         )
         val installed = catalog.single { it.id == InstalledThemeId("pack-atomic") }
-        assertEquals("ox57-first-test-v1", installed.version.value)
+        assertEquals("ox57-first-test-v1", installed.version?.value)
         assertEquals(InstalledThemeValidity.COMPATIBLE, installed.validity)
-        assertFalse(catalog.any { it.id == InstalledThemeId("pack-atomic") && it.version.value == "ox57-replacement-test-v1" })
+        assertFalse(catalog.any { it.id == InstalledThemeId("pack-atomic") && it.version?.value == "ox57-replacement-test-v1" })
 
         val packRoot = File(appFiles, "installed-scene-packs/pack-atomic")
         assertFalse(File(packRoot, "staging").exists())

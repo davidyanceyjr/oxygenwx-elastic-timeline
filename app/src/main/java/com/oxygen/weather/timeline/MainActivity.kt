@@ -40,6 +40,7 @@ import com.oxygen.weather.timeline.ui.CatalogTimeLabScreen
 import com.oxygen.weather.timeline.ui.LocationSelectorController
 import com.oxygen.weather.timeline.ui.LocationSelectorPanel
 import com.oxygen.weather.timeline.presentation.CatalogTimelinePresenter
+import com.oxygen.weather.timeline.presentation.scene.FirstCityCanopyAsset
 import com.oxygen.weather.timeline.presentation.SavedLocationRailTemperatureProjection
 import com.oxygen.weather.timeline.data.catalog.CatalogStorageDatabase
 import com.oxygen.weather.timeline.data.catalog.CatalogStorageNamespace
@@ -64,6 +65,7 @@ import com.oxygen.weather.timeline.data.catalog.RecordedCatalogSource
 import com.oxygen.weather.timeline.data.catalog.LiveCatalogRepository
 import com.oxygen.weather.timeline.data.openmeteo.OpenMeteoCatalogSource
 import com.oxygen.weather.timeline.data.scenepack.InstalledThemeCatalogEntry
+import com.oxygen.weather.timeline.data.scenepack.InstalledThemeCatalog
 import kotlinx.coroutines.launch
 import android.content.Intent
 import java.util.concurrent.atomic.AtomicLong
@@ -83,12 +85,19 @@ class MainActivity : ComponentActivity(), ActivityVariantDelegate.Host {
     private var pendingForegroundUpdate: LocationId? = null
     private var pendingForegroundLoadingObserved = false
     private var pendingForegroundError by mutableStateOf<String?>(null)
-    private var installedThemeChoices by mutableStateOf(emptyList<InstalledThemeCatalogEntry>())
+    private var themeCatalogEntries by mutableStateOf(
+        InstalledThemeCatalog.query(InstalledThemeCatalog.BUNDLED_FREE_ROLE_METADATA, emptyList()),
+    )
+    private var selectedInstalledThemeId by mutableStateOf<String?>(null)
     private var debugCoordinatorRequestCount: AtomicLong? = null
     private var debugSourceLoadCount: AtomicLong? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        selectedInstalledThemeId = getSharedPreferences(
+            SELECTED_THEME_PREFERENCES,
+            android.content.Context.MODE_PRIVATE,
+        ).getString(SELECTED_THEME_PACK_ID, null)
         val isDebuggable = applicationInfo.flags and ApplicationInfo.FLAG_DEBUGGABLE != 0
         debugCoordinatorRequestCount = if (isDebuggable) AtomicLong() else null
         debugSourceLoadCount = if (isDebuggable) AtomicLong() else null
@@ -165,6 +174,11 @@ class MainActivity : ComponentActivity(), ActivityVariantDelegate.Host {
             variantDelegate?.createFixturePlaceSearcher(this) ?: OpenMeteoPlaceSearcher()
         } else OpenMeteoPlaceSearcher()
         val openLocationSelector = isDebuggable && intent.getBooleanExtra(EXTRA_LOCATION_SELECTOR, false)
+        val debugCanopyAsset = if (isDebuggable) when (intent.getStringExtra(EXTRA_OX39_CANOPY_ASSET)) {
+            "baseline" -> FirstCityCanopyAsset.BASELINE
+            "olive" -> FirstCityCanopyAsset.OLIVE
+            else -> null
+        } else null
         val forceSg2NullWeather = isDebuggable && intent.getBooleanExtra(EXTRA_SG2_NULL_WEATHER, false)
         val forceSg2MissingOptionalLayer = isDebuggable && intent.getBooleanExtra(EXTRA_SG2_MISSING_OPTIONAL_LAYER, false)
         val showSnowPreview = isDebuggable && intent.getBooleanExtra(EXTRA_PREVIEW_SNOW, false)
@@ -257,8 +271,13 @@ class MainActivity : ComponentActivity(), ActivityVariantDelegate.Host {
                             val scenePresentation = if (forceSg2NullWeather) variantPresentation.copy(
                                 timeline = variantPresentation.timeline.copy(scene = null),
                             ) else variantPresentation
+                            val treatmentPresentation = debugCanopyAsset?.let { asset ->
+                                scenePresentation.copy(
+                                    composition = scenePresentation.composition.copy(canopyAsset = asset),
+                                )
+                            } ?: scenePresentation
                             CatalogTimeLabScreen(
-                            presentation = scenePresentation,
+                            presentation = treatmentPresentation,
                             onSelectInstant = activationCoordinator::selectInstant,
                             onReturnToNow = {
                                 activationCoordinator.selectInstant(
@@ -295,9 +314,13 @@ class MainActivity : ComponentActivity(), ActivityVariantDelegate.Host {
                             }) else null,
                             worldControlBelowDebugBanner = isDebuggable &&
                                 matchingActive.origin != CatalogOrigin.LIVE,
-                            installedThemeChoices = if (isDebuggable) installedThemeChoices else emptyList(),
+                            themeCatalogEntries = themeCatalogEntries,
                             resolveInstalledScenePack = if (isDebuggable) {
                                 { entry -> variantDelegate?.resolveInstalledScenePack(this@MainActivity, entry) }
+                            } else null,
+                            selectedInstalledThemeId = if (isDebuggable && debugCanopyAsset == null) selectedInstalledThemeId else null,
+                            onInstalledThemeSelectionChanged = if (isDebuggable && debugCanopyAsset == null) {
+                                { packId -> persistInstalledThemeSelection(packId) }
                             } else null,
                         ) }
                         else -> Box(Modifier.fillMaxSize().background(Color(0xFF11263D))) {
@@ -378,8 +401,20 @@ class MainActivity : ComponentActivity(), ActivityVariantDelegate.Host {
 
     override fun restoreStartupCatalog() = activationCoordinator.restoreStartup()
 
-    override fun publishInstalledThemeChoices(entries: List<InstalledThemeCatalogEntry>) {
-        installedThemeChoices = entries
+    override fun publishThemeCatalog(entries: List<InstalledThemeCatalogEntry>) {
+        themeCatalogEntries = entries
+    }
+
+    private fun persistInstalledThemeSelection(packId: String?) {
+        val preferences = getSharedPreferences(
+            SELECTED_THEME_PREFERENCES,
+            android.content.Context.MODE_PRIVATE,
+        )
+        preferences.edit().apply {
+            if (packId == null) remove(SELECTED_THEME_PACK_ID)
+            else putString(SELECTED_THEME_PACK_ID, packId)
+        }.apply()
+        selectedInstalledThemeId = packId
     }
 
     override fun onNewIntent(intent: Intent) {
@@ -413,8 +448,11 @@ private const val EXTRA_ATM6_CLEAR_NIGHT = "atm6_clear_night"
 private const val EXTRA_ATM6_HOUR = "atm6_hour"
 private const val EXTRA_LOCATION_SELECTOR = "location_selector"
 private const val EXTRA_LOCATION_FIXTURE_SEARCH = "location_fixture_search"
+private const val EXTRA_OX39_CANOPY_ASSET = "ox39_canopy_asset"
 private const val EXTRA_SG2_NULL_WEATHER = "sg2_null_weather"
 private const val EXTRA_SG2_MISSING_OPTIONAL_LAYER = "sg2_missing_optional_layer"
+internal const val SELECTED_THEME_PREFERENCES = "selected_installed_theme"
+internal const val SELECTED_THEME_PACK_ID = "selected_pack_id"
 @androidx.compose.runtime.Composable
 private fun FixturePrecipitationPreview(hourOffset: Int) {
     val view = ForecastProjection.fromHourOffset(hourOffset.toDouble(), precision = true)

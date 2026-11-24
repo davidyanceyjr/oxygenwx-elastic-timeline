@@ -1,0 +1,102 @@
+digraph PackPlatformReadiness {
+  graph [
+    label="Oxygen Time Lab — Cycle 175\nPack Platform and Cross-World Readiness\nShared behavior map • proposed for owner review • no implementation authorized",
+    labelloc=t,
+    labeljust=l,
+    fontsize=26,
+    fontname="Helvetica",
+    rankdir=TB,
+    compound=true,
+    splines=ortho,
+    nodesep=0.42,
+    ranksep=0.88,
+    pad=0.42,
+    bgcolor="#f5f7fa",
+    dpi=160
+  ];
+
+  node [shape=box, style="rounded,filled", fontname="Helvetica", fontsize=12,
+        color="#52657a", fillcolor="#ffffff", margin="0.14,0.10", penwidth=1.1];
+  edge [color="#536a83", penwidth=1.35, arrowsize=0.72, fontname="Helvetica", fontsize=9];
+
+  foundations [shape=note, fillcolor="#e4edf6", color="#37536f", fontsize=10,
+    label="Resolved foundations (DONE)\nOX-19 / OX-32: world choice preserves weather and timeline state\nOX-31 / OX-41: app-owned catalog and bundled-free role\nOX-55 / OX-57 / OX-56: renderer, local install, resolution recovery\nOX-24 / OX-36 / OX-38 / OX-92: scene substitution and typed weather inputs\nOX-12: exact selected-time reading and evidence"];
+
+  invariants [shape=note, fillcolor="#fff2d8", color="#b27a18", fontsize=10,
+    label="Across every switch and substitution\nKeep the same place, catalog revision, exact selected instant, forecast facts, and timeline state.\nNo switch-triggered forecast fetch or Activity/process restart.\nActivate a complete candidate atomically; preserve supported, carried, and unavailable weather truth.\nNo new plausibility rules, paid channel, Park polish, or executable pack content."];
+
+  subgraph cluster_baselines {
+    label="A. Repeatability, baseline, and local proof — independent exits";
+    color="#9ab6d2"; style="rounded"; penwidth=1.2; fontname="Helvetica"; fontsize=12;
+    ox09 [fillcolor="#eaf3fb", label="OX-09 • repeat selection\nSample the same world and selected time again.\nRecord repeatability; add stable seeds only if re-randomization is observed.\nPreserve the meaning of selection and motion."];
+    ox96 [fillcolor="#eaf3fb", label="OX-96 • first-pack baseline\nMeasure selected-time evaluation, package/scene resolution, first frame, and one in-session switch separately.\nRecord the reference device and workload.\nMeasurement only; no cache or global refactor."];
+    ox29 [fillcolor="#eaf3fb", label="OX-29 • TEST: local build/import proof\nCover bundled free access, reproducible local artifact, valid and invalid imports, alternate rendering, and first weather-safe switch.\nReport pass / fail / not run; no commerce provider."];
+    ox09 -> ox96 -> ox29 [style=invis, weight=8];
+  }
+
+  subgraph cluster_persistence {
+    label="B. Catalog and launch restoration";
+    color="#94c9ad"; style="rounded"; penwidth=1.2; fontname="Helvetica"; fontsize=12;
+    ox58 [fillcolor="#e8f5ed", label="OX-58 • restore catalog\nAfter cold relaunch, rediscover the same app-owned pack ID/version.\nKeep the bundled free entry present.\nDo not rely on process memory or scan shared storage."];
+    ox61 [fillcolor="#e8f5ed", label="OX-61 • restore chosen theme\nPersist a stable pack/variant choice separately from place and forecast state.\nRestore it when still available and compatible.\nSettings UI is outside this slice."];
+    ox62 [fillcolor="#fff2d8", color="#b27a18", label="OX-62 • unavailable choice\nIf the saved theme is unavailable at launch, restore the OX-41 bundled free default: Living Urban Park.\nShow truthful catalog status; preserve forecast access.\nOX-56's First City fallback remains limited to its resolution-failure path."];
+  }
+
+  subgraph cluster_settings {
+    label="C. Settings catalog and selection";
+    color="#94c9ad"; style="rounded"; penwidth=1.2; fontname="Helvetica"; fontsize=12;
+    ox33 [fillcolor="#e8f5ed", label="OX-33 • list themes\nSettings lists the bundled free world and installed catalog entries.\nShow compatible, incompatible, and active status as text.\nNo selection, download, or checkout behavior."];
+    ox69 [fillcolor="#e8f5ed", label="OX-69 • select from Settings\nRoute a valid choice through the existing OX-32 hot-swap path and OX-61 persistence.\nKeep invalid entries disabled and status clear.\nDo not duplicate scene loading."];
+  }
+
+  subgraph cluster_verification {
+    label="D. Installed verification and measured switch cost";
+    color="#d3b887"; style="rounded"; penwidth=1.2; fontname="Helvetica"; fontsize=12;
+    ox78 [fillcolor="#fff7e6", label="OX-78 • TEST: switching and recovery\nExercise repeat switches, cold restoration, unavailable selection, and recovery.\nRecord continuity, no restart, and fallback with explicit outcomes."];
+    ox98 [fillcolor="#fff7e6", label="OX-98 • TEST: core choice accessibility\nCheck Settings announcements, focus, disabled/unavailable status, selection, and exact weather access.\nUse the bundled and one installed world.\nKeep broad system acceptance out of this slice."];
+    ox73 [fillcolor="#fff7e6", label="OX-73 • switch/restore cost\nMeasure repeated valid switches and cold restore after OX-96.\nReport memory and latency, then record retain/follow-up.\nAny optimization needs a separate slice."];
+    ox78 -> ox98 -> ox73 [style=invis, weight=3];
+  }
+
+  subgraph cluster_substitution {
+    label="E. Definition-driven visual substitution and cross-pack truth";
+    color="#c7abd9"; style="rounded"; penwidth=1.2; fontname="Helvetica"; fontsize=12;
+    ox39 [fillcolor="#f2eafa", label="OX-39 • one visual treatment\nDeclare an alternate treatment for one existing rendering capability.\nKeep the same weather input, element identity, and depth.\nNo arbitrary plug-in renderer."];
+    ox40 [fillcolor="#f2eafa", label="OX-40 • two-world parity\nCompare the First City CANOPY and the adapted left Open Landscape tree group.\nRecord shared weather meaning, forecast access, unknown handling, and unsupported gaps.\nDo not add Park art."];
+    ox79 [fillcolor="#fff7e6", label="OX-79 • TEST: truth across packs\nFor supported, carried, and unavailable cases, compare exact instant, source validity, units, and interpretation across bundled/installed worlds.\nRecord pass / fail / not run per case."];
+  }
+
+  subgraph cluster_readiness {
+    label="F. Readiness summary and separate switch-specific proofs";
+    color="#9ba8b7"; style="rounded"; penwidth=1.2; fontname="Helvetica"; fontsize=12;
+    ox93 [fillcolor="#e9edf2", label="OX-93 • TEST: local platform readiness\nReconcile OX-29, OX-78, OX-79, OX-98, and OX-73.\nSeparate proven, failed, not-run, and blocked capabilities.\nRecord an owner milestone decision; no release approval."];
+    ox59 [fillcolor="#e9edf2", label="OX-59 • scrub/switch overlap\nOverlap one timeline scrub with one theme switch.\nEnd with one coherent selected instant and active scene, without stale selection or gesture theft.\nDistinct from ordinary OX-32 switching."];
+    ox60 [fillcolor="#e9edf2", label="OX-60 • theme resource lifecycle\nAfter repeated free ↔ alternate swaps, remove old visual layers, transformed hit regions, and animation state.\nKeep only the current theme's resources and targets.\nNo unrelated cache framework."];
+    ox93 -> ox59 -> ox60 [style=invis, weight=3];
+  }
+
+  ox58 -> ox61;
+  ox61 -> ox62;
+  ox58 -> ox33;
+  ox33 -> ox69;
+  ox61 -> ox69;
+  ox62 -> ox69;
+  ox29 -> ox78;
+  ox61 -> ox78;
+  ox62 -> ox78;
+  ox69 -> ox78;
+  ox69 -> ox98;
+  ox61 -> ox98;
+  ox62 -> ox98;
+  ox96 -> ox73;
+  ox61 -> ox73;
+  ox39 -> ox40;
+  ox40 -> ox79;
+  ox78 -> ox79;
+  ox29 -> ox93;
+  ox78 -> ox93;
+  ox79 -> ox93;
+  ox98 -> ox93;
+  ox73 -> ox93;
+
+}

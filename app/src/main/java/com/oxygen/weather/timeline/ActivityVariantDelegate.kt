@@ -42,7 +42,7 @@ interface ActivityVariantDelegate {
         val activityScope: LifecycleCoroutineScope
         val savedLocations: SavedLocationRepository
         val activationCoordinator: CatalogActivationCoordinator
-        fun publishInstalledThemeChoices(entries: List<InstalledThemeCatalogEntry>) = Unit
+        fun publishThemeCatalog(entries: List<InstalledThemeCatalogEntry>) = Unit
         fun restoreStartupCatalog()
         fun setDebugSessionMenuVisible(visible: Boolean) = Unit
         fun closeLocationSelector() = Unit

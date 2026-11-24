@@ -52,9 +52,17 @@ pointer is published. The superseded generation is removed after commit. A
 failure before pointer publication leaves the prior generation selected; an
 in-process cleanup failure is reported and does not change that pointer.
 
-The current OX-57 catalog query uses registrations known to the live installer
-instance. Cold-relaunch enumeration and restoration are assigned to OX-58.
-OX-57 does not claim recovery from process death or power loss during commit.
+On MainActivity creation, OX-58 enumerates only direct pack-ID directories
+under the app-private `files/installed-scene-packs/` root. It restores an
+app-owned registration only when that pack's bounded `current-generation`
+pointer selects a readable committed install record with the same `packId`.
+Staging and generation directories are not scanned for catalog entries, and
+shared storage is never searched. The catalog query still always supplies the
+bundled-free entry. Restoring catalog availability does not restore the
+selected theme; OX-61 owns that behavior by storing the stable app-owned
+`packId` separately and resolving it through the current compatible catalog
+registration. OX-61 does not persist weather or timeline state. OX-57 does not
+claim recovery from process death or power loss during commit.
 
 ## OX-57 install budgets
 

@@ -1,0 +1,232 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="2200" height="1560" viewBox="0 0 2200 1560">
+  <defs>
+    <style>
+      .bg { fill:#f4f6f8; }
+      .card { fill:#fff; stroke:#bdc8d3; stroke-width:2; }
+      .head { fill:#1f3348; font:700 22px Arial, sans-serif; }
+      .title { fill:#243b53; font:700 18px Arial, sans-serif; }
+      .body { fill:#364a5e; font:16px Arial, sans-serif; }
+      .small { fill:#52677c; font:14px Arial, sans-serif; }
+      .tiny { fill:#617589; font:12px Arial, sans-serif; }
+      .screen { fill:#fbfcfd; stroke:#26384a; stroke-width:3; }
+      .line { stroke:#d7dfe6; stroke-width:1.5; }
+      .muted { fill:#eef2f5; stroke:#c7d1db; stroke-width:1.5; }
+      .active { fill:#e6f3eb; stroke:#5e9775; stroke-width:2; }
+      .selected { fill:#eaf1fb; stroke:#6083ae; stroke-width:2; }
+      .disabled { fill:#f1f2f3; stroke:#a8b2bd; stroke-width:1.5; }
+      .accent { fill:#54779c; }
+      .warm { fill:#f3e7d3; stroke:#c1985f; stroke-width:1.5; }
+      .nav { stroke:#6987a4; stroke-width:4; stroke-linecap:round; }
+      .sceneSky { fill:#dce8f0; }
+      .sceneHorizon { fill:#c8d5c5; }
+      .tree { fill:#698b6f; }
+      .tree2 { fill:#78977b; }
+      .cloud { fill:#fff; stroke:#a8bac9; stroke-width:1.2; }
+      .ghost { fill:#d7dce1; stroke:#a1adb8; stroke-width:2; stroke-dasharray:7 6; }
+      .world { fill:#eaf0f4; stroke:#8ca0b2; stroke-width:1.4; }
+      .arrow { stroke:#6381a0; stroke-width:3; fill:none; marker-end:url(#arrowhead); }
+    </style>
+    <marker id="arrowhead" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto">
+      <polygon points="0 0, 10 3.5, 0 7" fill="#6381a0"/>
+    </marker>
+  </defs>
+  <rect class="bg" width="2200" height="1560"/>
+  <text x="58" y="53" class="head">Oxygen Time Lab • Cycle 175</text>
+  <text x="58" y="91" fill="#263c52" font-family="Arial, sans-serif" font-size="30" font-weight="700">Pack Platform and Cross-World Readiness — UI Artwork Board</text>
+  <text x="58" y="124" class="small">Proposed schematic states • pending product-owner review • conceptual artwork only, not installed acceptance evidence</text>
+
+  <!-- Settings list: OX-33 and OX-69 -->
+  <g transform="translate(55,155)">
+    <rect class="card" width="680" height="435" rx="18"/>
+    <text x="24" y="39" class="title">OX-33 / OX-69 — Settings catalog and selection</text>
+    <rect class="screen" x="30" y="62" width="284" height="342" rx="28"/>
+    <rect x="42" y="75" width="260" height="316" rx="15" fill="#fff"/>
+    <text x="60" y="108" class="title">Settings</text>
+    <text x="60" y="137" class="small">Weather world</text>
+    <rect class="active" x="52" y="151" width="240" height="55" rx="9"/>
+    <text x="64" y="174" class="body">Living Urban Park</text>
+    <text x="64" y="194" class="tiny">Included • Active • Free</text>
+    <text x="271" y="182" class="body">✓</text>
+    <line class="line" x1="54" y1="211" x2="289" y2="211"/>
+    <rect class="selected" x="52" y="218" width="240" height="57" rx="9"/>
+    <text x="64" y="242" class="body">Installed alternate</text>
+    <text x="64" y="262" class="tiny">Compatible • Available</text>
+    <text x="271" y="249" class="body">○</text>
+    <rect class="disabled" x="52" y="286" width="240" height="57" rx="9"/>
+    <text x="64" y="310" class="body">Unavailable theme</text>
+    <text x="64" y="330" class="tiny">Incompatible • Disabled</text>
+    <text x="337" y="101" class="body">Catalog-backed rows show:</text>
+    <text x="355" y="137" class="body">• bundled free role</text>
+    <text x="355" y="166" class="body">• installed compatible name</text>
+    <text x="355" y="195" class="body">• active / unavailable status</text>
+    <path class="arrow" d="M317 248 C345 248, 345 248, 369 248"/>
+    <rect class="muted" x="348" y="278" width="286" height="89" rx="12"/>
+    <text x="365" y="309" class="small">Selecting a valid row uses the</text>
+    <text x="365" y="333" class="small">existing hot-swap path; no new</text>
+    <text x="365" y="357" class="small">download, checkout, or loader UI.</text>
+  </g>
+
+  <!-- Compatible launch restoration: OX-61 -->
+  <g transform="translate(760,155)">
+    <rect class="card" width="680" height="435" rx="18"/>
+    <text x="24" y="39" class="title">OX-61 — Restore a saved compatible choice</text>
+    <rect class="muted" x="32" y="67" width="616" height="40" rx="9"/>
+    <text x="50" y="93" class="small">Cold launch • saved pack/variant key resolves as available and compatible</text>
+    <rect class="sceneSky" x="42" y="124" width="594" height="244" rx="12"/>
+    <path class="sceneHorizon" d="M42 282 Q190 242 324 279 Q450 245 636 274 L636 368 L42 368 Z"/>
+    <circle cx="536" cy="170" r="25" fill="#f0d9a6"/>
+    <path class="cloud" d="M150 195 C147 180 161 169 177 174 C184 154 216 157 220 179 C240 175 250 192 243 204 L163 204 Z"/>
+    <text x="67" y="153" class="small">Installed alternate world restored</text>
+    <rect x="72" y="300" width="112" height="46" rx="10" fill="#fff" stroke="#bac8d4"/>
+    <text x="87" y="320" class="tiny">Forecast fact</text>
+    <text x="87" y="338" class="small">unchanged</text>
+    <rect x="202" y="300" width="160" height="46" rx="10" fill="#fff" stroke="#bac8d4"/>
+    <text x="218" y="320" class="tiny">Exact selected instant</text>
+    <text x="218" y="338" class="small">unchanged</text>
+    <line class="nav" x1="78" y1="394" x2="600" y2="394"/>
+    <line x1="369" y1="380" x2="369" y2="408" stroke="#344e68" stroke-width="4"/>
+    <text x="384" y="417" class="tiny">timeline selection retained</text>
+  </g>
+
+  <!-- Unavailable launch fallback: OX-62 -->
+  <g transform="translate(1465,155)">
+    <rect class="card" width="680" height="435" rx="18"/>
+    <text x="24" y="39" class="title">OX-62 — Unavailable saved theme at launch</text>
+    <rect class="warm" x="32" y="67" width="616" height="48" rx="9"/>
+    <text x="50" y="97" class="body">Restore the OX-41 free default: Living Urban Park</text>
+    <rect class="sceneSky" x="42" y="130" width="594" height="207" rx="12"/>
+    <path class="sceneHorizon" d="M42 258 Q190 235 324 257 Q450 235 636 252 L636 337 L42 337 Z"/>
+    <text x="65" y="164" class="small">Bundled free scene</text>
+    <rect x="68" y="275" width="143" height="45" rx="9" fill="#fff" stroke="#bac8d4"/>
+    <text x="82" y="295" class="tiny">Forecast facts</text>
+    <text x="82" y="313" class="small">unchanged</text>
+    <rect x="224" y="275" width="163" height="45" rx="9" fill="#fff" stroke="#bac8d4"/>
+    <text x="239" y="295" class="tiny">Selected instant</text>
+    <text x="239" y="313" class="small">unchanged</text>
+    <line class="nav" x1="72" y1="358" x2="590" y2="358"/>
+    <line x1="383" y1="345" x2="383" y2="371" stroke="#344e68" stroke-width="4"/>
+    <text x="48" y="392" class="small">Settings still identifies the saved entry as unavailable.</text>
+    <text x="48" y="416" class="tiny">No new dialog/banner; OX-56 First City resolution fallback is separate.</text>
+  </g>
+
+  <!-- Repeatability: OX-09 -->
+  <g transform="translate(55,620)">
+    <rect class="card" width="680" height="435" rx="18"/>
+    <text x="24" y="39" class="title">OX-09 — Repeat the same scene selection</text>
+    <text x="31" y="73" class="small">Same world • same exact selected instant • same forecast inputs</text>
+    <rect class="sceneSky" x="32" y="91" width="285" height="222" rx="12"/>
+    <rect class="sceneSky" x="364" y="91" width="285" height="222" rx="12"/>
+    <path class="sceneHorizon" d="M32 249 Q130 226 205 248 Q263 232 317 245 L317 313 L32 313 Z"/>
+    <path class="sceneHorizon" d="M364 249 Q462 226 537 248 Q595 232 649 245 L649 313 L364 313 Z"/>
+    <path class="tree" d="M124 260 L145 198 L166 260 Z M150 263 L179 185 L207 263 Z M190 267 L216 208 L242 267 Z"/>
+    <path class="tree" d="M456 260 L477 198 L498 260 Z M482 263 L511 185 L539 263 Z M522 267 L548 208 L574 267 Z"/>
+    <path class="cloud" d="M67 148 C64 136 75 128 87 132 C93 116 116 119 120 137 C134 134 143 145 138 156 L77 156 Z"/>
+    <path class="cloud" d="M399 148 C396 136 407 128 419 132 C425 116 448 119 452 137 C466 134 475 145 470 156 L409 156 Z"/>
+    <text x="44" y="112" class="tiny">Sample A</text>
+    <text x="376" y="112" class="tiny">Sample B</text>
+    <path class="arrow" d="M320 202 L360 202"/>
+    <rect class="muted" x="93" y="337" width="491" height="59" rx="12"/>
+    <text x="121" y="363" class="body">Expected: same scene for the same selection</text>
+    <text x="121" y="385" class="small">If it differs, correct only demonstrated re-randomization.</text>
+  </g>
+
+  <!-- Treatment and cross-world substitution: OX-39/40 -->
+  <g transform="translate(760,620)">
+    <rect class="card" width="680" height="435" rx="18"/>
+    <text x="24" y="39" class="title">OX-39 / OX-40 — Treatment and world parity</text>
+    <text x="31" y="72" class="small">Same selected weather input and shared vegetation role; authored treatment may vary.</text>
+    <rect class="sceneSky" x="32" y="92" width="292" height="214" rx="10"/>
+    <rect class="sceneSky" x="354" y="92" width="292" height="214" rx="10"/>
+    <path class="sceneHorizon" d="M32 247 Q115 229 193 245 Q255 228 324 243 L324 306 L32 306 Z"/>
+    <path class="sceneHorizon" d="M354 247 Q437 229 515 245 Q577 228 646 243 L646 306 L354 306 Z"/>
+    <path class="tree" d="M105 263 L130 181 L155 263 Z M140 268 L174 166 L209 268 Z M190 267 L214 192 L239 267 Z"/>
+    <path class="tree2" d="M423 263 L448 181 L473 263 Z M458 268 L492 166 L527 268 Z M508 267 L532 192 L557 267 Z"/>
+    <text x="49" y="117" class="body">First City • CANOPY</text>
+    <text x="371" y="117" class="body">Open Landscape • left tree group</text>
+    <text x="49" y="291" class="tiny">Treatment A</text>
+    <text x="371" y="291" class="tiny">Treatment B</text>
+    <rect class="muted" x="45" y="326" width="590" height="66" rx="10"/>
+    <text x="64" y="353" class="small">Shared: selected weather meaning, exact time, and forecast access.</text>
+    <text x="64" y="378" class="small">Compare supported roles only; document capability gaps.</text>
+  </g>
+
+  <!-- Scrub and switch overlap: OX-59 -->
+  <g transform="translate(1465,620)">
+    <rect class="card" width="680" height="435" rx="18"/>
+    <text x="24" y="39" class="title">OX-59 — Scrub while a theme switch completes</text>
+    <text x="31" y="73" class="small">One overlap • the playhead and active scene settle together</text>
+    <rect class="sceneSky" x="32" y="91" width="616" height="170" rx="12"/>
+    <path class="sceneHorizon" d="M32 211 Q180 181 318 210 Q458 182 648 207 L648 261 L32 261 Z"/>
+    <text x="55" y="123" class="body">Alternate world becomes active</text>
+    <rect class="muted" x="54" y="145" width="170" height="44" rx="9"/>
+    <text x="70" y="173" class="small">Forecast unchanged</text>
+    <text x="54" y="290" class="small">Timeline • scrub target and final selection</text>
+    <line class="nav" x1="66" y1="326" x2="615" y2="326"/>
+    <line x1="402" y1="308" x2="402" y2="347" stroke="#344e68" stroke-width="4"/>
+    <circle cx="402" cy="326" r="9" fill="#54779c"/>
+    <text x="355" y="372" class="body">same exact selected instant</text>
+    <text x="47" y="411" class="tiny">No stale time, scene mismatch, or gesture theft; no new gesture/control.</text>
+  </g>
+
+  <!-- Resource lifecycle: OX-60 -->
+  <g transform="translate(55,1085)">
+    <rect class="card" width="680" height="420" rx="18"/>
+    <text x="24" y="39" class="title">OX-60 — Retire old theme-owned visual resources</text>
+    <text x="31" y="73" class="small">After repeated free ↔ alternate swaps</text>
+    <rect class="muted" x="36" y="94" width="275" height="192" rx="12"/>
+    <rect class="sceneSky" x="51" y="109" width="245" height="162" rx="8"/>
+    <path class="sceneHorizon" d="M51 234 Q120 211 183 232 Q238 218 296 232 L296 271 L51 271 Z"/>
+    <path class="tree" d="M107 244 L132 172 L157 244 Z"/>
+    <circle cx="145" cy="190" r="11" class="ghost"/>
+    <text x="58" y="129" class="tiny">Previous theme</text>
+    <rect class="active" x="369" y="94" width="275" height="192" rx="12"/>
+    <rect class="sceneSky" x="384" y="109" width="245" height="162" rx="8"/>
+    <path class="sceneHorizon" d="M384 234 Q453 211 516 232 Q571 218 629 232 L629 271 L384 271 Z"/>
+    <path class="tree2" d="M440 244 L465 172 L490 244 Z M495 248 L520 164 L545 248 Z"/>
+    <circle cx="478" cy="191" r="11" fill="#54779c"/>
+    <text x="397" y="129" class="tiny">Current theme only</text>
+    <path class="arrow" d="M316 185 L359 185"/>
+    <text x="54" y="321" class="small">Retired: old layer • old hit target • old animation state</text>
+    <text x="54" y="349" class="small">Current: new layer • current target • current animation</text>
+    <text x="54" y="389" class="tiny">Resource ownership is inspectable; no unrelated cache framework.</text>
+  </g>
+
+  <!-- Shared visible facts and timeline invariants -->
+  <g transform="translate(760,1085)">
+    <rect class="card" width="680" height="420" rx="18"/>
+    <text x="24" y="39" class="title">Shared visible invariants across the artwork</text>
+    <rect class="world" x="36" y="72" width="268" height="252" rx="14"/>
+    <rect class="sceneSky" x="50" y="86" width="240" height="222" rx="9"/>
+    <path class="sceneHorizon" d="M50 265 Q123 239 181 263 Q232 246 290 262 L290 308 L50 308 Z"/>
+    <circle cx="246" cy="126" r="19" fill="#f0d9a6"/>
+    <text x="331" y="100" class="body">Forecast facts stay readable as text.</text>
+    <text x="331" y="135" class="small">Place and catalog revision stay fixed.</text>
+    <text x="331" y="166" class="small">Selected time stays exact.</text>
+    <text x="331" y="197" class="small">Supported / carried / unavailable</text>
+    <text x="331" y="220" class="small">meaning stays truthful.</text>
+    <text x="331" y="259" class="small">No switch-triggered weather fetch.</text>
+    <line class="nav" x1="73" y1="354" x2="606" y2="354"/>
+    <line x1="352" y1="338" x2="352" y2="370" stroke="#344e68" stroke-width="4"/>
+    <text x="92" y="394" class="tiny">Timeline remains available before and after each scoped switch.</text>
+  </g>
+
+  <!-- Scope legend -->
+  <g transform="translate(1465,1085)">
+    <rect class="card" width="680" height="420" rx="18"/>
+    <text x="24" y="39" class="title">Board scope and reading key</text>
+    <rect class="active" x="36" y="71" width="24" height="24" rx="5"/>
+    <text x="75" y="90" class="body">Selected / current state</text>
+    <rect class="selected" x="36" y="111" width="24" height="24" rx="5"/>
+    <text x="75" y="130" class="body">Available, selectable state</text>
+    <rect class="disabled" x="36" y="151" width="24" height="24" rx="5"/>
+    <text x="75" y="170" class="body">Unavailable / disabled state</text>
+    <rect class="ghost" x="36" y="191" width="24" height="24" rx="5"/>
+    <text x="75" y="210" class="body">Old resource, scheduled for retirement</text>
+    <line class="line" x1="35" y1="237" x2="640" y2="237"/>
+    <text x="38" y="271" class="small">Nine artwork gates: OX-09, OX-39, OX-40, OX-59,</text>
+    <text x="38" y="296" class="small">OX-60, OX-61, OX-62, OX-33, and OX-69.</text>
+    <text x="38" y="338" class="small">No Park polish, commercial flow, new weather facts,</text>
+    <text x="38" y="363" class="small">or broad system acceptance is shown or implied.</text>
+    <text x="38" y="401" class="tiny">Schematic targets guide scope; installed evidence is still required.</text>
+  </g>
+</svg>

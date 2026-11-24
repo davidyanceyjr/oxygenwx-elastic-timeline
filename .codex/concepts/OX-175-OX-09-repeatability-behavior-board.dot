@@ -1,0 +1,46 @@
+digraph OX09Repeatability {
+  graph [
+    label="OX-09 — Repeatability across scene/world changes\nCycle 175 supplement • pre-approved scope • no implementation authorized",
+    labelloc=t,
+    labeljust=l,
+    fontsize=24,
+    fontname="Helvetica",
+    rankdir=TB,
+    splines=ortho,
+    nodesep=0.42,
+    ranksep=0.56,
+    pad=0.35,
+    bgcolor="#f5f7fa"
+  ];
+  node [shape=box, style="rounded,filled", fontname="Helvetica", fontsize=12,
+        color="#52657a", fillcolor="#ffffff", margin="0.17,0.12", penwidth=1.2];
+  edge [color="#536a83", penwidth=1.4, arrowsize=0.72, fontname="Helvetica", fontsize=10];
+
+  scope [shape=note, fillcolor="#e4edf6", color="#37536f",
+    label="OX-09 only. This supplements the shared Cycle 175 behavior package.\nUse the First City and Open Landscape paths established by OX-38 and OX-92.\nKeep place, catalog revision, selected instant, weather decision, build, and viewport fixed.\nCompare each world with its own samples; different worlds need not match pixel-for-pixel."];
+
+  first_city_a [fillcolor="#eaf3fb", label="FIRST CITY • A\nCapture the current renderer output\nat the fixed selected instant."];
+  first_city_repeat [fillcolor="#eaf3fb", label="FIRST CITY • A′\nRepeat the same selection in this world.\nRecord the output and any motion."];
+  landscape_b [fillcolor="#e8f5ed", label="OPEN LANDSCAPE • B / B′\nSwitch worlds at the same instant.\nCapture entry output, then repeat the same selection\nwithin Open Landscape."];
+  first_city_return [fillcolor="#eaf3fb", label="FIRST CITY • A″\nReturn to First City and repeat the same selection.\nCompare A, A′, and A″ within First City."];
+  compare [shape=note, fillcolor="#fff2d8", color="#b27a18",
+    label="Separate expected world differences and animation phase\nfrom unexpected re-randomization.\nDo not infer a defect from different scene compositions."];
+  disposition [shape=diamond, fillcolor="#fff7e6", label="Did evidence show\nunexpected re-randomization\nwithin the same world?"];
+  stable [fillcolor="#e8f5ed", color="#397653",
+    label="NO • Record the sampled results\nand a no-change disposition.\nDo not add a seed or cache."];
+  correction [fillcolor="#f2eafa", color="#78558e",
+    label="YES • Correct only the affected element\nwith a stable seed. Preserve its motion\nand selection meaning; compare before/after."];
+  unresolved [fillcolor="#fff2d8", color="#b27a18",
+    label="CAUSE NOT ESTABLISHED • Record the limitation\nand stop without speculative correction."];
+  exit [shape=note, fillcolor="#e4edf6", color="#37536f",
+    label="OX-09 exit remains controlling: evidence records the sampled repeat-selection result and either\na proven no-change disposition or a scoped stable-seed correction with visually equivalent motion/selection meaning."];
+
+  scope -> first_city_a -> first_city_repeat -> landscape_b -> first_city_return -> compare -> disposition;
+  disposition -> stable [xlabel="No"];
+  disposition -> correction [xlabel="Yes"];
+  disposition -> unresolved [xlabel="Cannot tell"];
+  { rank=same; stable; correction; unresolved; }
+  stable -> exit;
+  correction -> exit;
+  unresolved -> exit;
+}

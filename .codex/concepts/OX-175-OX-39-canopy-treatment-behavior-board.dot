@@ -1,0 +1,21 @@
+digraph OX39CanopyTreatment {
+  graph [rankdir=LR, bgcolor="#f7f9fc", pad="0.28", nodesep="0.52", ranksep="0.66", label="Cycle 175 · OX-39 · Definition-declared CANOPY treatment", labelloc=t, fontsize=20, fontname="Helvetica", fontcolor="#173044"];
+  node [shape=box, style="rounded,filled", color="#6f879b", fillcolor="#ffffff", fontname="Helvetica", fontsize=12, fontcolor="#173044", margin="0.18,0.12"];
+  edge [color="#607f99", penwidth=1.6, arrowsize=0.8, fontname="Helvetica", fontsize=10, fontcolor="#38566e"];
+
+  input [label="Fixed selected-instant composition\nSame SceneWeatherDecision\nSame location, instant and forecast facts", fillcolor="#edf5fb"];
+  definition [label="First City CANOPY declaration\nId = CANOPY · role = VEGETATION\nForeground CANOPY pass + existing geometry", fillcolor="#f1eafa"];
+  treatment [shape=diamond, style=filled, label="Declared CANOPY\ntreatment", fillcolor="#fff4d8", width=1.8, height=1.0];
+  baseline [label="Treatment A · BASELINE\nExisting sg2_city_canopy asset", fillcolor="#edf5fb"];
+  olive [label="Treatment B · OLIVE\nExisting sg2_city_canopy_olive asset", fillcolor="#edf5fb"];
+  renderer [label="Existing CANOPY draw path\nSame aligned-layer crop and mapping\nNo new renderer or shader framework", fillcolor="#eef7ee"];
+  acceptance [shape=note, label="Installed evidence\nCompare baseline and olive at one fixed OX-05 instant.\nOnly canopy appearance changes; weather facts, identity,\nforeground depth and geometry remain the same.", fillcolor="#fffdf5"];
+
+  input -> definition [label="selected weather"];
+  definition -> treatment [label="authored value"];
+  treatment -> baseline [label="BASELINE"];
+  treatment -> olive [label="OLIVE"];
+  baseline -> renderer;
+  olive -> renderer;
+  renderer -> acceptance;
+}
