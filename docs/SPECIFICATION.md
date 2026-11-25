@@ -44,7 +44,7 @@ The UI layer consumes typed `ForecastView`, which is derived from sample canonic
 
 Every visual enhancement must preserve the timeline's responsiveness, gesture predictability, and readability. A weather-scene change is incomplete if it makes scrubbing feel delayed, changes gesture ownership or arbitration unexpectedly, or obscures forecast values or timeline labels.
 
-Cloud artwork is restricted to the top 33% of the atmospheric scene viewport, measured from the top edge of the scene canvas. The full visible cloud output, including edges, blur, shadow, movement, and transitions, must remain inside that region. This placement rule does not change cloud-cover facts or precipitation meaning; rain and snow may extend below the cloud region.
+Cloud artwork is restricted to the top 40% of the atmospheric scene viewport, measured from the top edge of the scene canvas. The full visible cloud output, including edges, blur, shadow, movement, and transitions, must remain inside that region. This placement rule does not change cloud-cover facts or precipitation meaning; rain and snow may extend below the cloud region.
 
 ## Successor direction and durable boundaries
 

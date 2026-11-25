@@ -1,0 +1,71 @@
+digraph OX110 {
+  graph [
+    rankdir=LR,
+    splines=ortho,
+    nodesep=0.42,
+    ranksep=0.56,
+    pad=0.32,
+    bgcolor="#F3F6F8",
+    labelloc=t,
+    label="OX-110 · Urban Park storybook cloud layers\nBehavior board · Product-owner approved · 2026-11-25",
+    fontsize=22,
+    fontname="DejaVu Sans",
+    fontcolor="#17324B"
+  ];
+  node [shape=box, style="rounded,filled", color="#A7BBC9", penwidth=1.4,
+        fillcolor="#FFFFFF", fontname="DejaVu Sans", fontsize=11,
+        fontcolor="#17324B", margin="0.16,0.12"];
+  edge [color="#50758C", penwidth=1.5, arrowsize=0.75];
+
+  event [label="Selected forecast event\nExisting source-time and carry rules\nremain authoritative"];
+  mapping [shape=plain, label=<
+    <TABLE BORDER="1" COLOR="#A7BBC9" CELLBORDER="1" CELLSPACING="0" CELLPADDING="9" BGCOLOR="#FFFFFF">
+      <TR><TD COLSPAN="2" BGCOLOR="#E7F0F5"><B>Preserved OX-108 event mapping</B></TD></TR>
+      <TR><TD ALIGN="LEFT">PARTLY_SUNNY_CLOUDY<BR/>PARTLY_CLOUDY_NIGHT</TD><TD ALIGN="LEFT"><B>Layer 1</B> · sparse small clouds</TD></TR>
+      <TR><TD ALIGN="LEFT">MOSTLY_CLOUDY</TD><TD ALIGN="LEFT"><B>Layers 1 + 2</B> · partly cloudy + broken deck</TD></TR>
+      <TR><TD ALIGN="LEFT">CLOUDY_OVERCAST</TD><TD ALIGN="LEFT"><B>Layers 1 + 2 + 3</B> · full layered sky coverage</TD></TR>
+      <TR><TD ALIGN="LEFT">Other or absent event</TD><TD ALIGN="LEFT"><B>No Park cloud layers</B></TD></TR>
+      <TR><TD COLSPAN="2" BGCOLOR="#F4F7F9">Event identity selects layers; cloud-cover percentage does not.</TD></TR>
+    </TABLE>
+  >];
+  data [label="Park composition data\nDeclares cloud layer IDs and\nposition in the scene order\nNo forecast-generator changes"];
+  compose [label="Kotlin / Compose cloud pass\nDraw each active layer from\npaths, shapes and gradients\ninspired by the reference"];
+  output [label="Selected-time scene\nExisting per-layer track motion\nremains deterministic and\nuses the authoritative instant"];
+
+  event -> mapping -> data -> compose -> output;
+
+  subgraph cluster_composite {
+    label="Approved back-to-front composite order";
+    color="#8DA8B8";
+    style="rounded,filled";
+    fillcolor="#F8FAFB";
+    fontname="DejaVu Sans";
+    fontsize=12;
+    sky [label="Weather-sky underlay\nvisible through transparent Park pixels"];
+    background [label="Park Background plane\ncenter-cropped to fill the viewport"];
+    stars [label="Stars"];
+    sun [label="Selected-time Sun cue"];
+    moon [label="Supported Moon cue"];
+    layer1 [label="Cloud Layer 1\nPartly cloudy", fillcolor="#E5F2EF", color="#79A99D"];
+    layer2 [label="Cloud Layer 2\nCloudy", fillcolor="#E5F2EF", color="#79A99D"];
+    layer3 [label="Cloud Layer 3\nOvercast", fillcolor="#E5F2EF", color="#79A99D"];
+    middle [label="Base + added\nMiddleground\n(tree stays in front)"];
+    foreground [label="Foreground\nincludes banner above sign"];
+    precip [label="Existing rain / snow\neffect pass", fillcolor="#F2F3F5"];
+    sky -> background -> stars -> sun -> moon -> layer1 -> layer2 -> layer3 -> middle -> foreground -> precip;
+  }
+
+  bounds [shape=note, label="Cloud-only paint\nNo backing band or rectangle\nTransparent between cloud forms\nFull output stays inside top 40%\nof the atmospheric viewport", fillcolor="#FFF8E8", color="#D8B76D"];
+  scope [shape=note, label="Mechanics preserved\nScene generator and weather decisions\nSelected event, source time and carry\nSun / Moon paths and existing tracks\nOther themes and forecast UI", fillcolor="#EDF3F7", color="#91AAB9"];
+  night [shape=note, label="Review proposal\nKeep the reference's warm highlights\nin Moon-visible states; the weather-sky\nunderlay shows through Park alpha", fillcolor="#FFF8E8", color="#D8B76D"];
+  occlusion [shape=note, label="Occlusion contract\nClouds cover Sun, Moon and stars\nwhere cloud pixels overlap them.\nBase Middleground tree and\nforeground banner stay above clouds.", fillcolor="#EDF3F7", color="#91AAB9"];
+
+  data -> layer1 [style=dashed, color="#78A99B", constraint=false];
+  data -> layer2 [style=dashed, color="#78A99B", constraint=false];
+  data -> layer3 [style=dashed, color="#78A99B", constraint=false];
+  bounds -> compose [style=dashed, arrowhead=none, color="#C49B42", constraint=false];
+  scope -> data [style=dashed, arrowhead=none, color="#7894A3", constraint=false];
+  night -> output [style=dashed, arrowhead=none, color="#C49B42", constraint=false];
+  occlusion -> layer2 [style=dashed, arrowhead=none, color="#7894A3", constraint=false];
+  occlusion -> foreground [style=dashed, arrowhead=none, color="#7894A3", constraint=false];
+}

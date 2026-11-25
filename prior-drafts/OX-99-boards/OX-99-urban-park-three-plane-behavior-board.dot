@@ -1,0 +1,18 @@
+digraph OX99 {
+  graph [label="OX-99 | Three-plane Urban Park artwork proof\nPROPOSAL — owner approval pending",labelloc=t,fontsize=22,fontname="DejaVu Sans",bgcolor="#fbfcff",pad=.30,ranksep=.48,nodesep=.34];
+  node [shape=box,style="rounded,filled",fontname="DejaVu Sans",fontsize=12,color="#324963",fillcolor="#edf4fb",margin=".20,.12"];
+  edge [fontname="DejaVu Sans",fontsize=10,color="#47627d",arrowsize=.7];
+  start [label="Existing Park world selected\nKeep canonical location, forecast, instant",fillcolor="#dcecf8"];
+  prepare [label="Resolve 3 fixed RGBA PNGs\nCheck 1024×1536, decode and alpha"];
+  good [shape=diamond,label="All 3 valid?",fillcolor="#f7eed5"];
+  stage [label="Stage single composition\nOne shared viewport transform"];
+  commit [label="Atomic visible treatment\nBACK → MID → FRONT\nExisting forecast UI remains owned by app",fillcolor="#d8efe2"];
+  fail [label="Keep existing supported scene\nNo black / partial stack / crash",fillcolor="#fbe4e4"];
+  scrub [label="Forecast scrub / World navigation\nFacts, selected instant, gestures unchanged"];
+  later [label="OUT OF SCOPE\nNo pack-v2 extension; no time-of-day / weather variants\nNo per-element animations; no Settings/store",fillcolor="#f3f3f3"];
+  start -> prepare -> good;
+  good -> stage [label="yes"]; stage -> commit;good -> fail [label="no"];
+  commit -> scrub -> commit [label="static assets retained"];
+  fail -> scrub [label="recovery"];
+  later -> stage [style=dashed,dir=none,color="#a0a7ad"];
+}

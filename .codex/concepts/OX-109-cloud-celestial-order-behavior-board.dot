@@ -1,0 +1,60 @@
+digraph OX109 {
+  graph [
+    label="OX-109 · Urban Park layered sky and scene depth\nProposed for owner review · no implementation authorization",
+    labelloc=t,
+    fontsize=22,
+    fontname="DejaVu Sans",
+    rankdir=TB,
+    bgcolor="#f3f6f8",
+    pad=0.45,
+    nodesep=0.42,
+    ranksep=0.55,
+    splines=polyline
+  ];
+  node [shape=box, style="rounded,filled", fontname="DejaVu Sans", fontsize=15,
+        color="#93a8b8", fillcolor="#ffffff", fontcolor="#183247", margin="0.22,0.16"];
+  edge [fontname="DejaVu Sans", fontsize=11, color="#557187", penwidth=1.5, arrowsize=0.75];
+
+  selected [label="Selected forecast instant\nremains authoritative", fillcolor="#e6f1f5"];
+  event [label="Existing OX-108 canonical event selection\nand event-to-layer mapping", fillcolor="#e6f1f5"];
+  cues [label="Existing selected-time cue decisions\nSun cue · supported Moon cue", fillcolor="#e6f1f5"];
+  { rank=same; event; cues; }
+  selected -> event;
+  selected -> cues;
+
+  subgraph cluster_stack {
+    label="Urban Park composite · back to front";
+    color="#8ca7b6";
+    style="rounded";
+    fontsize=14;
+    fontname="DejaVu Sans Bold";
+    sky [label="Background backdrop\nblue daytime sky / star-filled night", fillcolor="#e9f0f8"];
+    background [label="Base Background Park image plane\nexisting asset / transform", fillcolor="#dbeaf1"];
+    sun [label="Sun cue\nselected-time sky path", fillcolor="#fff1cb"];
+    moon [label="Supported Moon cue\nselected-time sky path", fillcolor="#eee8f8"];
+    cloud1 [label="Cloud type 1\nseparately painted transparent layer\nown sky track / rate", fillcolor="#e0f1ed", color="#4d8b80", penwidth=2.0];
+    cloud2 [label="Cloud type 2\nseparately painted transparent layer\nown sky track / rate", fillcolor="#e0f1ed", color="#4d8b80", penwidth=2.0];
+    cloud3 [label="Cloud type 3\nseparately painted transparent layer\nown sky track / rate", fillcolor="#e0f1ed", color="#4d8b80", penwidth=2.0];
+    middlebase [label="Base Middleground image plane", fillcolor="#e8eee4"];
+    middleextra [label="Additional Middleground layer(s)\nstack above the base Middleground", fillcolor="#e8eee4"];
+    foreground [label="Foreground layer(s)\nhighest scene artwork · closest to viewer", fillcolor="#e8eee4"];
+
+    sky -> background -> sun -> moon -> cloud1 -> cloud2 -> cloud3 -> middlebase -> middleextra -> foreground;
+  }
+
+  event -> cloud1 [label="existing cumulative mapping", color="#2c8475", penwidth=1.8];
+  event -> cloud2 [label="active for Layers 2–3", color="#2c8475", penwidth=1.8];
+  event -> cloud3 [label="active for Layer 3", color="#2c8475", penwidth=1.8];
+  cues -> sun [label="cue selection unchanged"];
+  cues -> moon [label="cue selection unchanged"];
+
+  no_event [label="No selected OX-108 cloud event\ncloud overlay emits no forms", fillcolor="#f4eeee", color="#b79696"];
+  event -> no_event [label="existing no-cloud outcome", style=dashed, color="#9b7474"];
+
+  transparency [shape=note, label="Three-layer cloud contract\nEach cloud type is painted separately and has its own sky track.\nRates differ from Sun/Moon paths; numeric rates are unspecified.\nEvery layer has alpha 0 outside its active cloud forms.",
+                 fillcolor="#ffffff", color="#7da79e"];
+  cloud2 -> transparency [style=dotted, arrowhead=none, color="#6e9b91"];
+
+  invariants [shape=note, label="Preserve OX-108 event mapping, source-time/carry meaning,\ncelestial paths, image transforms, existing precipitation,\ntimeline/forecast UI, and all non-Urban-Park themes.", fillcolor="#ffffff", color="#93a8b8"];
+  selected -> invariants [style=dotted, arrowhead=none];
+}

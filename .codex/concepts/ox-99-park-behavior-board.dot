@@ -1,0 +1,66 @@
+digraph OX99ParkBehavior {
+  graph [rankdir=TB, bgcolor="#F4F7FA", pad="0.28", nodesep="0.35", ranksep="0.45", fontname="DejaVu Sans", labelloc="t", label="OX-99 — Park-specific three-plane artwork integration | OWNER REVIEW DRAFT • NOT APPROVED"];
+  node [shape=box, style="rounded,filled", color="#31536B", fillcolor="#FFFFFF", fontname="DejaVu Sans", fontsize=11, margin="0.16,0.10"];
+  edge [color="#58738A", penwidth=1.4, arrowsize=0.75, fontname="DejaVu Sans", fontsize=9];
+
+  owner [label="Owner decision · 2026-11-24\nKeep OX-99/OX-102 gated pending completed and approved boards.\nOwns the three supplied PNGs and authorized review-board reproduction,\nasset derivation, in-app display, and distribution. Preserve bytes/alpha.\nCreator/source and separate terms remain unspecified.", fillcolor="#E6F4EA"];
+  reference [label="Available owner-designated Concept 01 placement mockup\nTower = location; mural = current temperature/condition + owner-directed wind chill;\nbanner = wind; separate board = daily date/HI/LO/precipitation; bottom strip = daily cards.\nOX-41 sample values are illustrative. Exact source-layer registration is not measured.", fillcolor="#E7EEF4"];
+  allocation [label="Later owner choice: Streetcar Stop allocation\nShelter = hourly NEXT HOURS; separate board retains daily date/HI/LO/precipitation.\nThis supersedes the earlier three-day HI/LO shelter assignment.\nThe mockup depicts three sample rows; exact hourly count/range remains open.", fillcolor="#E7EEF4"];
+  owner -> reference -> allocation;
+
+  scope [shape=plain, label=<
+    <TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0" CELLPADDING="7" COLOR="#9AAEBE">
+      <TR><TD COLSPAN="3" BGCOLOR="#173B56"><FONT COLOR="white" POINT-SIZE="14"><B>Scope and architecture boundary</B></FONT></TD></TR>
+      <TR><TD BGCOLOR="#E7EEF4"><B>Existing app</B></TD><TD ALIGN="LEFT">Living Urban Park currently draws nine elements across BACKGROUND, MURAL_WALL, PARK_LANDMARKS, PATH, FOREGROUND.</TD><TD ALIGN="LEFT">Center reading, selected time, forecast truth, support/uncertainty and unavailable meaning remain app-owned.</TD></TR>
+      <TR><TD BGCOLOR="#E7EEF4"><B>OX-99</B></TD><TD ALIGN="LEFT">Park-specific wiring on the current Compose Canvas using approved images and OX-101 contract.</TD><TD ALIGN="LEFT">No shared image compositor implementation, pack-manifest change, or general renderer scope.</TD></TR>
+      <TR><TD BGCOLOR="#E7EEF4"><B>OX-101</B></TD><TD ALIGN="LEFT">Specify and verify reusable plane/layer ordering.</TD><TD ALIGN="LEFT">Does not itself establish universal plane bases or implement a shared compositor.</TD></TR>
+      <TR><TD BGCOLOR="#FFF1DA"><B>Source gap</B></TD><TD ALIGN="LEFT">Three supplied transparent PNGs contain no streetcar shelter.</TD><TD ALIGN="LEFT">Current app has a procedural shelter but no forecast sign/rows; source/disposition and sign treatment remain open.</TD></TR>
+    </TABLE>
+  >];
+
+  matrix [shape=plain, label=<
+    <TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0" CELLPADDING="6" COLOR="#9AAEBE">
+      <TR><TD COLSPAN="4" BGCOLOR="#173B56"><FONT COLOR="white" POINT-SIZE="14"><B>Existing Park draw map · each row needs plane + RETAIN / REPLACE / SUPPRESS</B></FONT></TD></TR>
+      <TR BGCOLOR="#DCE8F0"><TD><B>Current pass / ID</B></TD><TD><B>Owner direction or source observation</B></TD><TD><B>Target plane</B></TD><TD><B>Disposition/source</B></TD></TR>
+      <TR><TD>BACKGROUND · DISTANT_BACKDROP</TD><TD ALIGN="LEFT">Tower is location; tower appears in middleground.png; current backdrop is procedural.</TD><TD>OPEN</TD><TD>OPEN</TD></TR>
+      <TR><TD>MURAL_WALL · MURAL_WALL</TD><TD ALIGN="LEFT">Current temp/wind chill/condition icon on mural; foreground PNG has brick wall and separate blank board.</TD><TD>OPEN</TD><TD>OPEN</TD></TR>
+      <TR><TD>PARK_LANDMARKS · STREETCAR_SHELTER</TD><TD ALIGN="LEFT">Hourly NEXT HOURS; no shelter in supplied PNGs; current procedural shelter has no sign.</TD><TD>OPEN</TD><TD>OPEN</TD></TR>
+      <TR><TD>PARK_LANDMARKS · TREE_LEFT</TD><TD ALIGN="LEFT">Procedural tree overlaps source tree/canopy forms.</TD><TD>OPEN</TD><TD>OPEN</TD></TR>
+      <TR><TD>PARK_LANDMARKS · TREE_RIGHT</TD><TD ALIGN="LEFT">Procedural tree overlaps background/middleground foliage.</TD><TD>OPEN</TD><TD>OPEN</TD></TR>
+      <TR><TD>PATH · CURVED_PATH</TD><TD ALIGN="LEFT">Procedural curve overlaps source paving, markings, wet surfaces and water edge.</TD><TD>OPEN</TD><TD>OPEN</TD></TR>
+      <TR><TD>FOREGROUND · ENTRANCE</TD><TD ALIGN="LEFT">Procedural threshold; no matching source entrance identified.</TD><TD>OPEN</TD><TD>OPEN</TD></TR>
+      <TR><TD>FOREGROUND · BENCH_LEFT</TD><TD ALIGN="LEFT">Procedural left bench overlaps the one visible source bench.</TD><TD>OPEN</TD><TD>OPEN</TD></TR>
+      <TR><TD>FOREGROUND · BENCH_RIGHT</TD><TD ALIGN="LEFT">No second source bench observed; nearby source features are daily board/water.</TD><TD>OPEN</TD><TD>OPEN</TD></TR>
+      <TR><TD COLSPAN="4" BGCOLOR="#FFF1DA"><B>Required:</B> map all three source bases to planes and record shared sky/weather, overlays, clipping, and every draw disposition. Observed overlap is not a disposition.</TD></TR>
+    </TABLE>
+  >];
+
+  readings [shape=plain, label=<
+    <TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0" CELLPADDING="7" COLOR="#9AAEBE">
+      <TR><TD COLSPAN="3" BGCOLOR="#173B56"><FONT COLOR="white" POINT-SIZE="14"><B>Live reading surfaces · roles selected, exact placement/order remains open</B></FONT></TD></TR>
+      <TR BGCOLOR="#DCE8F0"><TD><B>Surface</B></TD><TD><B>Selected role / current behavior</B></TD><TD><B>Remaining decision</B></TD></TR>
+      <TR><TD>Tower</TD><TD ALIGN="LEFT">Location appears at the tower in Concept 01.</TD><TD>Exact live text anchor and image-plane order.</TD></TR>
+      <TR><TD>Mural</TD><TD ALIGN="LEFT">Current temperature, wind chill, condition icon. Current MURAL code renders temperature/source-time or unavailable.</TD><TD>Text layout, disclosure location, center-reading order, unavailable layout.</TD></TR>
+      <TR><TD>Banner</TD><TD ALIGN="LEFT">Wind appears on the banner; background source banner is blank.</TD><TD>Exact live wind content/anchor and image-plane order.</TD></TR>
+      <TR><TD>Shelter</TD><TD ALIGN="LEFT">Hourly NEXT HOURS; mockup has three example rows.</TD><TD>Physical shelter source/disposition, sign, exact hourly range/count and selected-time behavior.</TD></TR>
+      <TR><TD>Separate board</TD><TD ALIGN="LEFT">Daily date, HI/LO, precipitation chance, shown on foreground blank board in Concept 01.</TD><TD>Exact text bounds/order and unavailable behavior; no mock value becomes forecast truth.</TD></TR>
+      <TR><TD>Bottom strip / center reading</TD><TD ALIGN="LEFT">Daily forecast cards / full app-owned readout overlay.</TD><TD>Preserve timeline semantics; specify exact overlay order and no duplicate or hidden essential facts.</TD></TR>
+    </TABLE>
+  >];
+
+  states [shape=plain, label=<
+    <TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0" CELLPADDING="7" COLOR="#9AAEBE">
+      <TR><TD COLSPAN="3" BGCOLOR="#173B56"><FONT COLOR="white" POINT-SIZE="14"><B>Fixed-art behavior across selected-time states · owner decision required</B></FONT></TD></TR>
+      <TR BGCOLOR="#DCE8F0"><TD><B>State</B></TD><TD><B>Source observation</B></TD><TD><B>Owner choice</B></TD></TR>
+      <TR><TD>Daylight / supported value</TD><TD>Art is sunlit; values are not baked into the transparent PNGs.</TD><TD>Show supplied art / suppress? Alternate art is separate scope.</TD></TR>
+      <TR><TD>Night / supported value</TD><TD>Art remains sunlit and lamps are lit.</TD><TD>Show supplied art / suppress? Alternate art is separate scope.</TD></TR>
+      <TR><TD>Supported rain</TD><TD>Art has wet-looking paving/water; shared renderer draws supported rain.</TD><TD>Keep with rain / suppress? Alternate art is separate scope.</TD></TR>
+      <TR><TD>Supported snow</TD><TD>Art has no visible snow; shared renderer draws supported snow.</TD><TD>Keep with snow / suppress? Alternate art is separate scope.</TD></TR>
+      <TR><TD>Selected value unavailable</TD><TD>Images have no forecast text; current app surfaces show unavailable.</TD><TD>Approve visible reading surface and image fallback together.</TD></TR>
+      <TR><TD COLSPAN="3" BGCOLOR="#E6F4EA"><B>Invariant:</B> app owns selected time, forecast facts/support, uncertainty, weather decisions, and unavailable meaning.</TD></TR>
+    </TABLE>
+  >];
+
+  gate [label="Before OX-102 asset preparation or OX-99 integration:\ncomplete the plane/disposition rows; resolve shelter art/sign and hourly range;\nset exact reading anchors/order and fixed-art state policy; revise and obtain approval.", fillcolor="#FCE7E6"];
+  allocation -> scope -> matrix -> readings -> states -> gate;
+}

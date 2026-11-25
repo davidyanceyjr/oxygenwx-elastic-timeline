@@ -1,0 +1,65 @@
+digraph OX99_UrbanParkTheme {
+  graph [
+    label="OX-99 | Additive Urban Park theme from the First City · Baseline proof\nBEHAVIOR BOARD — draft for owner review; not approved",
+    labelloc=t,
+    fontsize=20,
+    fontname="DejaVu Sans",
+    bgcolor="#f7fafb",
+    pad=0.3,
+    rankdir=TB,
+    ranksep=0.48,
+    nodesep=0.32,
+    splines=polyline
+  ];
+  node [shape=box, style="rounded,filled", fontname="DejaVu Sans", fontsize=12, margin="0.17,0.12", color="#56717b", fillcolor="#ffffff"];
+  edge [fontname="DejaVu Sans", fontsize=10, color="#516b75", arrowsize=0.75];
+
+  subgraph cluster_inputs {
+    label="Theme choice and live time input";
+    color="#b5cbd2";
+    style="rounded,filled";
+    fillcolor="#edf4f6";
+    settings [label="Settings · Weather world\nLiving Urban Park · bundled free default\nUrban Park · separate bundled selectable entry"];
+    choose [label="Select Urban Park\nshow its own active state", fillcolor="#d9edf0"];
+    timeline [label="Existing timeline stays separate\ninteractive app UI; never baked into a PNG", fillcolor="#d9edf0"];
+    state [label="Selected instant and forecast facts\nTheme selection preserves them; scrubbing updates them", fillcolor="#e7f3e8"];
+    settings -> choose -> state [label="preserve current selection"];
+    timeline -> state [label="scrub"];
+  }
+
+  subgraph cluster_canvas {
+    label="Urban Park canvas · one shared 1024 × 1536 viewport transform";
+    color="#b5cbd2";
+    style="rounded,filled";
+    fillcolor="#f2f6f7";
+    bg [label="BACKGROUND base\nreferences/background.png", fillcolor="#dceaf7"];
+    cues [label="Separate selected-time Sun / supported Moon cue layers\nover the background image; not baked into it", fillcolor="#fff0c6"];
+    bg_weather [label="Existing background weather layers\nretain baseline-proof decisions", fillcolor="#e9f0f7"];
+    mg [label="MIDDLEGROUND base\nreferences/middleground.png", fillcolor="#dcebd7"];
+    mg_weather [label="Existing middleground weather layers\nretain baseline-proof decisions", fillcolor="#e9f0f7"];
+    fg [label="FOREGROUND base\nreferences/foreground.png", fillcolor="#f4e3d5"];
+    existing_ui [label="Existing scene readout and time treatment\nremain app-rendered above the art", fillcolor="#eee8f5"];
+    bg -> cues -> bg_weather -> mg -> mg_weather -> fg -> existing_ui;
+  }
+
+  state -> bg [label="render Urban Park at the selected instant"];
+
+  subgraph cluster_return {
+    label="Theme continuity";
+    color="#b5cbd2";
+    style="rounded,filled";
+    fillcolor="#edf4f6";
+    existing_theme [label="Switching back selects an existing theme\nwith its composition unchanged", fillcolor="#ffffff"];
+  }
+  state -> existing_theme [style=dashed, label="choose another theme"];
+
+  subgraph cluster_scope {
+    label="Scope boundary";
+    color="#d5c6a7";
+    style="rounded,filled";
+    fillcolor="#fbf6ea";
+    keep [label="Keep First City · Baseline proof unchanged\nand keep Living Urban Park as the default", fillcolor="#ffffff"];
+    fixed [label="The three supplied images stay fixed sunlit art;\nno new night/weather artwork or forecast logic", fillcolor="#ffffff"];
+    no_general [label="No generic plane framework, pack format,\nimport flow, or payment behavior", fillcolor="#ffffff"];
+  }
+}

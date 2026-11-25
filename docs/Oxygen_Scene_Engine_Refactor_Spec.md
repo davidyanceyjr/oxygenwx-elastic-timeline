@@ -796,7 +796,7 @@ The following are candidate outcomes for separate bounded Scene Engine slices, s
 4. Introduce semantic element roles.
 5. Separate weather interpretation from rendering.
 6. Establish scene state/keyframe structures.
-7. Refactor existing clouds and precipitation into reusable elements while preserving their approved meaning and the top-33%-of-scene cloud boundary.
+7. Refactor existing clouds and precipitation into reusable elements while preserving their approved meaning and the controlling top-40%-of-scene-viewport cloud boundary.
 8. Introduce deterministic procedural generation.
 9. Support compiled scene days across the full catalog.
 10. Implement one complete interactive semantic element.

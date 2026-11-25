@@ -1,0 +1,153 @@
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="2000" height="1320" viewBox="0 0 2000 1320">
+  <defs>
+    <linearGradient id="page" x2="0" y2="1"><stop offset="0" stop-color="#f4f8fa"/><stop offset="1" stop-color="#e9f0f3"/></linearGradient>
+    <linearGradient id="daySky" x2="0" y2="1"><stop offset="0" stop-color="#7db7d8"/><stop offset="0.55" stop-color="#a9d0dd"/><stop offset="1" stop-color="#e7d5ad"/></linearGradient>
+    <linearGradient id="nightSky" x2="0" y2="1"><stop offset="0" stop-color="#213b62"/><stop offset="0.6" stop-color="#526b87"/><stop offset="1" stop-color="#b4a994"/></linearGradient>
+    <filter id="softShadow" x="-20%" y="-20%" width="140%" height="150%"><feDropShadow dx="0" dy="4" stdDeviation="8" flood-color="#21394a" flood-opacity="0.15"/></filter>
+    <clipPath id="cloudZone"><rect x="0" y="0" width="1024" height="614"/></clipPath>
+    <clipPath id="parkBannerForeground" clipPathUnits="userSpaceOnUse">
+      <path d="M 794 278 C 840 271 906 264 952 257 L 956 526 Q 956 540 944 544 L 793 555 Q 782 555 781 542 L 779 297 Q 779 282 794 278 Z"/>
+    </clipPath>
+  </defs>
+  <rect width="2000" height="1320" fill="url(#page)"/>
+  <text x="48" y="62" font-family="DejaVu Sans, sans-serif" font-size="34" font-weight="700" fill="#17364c">OX-110 · Sunlit Storybook Clouds</text>
+  <text x="50" y="98" font-family="DejaVu Sans, sans-serif" font-size="17" fill="#537184">Park planes share a center crop · sky underlay shows only through transparent Background pixels</text>
+  <rect x="1668" y="32" width="284" height="42" rx="21" fill="#fff1ca" stroke="#dfbd69"/>
+  <text x="1810" y="59" text-anchor="middle" font-family="DejaVu Sans, sans-serif" font-size="14" font-weight="700" fill="#775d1d">OWNER APPROVED · 2026-11-25</text>
+
+  <!-- Actual app captures and the supplied/generate art are shown as direct review references. -->
+  <g filter="url(#softShadow)"><rect x="34" y="124" width="464" height="790" rx="20" fill="#ffffff" stroke="#bfd0d9" stroke-width="2"/></g>
+  <text x="58" y="160" font-family="DejaVu Sans, sans-serif" font-size="20" font-weight="700" fill="#23465d">App screens + cloud-art references</text>
+  <text x="58" y="185" font-family="DejaVu Sans, sans-serif" font-size="12" fill="#688392">Real captures anchor scene scale and existing placement</text>
+  <rect x="58" y="201" width="190" height="391" rx="10" fill="#dbe5eb" stroke="#c2d1d8"/>
+  <image x="58" y="201" width="190" height="391" preserveAspectRatio="xMidYMid meet" xlink:href="OX-108-urban-park-cloud-depth-device-capture.png"/>
+  <rect x="270" y="201" width="190" height="391" rx="10" fill="#dbe5eb" stroke="#c2d1d8"/>
+  <image x="270" y="201" width="190" height="391" preserveAspectRatio="xMidYMid meet" xlink:href="OX-109-current-sun-cloudy-reference.png"/>
+  <text x="153" y="615" text-anchor="middle" font-family="DejaVu Sans, sans-serif" font-size="11" font-weight="700" fill="#456577">Urban Park app capture</text>
+  <text x="365" y="615" text-anchor="middle" font-family="DejaVu Sans, sans-serif" font-size="11" font-weight="700" fill="#456577">Sun + cloud app capture</text>
+  <rect x="58" y="640" width="190" height="143" rx="8" fill="#e9eef1" stroke="#c2d1d8"/>
+  <image x="58" y="640" width="190" height="143" preserveAspectRatio="xMidYMid meet" xlink:href="OX-110-sunlit-storybook-clouds-reference.png"/>
+  <rect x="270" y="640" width="190" height="127" rx="8" fill="#e9eef1" stroke="#c2d1d8"/>
+  <image x="270" y="640" width="190" height="127" preserveAspectRatio="xMidYMid meet" xlink:href="OX-110-generated-storybook-cloud-layers.png"/>
+  <text x="153" y="803" text-anchor="middle" font-family="DejaVu Sans, sans-serif" font-size="11" font-weight="700" fill="#456577">Supplied style sheet</text>
+  <text x="365" y="787" text-anchor="middle" font-family="DejaVu Sans, sans-serif" font-size="11" font-weight="700" fill="#456577">Rendered layer sheet</text>
+  <text x="58" y="840" font-family="DejaVu Sans, sans-serif" font-size="12" fill="#526f7f">
+    <tspan x="58" dy="0">Painterly cloud forms follow the supplied</tspan>
+    <tspan x="58" dy="18">warm-lit, blue-violet reference. Layer PNGs</tspan>
+    <tspan x="58" dy="18">are board art direction; implementation stays</tspan>
+    <tspan x="58" dy="18">Kotlin/Compose geometry and gradients.</tspan>
+  </text>
+
+  <!-- Partly cloudy: one sparse layer leaves the Sun visible through its gap. -->
+  <g filter="url(#softShadow)"><rect x="520" y="124" width="352" height="790" rx="20" fill="#ffffff" stroke="#bfd0d9" stroke-width="2"/></g>
+  <text x="544" y="160" font-family="DejaVu Sans, sans-serif" font-size="17" font-weight="700" fill="#23465d">Partly cloudy · Sun</text>
+  <text x="544" y="185" font-family="DejaVu Sans, sans-serif" font-size="11" fill="#688392">PARTLY_SUNNY_CLOUDY · Layer 1</text>
+  <svg x="569.4375" y="211" width="253.125" height="450" viewBox="80 0 864 1536" preserveAspectRatio="none">
+    <rect width="1024" height="1536" fill="url(#daySky)"/>
+    <image x="0" y="0" width="1024" height="1536" xlink:href="OX-108-urban-park-cloud-depth-park-background-preview.png"/>
+    <circle cx="650" cy="270" r="75" fill="#ffe29c" stroke="#fff4d6" stroke-width="12"/>
+    <g clip-path="url(#cloudZone)">
+      <svg x="0" y="105" width="1024" height="215" viewBox="0 0 1536 320" preserveAspectRatio="none"><image x="0" y="0" width="1536" height="1024" xlink:href="OX-110-generated-storybook-cloud-layers.png"/></svg>
+    </g>
+    <image x="0" y="0" width="1024" height="1536" xlink:href="OX-108-urban-park-cloud-depth-park-middleground-preview.png"/>
+    <image x="0" y="0" width="1024" height="1536" xlink:href="OX-108-urban-park-cloud-depth-park-foreground-preview.png"/>
+    <image x="0" y="0" width="1024" height="1536" clip-path="url(#parkBannerForeground)" xlink:href="OX-108-urban-park-cloud-depth-park-background-preview.png"/>
+    <line x1="0" y1="614" x2="1024" y2="614" stroke="#263e53" stroke-width="14" stroke-dasharray="40 22" opacity="0.7"/>
+    <line x1="0" y1="614" x2="1024" y2="614" stroke="#fff5ce" stroke-width="7" stroke-dasharray="40 22"/>
+  </svg>
+  <text x="546" y="693" font-family="DejaVu Sans, sans-serif" font-size="13" font-weight="700" fill="#23465d">Tree and banner stay in front of clouds</text>
+  <text x="546" y="721" font-family="DejaVu Sans, sans-serif" font-size="12" fill="#688392">Sun through a cloud gap; dashed line marks top 40%.</text>
+
+  <!-- Partly cloudy at night: same single layer and an open gap around the Moon. -->
+  <g filter="url(#softShadow)"><rect x="888" y="124" width="352" height="790" rx="20" fill="#ffffff" stroke="#bfd0d9" stroke-width="2"/></g>
+  <text x="912" y="160" font-family="DejaVu Sans, sans-serif" font-size="17" font-weight="700" fill="#23465d">Partly cloudy · Moon + stars</text>
+  <text x="912" y="185" font-family="DejaVu Sans, sans-serif" font-size="11" fill="#688392">PARTLY_CLOUDY_NIGHT · Layer 1</text>
+  <svg x="937.4375" y="211" width="253.125" height="450" viewBox="80 0 864 1536" preserveAspectRatio="none">
+    <rect width="1024" height="1536" fill="url(#nightSky)"/>
+    <image x="0" y="0" width="1024" height="1536" xlink:href="OX-108-urban-park-cloud-depth-park-background-preview.png"/>
+    <g fill="#f4e7bd" opacity="0.96">
+      <circle cx="145" cy="118" r="7"/><circle cx="345" cy="205" r="6"/>
+      <circle cx="438" cy="282" r="7"/><circle cx="840" cy="142" r="6"/>
+      <circle cx="910" cy="327" r="7"/><circle cx="232" cy="365" r="5"/>
+    </g>
+    <circle cx="665" cy="255" r="48" fill="#f4e7bd" stroke="#fff5dc" stroke-width="8"/>
+    <g clip-path="url(#cloudZone)">
+      <svg x="0" y="110" width="1024" height="215" viewBox="0 0 1536 320" preserveAspectRatio="none"><image x="0" y="0" width="1536" height="1024" xlink:href="OX-110-generated-storybook-cloud-layers.png"/></svg>
+    </g>
+    <image x="0" y="0" width="1024" height="1536" xlink:href="OX-108-urban-park-cloud-depth-park-middleground-preview.png"/>
+    <image x="0" y="0" width="1024" height="1536" xlink:href="OX-108-urban-park-cloud-depth-park-foreground-preview.png"/>
+    <image x="0" y="0" width="1024" height="1536" clip-path="url(#parkBannerForeground)" xlink:href="OX-108-urban-park-cloud-depth-park-background-preview.png"/>
+    <line x1="0" y1="614" x2="1024" y2="614" stroke="#263e53" stroke-width="14" stroke-dasharray="40 22" opacity="0.7"/>
+    <line x1="0" y1="614" x2="1024" y2="614" stroke="#fff5ce" stroke-width="7" stroke-dasharray="40 22"/>
+  </svg>
+  <text x="914" y="693" font-family="DejaVu Sans, sans-serif" font-size="13" font-weight="700" fill="#23465d">Moon and stars show through cloud gaps</text>
+  <text x="914" y="721" font-family="DejaVu Sans, sans-serif" font-size="12" fill="#688392">Tree and banner stay above the cloud layer.</text>
+
+  <!-- Cloudy: second broken painterly deck fills more sky gaps. -->
+  <g filter="url(#softShadow)"><rect x="1256" y="124" width="352" height="790" rx="20" fill="#ffffff" stroke="#bfd0d9" stroke-width="2"/></g>
+  <text x="1280" y="160" font-family="DejaVu Sans, sans-serif" font-size="17" font-weight="700" fill="#23465d">Cloudy · two layers</text>
+  <text x="1280" y="185" font-family="DejaVu Sans, sans-serif" font-size="11" fill="#688392">MOSTLY_CLOUDY · Layers 1 + 2</text>
+  <svg x="1305.4375" y="211" width="253.125" height="450" viewBox="80 0 864 1536" preserveAspectRatio="none">
+    <rect width="1024" height="1536" fill="url(#daySky)"/>
+    <image x="0" y="0" width="1024" height="1536" xlink:href="OX-108-urban-park-cloud-depth-park-background-preview.png"/>
+    <circle cx="650" cy="270" r="75" fill="#ffe29c" stroke="#fff4d6" stroke-width="12"/>
+    <g clip-path="url(#cloudZone)">
+      <svg x="0" y="15" width="1024" height="170" viewBox="0 0 1536 320" preserveAspectRatio="none"><image x="0" y="0" width="1536" height="1024" xlink:href="OX-110-generated-storybook-cloud-layers.png"/></svg>
+      <svg x="0" y="300" width="1024" height="250" viewBox="0 320 1536 320" preserveAspectRatio="none"><image x="0" y="0" width="1536" height="1024" xlink:href="OX-110-generated-storybook-cloud-layers.png"/></svg>
+    </g>
+    <image x="0" y="0" width="1024" height="1536" xlink:href="OX-108-urban-park-cloud-depth-park-middleground-preview.png"/>
+    <image x="0" y="0" width="1024" height="1536" xlink:href="OX-108-urban-park-cloud-depth-park-foreground-preview.png"/>
+    <image x="0" y="0" width="1024" height="1536" clip-path="url(#parkBannerForeground)" xlink:href="OX-108-urban-park-cloud-depth-park-background-preview.png"/>
+    <line x1="0" y1="614" x2="1024" y2="614" stroke="#263e53" stroke-width="14" stroke-dasharray="40 22" opacity="0.7"/>
+    <line x1="0" y1="614" x2="1024" y2="614" stroke="#fff5ce" stroke-width="7" stroke-dasharray="40 22"/>
+  </svg>
+  <text x="1282" y="693" font-family="DejaVu Sans, sans-serif" font-size="13" font-weight="700" fill="#23465d">Two cloud layers; the tree stays in front</text>
+  <text x="1282" y="721" font-family="DejaVu Sans, sans-serif" font-size="12" fill="#688392">Base Middleground masks the lower cloud edge.</text>
+
+  <!-- Overcast: three cloud strata cover the celestial cue and most of the sky. -->
+  <g filter="url(#softShadow)"><rect x="1624" y="124" width="352" height="790" rx="20" fill="#ffffff" stroke="#bfd0d9" stroke-width="2"/></g>
+  <text x="1648" y="160" font-family="DejaVu Sans, sans-serif" font-size="17" font-weight="700" fill="#23465d">Overcast · three layers</text>
+  <text x="1648" y="185" font-family="DejaVu Sans, sans-serif" font-size="11" fill="#688392">CLOUDY_OVERCAST · Layers 1 + 2 + 3</text>
+  <svg x="1673.4375" y="211" width="253.125" height="450" viewBox="80 0 864 1536" preserveAspectRatio="none">
+    <rect width="1024" height="1536" fill="url(#nightSky)"/>
+    <image x="0" y="0" width="1024" height="1536" xlink:href="OX-108-urban-park-cloud-depth-park-background-preview.png"/>
+    <g fill="#f4e7bd" opacity="0.96">
+      <circle cx="145" cy="118" r="7"/><circle cx="345" cy="205" r="6"/>
+      <circle cx="438" cy="282" r="7"/><circle cx="840" cy="142" r="6"/>
+      <circle cx="910" cy="327" r="7"/><circle cx="232" cy="365" r="5"/>
+    </g>
+    <circle cx="630" cy="245" r="48" fill="#f4e7bd" stroke="#fff5dc" stroke-width="8"/>
+    <g clip-path="url(#cloudZone)">
+      <svg x="0" y="0" width="1024" height="170" viewBox="0 0 1536 320" preserveAspectRatio="none"><image x="0" y="0" width="1536" height="1024" xlink:href="OX-110-generated-storybook-cloud-layers.png"/></svg>
+      <svg x="0" y="130" width="1024" height="220" viewBox="0 320 1536 320" preserveAspectRatio="none"><image x="0" y="0" width="1536" height="1024" xlink:href="OX-110-generated-storybook-cloud-layers.png"/></svg>
+      <svg x="0" y="200" width="1024" height="360" viewBox="0 640 1536 384" preserveAspectRatio="none"><image x="0" y="0" width="1536" height="1024" xlink:href="OX-110-generated-storybook-cloud-layers.png"/></svg>
+    </g>
+    <image x="0" y="0" width="1024" height="1536" xlink:href="OX-108-urban-park-cloud-depth-park-middleground-preview.png"/>
+    <image x="0" y="0" width="1024" height="1536" xlink:href="OX-108-urban-park-cloud-depth-park-foreground-preview.png"/>
+    <image x="0" y="0" width="1024" height="1536" clip-path="url(#parkBannerForeground)" xlink:href="OX-108-urban-park-cloud-depth-park-background-preview.png"/>
+    <line x1="0" y1="614" x2="1024" y2="614" stroke="#263e53" stroke-width="14" stroke-dasharray="40 22" opacity="0.7"/>
+    <line x1="0" y1="614" x2="1024" y2="614" stroke="#fff5ce" stroke-width="7" stroke-dasharray="40 22"/>
+  </svg>
+  <text x="1650" y="693" font-family="DejaVu Sans, sans-serif" font-size="11" font-weight="700" fill="#23465d">Celestial cues covered; tree stays in front</text>
+  <text x="1650" y="721" font-family="DejaVu Sans, sans-serif" font-size="11" fill="#688392">Base tree and banner overlay the cloud deck.</text>
+
+  <!-- Shared depth contract and owner review question. -->
+  <rect x="520" y="946" width="1456" height="196" rx="18" fill="#ffffff" stroke="#bfd0d9" stroke-width="2"/>
+  <text x="548" y="984" font-family="DejaVu Sans, sans-serif" font-size="18" font-weight="700" fill="#23465d">Approved depth, back to front</text>
+  <g font-family="DejaVu Sans, sans-serif" font-size="13" font-weight="700" text-anchor="middle">
+    <rect x="548" y="1005" width="210" height="52" rx="12" fill="#e6f0f4" stroke="#a9c1ce"/><text x="653" y="1037" fill="#315368" font-size="12">Sky underlay + photo + stars</text>
+    <rect x="768" y="1005" width="100" height="52" rx="12" fill="#fff3d5" stroke="#dfc16d"/><text x="818" y="1037" fill="#70591d">Sun</text>
+    <rect x="878" y="1005" width="100" height="52" rx="12" fill="#fff3d5" stroke="#dfc16d"/><text x="928" y="1037" fill="#70591d">Moon</text>
+    <rect x="988" y="1005" width="190" height="52" rx="12" fill="#e5f2ee" stroke="#7eae9f"/><text x="1083" y="1037" fill="#315d52">Clouds 1 → 2 → 3</text>
+    <rect x="1188" y="1005" width="170" height="52" rx="12" fill="#e9f0e3" stroke="#aab99c"/><text x="1273" y="1037" fill="#42553e">Middleground</text>
+    <rect x="1368" y="1005" width="210" height="52" rx="12" fill="#e9f0e3" stroke="#aab99c"/><text x="1473" y="1037" fill="#42553e">Foreground + banner</text>
+    <rect x="1588" y="1005" width="200" height="52" rx="12" fill="#f1f3f5" stroke="#bac4ca"/><text x="1688" y="1037" fill="#526572">Precipitation pass</text>
+  </g>
+  <text x="548" y="1085" font-family="DejaVu Sans, sans-serif" font-size="13" fill="#526f7f">
+    <tspan x="548" dy="0">Back to front: sky underlay (through Background alpha) → Park Background → stars → Sun → Moon → Clouds → tree → banner.</tspan>
+    <tspan x="548" dy="20">Clouds cover overlapping celestial pixels. The tree and banner stay above clouds; output stays within the top 40%.</tspan>
+  </text>
+  <text x="548" y="1180" font-family="DejaVu Sans, sans-serif" font-size="13" font-weight="700" fill="#23465d">Review: cloud art, celestial occlusion, tree/banner over clouds, event coverage, top-40% bound, and scene order.</text>
+  <text x="48" y="1244" font-family="DejaVu Sans, sans-serif" font-size="12" fill="#688392">Composed review artwork uses actual app captures and OX-108 Park planes for context. It is not an installed after-state or runtime bitmap proposal.</text>
+  <text x="48" y="1266" font-family="DejaVu Sans, sans-serif" font-size="12" fill="#688392">All three Park planes share the same viewport-covering center crop; the weather-sky underlay appears only through transparent Background pixels.</text>
+</svg>

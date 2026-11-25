@@ -95,6 +95,7 @@ import com.oxygen.weather.timeline.presentation.scene.FirstCityTheme
 import com.oxygen.weather.timeline.presentation.scene.LivingUrbanParkTheme
 import com.oxygen.weather.timeline.presentation.scene.MinimalOpenLandscapeTheme
 import com.oxygen.weather.timeline.presentation.scene.SceneReading
+import com.oxygen.weather.timeline.presentation.scene.UrbanParkComposition
 import com.oxygen.weather.timeline.presentation.scene.SceneWeatherDecision
 import com.oxygen.weather.timeline.data.scenepack.InstalledThemeCatalogEntry
 import com.oxygen.weather.timeline.data.scenepack.InstalledThemeCatalog
@@ -300,8 +301,10 @@ private fun CatalogTimeLabScreenContent(
         val responsiveScale = (maxWidth.value / 411f).coerceIn(.75f, 1f)
         if (sceneReading != null && worldChoice.selected == CatalogWorld.URBAN_PARK) {
             CatalogUrbanParkScene(
-                composition = composition ?: FirstCityTheme.compose(sceneReading, view.zone),
-                selectedWeatherSymbolId = view.weatherSymbolId,
+                composition = UrbanParkComposition(
+                    firstCity = composition ?: FirstCityTheme.compose(sceneReading, view.zone),
+                    selectedWeatherSymbolId = view.weatherSymbolId,
+                ),
             )
         } else if (sceneReading != null && worldChoice.selected == CatalogWorld.LIVING_URBAN_PARK) {
             CatalogLivingUrbanParkScene(

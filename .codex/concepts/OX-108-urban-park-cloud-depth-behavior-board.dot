@@ -1,0 +1,54 @@
+digraph OX108 {
+  graph [
+    rankdir=TB,
+    bgcolor="#F3F6F8",
+    pad="0.28",
+    nodesep="0.28",
+    ranksep="0.4",
+    splines=ortho,
+    fontname="DejaVu Sans",
+    label="OX-108 · Urban Park cloudy event mapping and cloud depth\nDraft for owner review · behavior contract only · no implementation authorization",
+    labelloc=t,
+    fontsize=22,
+    fontcolor="#183149"
+  ];
+  node [shape=box, style="rounded,filled", color="#B7C8D3", fillcolor="#FFFFFF", fontname="DejaVu Sans", fontsize=11, fontcolor="#203C52", margin="0.16,0.10"];
+  edge [color="#668093", penwidth=1.5, arrowsize=0.8, fontname="DejaVu Sans", fontsize=9, fontcolor="#38546B"];
+
+  selected [label="Selected forecast instant\nExisting selected-time ownership", fillcolor="#E8F0F4"];
+  canonical [label="Canonical selected event identity\nKeep current primary-event selection and WeatherEventPriority fallback.\nUse the existing permitted legacy fallback only; retain source-time/carry meaning.\nDo not infer a cloudy event from cloud-cover percent or unsupported source codes.", fillcolor="#E8F0F4"];
+  selected -> canonical;
+
+  subgraph cluster_map {
+    label="Urban Park event-to-layer map";
+    color="#C4D5DE";
+    style="rounded,filled";
+    fillcolor="#F8FBFC";
+    fontname="DejaVu Sans";
+    fontsize=13;
+    fontcolor="#183149";
+
+    partly [label="PARTLY_SUNNY_CLOUDY\nPARTLY_CLOUDY_NIGHT\n→ Layer 1 only\nSeparated, broken cumulus form", fillcolor="#E9F5F3"];
+    mostly [label="MOSTLY_CLOUDY\n→ Layers 1 + 2\nCumulus + broad broken cloud deck", fillcolor="#E4EFF3"];
+    overcast [label="CLOUDY_OVERCAST\n→ Layers 1 + 2 + 3\nCumulus + deck + continuous veil", fillcolor="#DDE8ED"];
+    other [label="Any other or absent selected event\n→ No OX-108 themed cloud layers\nCloud cover alone does not select a layer", fillcolor="#F2F4F5"];
+    { rank=same; partly; mostly; overcast; other; }
+  }
+
+  canonical -> partly [label="selected ID"];
+  canonical -> mostly [label="selected ID"];
+  canonical -> overcast [label="selected ID"];
+  canonical -> other [label="otherwise"];
+
+  stack [label="Urban Park back-to-front render order\nSky / existing rain wash → Background image → active cloud layers L1, L2, L3 → existing Sun/Moon cues\n→ Middleground image → Foreground image → existing precipitation", fillcolor="#DDF0ED", color="#7EAAA5", penwidth=1.8];
+  partly -> stack;
+  mostly -> stack;
+  overcast -> stack;
+  other -> stack;
+
+  result [label="Depth and visual boundary\nThe active cloud group is drawn immediately above the Background image plane, directly below the later scene content.\nOpaque Middleground and Foreground pixels occlude it; Background pixels remain below it.\nAll cloud output, blur, motion, and transitions stay inside the top 33% of the scene canvas.", fillcolor="#E8F3F1"];
+  stack -> result;
+
+  preserve [label="Preserve outside this mapping\nExisting sky and cue treatment; precipitation renderer, depth, and behavior; First City and Living Urban Park; supplied plane images and transforms;\napp-owned cloudy forecast symbol/text, other forecast values, controls, and timeline behavior.", fillcolor="#F7F1E4", color="#D9C79B"];
+  result -> preserve;
+}

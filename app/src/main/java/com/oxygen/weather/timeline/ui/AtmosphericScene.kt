@@ -16,6 +16,7 @@ import androidx.compose.ui.graphics.ImageBitmap
 import androidx.compose.ui.graphics.FilterQuality
 import androidx.compose.ui.graphics.drawscope.DrawScope
 import androidx.compose.ui.graphics.drawscope.Stroke
+import androidx.compose.ui.graphics.drawscope.clipPath
 import androidx.compose.ui.graphics.drawscope.clipRect
 import androidx.compose.ui.graphics.drawscope.drawIntoCanvas
 import androidx.compose.ui.graphics.drawscope.withTransform
@@ -46,6 +47,9 @@ import com.oxygen.weather.timeline.presentation.scene.FirstCitySnowRenderStyle
 import com.oxygen.weather.timeline.presentation.scene.FirstCityLayer
 import com.oxygen.weather.timeline.presentation.scene.FirstCityPassReference
 import com.oxygen.weather.timeline.presentation.scene.FirstCityTheme
+import com.oxygen.weather.timeline.presentation.scene.UrbanParkCloudLayer
+import com.oxygen.weather.timeline.presentation.scene.UrbanParkComposition
+import com.oxygen.weather.timeline.presentation.scene.UrbanParkLayer
 import com.oxygen.weather.timeline.presentation.scene.FirstCityWorldBounds
 import com.oxygen.weather.timeline.presentation.scene.LivingUrbanParkComposition
 import com.oxygen.weather.timeline.presentation.scene.LivingUrbanParkDataSurfaceDeclaration
@@ -68,7 +72,6 @@ import com.oxygen.weather.timeline.presentation.scene.SceneReading
 import com.oxygen.weather.timeline.presentation.scene.SceneCloudRenderInput
 import com.oxygen.weather.timeline.presentation.scene.SceneRainRenderInput
 import com.oxygen.weather.timeline.presentation.scene.SceneSnowRenderInput
-import com.oxygen.weather.timeline.presentation.symbol.WeatherSymbolId
 import com.oxygen.weather.timeline.presentation.scene.cloudRenderInput
 import com.oxygen.weather.timeline.presentation.scene.rainRenderInput
 import com.oxygen.weather.timeline.presentation.scene.snowRenderInput
@@ -85,12 +88,10 @@ import kotlin.math.roundToInt
 import kotlin.math.sin
 
 private const val CLOUD_REGION_FRACTION = .33f
+private const val URBAN_PARK_CLOUD_REGION_FRACTION = .40f
 private const val CITY_RAIN_CLOUD_BASE_FRACTION = .24f
 private const val CITY_RAIN_FIELD_BOTTOM_FRACTION = .87f
 private const val CITY_RAIN_DEFAULT_START_FRACTION = .52f
-private const val URBAN_PARK_CLOUD_TYPE_1_TRAVEL_PER_HOUR = .085
-private const val URBAN_PARK_CLOUD_TYPE_2_TRAVEL_PER_HOUR = -.035
-private const val URBAN_PARK_CLOUD_TYPE_3_TRAVEL_PER_HOUR = .12
 
 /** Decorative-only rendering. Legible forecast facts are supplied by UI text above this layer. */
 @Composable
@@ -240,118 +241,133 @@ fun CatalogAtmosphericScene(
     }
 }
 
-/** Urban Park keeps First City's selected-time cues and weather decisions over fixed bundled art. */
+/** Urban Park keeps First City's resolved weather inputs over its own declared Park composition. */
 @Composable
-fun CatalogUrbanParkScene(
-    composition: FirstCityComposition,
-    selectedWeatherSymbolId: WeatherSymbolId?,
+internal fun CatalogUrbanParkScene(
+    composition: UrbanParkComposition,
     modifier: Modifier = Modifier,
 ) {
     val background = ImageBitmap.imageResource(R.drawable.urban_park_background)
     val middleground = ImageBitmap.imageResource(R.drawable.urban_park_middleground)
     val foreground = ImageBitmap.imageResource(R.drawable.urban_park_foreground)
-    val cloudLayerCount = when (selectedWeatherSymbolId) {
-        WeatherSymbolId.PARTLY_SUNNY_CLOUDY,
-        WeatherSymbolId.PARTLY_CLOUDY_NIGHT -> 1
-        WeatherSymbolId.MOSTLY_CLOUDY -> 2
-        WeatherSymbolId.CLOUDY_OVERCAST -> 3
-        else -> 0
-    }
+    val firstCity = composition.firstCity
     Canvas(modifier.fillMaxSize()) {
-        val planeWidth = size.width.roundToInt()
-        val planeHeight = (planeWidth * 1536f / 1024f).roundToInt()
+        val viewportWidth = size.width.roundToInt()
+        val viewportHeight = size.height.roundToInt()
+        val scale = maxOf(
+            size.width / background.width.toFloat(),
+            size.height / background.height.toFloat(),
+        )
+        val planeWidth = (background.width * scale).roundToInt()
+        val planeHeight = (background.height * scale).roundToInt()
         val planeOffset = androidx.compose.ui.unit.IntOffset(
-            0,
-            size.height.roundToInt() - planeHeight,
+            (viewportWidth - planeWidth) / 2,
+            (viewportHeight - planeHeight) / 2,
         )
         val planeSize = androidx.compose.ui.unit.IntSize(planeWidth, planeHeight)
 
-        val sky = composition.sky
-        if (sky == null) {
-            drawCityWorld(composition.treatment)
-        } else {
-            val cloudiness = composition.clouds.coverFraction
-            val storm = composition.precipitation == CityPrecipitation.STORM
-            drawSkyPalette(sky.condition, sky.daylight, cloudiness, storm)
-            if (composition.precipitation == CityPrecipitation.RAIN) {
-                drawRect(Brush.verticalGradient(
-                    0f to Color(0xFF4B6072), .55f to Color(0xFF5F7385),
-                    1f to Color.Transparent,
-                ))
-            }
-        }
-        drawUrbanParkPlane(background, planeOffset, planeSize)
-        if (composition.cue.visible) drawCityTimeCue(composition.cue, composition.treatment)
-        if (composition.moonCue.visible) drawCityTimeCue(composition.moonCue, composition.treatment)
-        drawUrbanParkCloudStack(
-            layerCount = cloudLayerCount,
-            daylight = composition.clouds.daylight,
-            selectedInstant = composition.selectedInstant,
-        )
-
-        drawUrbanParkPlane(middleground, planeOffset, planeSize)
-        drawUrbanParkPlane(foreground, planeOffset, planeSize)
-
-        if (FirstCityLayer.PRECIPITATION in composition.layerOrder) {
-            drawRect(
-                brush = Brush.verticalGradient(
-                    0f to Color.Transparent,
-                    .5f to Color(0x09091828),
-                    1f to Color(0xDD081626),
-                ),
-            )
-            when (composition.precipitation) {
-                CityPrecipitation.RAIN -> {
-                    val input = composition.rainRenderInput()
-                    check(input.selectedInstant == composition.selectedInstant)
-                    check(input.pass.layer == FirstCityLayer.PRECIPITATION)
-                    drawRainRenderer(input)
+        composition.layerOrder.sortedBy(UrbanParkLayer::backToFrontPosition).forEach { layer ->
+            when (layer) {
+                UrbanParkLayer.SKY_UNDERLAY -> {
+                    val sky = firstCity.sky
+                    if (sky == null) {
+                        drawCityWorld(firstCity.treatment)
+                    } else {
+                        val cloudiness = firstCity.clouds.coverFraction
+                        val storm = firstCity.precipitation == CityPrecipitation.STORM
+                        drawSkyPalette(sky.condition, sky.daylight, cloudiness, storm)
+                        if (firstCity.precipitation == CityPrecipitation.RAIN) {
+                            drawRect(Brush.verticalGradient(
+                                0f to Color(0xFF4B6072), .55f to Color(0xFF5F7385),
+                                1f to Color.Transparent,
+                            ))
+                        }
+                    }
                 }
-                CityPrecipitation.SNOW -> {
-                    val input = composition.snowRenderInput()
-                    check(input.selectedInstant == composition.selectedInstant)
-                    check(input.pass.layer == FirstCityLayer.PRECIPITATION)
-                    drawSnowRenderer(input)
+                UrbanParkLayer.BACKGROUND -> drawUrbanParkPlane(background, planeOffset, planeSize)
+                UrbanParkLayer.STARS -> drawCityStars(firstCity.treatment)
+                UrbanParkLayer.SUN -> drawCityTimeCue(firstCity.cue, firstCity.treatment)
+                UrbanParkLayer.MOON -> drawCityTimeCue(firstCity.moonCue, firstCity.treatment)
+                UrbanParkLayer.CLOUD_LAYER_1 -> drawUrbanParkCloudLayer(
+                    UrbanParkCloudLayer.LAYER_1, firstCity.clouds.daylight, composition.selectedInstant,
+                )
+                UrbanParkLayer.CLOUD_LAYER_2 -> drawUrbanParkCloudLayer(
+                    UrbanParkCloudLayer.LAYER_2, firstCity.clouds.daylight, composition.selectedInstant,
+                )
+                UrbanParkLayer.CLOUD_LAYER_3 -> drawUrbanParkCloudLayer(
+                    UrbanParkCloudLayer.LAYER_3, firstCity.clouds.daylight, composition.selectedInstant,
+                )
+                UrbanParkLayer.MIDDLEGROUND ->
+                    drawUrbanParkPlane(middleground, planeOffset, planeSize)
+                UrbanParkLayer.FOREGROUND -> {
+                    drawUrbanParkPlane(foreground, planeOffset, planeSize)
+                    drawUrbanParkBannerForeground(background, planeOffset, planeSize)
                 }
-                CityPrecipitation.NONE, CityPrecipitation.STORM -> Unit
+                UrbanParkLayer.PRECIPITATION -> {
+                    drawRect(
+                        brush = Brush.verticalGradient(
+                            0f to Color.Transparent,
+                            .5f to Color(0x09091828),
+                            1f to Color(0xDD081626),
+                        ),
+                    )
+                    when (firstCity.precipitation) {
+                        CityPrecipitation.RAIN -> {
+                            val input = firstCity.rainRenderInput()
+                            check(input.selectedInstant == composition.selectedInstant)
+                            check(input.pass.layer == FirstCityLayer.PRECIPITATION)
+                            drawRainRenderer(input)
+                        }
+                        CityPrecipitation.SNOW -> {
+                            val input = firstCity.snowRenderInput()
+                            check(input.selectedInstant == composition.selectedInstant)
+                            check(input.pass.layer == FirstCityLayer.PRECIPITATION)
+                            drawSnowRenderer(input)
+                        }
+                        CityPrecipitation.NONE, CityPrecipitation.STORM -> Unit
+                    }
+                }
             }
         }
     }
 }
 
-/** Urban Park clouds use the selected canonical event, independently of cloud-cover facts. */
-private fun DrawScope.drawUrbanParkCloudStack(
-    layerCount: Int,
+/** Draw one stable Park cloud identity on its independent selected-time track. */
+private fun DrawScope.drawUrbanParkCloudLayer(
+    layer: UrbanParkCloudLayer,
     daylight: Double,
     selectedInstant: Instant,
 ) {
-    if (layerCount == 0 || size.width <= 0f || size.height <= 0f) return
+    if (size.width <= 0f || size.height <= 0f) return
 
     val light = daylight.toFloat().takeIf(Float::isFinite)?.coerceIn(0f, 1f) ?: .35f
-    val cloudColor = lerp(Color(0xFF71869F), Color(0xFFE6EDF2), light)
-    clipRect(left = 0f, top = 0f, right = size.width, bottom = size.height * CLOUD_REGION_FRACTION) {
-        if (layerCount >= 1) {
-            drawUrbanParkCloudTrack(
-                cloudTrackOffset(selectedInstant, URBAN_PARK_CLOUD_TYPE_1_TRAVEL_PER_HOUR),
-            ) {
-                drawUrbanParkCumulus(.055f, .155f, .235f, .096f, cloudColor)
-                drawUrbanParkCumulus(.365f, .168f, .205f, .082f, cloudColor)
-                drawUrbanParkCumulus(.685f, .15f, .255f, .102f, cloudColor)
-            }
-        }
-        if (layerCount >= 2) {
-            drawUrbanParkCloudTrack(
-                cloudTrackOffset(selectedInstant, URBAN_PARK_CLOUD_TYPE_2_TRAVEL_PER_HOUR),
-            ) {
-                drawUrbanParkCloudDeck(.025f, .226f, .445f, .071f, cloudColor)
-                drawUrbanParkCloudDeck(.535f, .218f, .44f, .079f, cloudColor)
-            }
-        }
-        if (layerCount >= 3) {
-            drawUrbanParkCloudTrack(
-                cloudTrackOffset(selectedInstant, URBAN_PARK_CLOUD_TYPE_3_TRAVEL_PER_HOUR),
-            ) {
-                drawUrbanParkOvercastVeil(cloudColor)
+    clipRect(
+        left = 0f,
+        top = 0f,
+        right = size.width,
+        bottom = size.height * URBAN_PARK_CLOUD_REGION_FRACTION,
+    ) {
+        drawUrbanParkCloudTrack(cloudTrackOffset(selectedInstant, layer.travelPerHour)) {
+            when (layer) {
+                UrbanParkCloudLayer.LAYER_1 -> {
+                    drawStorybookCloud(.02f, .139f, .23f, .080f, light, 0)
+                    drawStorybookCloud(.33f, .151f, .19f, .074f, light, 1)
+                    drawStorybookCloud(.70f, .132f, .25f, .084f, light, 2)
+                }
+                UrbanParkCloudLayer.LAYER_2 -> {
+                    drawStorybookCloud(-.06f, .178f, .50f, .088f, light, 3)
+                    drawStorybookCloud(.56f, .186f, .49f, .084f, light, 1)
+                }
+                UrbanParkCloudLayer.LAYER_3 -> {
+                    drawStorybookCloud(-.18f, .151f, .43f, .106f, light, 2)
+                    drawStorybookCloud(.07f, .143f, .43f, .110f, light, 0)
+                    drawStorybookCloud(.32f, .153f, .43f, .105f, light, 1)
+                    drawStorybookCloud(.57f, .141f, .44f, .110f, light, 3)
+                    drawStorybookCloud(.82f, .152f, .43f, .105f, light, 2)
+                    drawStorybookCloud(-.04f, .205f, .45f, .122f, light, 2)
+                    drawStorybookCloud(.28f, .215f, .45f, .118f, light, 1)
+                    drawStorybookCloud(.56f, .205f, .45f, .125f, light, 2)
+                }
             }
         }
     }
@@ -376,13 +392,14 @@ private fun cloudTrackOffset(selectedInstant: Instant, travelPerHour: Double): F
     return (travelledWidths - floor(travelledWidths)).toFloat()
 }
 
-/** Separate rounded crowns and open gaps keep the first layer distinct from the lower deck. */
-private fun DrawScope.drawUrbanParkCumulus(
+/** Softly shaded, rounded storybook forms stay transparent beyond their cloud silhouettes. */
+private fun DrawScope.drawStorybookCloud(
     xFraction: Float,
     yFraction: Float,
     widthFraction: Float,
     heightFraction: Float,
-    color: Color,
+    daylight: Float,
+    variation: Int,
 ) {
     val left = size.width * xFraction
     val top = size.height * yFraction
@@ -390,99 +407,97 @@ private fun DrawScope.drawUrbanParkCumulus(
     val height = size.height * heightFraction
     val right = left + width
     val baseline = top + height
+    val warmth = .30f + .70f * daylight
+    val highlight = lerp(Color(0xFFC8D9EB), Color(0xFFFFF2D8), warmth)
+    val body = lerp(Color(0xFF8DA4C2), Color(0xFFF2D8B7), warmth)
+    val shade = lerp(Color(0xFF465B7D), Color(0xFF967B8D), warmth)
+    val centerCrown = when (variation % 3) {
+        0 -> .59f
+        1 -> .55f
+        else -> .63f
+    }
+    val rightCrown = if (variation % 2 == 0) .84f else .81f
     val cloud = Path().apply {
         moveTo(left, baseline)
-        cubicTo(left + width * .04f, baseline - height * .28f,
-            left + width * .13f, baseline - height * .38f,
-            left + width * .23f, baseline - height * .33f)
-        cubicTo(left + width * .25f, baseline - height * .72f,
-            left + width * .39f, baseline - height * .82f,
-            left + width * .49f, baseline - height * .53f)
-        cubicTo(left + width * .58f, baseline - height * .98f,
-            left + width * .75f, baseline - height * .92f,
-            left + width * .79f, baseline - height * .48f)
-        cubicTo(left + width * .91f, baseline - height * .48f,
-            right, baseline - height * .3f,
+        cubicTo(left + width * .02f, baseline - height * .17f,
+            left + width * .08f, baseline - height * .32f,
+            left + width * .19f, baseline - height * .29f)
+        cubicTo(left + width * .16f, baseline - height * .52f,
+            left + width * .25f, baseline - height * .75f,
+            left + width * .38f, baseline - height * .68f)
+        cubicTo(left + width * .42f, baseline - height * .97f,
+            left + width * (centerCrown - .08f), baseline - height * 1.04f,
+            left + width * centerCrown, baseline - height * .67f)
+        cubicTo(left + width * (centerCrown + .07f), baseline - height * .88f,
+            left + width * (rightCrown - .02f), baseline - height * .79f,
+            left + width * rightCrown, baseline - height * .48f)
+        cubicTo(left + width * .94f, baseline - height * .46f,
+            left + width * .99f, baseline - height * .34f,
             right, baseline)
+        cubicTo(right - width * .05f, baseline + height * .02f,
+            right - width * .18f, baseline - height * .04f,
+            right - width * .30f, baseline - height * .02f)
+        cubicTo(left + width * .57f, baseline + height * .035f,
+            left + width * .46f, baseline - height * .06f,
+            left + width * .34f, baseline - height * .035f)
+        cubicTo(left + width * .18f, baseline + height * .025f,
+            left + width * .07f, baseline - height * .025f,
+            left, baseline)
         close()
     }
     drawPath(
         path = cloud,
         brush = Brush.verticalGradient(
-            colors = listOf(color.copy(alpha = .68f), color.copy(alpha = .43f)),
+            0f to highlight,
+            .33f to body,
+            .76f to shade,
+            1f to shade.copy(alpha = .92f),
             startY = top,
             endY = baseline,
         ),
     )
+    clipPath(cloud) {
+        listOf(.34f to .29f, centerCrown to .24f, rightCrown to .35f).forEach { (x, y) ->
+            val glowCenter = Offset(left + width * x, top + height * y)
+            drawOval(
+                brush = Brush.radialGradient(
+                    colors = listOf(highlight.copy(alpha = .36f), Color.Transparent),
+                    center = glowCenter,
+                    radius = width * .18f,
+                ),
+                topLeft = Offset(left + width * (x - .15f), top + height * (y - .23f)),
+                size = Size(width * .30f, height * .46f),
+            )
+        }
+    }
 }
 
-/** Broad, low pieces read as a broken deck while retaining a visible gap between forms. */
-private fun DrawScope.drawUrbanParkCloudDeck(
-    xFraction: Float,
-    yFraction: Float,
-    widthFraction: Float,
-    heightFraction: Float,
-    color: Color,
+/** The approved board's source-space mask redraws the same banner pixels at Foreground depth. */
+private fun DrawScope.drawUrbanParkBannerForeground(
+    background: ImageBitmap,
+    destinationOffset: androidx.compose.ui.unit.IntOffset,
+    destinationSize: androidx.compose.ui.unit.IntSize,
 ) {
-    val left = size.width * xFraction
-    val top = size.height * yFraction
-    val width = size.width * widthFraction
-    val height = size.height * heightFraction
-    val right = left + width
-    val baseline = top + height
-    val cloud = Path().apply {
-        moveTo(left, baseline)
-        cubicTo(left + width * .12f, baseline - height * .22f,
-            left + width * .18f, baseline - height * .34f,
-            left + width * .31f, baseline - height * .31f)
-        cubicTo(left + width * .36f, baseline - height * .74f,
-            left + width * .56f, baseline - height * .88f,
-            left + width * .67f, baseline - height * .49f)
-        cubicTo(left + width * .75f, baseline - height * .66f,
-            left + width * .9f, baseline - height * .56f,
-            right, baseline - height * .32f)
-        lineTo(right, baseline)
+    val scaleX = destinationSize.width.toFloat() / background.width
+    val scaleY = destinationSize.height.toFloat() / background.height
+    val originX = destinationOffset.x.toFloat()
+    val originY = destinationOffset.y.toFloat()
+    fun x(sourceX: Float) = originX + sourceX * scaleX
+    fun y(sourceY: Float) = originY + sourceY * scaleY
+    val banner = Path().apply {
+        moveTo(x(794f), y(278f))
+        cubicTo(x(840f), y(271f), x(906f), y(264f), x(952f), y(257f))
+        lineTo(x(956f), y(526f))
+        quadraticTo(x(956f), y(540f), x(944f), y(544f))
+        lineTo(x(793f), y(555f))
+        quadraticTo(x(782f), y(555f), x(781f), y(542f))
+        lineTo(x(779f), y(297f))
+        quadraticTo(x(779f), y(282f), x(794f), y(278f))
         close()
     }
-    drawPath(
-        path = cloud,
-        brush = Brush.verticalGradient(
-            colors = listOf(color.copy(alpha = .53f), color.copy(alpha = .35f)),
-            startY = top,
-            endY = baseline,
-        ),
-    )
-}
-
-/** A low-contrast full-width veil gives the overcast state one continuous final form. */
-private fun DrawScope.drawUrbanParkOvercastVeil(color: Color) {
-    val top = size.height * .194f
-    val bottom = size.height * .307f
-    val veil = Path().apply {
-        moveTo(0f, top + size.height * .012f)
-        cubicTo(size.width * .18f, top - size.height * .009f,
-            size.width * .31f, top + size.height * .006f,
-            size.width * .48f, top)
-        cubicTo(size.width * .68f, top - size.height * .012f,
-            size.width * .83f, top + size.height * .011f,
-            size.width, top - size.height * .002f)
-        lineTo(size.width, bottom - size.height * .009f)
-        cubicTo(size.width * .78f, bottom + size.height * .006f,
-            size.width * .66f, bottom - size.height * .003f,
-            size.width * .48f, bottom)
-        cubicTo(size.width * .3f, bottom + size.height * .008f,
-            size.width * .14f, bottom - size.height * .005f,
-            0f, bottom + size.height * .002f)
-        close()
+    clipPath(banner) {
+        drawUrbanParkPlane(background, destinationOffset, destinationSize)
     }
-    drawPath(
-        path = veil,
-        brush = Brush.verticalGradient(
-            colors = listOf(color.copy(alpha = .34f), color.copy(alpha = .20f)),
-            startY = top,
-            endY = bottom,
-        ),
-    )
 }
 
 /** Minimal open-landscape renderer; weather decisions remain owned by presentation. */

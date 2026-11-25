@@ -1,0 +1,145 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="2000" height="1560" viewBox="0 0 2000 1560" role="img" aria-labelledby="title desc">
+<title id="title">OX-108 Urban Park cloudy event cloud layers</title>
+<desc id="desc">The Pixel 3 XL capture and upper crop show the current repeating cloud bands. The artwork proposes three distinct cloud layers mapped to the selected cloudy event and placed directly above the Background image plane, behind Middleground and Foreground. The existing forecast symbol and timeline remain unchanged. The concept composite is not an installed screenshot.</desc>
+<defs>
+  <linearGradient id="sky" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#416787"/><stop offset="0.55" stop-color="#9ab7c5"/><stop offset="1" stop-color="#e7d7b8"/></linearGradient>
+  <linearGradient id="cloud1" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#f5fbfc" stop-opacity="0.94"/><stop offset="0.62" stop-color="#dce9ed" stop-opacity="0.84"/><stop offset="1" stop-color="#b3c7d1" stop-opacity="0.7"/></linearGradient>
+  <linearGradient id="cloud2" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#e3edf0" stop-opacity="0.88"/><stop offset="0.58" stop-color="#c1d1d8" stop-opacity="0.77"/><stop offset="1" stop-color="#91a8b6" stop-opacity="0.64"/></linearGradient>
+  <linearGradient id="cloud3" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#d7e4e9" stop-opacity="0.64"/><stop offset="0.52" stop-color="#bfced6" stop-opacity="0.53"/><stop offset="1" stop-color="#8299a8" stop-opacity="0.36"/></linearGradient>
+  <clipPath id="cloud-region"><rect x="1228" y="244" width="350" height="174"/></clipPath>
+  <clipPath id="capture-clip"><rect x="78" y="226" width="374" height="769" rx="16"/></clipPath>
+  <clipPath id="crop-clip"><rect x="526" y="240" width="620" height="280" rx="14"/></clipPath>
+  <clipPath id="concept-clip"><rect x="1228" y="244" width="350" height="525" rx="14"/></clipPath>
+  <marker id="arrow" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto"><path d="M0 0L8 4L0 8Z" fill="#678194"/></marker>
+  <g id="cloud-one" fill="url(#cloud1)">
+    <path d="M4 37 C1 33 3 27 8 24 C11 22 15 21 19 22 C21 13 28 8 36 10 C42 11 45 16 46 21 C51 15 58 14 64 17 C70 20 72 25 71 30 C77 31 80 35 78 39 C76 43 71 44 66 44 H11 C7 44 5 41 4 37Z"/>
+  </g>
+  <g id="cloud-two" fill="url(#cloud2)">
+    <path d="M0 34 C13 27 25 29 37 32 C44 22 58 18 71 22 C83 25 88 32 96 34 C103 23 116 19 129 23 C141 26 148 32 155 32 C163 29 169 33 168 39 C166 47 156 49 145 49 H16 C5 49 -2 43 0 34Z"/>
+  </g>
+  <g id="cloud-three" fill="url(#cloud3)">
+    <path d="M0 20 C20 17 40 13 61 17 C83 21 106 12 129 16 C145 19 155 17 168 21 L168 44 C140 49 112 43 85 46 C58 49 29 44 0 48Z"/>
+  </g>
+  <style>
+    .title{font:700 34px 'DejaVu Sans',sans-serif;fill:#183149}.sub{font:16px 'DejaVu Sans',sans-serif;fill:#3e5b70}
+    .head{font:700 20px 'DejaVu Sans',sans-serif;fill:#183149}.body{font:15px 'DejaVu Sans',sans-serif;fill:#38546b}
+    .small{font:13px 'DejaVu Sans',sans-serif;fill:#456176}.tiny{font:11px 'DejaVu Sans',sans-serif;fill:#456176}
+    .label{font:700 13px 'DejaVu Sans',sans-serif;fill:#203c52}.event{font:700 14px 'DejaVu Sans',sans-serif;fill:#203c52}
+  </style>
+</defs>
+<rect width="2000" height="1560" fill="#f3f6f8"/>
+<text x="60" y="68" class="title">OX-108 · Map cloudy weather events to Urban Park clouds</text>
+<text x="60" y="104" class="sub">Draft for owner review · Three new cloud forms · Three Park cloud layers directly above Background · Existing device screen is reference, not an after image</text>
+
+<!-- Current installed screen -->
+<rect x="55" y="150" width="420" height="1245" rx="22" fill="#fff" stroke="#c8d5df" stroke-width="2"/>
+<text x="80" y="195" class="head">Current device screen</text>
+<text x="80" y="218" class="small">Pixel 3 XL · Urban Park · cloudy/overcast</text>
+<rect x="74" y="222" width="382" height="777" rx="18" fill="#102338"/>
+<g clip-path="url(#capture-clip)"><image href="OX-108-urban-park-cloud-depth-device-capture.png" x="78" y="226" width="374" height="769" preserveAspectRatio="none"/></g>
+<text x="80" y="1038" class="body">Current screen captured 2026-11-24.</text>
+<text x="80" y="1063" class="body">The old repeated bands are the scene</text>
+<text x="80" y="1086" class="body">cloud artwork being replaced.</text>
+<rect x="78" y="1122" width="374" height="208" rx="14" fill="#eef5f8"/>
+<text x="98" y="1157" class="label">Unchanged app-owned UI</text>
+<text x="98" y="1187" class="small">The large cloudy forecast symbol, city,</text>
+<text x="98" y="1210" class="small">readouts, world/settings controls, and</text>
+<text x="98" y="1233" class="small">timeline stay as shown in the capture.</text>
+<text x="98" y="1285" class="tiny">Cloud event art is separate from this symbol.</text>
+
+<!-- Current cloud crop and event map -->
+<rect x="500" y="150" width="670" height="1245" rx="22" fill="#fff" stroke="#c8d5df" stroke-width="2"/>
+<text x="525" y="195" class="head">What changes and how events map</text>
+<text x="525" y="220" class="small">Current upper scene crop · repeated generic bands are replaced</text>
+<rect x="522" y="236" width="628" height="286" rx="15" fill="#e5edf2"/>
+<g clip-path="url(#crop-clip)"><image href="OX-108-urban-park-cloud-depth-device-detail-crop.png" x="526" y="240" width="620" height="280" preserveAspectRatio="none"/></g>
+<rect x="526" y="265" width="620" height="178" rx="10" fill="none" stroke="#f0bf4f" stroke-width="4" stroke-dasharray="12 8"/>
+<text x="526" y="553" class="body">Remove the two repeating atmospheric bands.</text>
+<text x="526" y="578" class="small">The cloudy symbol over the photo is forecast UI and stays unchanged.</text>
+<path d="M1123 443 C1144 480 1139 531 1110 563" fill="none" stroke="#bf8c27" stroke-width="2.5" marker-end="url(#arrow)"/>
+<text x="525" y="633" class="head">Selected cloudy event → active cloud layers</text>
+<text x="525" y="659" class="small">Use the canonical selected event identity, not cloud-cover percent.</text>
+
+<rect x="522" y="684" width="628" height="186" rx="14" fill="#f2f7f9" stroke="#d4e0e7"/>
+<text x="544" y="715" class="event">PARTLY_SUNNY_CLOUDY</text>
+<text x="544" y="738" class="event">PARTLY_CLOUDY_NIGHT</text>
+<use href="#cloud-one" x="855" y="702" transform="translate(855 702) scale(1.05) translate(-855 -702)"/>
+<rect x="1014" y="708" width="114" height="36" rx="18" fill="#d9ecea"/><text x="1071" y="731" text-anchor="middle" class="label">Layer 1</text>
+<text x="544" y="789" class="small">Broken, separated cumulus forms · day/night color follows the existing sky treatment.</text>
+<text x="544" y="843" class="tiny">One sparse layer</text>
+
+<rect x="522" y="882" width="628" height="174" rx="14" fill="#f2f7f9" stroke="#d4e0e7"/>
+<text x="544" y="916" class="event">MOSTLY_CLOUDY</text>
+<use href="#cloud-two" x="832" y="894" transform="translate(832 894) scale(1.25) translate(-832 -894)"/>
+<rect x="1000" y="900" width="64" height="36" rx="18" fill="#d9ecea"/><text x="1032" y="923" text-anchor="middle" class="label">L1</text>
+<rect x="1070" y="900" width="64" height="36" rx="18" fill="#cbdbe3"/><text x="1102" y="923" text-anchor="middle" class="label">L2</text>
+<text x="544" y="965" class="small">Layer 1 broken clouds + Layer 2 broad, low cloud deck.</text>
+<text x="544" y="1018" class="tiny">Two distinct cloud layers</text>
+
+<rect x="522" y="1068" width="628" height="174" rx="14" fill="#f2f7f9" stroke="#d4e0e7"/>
+<text x="544" y="1102" class="event">CLOUDY_OVERCAST</text>
+<use href="#cloud-three" x="812" y="1080" transform="translate(812 1080) scale(1.2) translate(-812 -1080)"/>
+<rect x="1000" y="1086" width="43" height="36" rx="18" fill="#d9ecea"/><text x="1021" y="1109" text-anchor="middle" class="label">L1</text>
+<rect x="1048" y="1086" width="43" height="36" rx="18" fill="#cbdbe3"/><text x="1069" y="1109" text-anchor="middle" class="label">L2</text>
+<rect x="1096" y="1086" width="43" height="36" rx="18" fill="#bccbd6"/><text x="1117" y="1109" text-anchor="middle" class="label">L3</text>
+<text x="544" y="1151" class="small">Layers 1 + 2 + 3 · broad, continuous overcast veil.</text>
+<text x="544" y="1204" class="tiny">Three distinct cloud layers</text>
+<text x="525" y="1282" class="small">Other/no selected cloudy event: no OX-108 themed cloud layers.</text>
+<text x="525" y="1307" class="small">Existing precipitation rendering remains unchanged.</text>
+
+<!-- Proposed artwork and exact depth -->
+<rect x="1195" y="150" width="750" height="1245" rx="22" fill="#fff" stroke="#c8d5df" stroke-width="2"/>
+<text x="1220" y="195" class="head">Proposed clouds and Park depth</text>
+<text x="1220" y="220" class="small">Overcast concept composite · existing image planes + vector cloud art</text>
+<text x="1220" y="239" class="tiny">Concept proposal, not an installed screen capture</text>
+<rect x="1222" y="244" width="362" height="546" rx="16" fill="url(#sky)" stroke="#aebfca"/>
+<g clip-path="url(#concept-clip)">
+  <rect x="1228" y="244" width="350" height="525" fill="url(#sky)"/>
+  <image href="OX-108-urban-park-cloud-depth-park-background-preview.png" x="1228" y="244" width="350" height="525" preserveAspectRatio="none"/>
+  <g clip-path="url(#cloud-region)">
+    <!-- Cloud L1: separate, uneven cumulus -->
+    <use href="#cloud-one" x="1245" y="270" transform="translate(1245 270) scale(1.18) translate(-1245 -270)" opacity="0.84"/>
+    <use href="#cloud-one" x="1380" y="297" transform="translate(1380 297) scale(0.82) translate(-1380 -297)" opacity="0.76"/>
+    <!-- Cloud L2: wider, broken stratocumulus deck -->
+    <use href="#cloud-two" x="1280" y="319" transform="translate(1280 319) scale(2.5 1.05) translate(-1280 -319)" opacity="0.68"/>
+    <!-- Cloud L3: soft continuous overcast sheet -->
+    <use href="#cloud-three" x="1240" y="270" transform="translate(1240 270) scale(2.08 1.25) translate(-1240 -270)" opacity="0.64"/>
+  </g>
+  <image href="OX-108-urban-park-cloud-depth-park-middleground-preview.png" x="1228" y="244" width="350" height="525" preserveAspectRatio="none"/>
+  <image href="OX-108-urban-park-cloud-depth-park-foreground-preview.png" x="1228" y="244" width="350" height="525" preserveAspectRatio="none"/>
+</g>
+<path d="M1210 244 h-12 v174 h12" fill="none" stroke="#bb8d32" stroke-width="2"/>
+<text x="1222" y="812" class="tiny">Cloud bounds stay within the top 33% of the scene canvas.</text>
+
+<text x="1610" y="270" class="label">THREE DISTINCT DRAWN FORMS</text>
+<rect x="1602" y="290" width="310" height="132" rx="14" fill="#f3f7f9" stroke="#d4e0e7"/>
+<use href="#cloud-one" x="1620" y="312" transform="translate(1620 312) scale(1.35) translate(-1620 -312)"/>
+<text x="1620" y="385" class="label">L1 · Broken cumulus</text><text x="1620" y="406" class="tiny">Separate puffs, open gaps</text>
+<rect x="1602" y="435" width="310" height="132" rx="14" fill="#f3f7f9" stroke="#d4e0e7"/>
+<use href="#cloud-two" x="1620" y="458" transform="translate(1620 458) scale(1.55) translate(-1620 -458)"/>
+<text x="1620" y="530" class="label">L2 · Broad cloud deck</text><text x="1620" y="551" class="tiny">Lower, wider broken sheet</text>
+<rect x="1602" y="580" width="310" height="132" rx="14" fill="#f3f7f9" stroke="#d4e0e7"/>
+<use href="#cloud-three" x="1620" y="603" transform="translate(1620 603) scale(1.55) translate(-1620 -603)"/>
+<text x="1620" y="675" class="label">L3 · Overcast veil</text><text x="1620" y="696" class="tiny">Continuous soft cover</text>
+
+<text x="1220" y="858" class="label">BACK-TO-FRONT DRAW ORDER · clouds sit directly above Background</text>
+<rect x="1220" y="878" width="694" height="76" rx="12" fill="#eef3f6"/>
+<text x="1240" y="907" class="small">1 · Sky / rain wash</text><text x="1240" y="931" class="small">2 · Background image</text>
+<rect x="1490" y="888" width="102" height="54" rx="10" fill="#d9ecea" stroke="#77aaa5"/>
+<text x="1541" y="910" text-anchor="middle" class="label">3 · Cloud L1</text><text x="1541" y="930" text-anchor="middle" class="tiny">active by event</text>
+<rect x="1602" y="888" width="102" height="54" rx="10" fill="#cbdbe3" stroke="#92a9b8"/>
+<text x="1653" y="910" text-anchor="middle" class="label">4 · Cloud L2</text><text x="1653" y="930" text-anchor="middle" class="tiny">active by event</text>
+<rect x="1714" y="888" width="178" height="54" rx="10" fill="#bccbd6" stroke="#849aa9"/>
+<text x="1803" y="910" text-anchor="middle" class="label">5 · Cloud L3</text><text x="1803" y="930" text-anchor="middle" class="tiny">active by event</text>
+<path d="M1240 973 H1885" stroke="#678194" stroke-width="2" marker-end="url(#arrow)"/>
+<text x="1240" y="1003" class="small">6 · Sun/Moon cues</text><text x="1410" y="1003" class="small">7 · Middleground image</text><text x="1638" y="1003" class="small">8 · Foreground image</text><text x="1835" y="1003" class="tiny">9 · precipitation</text>
+<text x="1220" y="1043" class="tiny">Opaque Middleground and Foreground art occludes the cloud stack; Background art is below it.</text>
+
+<rect x="1220" y="1080" width="694" height="238" rx="16" fill="#eef7f5"/>
+<text x="1245" y="1120" class="label">UNCHANGED</text>
+<text x="1245" y="1154" class="body">Existing event selection and source-time/carry semantics;</text>
+<text x="1245" y="1180" class="body">sky and Sun/Moon treatment; precipitation layer and behavior;</text>
+<text x="1245" y="1206" class="body">other worlds; image files and transforms; forecast UI and timeline.</text>
+<text x="1245" y="1260" class="small">The event map does not infer cloud type from cloud-cover percent.</text>
+<text x="1245" y="1286" class="small">All cloud edges, blur, motion, and transitions stay within 33%.</text>
+</svg>
