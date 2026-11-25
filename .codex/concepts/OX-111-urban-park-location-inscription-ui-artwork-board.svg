@@ -1,0 +1,97 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1760" height="1250" viewBox="0 0 1760 1250">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#101e2c"/>
+      <stop offset="1" stop-color="#0a1420"/>
+    </linearGradient>
+    <linearGradient id="panel" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#1a2e3e"/>
+      <stop offset="1" stop-color="#142536"/>
+    </linearGradient>
+    <clipPath id="screenClip"><rect x="54" y="202" width="394" height="810" rx="15"/></clipPath>
+    <style>
+      .title { font: 700 38px Inter, Arial, sans-serif; fill: #f2f6f8; }
+      .subtitle { font: 400 17px Inter, Arial, sans-serif; fill: #b8cbd5; }
+      .eyebrow { font: 700 13px Inter, Arial, sans-serif; fill: #85c8d1; letter-spacing: 1.4px; }
+      .cardtitle { font: 700 21px Inter, Arial, sans-serif; fill: #edf4f7; }
+      .body { font: 400 15px Inter, Arial, sans-serif; fill: #c9d9e1; }
+      .small { font: 400 13px Inter, Arial, sans-serif; fill: #aabdc8; }
+    </style>
+  </defs>
+  <rect width="1760" height="1250" fill="url(#bg)"/>
+  <path d="M0 120 H1760" stroke="#2a4253" stroke-width="1"/>
+  <text x="54" y="45" class="eyebrow">OXYGEN TIME LAB  /  OX-111  /  PROPOSED UI ARTWORK</text>
+  <text x="54" y="91" class="title">Location becomes paint on the water tower</text>
+  <text x="858" y="88" class="subtitle">One scene layer • dynamic lettering • paint integrated with tower surface</text>
+
+  <!-- Current screen reference -->
+  <rect x="48" y="145" width="420" height="1018" rx="22" fill="url(#panel)" stroke="#38566a" stroke-width="1.5"/>
+  <text x="70" y="180" class="eyebrow">CURRENT SCREEN REFERENCE</text>
+  <text x="70" y="202" class="small">Current Pixel capture; shown as the before-state</text>
+  <g clip-path="url(#screenClip)">
+    <image href="OX-111-urban-park-location-inscription-current-reference.png" x="54" y="202" width="394" height="810" preserveAspectRatio="none"/>
+  </g>
+  <rect x="54" y="202" width="394" height="810" rx="15" fill="none" stroke="#7699aa" stroke-width="1"/>
+  <path d="M188 470 C 230 456 280 448 314 440" fill="none" stroke="#ffd375" stroke-width="2.5" stroke-dasharray="7 6"/>
+  <circle cx="314" cy="440" r="7" fill="#ffd375" stroke="#102130" stroke-width="3"/>
+  <rect x="68" y="1030" width="380" height="102" rx="15" fill="#0d1d2a" stroke="#304b5d"/>
+  <text x="86" y="1060" class="body" font-weight="700">The location line moves to the tower.</text>
+  <text x="86" y="1087" class="small">Picker action, weather facts, and timeline remain.</text>
+  <text x="86" y="1111" class="small">This screenshot is reference, not acceptance evidence.</text>
+
+  <!-- Chicago target card -->
+  <rect x="496" y="145" width="592" height="692" rx="22" fill="url(#panel)" stroke="#38566a" stroke-width="1.5"/>
+  <text x="520" y="180" class="eyebrow">TARGET A  /  SHORT NAME</text>
+  <text x="520" y="215" class="cardtitle">Chicago</text>
+  <text x="520" y="242" class="small">Directly painted on the curved tank • one line</text>
+  <image href="OX-111-urban-park-location-inscription-painted-chicago.png" x="520" y="264" width="544" height="325" preserveAspectRatio="none"/>
+  <rect x="520" y="264" width="544" height="325" rx="10" fill="none" stroke="#a9c0cb" stroke-opacity=".6"/>
+  <text x="520" y="641" class="body">The lettering bends around the cylinder and follows the tank lighting.</text>
+  <text x="520" y="670" class="small">Brush texture and pigment wear sit within the painted strokes.</text>
+  <text x="520" y="705" class="small">Photo-based paint study; not a runtime bitmap.</text>
+
+  <!-- Multiword target card -->
+  <rect x="1112" y="145" width="600" height="692" rx="22" fill="url(#panel)" stroke="#38566a" stroke-width="1.5"/>
+  <text x="1136" y="180" class="eyebrow">TARGET B  /  MULTIWORD NAME</text>
+  <text x="1136" y="215" class="cardtitle">San Francisco</text>
+  <text x="1136" y="242" class="small">Paint two lines on the same face • keep the full name</text>
+  <image href="OX-111-urban-park-location-inscription-painted-san-francisco.png" x="1136" y="264" width="552" height="330" preserveAspectRatio="none"/>
+  <rect x="1136" y="264" width="552" height="330" rx="10" fill="none" stroke="#a9c0cb" stroke-opacity=".6"/>
+  <text x="1136" y="641" class="body">The same painter redraws each newly selected location.</text>
+  <text x="1136" y="670" class="small">Null or blank input leaves the tank unlettered.</text>
+  <text x="1136" y="705" class="small">Text remains available from presentation semantics.</text>
+
+  <!-- Scene order and retained interface -->
+  <rect x="496" y="865" width="1216" height="298" rx="22" fill="#132637" stroke="#38566a" stroke-width="1.5"/>
+  <text x="522" y="901" class="eyebrow">PROPOSED BACK-TO-FRONT PARK PASS ORDER</text>
+  <g font-family="Inter, Arial, sans-serif" font-size="13" font-weight="600" text-anchor="middle">
+    <rect x="522" y="925" width="103" height="44" rx="12" fill="#203a4b" stroke="#547386"/>
+    <text x="573" y="952" fill="#eaf1f4">Sky underlay</text>
+    <path d="M629 947 H640" stroke="#91adbb" stroke-width="2"/><path d="M636 942 L643 947 L636 952" fill="none" stroke="#91adbb" stroke-width="2"/>
+    <rect x="645" y="925" width="112" height="44" rx="12" fill="#203a4b" stroke="#547386"/>
+    <text x="701" y="952" fill="#eaf1f4">Background</text>
+    <path d="M761 947 H772" stroke="#91adbb" stroke-width="2"/><path d="M768 942 L775 947 L768 952" fill="none" stroke="#91adbb" stroke-width="2"/>
+    <rect x="777" y="925" width="132" height="44" rx="12" fill="#203a4b" stroke="#547386"/>
+    <text x="843" y="952" fill="#eaf1f4">Stars / Sun / Moon</text>
+    <path d="M913 947 H924" stroke="#91adbb" stroke-width="2"/><path d="M920 942 L927 947 L920 952" fill="none" stroke="#91adbb" stroke-width="2"/>
+    <rect x="929" y="925" width="78" height="44" rx="12" fill="#203a4b" stroke="#547386"/>
+    <text x="968" y="952" fill="#eaf1f4">Clouds</text>
+    <path d="M1011 947 H1022" stroke="#91adbb" stroke-width="2"/><path d="M1018 942 L1025 947 L1018 952" fill="none" stroke="#91adbb" stroke-width="2"/>
+    <rect x="1027" y="925" width="126" height="44" rx="12" fill="#203a4b" stroke="#547386"/>
+    <text x="1090" y="952" fill="#eaf1f4">Middleground</text>
+    <path d="M1157 947 H1168" stroke="#91adbb" stroke-width="2"/><path d="M1164 942 L1171 947 L1164 952" fill="none" stroke="#91adbb" stroke-width="2"/>
+    <rect x="1173" y="919" width="157" height="56" rx="14" fill="#215541" stroke="#75c39a" stroke-width="2"/>
+    <text x="1251" y="953" fill="#effbf4">Tower inscription</text>
+    <path d="M1334 947 H1345" stroke="#91adbb" stroke-width="2"/><path d="M1341 942 L1348 947 L1341 952" fill="none" stroke="#91adbb" stroke-width="2"/>
+    <rect x="1350" y="925" width="123" height="44" rx="12" fill="#203a4b" stroke="#547386"/>
+    <text x="1411" y="952" fill="#eaf1f4">Foreground</text>
+    <path d="M1477 947 H1488" stroke="#91adbb" stroke-width="2"/><path d="M1484 942 L1491 947 L1484 952" fill="none" stroke="#91adbb" stroke-width="2"/>
+    <rect x="1493" y="925" width="183" height="44" rx="12" fill="#203a4b" stroke="#547386"/>
+    <text x="1584" y="952" fill="#eaf1f4">Precipitation pass</text>
+  </g>
+  <text x="522" y="1012" class="body">Weather-sky underlay shows only through transparent Park Background pixels.</text>
+  <text x="522" y="1042" class="body">The location picker, remaining meteo values, and timeline stay in the main view.</text>
+  <text x="522" y="1072" class="body">Foreground art/banner stay in front; accessible location text remains presentation-sourced.</text>
+  <text x="522" y="1124" class="small">Library boundary still needs owner choice: dedicated :urban-park Gradle module or Park package in :app.</text>
+  <text x="522" y="1148" class="small">Paint studies guide material only; runtime location lettering remains dynamically drawn.</text>
+</svg>

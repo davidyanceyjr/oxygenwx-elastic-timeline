@@ -1,0 +1,60 @@
+digraph OX111 {
+  graph [
+    rankdir=TB,
+    bgcolor="#0b1623",
+    pad="0.38",
+    nodesep="0.32",
+    ranksep="0.48",
+    splines=ortho,
+    fontname="Inter",
+    label="OX-111  |  URBAN PARK LOCATION INSCRIPTION",
+    labelloc=t,
+    fontsize=24,
+    fontcolor="#edf4f7"
+  ];
+  node [
+    shape=box,
+    style="rounded,filled",
+    color="#557286",
+    penwidth=1.4,
+    fillcolor="#172b3b",
+    fontname="Inter",
+    fontsize=13,
+    fontcolor="#f4f7f8",
+    margin="0.17,0.12"
+  ];
+  edge [
+    color="#8bb3c4",
+    penwidth=1.5,
+    arrowsize=0.75,
+    fontname="Inter",
+    fontsize=11,
+    fontcolor="#c8dce5"
+  ];
+
+  input [label="Typed presentation input\nselectedLocationName\n(single source for the visible place name)", fillcolor="#1f3c4e", color="#80b9ca"];
+  changed [label="Location selection changes\nsame input updates the next scene draw", fillcolor="#1f3c4e", color="#80b9ca"];
+  decision [shape=diamond, label="Name has\nvisible characters?", fillcolor="#263949", color="#9bb8c6"];
+  empty [label="No painted lettering\nDo not invent a place name\nKeep existing selection/accessibility state", fillcolor="#352f2c", color="#c69b79"];
+  layout [label="One reusable tower-inscription function\nMeasure the selected name against the tank-face bounds\nWrap at word boundaries; fit the full name to the face\nNo truncation or ellipsis", fillcolor="#174452", color="#66c2c2"];
+  treatment [label="Paint treatment\nUse the same Park plane transform\nClip and bend lettering to the cylinder\nPigment follows tank grain and lighting\nA crisp flat overlay fails the visual exit", fillcolor="#174452", color="#66c2c2"];
+  plane [label="Preserve earlier OX-110 passes in order:\nSKY_UNDERLAY → BACKGROUND → STARS → SUN/MOON → CLOUDS\nMIDDLEGROUND tower pixels establish the face and shared plane geometry", fillcolor="#2d3e4c", color="#a3bac3"];
+  inscription [label="TOWER_INSCRIPTION\nPainted location pass follows the tower-bearing plane", fillcolor="#255144", color="#7ac59f", penwidth=2];
+  foreground [label="FOREGROUND\nExisting front-facing Park art and banner stay above the lettering", fillcolor="#2d3e4c", color="#a3bac3"];
+  precipitation [label="PRECIPITATION\nKeep the existing separate effect pass and order", fillcolor="#2d3e4c", color="#a3bac3"];
+  semantic [label="Accessible location text remains sourced from presentation state\nThe drawing is visual output, not the semantic label", fillcolor="#28364a", color="#9baed2"];
+  picker [label="Keep the current location-picker action and its accessible affordance", fillcolor="#28364a", color="#9baed2"];
+  retained [label="Keep remaining meteo readout values, selected time, timeline,\nweather/source-time meaning, and other themes unchanged", fillcolor="#28364a", color="#9baed2"];
+  boundary [label="OWNER ARCHITECTURE QUESTION\nDoes the Urban Park Kotlin library mean a dedicated :urban-park\nGradle module, or a Park-specific Kotlin package inside :app?\nKeep shared presentation inputs behind a typed boundary.", fillcolor="#473b27", color="#e1b96e", penwidth=2];
+
+  input -> decision;
+  changed -> input [xlabel="new selected value"];
+  decision -> empty [label="blank / null"];
+  decision -> layout [label="nonblank"];
+  layout -> treatment -> plane -> inscription -> foreground -> precipitation;
+  {rank=same; empty; semantic; picker; retained}
+  input -> semantic [style=dashed, arrowhead=none, color="#859bb8", constraint=false];
+  input -> picker [style=dashed, arrowhead=none, color="#859bb8", constraint=false];
+  input -> retained [style=dashed, arrowhead=none, color="#859bb8", constraint=false];
+  treatment -> boundary [style=dashed, arrowhead=none, color="#d3a94f"];
+}

@@ -1,0 +1,91 @@
+digraph OX111SharedSceneCore {
+  graph [
+    rankdir=TB,
+    bgcolor="#0b1623",
+    pad="0.38",
+    nodesep="0.34",
+    ranksep="0.52",
+    splines=ortho,
+    fontname="Inter",
+    label="OX-111  |  SHARED SCENE CORE + URBAN PARK DATA INSCRIPTION",
+    labelloc=t,
+    fontsize=23,
+    fontcolor="#edf4f7"
+  ];
+  node [
+    shape=box,
+    style="rounded,filled",
+    color="#557286",
+    penwidth=1.4,
+    fillcolor="#172b3b",
+    fontname="Inter",
+    fontsize=12,
+    fontcolor="#f4f7f8",
+    margin="0.17,0.12"
+  ];
+  edge [
+    color="#8bb3c4",
+    penwidth=1.5,
+    arrowsize=0.75,
+    fontname="Inter",
+    fontsize=10,
+    fontcolor="#c8dce5"
+  ];
+
+  subgraph cluster_inputs {
+    label="APP-OWNED TYPED SCENE INPUTS";
+    color="#537b8e";
+    fontname="Inter";
+    fontsize=14;
+    fontcolor="#9dd4e0";
+    style="rounded";
+    forecast [label="Typed forecast projection\nThe selected forecast instant remains authoritative", fillcolor="#1f3c4e", color="#80b9ca"];
+    mapping [label="App maps forecast + selected theme\nto a theme-neutral SceneDescription\nNo provider DTO crosses into rendering", fillcolor="#1f3c4e", color="#80b9ca"];
+    park_definition [label="Urban Park scene definition\nThree image planes, tower face geometry,\nsurface material, and Park-only elements", fillcolor="#1f3c4e", color="#80b9ca"];
+    other_definitions [label="Built-in and future code-backed themes\nCity, roadside, desert, alien, and others supply\ntheir own assets, geometry, materials, and elements", fillcolor="#1f3c4e", color="#80b9ca"];
+    forecast -> mapping;
+  }
+
+  subgraph cluster_core {
+    label="SHARED :scene-core GRADLE LIBRARY  |  app depends on core; core has no app/theme dependency";
+    color="#4e8a7b";
+    fontname="Inter";
+    fontsize=14;
+    fontcolor="#9be0c3";
+    style="rounded";
+    order [label="Depth-ordered scene contract\nTheme supplies ordered planes and element declarations\nCore draws declared content back to front", fillcolor="#17473f", color="#6dc6a9"];
+    planes [label="Reusable plane compositor\nOptional Background / Middleground / Foreground stack\nApply one declared fit/crop transform to the plane set", fillcolor="#17473f", color="#6dc6a9"];
+    elements [label="Shared element pipeline\nCommon forecast-driven elements use typed inputs\nTheme-specific painters can occupy declared passes", fillcolor="#17473f", color="#6dc6a9"];
+    painted [label="Reusable painted-data surface renderer\nMeasure and wrap the full value; apply theme surface transform,\nface clip, pigment texture, and lighting", fillcolor="#17473f", color="#6dc6a9", penwidth=2];
+    order -> planes;
+    order -> elements;
+    elements -> painted;
+  }
+
+  subgraph cluster_outputs {
+    label="SCENE OUTPUTS AND SLICE BOUNDARIES";
+    color="#816e4b";
+    fontname="Inter";
+    fontsize=14;
+    fontcolor="#e8c987";
+    style="rounded";
+    park_scene [label="Urban Park uses the shared core\nSKY_UNDERLAY → BACKGROUND → STARS → SUN/MOON → CLOUDS\n→ MIDDLEGROUND tower → LOCATION_PAINT → FOREGROUND → PRECIPITATION", fillcolor="#33453c", color="#b1c69a"];
+    city_scenes [label="Other current theme scenes use the same shared contracts\nTheir existing appearance, weather mapping, and special elements remain intact", fillcolor="#33453c", color="#b1c69a"];
+    inscription [label="Chicago: one line on the tower\nSan Francisco: wraps to fit the same face\nSelection change updates the same painter; blank value paints nothing", fillcolor="#255144", color="#7ac59f", penwidth=2];
+    preserve [label="Keep location accessibility text and picker; all other readout values,\nselected-time/timeline behavior, source-time meaning, and data viewer remain", fillcolor="#28364a", color="#9baed2"];
+    extensions [label="Future birds, signs, monuments, and other theme-specific elements\nremain declared by their owning theme; this slice adds no new motif", fillcolor="#28364a", color="#9baed2"];
+    park_scene -> inscription;
+  }
+
+  mapping -> order;
+  park_definition -> planes;
+  park_definition -> painted;
+  other_definitions -> order;
+  other_definitions -> elements;
+  planes -> park_scene;
+  painted -> park_scene;
+  elements -> city_scenes;
+  park_scene -> preserve [style=dashed, arrowhead=none, color="#859bb8"];
+  city_scenes -> preserve [style=dashed, arrowhead=none, color="#859bb8"];
+  other_definitions -> extensions [style=dashed, arrowhead=none, color="#859bb8"];
+}

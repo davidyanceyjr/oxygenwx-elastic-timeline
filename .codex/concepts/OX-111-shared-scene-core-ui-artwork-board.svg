@@ -1,0 +1,122 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1760" height="1370" viewBox="0 0 1760 1370">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#101e2c"/><stop offset="1" stop-color="#0a1420"/>
+    </linearGradient>
+    <linearGradient id="panel" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#1a2e3e"/><stop offset="1" stop-color="#142536"/>
+    </linearGradient>
+    <clipPath id="screenClip"><rect x="58" y="222" width="330" height="680" rx="14"/></clipPath>
+    <style>
+      .title { font: 700 36px Inter, Arial, sans-serif; fill: #f2f6f8; }
+      .subtitle { font: 400 16px Inter, Arial, sans-serif; fill: #b8cbd5; }
+      .eyebrow { font: 700 12px Inter, Arial, sans-serif; fill: #85c8d1; letter-spacing: 1.35px; }
+      .cardtitle { font: 700 20px Inter, Arial, sans-serif; fill: #edf4f7; }
+      .body { font: 400 14px Inter, Arial, sans-serif; fill: #c9d9e1; }
+      .small { font: 400 12px Inter, Arial, sans-serif; fill: #aabdc8; }
+      .boxhead { font: 700 14px Inter, Arial, sans-serif; fill: #eef5f7; }
+      .boxbody { font: 400 12px Inter, Arial, sans-serif; fill: #c6d6df; }
+      .arrow { stroke: #91adbb; stroke-width: 2; fill: none; }
+    </style>
+  </defs>
+  <rect width="1760" height="1370" fill="url(#bg)"/>
+  <path d="M0 122 H1760" stroke="#2a4253" stroke-width="1"/>
+  <text x="52" y="42" class="eyebrow">OXYGEN TIME LAB  /  OX-111  /  REVISED UI ARTWORK BOARD</text>
+  <text x="52" y="87" class="title">One shared scene core, forecast-driven scenes</text>
+  <text x="870" y="82" class="subtitle">Theme assets and special elements stay theme-owned.</text>
+
+  <!-- Current screen reference -->
+  <rect x="42" y="145" width="374" height="1178" rx="22" fill="url(#panel)" stroke="#38566a" stroke-width="1.5"/>
+  <text x="62" y="179" class="eyebrow">CURRENT SCREEN REFERENCE</text>
+  <text x="62" y="200" class="small">Pixel capture • location is still in the central readout</text>
+  <g clip-path="url(#screenClip)">
+    <image href="OX-111-urban-park-location-inscription-current-reference.png" x="58" y="222" width="330" height="680" preserveAspectRatio="none"/>
+  </g>
+  <rect x="58" y="222" width="330" height="680" rx="14" fill="none" stroke="#7699aa" stroke-width="1"/>
+  <rect x="60" y="928" width="338" height="366" rx="15" fill="#0d1d2a" stroke="#304b5d"/>
+  <text x="78" y="964" class="cardtitle">What moves in OX-111</text>
+  <text x="78" y="998" class="body">The selected place name becomes a</text>
+  <text x="78" y="1020" class="body">painted tower layer. It remains dynamic</text>
+  <text x="78" y="1042" class="body">and readable from presentation state.</text>
+  <path d="M78 1064 H378" stroke="#304b5d"/>
+  <text x="78" y="1094" class="small">Location picker: retained</text>
+  <text x="78" y="1118" class="small">Other meteo values: retained</text>
+  <text x="78" y="1142" class="small">Timeline and selected time: retained</text>
+  <text x="78" y="1166" class="small">Main data viewer: retained in this slice</text>
+  <text x="78" y="1210" class="small">Reference only; not installed acceptance.</text>
+  <text x="78" y="1234" class="small">Paint photos guide material, not runtime assets.</text>
+
+  <!-- Forecast-to-renderer architecture -->
+  <rect x="440" y="145" width="1278" height="410" rx="22" fill="url(#panel)" stroke="#38566a" stroke-width="1.5"/>
+  <text x="466" y="181" class="eyebrow">SHARED CONTRACT  /  ONE-WAY DEPENDENCY</text>
+  <text x="466" y="213" class="cardtitle">Forecast resolves the scene; the core renders its description</text>
+
+  <rect x="466" y="242" width="250" height="112" rx="14" fill="#1c3a4b" stroke="#6e9cad"/>
+  <text x="484" y="272" class="boxhead">Typed forecast projection</text>
+  <text x="484" y="298" class="boxbody">Selected instant and supported</text>
+  <text x="484" y="318" class="boxbody">conditions remain authoritative.</text>
+  <path d="M720 298 H752" class="arrow"/><path d="M745 292 L753 298 L745 304" class="arrow"/>
+
+  <rect x="762" y="242" width="272" height="112" rx="14" fill="#1c3a4b" stroke="#6e9cad"/>
+  <text x="780" y="272" class="boxhead">App-owned scene definition</text>
+  <text x="780" y="298" class="boxbody">Forecast mapping + chosen theme</text>
+  <text x="780" y="318" class="boxbody">produce typed layers and elements.</text>
+  <path d="M1038 298 H1070" class="arrow"/><path d="M1063 292 L1071 298 L1063 304" class="arrow"/>
+
+  <rect x="1080" y="232" width="278" height="132" rx="16" fill="#17473f" stroke="#6dc6a9" stroke-width="2"/>
+  <text x="1098" y="265" class="boxhead">:scene-core library</text>
+  <text x="1098" y="291" class="boxbody">Ordered composition • plane stack</text>
+  <text x="1098" y="311" class="boxbody">shared elements • painted surfaces</text>
+  <text x="1098" y="337" class="small">No app or theme dependency</text>
+  <path d="M1362 298 H1394" class="arrow"/><path d="M1387 292 L1395 298 L1387 304" class="arrow"/>
+
+  <rect x="1404" y="242" width="282" height="112" rx="14" fill="#263d47" stroke="#86ad9c"/>
+  <text x="1422" y="272" class="boxhead">Composited scene</text>
+  <text x="1422" y="298" class="boxbody">Declared depth order and theme</text>
+  <text x="1422" y="318" class="boxbody">geometry determine the visible result.</text>
+
+  <rect x="466" y="388" width="374" height="132" rx="14" fill="#162d3d" stroke="#4b7184"/>
+  <text x="484" y="419" class="boxhead">Reusable plane compositor</text>
+  <text x="484" y="446" class="boxbody">Optional Background / Middleground / Foreground</text>
+  <text x="484" y="468" class="boxbody">share one declared fit/crop transform.</text>
+  <text x="484" y="495" class="small">Other themes may declare different plane sets.</text>
+
+  <rect x="854" y="388" width="374" height="132" rx="14" fill="#162d3d" stroke="#4b7184"/>
+  <text x="872" y="419" class="boxhead">Ordered scene elements</text>
+  <text x="872" y="446" class="boxbody">Common forecast-driven elements and theme</text>
+  <text x="872" y="468" class="boxbody">painters share the same depth contract.</text>
+  <text x="872" y="495" class="small">Birds, signs, and monuments stay theme-owned.</text>
+
+  <rect x="1242" y="388" width="444" height="132" rx="14" fill="#17473f" stroke="#6dc6a9" stroke-width="1.5"/>
+  <text x="1260" y="419" class="boxhead">Painted-data surface renderer</text>
+  <text x="1260" y="446" class="boxbody">Measure and wrap the value; transform and clip it</text>
+  <text x="1260" y="468" class="boxbody">to theme-provided surface geometry and material.</text>
+  <text x="1260" y="495" class="small">Pigment texture and lighting integrate the lettering.</text>
+
+  <!-- Painted target visuals -->
+  <rect x="440" y="580" width="620" height="500" rx="22" fill="url(#panel)" stroke="#38566a" stroke-width="1.5"/>
+  <text x="466" y="617" class="eyebrow">URBAN PARK  /  SHORT VALUE</text>
+  <text x="466" y="650" class="cardtitle">Chicago</text>
+  <text x="466" y="676" class="small">One line, painted into the cylindrical tower surface</text>
+  <image href="OX-111-urban-park-location-inscription-painted-chicago.png" x="466" y="696" width="568" height="322" preserveAspectRatio="none"/>
+  <rect x="466" y="696" width="568" height="322" rx="10" fill="none" stroke="#a9c0cb" stroke-opacity=".6"/>
+  <text x="466" y="1046" class="small">Theme supplies face geometry and material; core paints the dynamic text.</text>
+
+  <rect x="1080" y="580" width="638" height="500" rx="22" fill="url(#panel)" stroke="#38566a" stroke-width="1.5"/>
+  <text x="1106" y="617" class="eyebrow">URBAN PARK  /  MULTIWORD VALUE</text>
+  <text x="1106" y="650" class="cardtitle">San Francisco</text>
+  <text x="1106" y="676" class="small">Wrap at the word boundary; keep the complete value inside the same face</text>
+  <image href="OX-111-urban-park-location-inscription-painted-san-francisco.png" x="1106" y="696" width="586" height="322" preserveAspectRatio="none"/>
+  <rect x="1106" y="696" width="586" height="322" rx="10" fill="none" stroke="#a9c0cb" stroke-opacity=".6"/>
+  <text x="1106" y="1046" class="small">Location changes update the same renderer; blank input paints nothing.</text>
+
+  <!-- Ownership and ordering -->
+  <rect x="440" y="1104" width="1278" height="219" rx="22" fill="#132637" stroke="#38566a" stroke-width="1.5"/>
+  <text x="466" y="1140" class="eyebrow">THEME BOUNDARY AND PARK DEPTH ORDER</text>
+  <text x="466" y="1172" class="body">Shared :scene-core: plane composition • depth ordering • reusable painted-data renderer</text>
+  <text x="466" y="1198" class="body">Theme-owned: image assets • face/shape geometry • material descriptors • custom motifs</text>
+  <text x="466" y="1234" class="body" font-weight="700">Park: Middleground tower → location paint → Foreground/banner</text>
+  <text x="466" y="1260" class="small">Current built-in themes retain their visible appearance and forecast mapping through the common contracts.</text>
+  <text x="466" y="1286" class="small">Code-backed city, roadside, desert, alien, and future themes can use the same core with their own definitions.</text>
+  <text x="466" y="1312" class="small">The core draws typed scene descriptions; it does not interpret raw forecast data or change selected time.</text>
+</svg>

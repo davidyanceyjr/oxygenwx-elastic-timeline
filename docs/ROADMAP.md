@@ -1716,6 +1716,68 @@ These groupings do not merge slice acceptance. Cycle 171 is complete. The owner 
 
 **Owner follow-up (2026-11-25):** The Park photo contains the sky; do not draw a separate sky band above the top of the viewport. Scale and center-crop the Background, Middleground, and Foreground planes together to fill the viewport. Keep the weather-sky underlay only beneath transparent pixels in the Park Background, so its alpha defines where that underlay shows. Revise both OX-110 board packages and record renewed approvals and fingerprints before resuming implementation.
 
+### OX-111 — Build shared scene core and paint location onto Urban Park tower — SUPERSEDED
+
+**Outcome:** Before execution, the product owner approved decomposing the integrated scope into OX-111A through OX-111E. This leaf is superseded before implementation and has no acceptance evidence.
+**Evidence:** Cycle 180 plan and checkpoint: .codex/plans/180-ox111-urban-park-location-inscription.md.
+**Replacement slices:** OX-111A (ordered core and First City), OX-111B (Living Urban Park), OX-111C (Open Landscape), OX-111D (Urban Park composition), and OX-111E (Urban Park painted location).
+**Board disposition:** The product owner confirmed the same complete revised behavior and UI artwork packages are approved for all five replacement slices. Per-slice approval and fingerprints are in the cycle 180 manifest.
+
+### OX-111A — Create shared ordered scene core and migrate First City — NEXT
+
+**Objective/scope:** Add the Android Compose :scene-core module with theme-neutral ordered scene entries, a shared drawing runner, and public KDoc for ordering/callback ownership. Adapt First City default, baseline-proof, olive, and installed-content variants. Keep plane-stack composition and painted surfaces for dependent Park slices.
+**Depends on:** OX-19.
+**Exit:** Installed evidence shows First City default, baseline proof, olive, and installed-content variants routed through the theme-neutral :scene-core ordered renderer with their appearance, central location label, forecast mapping, and selected-time behavior preserved. Public core KDoc defines ordered-entry ownership; :scene-core has no app, forecast, or theme dependency, and :app depends on :scene-core one way.
+**Evidence:** .codex/test-artifacts/180-ox111-urban-park-location-inscription/OX-111A/ and .codex/history/180-ox111-urban-park-location-inscription.md.
+**In-scope installed states:** First City default, baseline proof, olive, and installed content at matched selected instants and art choices.
+**Visual objective:** Preserve First City appearance, visible facts, and selected-time mapping through the shared renderer.
+**Verification:** Run authorized build and contract commands; inspect :app and :scene-core dependency graphs; capture matched installed variants and observe a direct scrub. Do not add or run automated tests unless separately authorized. No RTL, TalkBack, or broad system matrix.
+**Slice board(s):** The product owner approved the same complete revised behavior package .codex/concepts/OX-111-shared-scene-core-behavior-board.dot, .svg, .png, and .md, and UI artwork package .codex/concepts/OX-111-shared-scene-core-ui-artwork-board.svg, .png, and .md for all five slices on 2026-11-25. Cycle 180 repeats approval and full SHA-256 fingerprints separately on each covered manifest entry. The packages govern the neutral core boundary, preserved current-theme treatment, Park plane/order contract, and Chicago/San Francisco tower surface. Images are board references, not runtime assets or installed acceptance evidence.
+
+### OX-111B — Migrate Living Urban Park to shared scene core — PLANNED
+
+**Objective/scope:** Adapt only Living Urban Park's app-owned scene composition to the shared ordered-entry contract. Preserve theme-specific drawing, visible treatment, location label, forecast decisions, and selected-time mapping.
+**Depends on:** OX-111A, OX-19.
+**Exit:** Installed matched evidence shows Living Urban Park routed through :scene-core with its visible appearance, central location label, forecast mapping, remaining readout, and selected-time behavior preserved. A direct timeline scrub continues to drive the selected scene.
+**Evidence:** .codex/test-artifacts/180-ox111-urban-park-location-inscription/OX-111B/ and .codex/history/180-ox111-urban-park-location-inscription.md.
+**In-scope installed states:** A representative Living Urban Park scene at a matched selected instant.
+**Visual objective:** Keep the current Living Urban Park screen and central location treatment intact through the common renderer.
+**Verification:** Run authorized build and contract commands; compare matched installed captures, readout, central label, and selected-time mapping; observe a direct scrub. Do not add or run automated tests unless separately authorized. No RTL, TalkBack, or broad system matrix.
+**Slice board(s):** The product owner approved the same complete revised behavior package .codex/concepts/OX-111-shared-scene-core-behavior-board.dot, .svg, .png, and .md, and UI artwork package .codex/concepts/OX-111-shared-scene-core-ui-artwork-board.svg, .png, and .md for all five slices on 2026-11-25. Cycle 180 repeats approval and full SHA-256 fingerprints separately on each covered manifest entry. The packages govern the neutral core boundary, preserved current-theme treatment, Park plane/order contract, and Chicago/San Francisco tower surface. Images are board references, not runtime assets or installed acceptance evidence.
+
+### OX-111C — Migrate Open Landscape to shared scene core — PLANNED
+
+**Objective/scope:** Adapt only Open Landscape's app-owned scene composition to the shared ordered-entry contract. Preserve theme-specific drawing, visible treatment, location label, forecast decisions, and selected-time mapping.
+**Depends on:** OX-111B, OX-19.
+**Exit:** Installed matched evidence shows Open Landscape routed through :scene-core with its visible appearance, central location label, forecast mapping, remaining readout, and selected-time behavior preserved. A direct timeline scrub continues to drive the selected scene.
+**Evidence:** .codex/test-artifacts/180-ox111-urban-park-location-inscription/OX-111C/ and .codex/history/180-ox111-urban-park-location-inscription.md.
+**In-scope installed states:** A representative Open Landscape scene at a matched selected instant.
+**Visual objective:** Keep the current Open Landscape screen and central location treatment intact through the common renderer.
+**Verification:** Run authorized build and contract commands; compare matched installed captures, readout, central label, and selected-time mapping; observe a direct scrub. Do not add or run automated tests unless separately authorized. No RTL, TalkBack, or broad system matrix.
+**Slice board(s):** The product owner approved the same complete revised behavior package .codex/concepts/OX-111-shared-scene-core-behavior-board.dot, .svg, .png, and .md, and UI artwork package .codex/concepts/OX-111-shared-scene-core-ui-artwork-board.svg, .png, and .md for all five slices on 2026-11-25. Cycle 180 repeats approval and full SHA-256 fingerprints separately on each covered manifest entry. The packages govern the neutral core boundary, preserved current-theme treatment, Park plane/order contract, and Chicago/San Francisco tower surface. Images are board references, not runtime assets or installed acceptance evidence.
+
+### OX-111D — Migrate Urban Park composition to shared scene core — PLANNED
+
+**Objective/scope:** Add the optional shared plane compositor and adapt Urban Park's scene ordering. Preserve OX-99 shared center crop and Background alpha underlay plus OX-110 celestial/cloud/Middleground/tree/Foreground/banner order, weather mapping, and selected-time behavior. Preserve one cloud layer for PARTLY_SUNNY_CLOUDY and PARTLY_CLOUDY_NIGHT, two for MOSTLY_CLOUDY, three for CLOUDY_OVERCAST, and none for other/absent events. Keep the location label central until OX-111E.
+**Depends on:** OX-111C, OX-19, OX-99, OX-110.
+**Exit:** Installed matched Urban Park evidence for PARTLY_SUNNY_CLOUDY, PARTLY_CLOUDY_NIGHT, MOSTLY_CLOUDY, CLOUDY_OVERCAST, and a non-cloudy control shows shared scene ordering and plane composition preserve OX-99 alignment/alpha and OX-110 sky-underlay, celestial, cloud, Middleground/tree, and Foreground/banner behavior with selected-time mapping intact. Cloud mapping remains one layer for each partly cloudy event, two for MOSTLY_CLOUDY, three for CLOUDY_OVERCAST, and none for other/absent events. The central location label remains in place until OX-111E.
+**Evidence:** .codex/test-artifacts/180-ox111-urban-park-location-inscription/OX-111D/ and .codex/history/180-ox111-urban-park-location-inscription.md.
+**In-scope installed states:** PARTLY_SUNNY_CLOUDY, PARTLY_CLOUDY_NIGHT, MOSTLY_CLOUDY, CLOUDY_OVERCAST, a non-cloudy control, celestial/cloud overlap where supported, registered planes, transparent Background underlay, tree/banner depth, and direct scrub.
+**Visual objective:** Preserve approved Urban Park composition and depth while routing its scene passes through the core.
+**Verification:** Run authorized build and contract commands; inspect installed states for the exact one/one/two/three/no-layer mapping, plane transform, alpha, scene order, cloud identity, foreground depth, and selected-time continuity. Do not add or run automated tests unless separately authorized. No RTL, TalkBack, or broad system matrix.
+**Slice board(s):** The product owner approved the same complete revised behavior package .codex/concepts/OX-111-shared-scene-core-behavior-board.dot, .svg, .png, and .md, and UI artwork package .codex/concepts/OX-111-shared-scene-core-ui-artwork-board.svg, .png, and .md for all five slices on 2026-11-25. Cycle 180 repeats approval and full SHA-256 fingerprints separately on each covered manifest entry. The packages govern the neutral core boundary, preserved current-theme treatment, Park plane/order contract, and Chicago/San Francisco tower surface. Images are board references, not runtime assets or installed acceptance evidence.
+
+### OX-111E — Paint selected location onto the Urban Park tower — PLANNED
+
+**Objective/scope:** Add the generic painted-data-surface renderer and use it for Urban Park's presentation-sourced selected location name. Move only the Park visible location label from the center to the tower. Preserve the picker, accessible location value, other readout values, data viewer, timeline, and other themes' central labels.
+**Depends on:** OX-111D, OX-19.
+**Exit:** Installed evidence shows Chicago and San Francisco dynamically painted inside the Urban Park tower face by the same renderer, including word wrapping, face clipping, perspective/material integration, and depth after Middleground but before Foreground. A location change updates the same painter; blank input draws no inscription. At completion, :scene-core exposes theme-neutral ordered-scene, plane, element, and painted-surface contracts without app presentation/theme dependencies, so future code-backed themes can supply their own assets, geometry, materials, and painters without Park-specific core code. Only Urban Park moves its visible location label; the accessible selected name and picker, other themes' central labels, remaining readout, data viewer, and selected-time/timeline behavior remain intact.
+**Evidence:** .codex/test-artifacts/180-ox111-urban-park-location-inscription/OX-111E/ and .codex/history/180-ox111-urban-park-location-inscription.md.
+**In-scope installed states:** Urban Park with Chicago, San Francisco, and a location change between them; installed accessibility hierarchy; retained readout and selected-time/timeline behavior.
+**Visual objective:** Paint perspective-fitted dynamic location lettering that follows tower geometry/material while keeping the rest of the timeline screen intact.
+**Verification:** Run authorized build and contract commands, inspect installed captures and accessibility hierarchy, perform the existing location change and a direct scrub, and inspect the final one-way module dependency. Do not add or run automated tests unless separately authorized. No RTL, TalkBack, or broad system matrix.
+**Slice board(s):** The product owner approved the same complete revised behavior package .codex/concepts/OX-111-shared-scene-core-behavior-board.dot, .svg, .png, and .md, and UI artwork package .codex/concepts/OX-111-shared-scene-core-ui-artwork-board.svg, .png, and .md for all five slices on 2026-11-25. Cycle 180 repeats approval and full SHA-256 fingerprints separately on each covered manifest entry. The packages govern the neutral core boundary, preserved current-theme treatment, Park plane/order contract, and Chicago/San Francisco tower surface. Images are board references, not runtime assets or installed acceptance evidence.
+
 ### OX-48 — Polish mural source-time and carried-state disclosure — PLANNED
 
 **Objective/scope:** Refine wall-integrated source-valid-time, carried-state and demo/unavailable disclosure typography and placement without changing the truthful binding already implemented by OX-12A.
