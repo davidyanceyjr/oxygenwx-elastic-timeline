@@ -110,6 +110,7 @@ class CatalogPickerDelegate : ActivityVariantDelegate {
     private var sessionCheckpoint: CatalogActivationCoordinator.Checkpoint? = null
     private val sessionRequestJobs = linkedSetOf<Job>()
     private var overlayVisible by mutableStateOf(false)
+    private var showSg11SkySymbolReviewCard by mutableStateOf(true)
     private var selectedGroups by mutableStateOf(DiagnosticGroup.entries.toSet())
     private var configurePresets by mutableStateOf(false)
     private var presetName by mutableStateOf("")
@@ -310,7 +311,9 @@ class CatalogPickerDelegate : ActivityVariantDelegate {
             DebugCatalogActivity.OX01F_UNAVAILABLE_REPLAY_ID,
             DebugCatalogActivity.SG11_ADDITIONAL_EVENTS_REPLAY_ID,
         )
-        if (sourceDetail == null && !overlayVisible && !symbolReview) return
+        val showSymbolReview = symbolReview &&
+            (activeDatasetId != DebugCatalogActivity.SG11_SKY_REPLAY_ID || showSg11SkySymbolReviewCard)
+        if (sourceDetail == null && !overlayVisible && !showSymbolReview) return
         Column(
             modifier = Modifier.fillMaxWidth().padding(horizontal = 18.dp),
             verticalArrangement = Arrangement.spacedBy(8.dp),
@@ -364,7 +367,7 @@ class CatalogPickerDelegate : ActivityVariantDelegate {
                     }
                 }
             }
-            if (symbolReview) {
+            if (showSymbolReview) {
                 val symbol = diagnostics.symbolId ?: WeatherSymbolId.CONDITION_UNAVAILABLE
                 val selectedFact = host.activationCoordinator.state.value.active?.let { active ->
                     active.recording.catalog.facts.firstOrNull { it.validTime == diagnostics.eventSourceTime }
@@ -468,6 +471,18 @@ class CatalogPickerDelegate : ActivityVariantDelegate {
                                 Text("Diagnostic overlay", color = Color.White)
                                 androidx.compose.foundation.layout.Spacer(Modifier.weight(1f))
                                 androidx.compose.material3.Switch(checked = overlayVisible, onCheckedChange = { overlayVisible = it })
+                            }
+                            if (host.activationCoordinator.state.value.active?.datasetId?.value ==
+                                DebugCatalogActivity.SG11_SKY_REPLAY_ID
+                            ) {
+                                Row(Modifier.fillMaxWidth(), verticalAlignment = Alignment.CenterVertically) {
+                                    Text("SG11 sky symbol review card", color = Color.White)
+                                    androidx.compose.foundation.layout.Spacer(Modifier.weight(1f))
+                                    androidx.compose.material3.Switch(
+                                        checked = showSg11SkySymbolReviewCard,
+                                        onCheckedChange = { showSg11SkySymbolReviewCard = it },
+                                    )
+                                }
                             }
                             Text("Saved display presets", style = MaterialTheme.typography.labelMedium, color = Color(0xFF9FE5D7))
                             savedPresets(host).forEach { (name, groups) ->
@@ -781,6 +796,7 @@ class CatalogPickerDelegate : ActivityVariantDelegate {
         sessionCheckpoint = checkpoint
         sessionGeneration++
         overlayVisible = false
+        showSg11SkySymbolReviewCard = true
         selectedGroups = DiagnosticGroup.entries.toSet()
         selectedPreset = null
         host.closeLocationSelector()
@@ -798,6 +814,7 @@ class CatalogPickerDelegate : ActivityVariantDelegate {
         sessionRequestJobs.toList().forEach(Job::cancel)
         sessionRequestJobs.clear()
         overlayVisible = false
+        showSg11SkySymbolReviewCard = true
         configurePresets = false
         requestError = null
         previewFailureShownInLibrary = false

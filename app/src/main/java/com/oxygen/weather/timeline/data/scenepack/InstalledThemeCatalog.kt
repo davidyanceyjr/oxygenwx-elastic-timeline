@@ -19,6 +19,13 @@ data class BundledFreeThemeMetadata(
     val version: InstalledThemeVersion?,
 )
 
+/** App-managed identity and content revision for an additional selectable bundled theme. */
+data class BundledSelectableThemeMetadata(
+    val id: InstalledThemeId,
+    val displayName: String,
+    val version: InstalledThemeVersion,
+)
+
 /** Compatibility disposition already established by upstream app-managed pack evaluation. */
 enum class AppOwnedThemeCompatibility {
     COMPATIBLE,
@@ -42,6 +49,7 @@ data class AppOwnedThemeRegistration(
 
 enum class InstalledThemeOrigin {
     BUNDLED_FREE,
+    BUNDLED_SELECTABLE,
     APP_OWNED,
 }
 
@@ -77,14 +85,21 @@ object InstalledThemeCatalog {
         displayName = "Living Urban Park",
         version = null,
     )
+    val BUNDLED_SELECTABLE_THEME_ID = InstalledThemeId("urban-park")
+    val BUNDLED_SELECTABLE_ROLE_METADATA = BundledSelectableThemeMetadata(
+        id = BUNDLED_SELECTABLE_THEME_ID,
+        displayName = "Urban Park",
+        version = InstalledThemeVersion("urban-park-content-v1"),
+    )
 
     /**
-     * Always includes the bundled-free role, even when [appOwnedRegistrations] is empty.
+     * Always includes both bundled roles, even when [appOwnedRegistrations] is empty.
      * App-owned compatibility is carried through from upstream evaluation without revalidation.
      */
     fun query(
         bundledFreeMetadata: BundledFreeThemeMetadata,
         appOwnedRegistrations: Iterable<AppOwnedThemeRegistration>,
+        bundledSelectableMetadata: BundledSelectableThemeMetadata = BUNDLED_SELECTABLE_ROLE_METADATA,
     ): List<InstalledThemeCatalogEntry> = buildList {
         add(
             InstalledThemeCatalogEntry(
@@ -92,6 +107,15 @@ object InstalledThemeCatalog {
                 version = bundledFreeMetadata.version,
                 displayName = bundledFreeMetadata.displayName,
                 origin = InstalledThemeOrigin.BUNDLED_FREE,
+                validity = InstalledThemeValidity.ALWAYS_AVAILABLE,
+            ),
+        )
+        add(
+            InstalledThemeCatalogEntry(
+                id = bundledSelectableMetadata.id,
+                version = bundledSelectableMetadata.version,
+                displayName = bundledSelectableMetadata.displayName,
+                origin = InstalledThemeOrigin.BUNDLED_SELECTABLE,
                 validity = InstalledThemeValidity.ALWAYS_AVAILABLE,
             ),
         )

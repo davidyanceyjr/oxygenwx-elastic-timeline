@@ -45,7 +45,7 @@ import com.oxygen.weather.timeline.data.scenepack.InstalledThemeValidity
 @Composable
 internal fun CatalogSettingsScreen(
     catalogEntries: List<InstalledThemeCatalogEntry>,
-    activeInstalledThemeId: String?,
+    activeThemeId: String?,
     bundledFreeThemeActive: Boolean,
     onBack: () -> Unit,
     onSelectTheme: (InstalledThemeCatalogEntry) -> Unit,
@@ -111,7 +111,8 @@ internal fun CatalogSettingsScreen(
                 items(catalogEntries, key = { it.id.value }) { entry ->
                     val active = when (entry.origin) {
                         InstalledThemeOrigin.BUNDLED_FREE -> bundledFreeThemeActive
-                        InstalledThemeOrigin.APP_OWNED -> activeInstalledThemeId == entry.id.value
+                        InstalledThemeOrigin.BUNDLED_SELECTABLE,
+                        InstalledThemeOrigin.APP_OWNED -> activeThemeId == entry.id.value
                     }
                     CatalogSettingsThemeRow(entry, active, onSelectTheme)
                 }
@@ -126,10 +127,10 @@ private fun CatalogSettingsThemeRow(
     active: Boolean,
     onSelect: (InstalledThemeCatalogEntry) -> Unit,
 ) {
-    val kindLabel = if (entry.origin == InstalledThemeOrigin.BUNDLED_FREE) {
-        "Bundled free"
-    } else {
-        "App-owned registration"
+    val kindLabel = when (entry.origin) {
+        InstalledThemeOrigin.BUNDLED_FREE -> "Bundled free"
+        InstalledThemeOrigin.BUNDLED_SELECTABLE -> "Bundled"
+        InstalledThemeOrigin.APP_OWNED -> "App-owned registration"
     }
     val statusLabel = when (entry.validity) {
         InstalledThemeValidity.ALWAYS_AVAILABLE -> null

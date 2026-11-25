@@ -97,6 +97,7 @@ import com.oxygen.weather.timeline.presentation.scene.MinimalOpenLandscapeTheme
 import com.oxygen.weather.timeline.presentation.scene.SceneReading
 import com.oxygen.weather.timeline.presentation.scene.SceneWeatherDecision
 import com.oxygen.weather.timeline.data.scenepack.InstalledThemeCatalogEntry
+import com.oxygen.weather.timeline.data.scenepack.InstalledThemeCatalog
 import com.oxygen.weather.timeline.data.scenepack.InstalledThemeOrigin
 import com.oxygen.weather.timeline.data.scenepack.InstalledThemeValidity
 import com.oxygen.weather.timeline.data.scenepack.ScenePackCurrentGeneration
@@ -205,6 +206,15 @@ private fun CatalogTimeLabScreenContent(
                     onWorldObservation?.invoke("selected:${worldChoice.committed.observationId}")
                 }
             }
+            InstalledThemeOrigin.BUNDLED_SELECTABLE -> {
+                if (entry.id == InstalledThemeCatalog.BUNDLED_SELECTABLE_THEME_ID &&
+                    entry.validity == InstalledThemeValidity.ALWAYS_AVAILABLE
+                ) {
+                    worldChoice.choose(CatalogWorld.URBAN_PARK)
+                    onInstalledThemeSelectionChanged?.invoke(null)
+                    onWorldObservation?.invoke("selected:${worldChoice.committed.observationId}")
+                }
+            }
             InstalledThemeOrigin.APP_OWNED -> {
                 if (selectableInstalledThemes.any { it.id == entry.id }) {
                     scope.launch {
@@ -288,7 +298,12 @@ private fun CatalogTimeLabScreenContent(
         // Keep foreground typography and pictograms proportional to the available
         // width. The atmospheric canvas already scales independently to fill it.
         val responsiveScale = (maxWidth.value / 411f).coerceIn(.75f, 1f)
-        if (sceneReading != null && worldChoice.selected == CatalogWorld.LIVING_URBAN_PARK) {
+        if (sceneReading != null && worldChoice.selected == CatalogWorld.URBAN_PARK) {
+            CatalogUrbanParkScene(
+                composition = composition ?: FirstCityTheme.compose(sceneReading, view.zone),
+                selectedWeatherSymbolId = view.weatherSymbolId,
+            )
+        } else if (sceneReading != null && worldChoice.selected == CatalogWorld.LIVING_URBAN_PARK) {
             CatalogLivingUrbanParkScene(
                 composition = LivingUrbanParkTheme.compose(SceneWeatherDecision.resolve(sceneReading, view.zone)),
                 temperatureBinding = requireNotNull(view.selectedTemperatureBinding),
@@ -536,7 +551,7 @@ private fun CatalogTimeLabScreenContent(
                 text = {
                     Column {
                         CatalogWorld.entries.filter { option ->
-                            option != CatalogWorld.INSTALLED_PACK &&
+                            option != CatalogWorld.INSTALLED_PACK && option != CatalogWorld.URBAN_PARK &&
                                 (BuildConfig.DEBUG || option !in setOf(CatalogWorld.OLIVE_PACK, CatalogWorld.BASELINE_PROOF))
                         }.forEach { option ->
                             TextButton(
@@ -609,7 +624,11 @@ private fun CatalogTimeLabScreenContent(
         if (settingsOpen) {
             CatalogSettingsScreen(
                 catalogEntries = themeCatalogEntries,
-                activeInstalledThemeId = committedWorld.installedTheme?.id?.value,
+                activeThemeId = when {
+                    committedWorld.world == CatalogWorld.URBAN_PARK ->
+                        InstalledThemeCatalog.BUNDLED_SELECTABLE_THEME_ID.value
+                    else -> committedWorld.installedTheme?.id?.value
+                },
                 bundledFreeThemeActive = committedWorld.world == CatalogWorld.LIVING_URBAN_PARK &&
                     committedWorld.installedTheme == null,
                 onBack = { settingsOpen = false },
@@ -621,6 +640,7 @@ private fun CatalogTimeLabScreenContent(
 
 internal enum class CatalogWorld(val label: String, val chooserLabel: String) {
     LIVING_URBAN_PARK("Living Urban Park", "Living Urban Park"),
+    URBAN_PARK("Urban Park", "Urban Park"),
     FIRST_CITY("First City", "First City"),
     OPEN_LANDSCAPE("Open Landscape", "Minimal Open Landscape"),
     OLIVE_PACK("First City · Olive pack", "First City · Olive pack"),
