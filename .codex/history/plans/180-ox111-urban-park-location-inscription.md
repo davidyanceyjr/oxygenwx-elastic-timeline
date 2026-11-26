@@ -1,6 +1,6 @@
 # Cycle plan — 180-ox111-urban-park-location-inscription
 
-State: PLANNED
+State: CLOSED
 Plan maturity: FINAL
 Cycle ID: 180-ox111-urban-park-location-inscription
 Roadmap items: OX-111A, OX-111B, OX-111C, OX-111D, OX-111E
@@ -23,7 +23,7 @@ The ordered roster decomposes the former integrated OX-111 into five independent
       "depends_on": [
         "OX-19"
       ],
-      "status": "PLANNED",
+      "status": "DONE",
       "exit": "Installed evidence shows First City default, baseline proof, olive, and installed-content variants routed through the theme-neutral :scene-core ordered renderer with their appearance, central location label, forecast mapping, and selected-time behavior preserved. Public core KDoc defines ordered-entry ownership; :scene-core has no app, forecast, or theme dependency, and :app depends on :scene-core one way.",
       "boards": {
         "behavior": {
@@ -88,8 +88,21 @@ The ordered roster decomposes the former integrated OX-111 into five independent
           ]
         }
       },
-      "outcome": null,
-      "evidence": []
+      "outcome": "First City default, baseline proof, olive, and installed-content variants are routed through the ordered :scene-core renderer. Matched installed captures retain Chicago, forecast facts, and selected instant; a direct First City scrub updates selected time and forecast. Public KDoc defines theme-owned ordered entries, and dependency/code inspection confirms one-way app-to-core dependency with no app, forecast, or theme dependency in :scene-core.",
+      "evidence": [
+        ".codex/test-artifacts/180-ox111-urban-park-location-inscription/OX-111A/README.md",
+        ".codex/test-artifacts/180-ox111-urban-park-location-inscription/OX-111A/01-first-city-default.png",
+        ".codex/test-artifacts/180-ox111-urban-park-location-inscription/OX-111A/02-first-city-baseline-proof.png",
+        ".codex/test-artifacts/180-ox111-urban-park-location-inscription/OX-111A/03-first-city-olive.png",
+        ".codex/test-artifacts/180-ox111-urban-park-location-inscription/OX-111A/04-first-city-installed-content.png",
+        ".codex/test-artifacts/180-ox111-urban-park-location-inscription/OX-111A/05-installed-content-direct-scrub.png",
+        ".codex/test-artifacts/180-ox111-urban-park-location-inscription/OX-111A/06-first-city-direct-scrub.png",
+        ".codex/test-artifacts/180-ox111-urban-park-location-inscription/OX-111A/06-first-city-direct-scrub.xml",
+        ".codex/test-artifacts/180-ox111-urban-park-location-inscription/OX-111A/build.txt",
+        ".codex/test-artifacts/180-ox111-urban-park-location-inscription/OX-111A/contract.txt",
+        ".codex/test-artifacts/180-ox111-urban-park-location-inscription/OX-111A/app-debugRuntimeClasspath.txt",
+        ".codex/test-artifacts/180-ox111-urban-park-location-inscription/OX-111A/scene-core-debugCompileClasspath.txt"
+      ]
     },
     {
       "id": "OX-111B",
@@ -97,7 +110,7 @@ The ordered roster decomposes the former integrated OX-111 into five independent
         "OX-111A",
         "OX-19"
       ],
-      "status": "PLANNED",
+      "status": "DONE",
       "exit": "Installed matched evidence shows Living Urban Park routed through :scene-core with its visible appearance, central location label, forecast mapping, remaining readout, and selected-time behavior preserved. A direct timeline scrub continues to drive the selected scene.",
       "boards": {
         "behavior": {
@@ -162,8 +175,18 @@ The ordered roster decomposes the former integrated OX-111 into five independent
           ]
         }
       },
-      "outcome": null,
-      "evidence": []
+      "outcome": "Living Urban Park now executes its app-owned sky, cloud, ordered element, and precipitation callbacks through :scene-core while keeping theme drawing and forecast decisions app-owned. Matched installed captures at Friday 7:07:35 AM CST show the same scene, Chicago label, forecast facts, and selected-time display before and after the change. A direct scrub updates selected time and weather text.",
+      "evidence": [
+        ".codex/test-artifacts/180-ox111-urban-park-location-inscription/OX-111B/README.md",
+        ".codex/test-artifacts/180-ox111-urban-park-location-inscription/OX-111B/01-living-urban-park-before-core.png",
+        ".codex/test-artifacts/180-ox111-urban-park-location-inscription/OX-111B/01-living-urban-park-before-core.xml",
+        ".codex/test-artifacts/180-ox111-urban-park-location-inscription/OX-111B/02-living-urban-park-after-core-matched.png",
+        ".codex/test-artifacts/180-ox111-urban-park-location-inscription/OX-111B/02-living-urban-park-after-core-matched.xml",
+        ".codex/test-artifacts/180-ox111-urban-park-location-inscription/OX-111B/03-living-urban-park-direct-scrub.png",
+        ".codex/test-artifacts/180-ox111-urban-park-location-inscription/OX-111B/03-living-urban-park-direct-scrub.xml",
+        ".codex/test-artifacts/180-ox111-urban-park-location-inscription/OX-111B/build.txt",
+        ".codex/test-artifacts/180-ox111-urban-park-location-inscription/OX-111B/contract.txt"
+      ]
     },
     {
       "id": "OX-111C",
@@ -171,7 +194,7 @@ The ordered roster decomposes the former integrated OX-111 into five independent
         "OX-111B",
         "OX-19"
       ],
-      "status": "PLANNED",
+      "status": "DONE",
       "exit": "Installed matched evidence shows Open Landscape routed through :scene-core with its visible appearance, central location label, forecast mapping, remaining readout, and selected-time behavior preserved. A direct timeline scrub continues to drive the selected scene.",
       "boards": {
         "behavior": {
@@ -236,8 +259,19 @@ The ordered roster decomposes the former integrated OX-111 into five independent
           ]
         }
       },
-      "outcome": null,
-      "evidence": []
+      "outcome": "Open Landscape now executes its sky, cloud, terrain, tree-group, and precipitation drawing callbacks through :scene-core in the existing order. Matched installed captures at Friday 7:00 AM CST show unchanged scene appearance, Chicago location label, weather facts, and selected-time display before and after the migration. A direct scrub updates selected time, scene lighting, and forecast values.",
+      "evidence": [
+        ".codex/test-artifacts/180-ox111-urban-park-location-inscription/OX-111C/README.md",
+        ".codex/test-artifacts/180-ox111-urban-park-location-inscription/OX-111C/01-open-landscape-before-core.png",
+        ".codex/test-artifacts/180-ox111-urban-park-location-inscription/OX-111C/01-open-landscape-before-core.xml",
+        ".codex/test-artifacts/180-ox111-urban-park-location-inscription/OX-111C/02-open-landscape-after-core-matched.png",
+        ".codex/test-artifacts/180-ox111-urban-park-location-inscription/OX-111C/02-open-landscape-after-core-matched.xml",
+        ".codex/test-artifacts/180-ox111-urban-park-location-inscription/OX-111C/03-open-landscape-direct-scrub.png",
+        ".codex/test-artifacts/180-ox111-urban-park-location-inscription/OX-111C/03-open-landscape-direct-scrub.xml",
+        ".codex/test-artifacts/180-ox111-urban-park-location-inscription/OX-111C/build.txt",
+        ".codex/test-artifacts/180-ox111-urban-park-location-inscription/OX-111C/contract.txt",
+        ".codex/test-artifacts/180-ox111-urban-park-location-inscription/OX-111C/run.txt"
+      ]
     },
     {
       "id": "OX-111D",
@@ -247,7 +281,7 @@ The ordered roster decomposes the former integrated OX-111 into five independent
         "OX-99",
         "OX-110"
       ],
-      "status": "PLANNED",
+      "status": "DONE",
       "exit": "Installed matched Urban Park evidence for PARTLY_SUNNY_CLOUDY, PARTLY_CLOUDY_NIGHT, MOSTLY_CLOUDY, CLOUDY_OVERCAST, and a non-cloudy control shows shared scene ordering and plane composition preserve OX-99 alignment/alpha and OX-110 sky-underlay, celestial, cloud, Middleground/tree, and Foreground/banner behavior with selected-time mapping intact. Cloud mapping remains one layer for each partly cloudy event, two for MOSTLY_CLOUDY, three for CLOUDY_OVERCAST, and none for other/absent events. The central location label remains in place until OX-111E.",
       "boards": {
         "behavior": {
@@ -312,8 +346,25 @@ The ordered roster decomposes the former integrated OX-111 into five independent
           ]
         }
       },
-      "outcome": null,
-      "evidence": []
+      "outcome": "Urban Park now draws its approved ordered plane composition through :scene-core. Installed matched evidence confirms one/one/two/three/no cloud layers for the requested event states, preserved crop and alpha, weather underlay and celestial overlap, Middleground/tree and Foreground/banner depth, central Chicago label, and selected-time mapping after direct scrub. Authorized build and contract checks pass; no automated tests were run.",
+      "evidence": [
+        ".codex/test-artifacts/180-ox111-urban-park-location-inscription/OX-111D/README.md",
+        ".codex/test-artifacts/180-ox111-urban-park-location-inscription/OX-111D/build.txt",
+        ".codex/test-artifacts/180-ox111-urban-park-location-inscription/OX-111D/contract.txt",
+        ".codex/test-artifacts/180-ox111-urban-park-location-inscription/OX-111D/01-partly-sunny-12-00-installed.png",
+        ".codex/test-artifacts/180-ox111-urban-park-location-inscription/OX-111D/01-partly-sunny-12-00-hierarchy.xml",
+        ".codex/test-artifacts/180-ox111-urban-park-location-inscription/OX-111D/02-partly-cloudy-night-13-00-installed.png",
+        ".codex/test-artifacts/180-ox111-urban-park-location-inscription/OX-111D/02-partly-cloudy-night-13-00-hierarchy.xml",
+        ".codex/test-artifacts/180-ox111-urban-park-location-inscription/OX-111D/03-mostly-cloudy-14-00-installed.png",
+        ".codex/test-artifacts/180-ox111-urban-park-location-inscription/OX-111D/03-mostly-cloudy-14-00-hierarchy.xml",
+        ".codex/test-artifacts/180-ox111-urban-park-location-inscription/OX-111D/04-cloudy-overcast-15-00-installed.png",
+        ".codex/test-artifacts/180-ox111-urban-park-location-inscription/OX-111D/04-cloudy-overcast-15-00-hierarchy.xml",
+        ".codex/test-artifacts/180-ox111-urban-park-location-inscription/OX-111D/05-sunny-08-00-installed.png",
+        ".codex/test-artifacts/180-ox111-urban-park-location-inscription/OX-111D/05-sunny-08-00-hierarchy.xml",
+        ".codex/test-artifacts/180-ox111-urban-park-location-inscription/OX-111D/06-direct-scrub-installed.png",
+        ".codex/test-artifacts/180-ox111-urban-park-location-inscription/OX-111D/06-direct-scrub-hierarchy.xml",
+        ".codex/test-artifacts/180-ox111-urban-park-location-inscription/OX-111D/event-picker-hierarchy.xml"
+      ]
     },
     {
       "id": "OX-111E",
@@ -321,7 +372,7 @@ The ordered roster decomposes the former integrated OX-111 into five independent
         "OX-111D",
         "OX-19"
       ],
-      "status": "PLANNED",
+      "status": "DONE",
       "exit": "Installed evidence shows Chicago and San Francisco dynamically painted inside the Urban Park tower face by the same renderer, including word wrapping, face clipping, perspective/material integration, and depth after Middleground but before Foreground. A location change updates the same painter; blank input draws no inscription. At completion, :scene-core exposes theme-neutral ordered-scene, plane, element, and painted-surface contracts without app presentation/theme dependencies, so future code-backed themes can supply their own assets, geometry, materials, and painters without Park-specific core code. Only Urban Park moves its visible location label; the accessible selected name and picker, other themes' central labels, remaining readout, data viewer, and selected-time/timeline behavior remain intact.",
       "boards": {
         "behavior": {
@@ -386,10 +437,43 @@ The ordered roster decomposes the former integrated OX-111 into five independent
           ]
         }
       },
-      "outcome": null,
-      "evidence": []
+      "outcome": "The installed Urban Park Chicago and San Francisco states use the same generic painted-data-surface renderer; Chicago fits one line and San Francisco wraps inside the clipped, perspective-aligned tower face in dark blue. Blank input produced no inscription in an owner-approved temporary debug-only preview, which was removed before the final build. The accessible selected name and picker remain present, Living Urban Park retains the central location label and readout, and a direct timeline scrub updates selected time and forecast values while keeping the Chicago inscription. The timeline hierarchy retains the browse action and source wiring to CatalogForecastBrowser. Dependency reports show app-to-scene-core one-way dependency and no project dependency from scene-core. TalkBack, RTL, and broad system acceptance were not run.",
+      "evidence": [
+        ".codex/test-artifacts/180-ox111-urban-park-location-inscription/OX-111E/README.md",
+        ".codex/test-artifacts/180-ox111-urban-park-location-inscription/OX-111E/07-blank-painter-input.png",
+        ".codex/test-artifacts/180-ox111-urban-park-location-inscription/OX-111E/07-blank-painter-input.xml",
+        ".codex/test-artifacts/180-ox111-urban-park-location-inscription/OX-111E/10-san-francisco-dark-blue-final.png",
+        ".codex/test-artifacts/180-ox111-urban-park-location-inscription/OX-111E/10-san-francisco-dark-blue-final.xml",
+        ".codex/test-artifacts/180-ox111-urban-park-location-inscription/OX-111E/11-living-urban-park-central-label-readout.png",
+        ".codex/test-artifacts/180-ox111-urban-park-location-inscription/OX-111E/11-living-urban-park-central-label-readout.xml",
+        ".codex/test-artifacts/180-ox111-urban-park-location-inscription/OX-111E/12-chicago-dark-blue-final.png",
+        ".codex/test-artifacts/180-ox111-urban-park-location-inscription/OX-111E/12-chicago-dark-blue-final.xml",
+        ".codex/test-artifacts/180-ox111-urban-park-location-inscription/OX-111E/13-chicago-direct-scrub.png",
+        ".codex/test-artifacts/180-ox111-urban-park-location-inscription/OX-111E/13-chicago-direct-scrub.xml",
+        ".codex/test-artifacts/180-ox111-urban-park-location-inscription/OX-111E/build.txt",
+        ".codex/test-artifacts/180-ox111-urban-park-location-inscription/OX-111E/contract.txt",
+        ".codex/test-artifacts/180-ox111-urban-park-location-inscription/OX-111E/run.txt",
+        ".codex/test-artifacts/180-ox111-urban-park-location-inscription/OX-111E/app-debugRuntimeClasspath-final.txt",
+        ".codex/test-artifacts/180-ox111-urban-park-location-inscription/OX-111E/scene-core-debugCompileClasspath-final.txt"
+      ]
     }
-  ]
+  ],
+  "closeout": {
+    "closed_on": "2026-11-25",
+    "summary": "Cycle 180 completed OX-111A through OX-111E in dependency order. The app now uses the theme-neutral :scene-core ordered renderer and plane compositor; Urban Park uses the generic painted-data-surface renderer to show its selected location on the tower in dark blue. Installed evidence covers both Chicago and San Francisco, blank painter input, the retained central label/readout in Living Urban Park, and a direct timeline scrub. The selected-location accessibility value and picker remain present. Blank input was verified with the owner-selected temporary debug-only null preview, which was removed before final build/install. The browse action remains exposed in the timeline hierarchy and wired to CatalogForecastBrowser. No automated tests were run. RTL, TalkBack, reduced motion, and broad system acceptance remain outside this cycle.",
+    "verification": [
+      "python scripts/dev.py workflow — Workflow scaffold: OK before closeout; post-close validation confirms IDLE.",
+      "python scripts/dev.py contract — passed; transport contract reported OK.",
+      "python scripts/dev.py build — BUILD SUCCESSFUL.",
+      "python scripts/dev.py run --serial 8AKY0M32X — streamed install succeeded and launched MainActivity.",
+      "./gradlew :app:dependencies --configuration debugRuntimeClasspath — includes project :scene-core.",
+      "./gradlew :scene-core:dependencies --configuration debugCompileClasspath — no project dependencies; scene-core declares Compose UI only.",
+      "Pixel 3 XL / Android 12 installed inspection: deep-blue Chicago and two-line San Francisco tower lettering; blank painter input; Living Urban Park central Chicago label and readout; direct scrub updated selected time/weather while preserving Chicago inscription.",
+      "git diff --check — passed.",
+      "Automated tests not run; RTL, TalkBack, reduced motion, and broad system acceptance not checked per plan."
+    ],
+    "evidence_directory": ".codex/test-artifacts/180-ox111-urban-park-location-inscription/"
+  }
 }
 ```
 <!-- cycle-manifest:end -->
@@ -409,9 +493,53 @@ The cycle stays at REVIEW until a separate owner instruction activates it.
     "OX-111D",
     "OX-111E"
   ],
-  "stage": "REVIEW",
-  "prior_cycle_state": "PLANNED",
+  "stage": "CLOSEOUT",
+  "prior_cycle_state": "ACTIVE",
   "accepted_boards": [
+    ".codex/concepts/OX-111-shared-scene-core-behavior-board.dot",
+    ".codex/concepts/OX-111-shared-scene-core-behavior-board.svg",
+    ".codex/concepts/OX-111-shared-scene-core-behavior-board.png",
+    ".codex/concepts/OX-111-shared-scene-core-behavior-board.md",
+    ".codex/concepts/OX-111-shared-scene-core-ui-artwork-board.svg",
+    ".codex/concepts/OX-111-shared-scene-core-ui-artwork-board.png",
+    ".codex/concepts/OX-111-shared-scene-core-ui-artwork-board.md",
+    ".codex/concepts/OX-111-urban-park-location-inscription-current-reference.png",
+    ".codex/concepts/OX-111-urban-park-location-inscription-tower-reference.png",
+    ".codex/concepts/OX-111-urban-park-location-inscription-painted-chicago.png",
+    ".codex/concepts/OX-111-urban-park-location-inscription-painted-san-francisco.png",
+    ".codex/concepts/OX-111-shared-scene-core-behavior-board.dot",
+    ".codex/concepts/OX-111-shared-scene-core-behavior-board.svg",
+    ".codex/concepts/OX-111-shared-scene-core-behavior-board.png",
+    ".codex/concepts/OX-111-shared-scene-core-behavior-board.md",
+    ".codex/concepts/OX-111-shared-scene-core-ui-artwork-board.svg",
+    ".codex/concepts/OX-111-shared-scene-core-ui-artwork-board.png",
+    ".codex/concepts/OX-111-shared-scene-core-ui-artwork-board.md",
+    ".codex/concepts/OX-111-urban-park-location-inscription-current-reference.png",
+    ".codex/concepts/OX-111-urban-park-location-inscription-tower-reference.png",
+    ".codex/concepts/OX-111-urban-park-location-inscription-painted-chicago.png",
+    ".codex/concepts/OX-111-urban-park-location-inscription-painted-san-francisco.png",
+    ".codex/concepts/OX-111-shared-scene-core-behavior-board.dot",
+    ".codex/concepts/OX-111-shared-scene-core-behavior-board.svg",
+    ".codex/concepts/OX-111-shared-scene-core-behavior-board.png",
+    ".codex/concepts/OX-111-shared-scene-core-behavior-board.md",
+    ".codex/concepts/OX-111-shared-scene-core-ui-artwork-board.svg",
+    ".codex/concepts/OX-111-shared-scene-core-ui-artwork-board.png",
+    ".codex/concepts/OX-111-shared-scene-core-ui-artwork-board.md",
+    ".codex/concepts/OX-111-urban-park-location-inscription-current-reference.png",
+    ".codex/concepts/OX-111-urban-park-location-inscription-tower-reference.png",
+    ".codex/concepts/OX-111-urban-park-location-inscription-painted-chicago.png",
+    ".codex/concepts/OX-111-urban-park-location-inscription-painted-san-francisco.png",
+    ".codex/concepts/OX-111-shared-scene-core-behavior-board.dot",
+    ".codex/concepts/OX-111-shared-scene-core-behavior-board.svg",
+    ".codex/concepts/OX-111-shared-scene-core-behavior-board.png",
+    ".codex/concepts/OX-111-shared-scene-core-behavior-board.md",
+    ".codex/concepts/OX-111-shared-scene-core-ui-artwork-board.svg",
+    ".codex/concepts/OX-111-shared-scene-core-ui-artwork-board.png",
+    ".codex/concepts/OX-111-shared-scene-core-ui-artwork-board.md",
+    ".codex/concepts/OX-111-urban-park-location-inscription-current-reference.png",
+    ".codex/concepts/OX-111-urban-park-location-inscription-tower-reference.png",
+    ".codex/concepts/OX-111-urban-park-location-inscription-painted-chicago.png",
+    ".codex/concepts/OX-111-urban-park-location-inscription-painted-san-francisco.png",
     ".codex/concepts/OX-111-shared-scene-core-behavior-board.dot",
     ".codex/concepts/OX-111-shared-scene-core-behavior-board.svg",
     ".codex/concepts/OX-111-shared-scene-core-behavior-board.png",
@@ -436,18 +564,33 @@ The cycle stays at REVIEW until a separate owner instruction activates it.
     "The five exits preserve the original OX-111 invariants, acceptance obligations, verification limits, and evidence requirements.",
     "The integrated OX-111 leaf is SUPERSEDED before implementation; OX-111A is the sole NEXT and OX-111B through OX-111E are PLANNED.",
     "Full review of the five-slice plan passed with external dependencies OX-19, OX-99, and OX-110 recorded DONE.",
-    "In-cycle dependencies enforce the serial order OX-111A → OX-111B → OX-111C → OX-111D → OX-111E; external dependencies remain explicit."
+    "In-cycle dependencies enforce the serial order OX-111A → OX-111B → OX-111C → OX-111D → OX-111E; external dependencies remain explicit.",
+    "all_slice_boards_approved",
+    "final_plan_reviewed",
+    "All five cycle slices have terminal outcomes with their own recorded outcome and evidence."
   ],
   "decisions": [
     "The owner approved the five-slice decomposition and confirmed one shared approved behavior/UI board package covers all five slices.",
-    "Execution is strictly serial: OX-111A → OX-111B → OX-111C → OX-111D → OX-111E. Each slice after OX-111A depends on its immediate predecessor; applicable external dependencies remain recorded."
+    "Execution is strictly serial: OX-111A → OX-111B → OX-111C → OX-111D → OX-111E. Each slice after OX-111A depends on its immediate predecessor; applicable external dependencies remain recorded.",
+    "Planned-context estimate: not quantified because the active model input window and a compatible tokenizer are unavailable in this environment. No token estimate, percentage, or 65% pass is claimed; the roster is unchanged because the five slices share one bounded objective and execute in their recorded dependency order.",
+    "Owner selected a temporary debug-only null-name preview to verify blank painter input; the override was removed before the final build and install.",
+    "Owner requested dark-blue painted lettering to match the Urban Park wall and banner; final Chicago and San Francisco captures confirm the deep-blue pigment treatment."
   ],
   "open_questions": [],
   "completed_outputs": [
     "Clarified the Park tower-face geometry's relationship to the shared plane viewport transform and documented the core API ownership/ordering contract.",
     "Replaced the integrated OX-111 leaf with OX-111A through OX-111E, each with its own dependency record, exit, verification, and evidence target.",
     "Recorded the same owner-approved behavior and UI artwork packages with full fingerprints separately on all five roster entries.",
-    "Recorded a strictly serial dependency chain and next-slice footnotes for all five slice entries."
+    "Recorded a strictly serial dependency chain and next-slice footnotes for all five slice entries.",
+    "Scoped the EXECUTE next-stage read set to active slice OX-111A; refresh it when each later slice becomes active.",
+    "Activated OX-111A for execution.",
+    "Closed slice OX-111A as DONE.",
+    "Closed slice OX-111B as DONE.",
+    "Closed slice OX-111C as DONE.",
+    "Closed slice OX-111D as DONE.",
+    "Closed slice OX-111E as DONE.",
+    "Captured final dark-blue Chicago and San Francisco installed states, Living Urban Park label/readout, blank painter state, and Chicago direct scrub; recorded build, contract, and dependency evidence.",
+    "Cycle closeout summary and verification archived."
   ],
   "evidence": [
     ".codex/concepts/OX-111-urban-park-location-inscription-current-reference.png (board reference only; not slice acceptance evidence)",
@@ -455,60 +598,87 @@ The cycle stays at REVIEW until a separate owner instruction activates it.
     ".codex/concepts/OX-111-urban-park-location-inscription-painted-chicago.png (paint integration study only; not slice acceptance evidence)",
     ".codex/concepts/OX-111-urban-park-location-inscription-painted-san-francisco.png (paint integration study only; not slice acceptance evidence)",
     ".codex/concepts/OX-111-shared-scene-core-behavior-board.dot",
-    ".codex/concepts/OX-111-shared-scene-core-ui-artwork-board.svg"
+    ".codex/concepts/OX-111-shared-scene-core-ui-artwork-board.svg",
+    ".codex/test-artifacts/180-ox111-urban-park-location-inscription/OX-111A/README.md",
+    ".codex/test-artifacts/180-ox111-urban-park-location-inscription/OX-111A/01-first-city-default.png",
+    ".codex/test-artifacts/180-ox111-urban-park-location-inscription/OX-111A/02-first-city-baseline-proof.png",
+    ".codex/test-artifacts/180-ox111-urban-park-location-inscription/OX-111A/03-first-city-olive.png",
+    ".codex/test-artifacts/180-ox111-urban-park-location-inscription/OX-111A/04-first-city-installed-content.png",
+    ".codex/test-artifacts/180-ox111-urban-park-location-inscription/OX-111A/05-installed-content-direct-scrub.png",
+    ".codex/test-artifacts/180-ox111-urban-park-location-inscription/OX-111A/06-first-city-direct-scrub.png",
+    ".codex/test-artifacts/180-ox111-urban-park-location-inscription/OX-111A/06-first-city-direct-scrub.xml",
+    ".codex/test-artifacts/180-ox111-urban-park-location-inscription/OX-111A/build.txt",
+    ".codex/test-artifacts/180-ox111-urban-park-location-inscription/OX-111A/contract.txt",
+    ".codex/test-artifacts/180-ox111-urban-park-location-inscription/OX-111A/app-debugRuntimeClasspath.txt",
+    ".codex/test-artifacts/180-ox111-urban-park-location-inscription/OX-111A/scene-core-debugCompileClasspath.txt",
+    ".codex/test-artifacts/180-ox111-urban-park-location-inscription/OX-111B/README.md",
+    ".codex/test-artifacts/180-ox111-urban-park-location-inscription/OX-111B/01-living-urban-park-before-core.png",
+    ".codex/test-artifacts/180-ox111-urban-park-location-inscription/OX-111B/01-living-urban-park-before-core.xml",
+    ".codex/test-artifacts/180-ox111-urban-park-location-inscription/OX-111B/02-living-urban-park-after-core-matched.png",
+    ".codex/test-artifacts/180-ox111-urban-park-location-inscription/OX-111B/02-living-urban-park-after-core-matched.xml",
+    ".codex/test-artifacts/180-ox111-urban-park-location-inscription/OX-111B/03-living-urban-park-direct-scrub.png",
+    ".codex/test-artifacts/180-ox111-urban-park-location-inscription/OX-111B/03-living-urban-park-direct-scrub.xml",
+    ".codex/test-artifacts/180-ox111-urban-park-location-inscription/OX-111B/build.txt",
+    ".codex/test-artifacts/180-ox111-urban-park-location-inscription/OX-111B/contract.txt",
+    ".codex/test-artifacts/180-ox111-urban-park-location-inscription/OX-111C/README.md",
+    ".codex/test-artifacts/180-ox111-urban-park-location-inscription/OX-111C/01-open-landscape-before-core.png",
+    ".codex/test-artifacts/180-ox111-urban-park-location-inscription/OX-111C/01-open-landscape-before-core.xml",
+    ".codex/test-artifacts/180-ox111-urban-park-location-inscription/OX-111C/02-open-landscape-after-core-matched.png",
+    ".codex/test-artifacts/180-ox111-urban-park-location-inscription/OX-111C/02-open-landscape-after-core-matched.xml",
+    ".codex/test-artifacts/180-ox111-urban-park-location-inscription/OX-111C/03-open-landscape-direct-scrub.png",
+    ".codex/test-artifacts/180-ox111-urban-park-location-inscription/OX-111C/03-open-landscape-direct-scrub.xml",
+    ".codex/test-artifacts/180-ox111-urban-park-location-inscription/OX-111C/build.txt",
+    ".codex/test-artifacts/180-ox111-urban-park-location-inscription/OX-111C/contract.txt",
+    ".codex/test-artifacts/180-ox111-urban-park-location-inscription/OX-111C/run.txt",
+    ".codex/test-artifacts/180-ox111-urban-park-location-inscription/OX-111D/README.md",
+    ".codex/test-artifacts/180-ox111-urban-park-location-inscription/OX-111D/build.txt",
+    ".codex/test-artifacts/180-ox111-urban-park-location-inscription/OX-111D/contract.txt",
+    ".codex/test-artifacts/180-ox111-urban-park-location-inscription/OX-111D/01-partly-sunny-12-00-installed.png",
+    ".codex/test-artifacts/180-ox111-urban-park-location-inscription/OX-111D/01-partly-sunny-12-00-hierarchy.xml",
+    ".codex/test-artifacts/180-ox111-urban-park-location-inscription/OX-111D/02-partly-cloudy-night-13-00-installed.png",
+    ".codex/test-artifacts/180-ox111-urban-park-location-inscription/OX-111D/02-partly-cloudy-night-13-00-hierarchy.xml",
+    ".codex/test-artifacts/180-ox111-urban-park-location-inscription/OX-111D/03-mostly-cloudy-14-00-installed.png",
+    ".codex/test-artifacts/180-ox111-urban-park-location-inscription/OX-111D/03-mostly-cloudy-14-00-hierarchy.xml",
+    ".codex/test-artifacts/180-ox111-urban-park-location-inscription/OX-111D/04-cloudy-overcast-15-00-installed.png",
+    ".codex/test-artifacts/180-ox111-urban-park-location-inscription/OX-111D/04-cloudy-overcast-15-00-hierarchy.xml",
+    ".codex/test-artifacts/180-ox111-urban-park-location-inscription/OX-111D/05-sunny-08-00-installed.png",
+    ".codex/test-artifacts/180-ox111-urban-park-location-inscription/OX-111D/05-sunny-08-00-hierarchy.xml",
+    ".codex/test-artifacts/180-ox111-urban-park-location-inscription/OX-111D/06-direct-scrub-installed.png",
+    ".codex/test-artifacts/180-ox111-urban-park-location-inscription/OX-111D/06-direct-scrub-hierarchy.xml",
+    ".codex/test-artifacts/180-ox111-urban-park-location-inscription/OX-111D/event-picker-hierarchy.xml",
+    ".codex/test-artifacts/180-ox111-urban-park-location-inscription/OX-111E/README.md",
+    ".codex/test-artifacts/180-ox111-urban-park-location-inscription/OX-111E/07-blank-painter-input.png",
+    ".codex/test-artifacts/180-ox111-urban-park-location-inscription/OX-111E/07-blank-painter-input.xml",
+    ".codex/test-artifacts/180-ox111-urban-park-location-inscription/OX-111E/10-san-francisco-dark-blue-final.png",
+    ".codex/test-artifacts/180-ox111-urban-park-location-inscription/OX-111E/10-san-francisco-dark-blue-final.xml",
+    ".codex/test-artifacts/180-ox111-urban-park-location-inscription/OX-111E/11-living-urban-park-central-label-readout.png",
+    ".codex/test-artifacts/180-ox111-urban-park-location-inscription/OX-111E/11-living-urban-park-central-label-readout.xml",
+    ".codex/test-artifacts/180-ox111-urban-park-location-inscription/OX-111E/12-chicago-dark-blue-final.png",
+    ".codex/test-artifacts/180-ox111-urban-park-location-inscription/OX-111E/12-chicago-dark-blue-final.xml",
+    ".codex/test-artifacts/180-ox111-urban-park-location-inscription/OX-111E/13-chicago-direct-scrub.png",
+    ".codex/test-artifacts/180-ox111-urban-park-location-inscription/OX-111E/13-chicago-direct-scrub.xml",
+    ".codex/test-artifacts/180-ox111-urban-park-location-inscription/OX-111E/build.txt",
+    ".codex/test-artifacts/180-ox111-urban-park-location-inscription/OX-111E/contract.txt",
+    ".codex/test-artifacts/180-ox111-urban-park-location-inscription/OX-111E/run.txt",
+    ".codex/test-artifacts/180-ox111-urban-park-location-inscription/OX-111E/app-debugRuntimeClasspath-final.txt",
+    ".codex/test-artifacts/180-ox111-urban-park-location-inscription/OX-111E/scene-core-debugCompileClasspath-final.txt",
+    ".codex/test-artifacts/180-ox111-urban-park-location-inscription/README.md",
+    ".codex/history/180-ox111-urban-park-location-inscription.md"
   ],
   "next_stage_read_set": [
     ".codex/current.md",
     ".codex/README.md",
     ".agents/skills/oxygen-execute-plan/SKILL.md",
-    "AGENTS.md",
     ".codex/plans/180-ox111-urban-park-location-inscription.md",
-    "docs/ROADMAP_SPECIFICATION.md",
     "docs/ROADMAP.md",
-    "docs/SPECIFICATION.md",
-    "docs/OXYGEN_EXPERIENCE_SPECIFICATION.md",
-    "docs/UI_DEVELOPMENT_WORKFLOW.md",
-    ".codex/concepts/OX-111-shared-scene-core-behavior-board.dot",
-    ".codex/concepts/OX-111-shared-scene-core-behavior-board.svg",
-    ".codex/concepts/OX-111-shared-scene-core-behavior-board.png",
-    ".codex/concepts/OX-111-shared-scene-core-behavior-board.md",
-    ".codex/concepts/OX-111-shared-scene-core-ui-artwork-board.svg",
-    ".codex/concepts/OX-111-shared-scene-core-ui-artwork-board.png",
-    ".codex/concepts/OX-111-shared-scene-core-ui-artwork-board.md",
-    ".codex/concepts/OX-111-urban-park-location-inscription-current-reference.png",
-    ".codex/concepts/OX-111-urban-park-location-inscription-tower-reference.png",
-    ".codex/concepts/OX-111-urban-park-location-inscription-painted-chicago.png",
-    ".codex/concepts/OX-111-urban-park-location-inscription-painted-san-francisco.png",
-    ".codex/history/plans/155-ox19-scene-choice-independence.md",
-    ".codex/history/plans/176-ox99-urban-park-theme-proof.md",
-    ".codex/history/plans/179-ox110-storybook-cloud-layers.md",
-    "app/src/main/java/com/oxygen/weather/timeline/presentation/CatalogTimelinePresentation.kt",
-    "app/src/main/java/com/oxygen/weather/timeline/presentation/scene/SceneWeatherDecision.kt",
-    "app/src/main/java/com/oxygen/weather/timeline/presentation/scene/SceneElementDeclaration.kt",
-    "app/src/main/java/com/oxygen/weather/timeline/presentation/scene/UrbanParkComposition.kt",
-    "app/src/main/java/com/oxygen/weather/timeline/presentation/scene/FirstCityComposition.kt",
-    "app/src/main/java/com/oxygen/weather/timeline/presentation/scene/FirstCityTheme.kt",
-    "app/src/main/java/com/oxygen/weather/timeline/presentation/scene/LivingUrbanParkComposition.kt",
-    "app/src/main/java/com/oxygen/weather/timeline/presentation/scene/MinimalOpenLandscapeComposition.kt",
+    "docs/ROADMAP_SPECIFICATION.md",
+    ".codex/test-artifacts/180-ox111-urban-park-location-inscription/OX-111E/README.md",
+    "scene-core/src/main/java/com/oxygen/weather/scenecore/ScenePaintedDataSurface.kt",
+    "app/src/main/java/com/oxygen/weather/timeline/presentation/scene/UrbanParkLocationSurface.kt",
     "app/src/main/java/com/oxygen/weather/timeline/ui/AtmosphericScene.kt",
-    "app/src/main/java/com/oxygen/weather/timeline/ui/CatalogTimeLabScreen.kt",
-    "app/src/main/java/com/oxygen/weather/timeline/ui/LocationSelectorController.kt",
-    "app/src/main/java/com/oxygen/weather/timeline/ui/LocationSelectorPanel.kt",
-    "app/src/main/java/com/oxygen/weather/timeline/MainActivity.kt",
-    "app/src/main/java/com/oxygen/weather/timeline/data/catalog/CatalogActivationCoordinator.kt",
-    "settings.gradle.kts",
-    "build.gradle.kts",
-    "app/build.gradle.kts",
-    "app/src/main/res/drawable-nodpi/sg2_city_architecture.png",
-    "app/src/main/res/drawable-nodpi/sg2_city_canopy.png",
-    "app/src/main/res/drawable-nodpi/sg2_city_canopy_olive.png",
-    "app/src/main/res/drawable-nodpi/urban_park_background.png",
-    "app/src/main/res/drawable-nodpi/urban_park_middleground.png",
-    "app/src/main/res/drawable-nodpi/urban_park_foreground.png",
-    "scripts/dev.py",
-    "scripts/codex_cycle.py"
+    "app/src/main/java/com/oxygen/weather/timeline/ui/CatalogTimeLabScreen.kt"
   ],
-  "next_action": "Keep the cycle PLANNED at REVIEW. Await a separate owner instruction before activation; this review does not activate the cycle or authorize implementation."
+  "next_action": "Inspect the complete final diff and git diff --check, validate the CLOSEOUT workflow and slice evidence, then archive cycle 180 with exact verification results and limits."
 }
 ```
 <!-- cycle-checkpoint:end -->

@@ -1723,7 +1723,7 @@ These groupings do not merge slice acceptance. Cycle 171 is complete. The owner 
 **Replacement slices:** OX-111A (ordered core and First City), OX-111B (Living Urban Park), OX-111C (Open Landscape), OX-111D (Urban Park composition), and OX-111E (Urban Park painted location).
 **Board disposition:** The product owner confirmed the same complete revised behavior and UI artwork packages are approved for all five replacement slices. Per-slice approval and fingerprints are in the cycle 180 manifest.
 
-### OX-111A — Create shared ordered scene core and migrate First City — NEXT
+### OX-111A — Create shared ordered scene core and migrate First City — DONE
 
 **Objective/scope:** Add the Android Compose :scene-core module with theme-neutral ordered scene entries, a shared drawing runner, and public KDoc for ordering/callback ownership. Adapt First City default, baseline-proof, olive, and installed-content variants. Keep plane-stack composition and painted surfaces for dependent Park slices.
 **Depends on:** OX-19.
@@ -1734,7 +1734,7 @@ These groupings do not merge slice acceptance. Cycle 171 is complete. The owner 
 **Verification:** Run authorized build and contract commands; inspect :app and :scene-core dependency graphs; capture matched installed variants and observe a direct scrub. Do not add or run automated tests unless separately authorized. No RTL, TalkBack, or broad system matrix.
 **Slice board(s):** The product owner approved the same complete revised behavior package .codex/concepts/OX-111-shared-scene-core-behavior-board.dot, .svg, .png, and .md, and UI artwork package .codex/concepts/OX-111-shared-scene-core-ui-artwork-board.svg, .png, and .md for all five slices on 2026-11-25. Cycle 180 repeats approval and full SHA-256 fingerprints separately on each covered manifest entry. The packages govern the neutral core boundary, preserved current-theme treatment, Park plane/order contract, and Chicago/San Francisco tower surface. Images are board references, not runtime assets or installed acceptance evidence.
 
-### OX-111B — Migrate Living Urban Park to shared scene core — PLANNED
+### OX-111B — Migrate Living Urban Park to shared scene core — DONE
 
 **Objective/scope:** Adapt only Living Urban Park's app-owned scene composition to the shared ordered-entry contract. Preserve theme-specific drawing, visible treatment, location label, forecast decisions, and selected-time mapping.
 **Depends on:** OX-111A, OX-19.
@@ -1745,7 +1745,7 @@ These groupings do not merge slice acceptance. Cycle 171 is complete. The owner 
 **Verification:** Run authorized build and contract commands; compare matched installed captures, readout, central label, and selected-time mapping; observe a direct scrub. Do not add or run automated tests unless separately authorized. No RTL, TalkBack, or broad system matrix.
 **Slice board(s):** The product owner approved the same complete revised behavior package .codex/concepts/OX-111-shared-scene-core-behavior-board.dot, .svg, .png, and .md, and UI artwork package .codex/concepts/OX-111-shared-scene-core-ui-artwork-board.svg, .png, and .md for all five slices on 2026-11-25. Cycle 180 repeats approval and full SHA-256 fingerprints separately on each covered manifest entry. The packages govern the neutral core boundary, preserved current-theme treatment, Park plane/order contract, and Chicago/San Francisco tower surface. Images are board references, not runtime assets or installed acceptance evidence.
 
-### OX-111C — Migrate Open Landscape to shared scene core — PLANNED
+### OX-111C — Migrate Open Landscape to shared scene core — DONE
 
 **Objective/scope:** Adapt only Open Landscape's app-owned scene composition to the shared ordered-entry contract. Preserve theme-specific drawing, visible treatment, location label, forecast decisions, and selected-time mapping.
 **Depends on:** OX-111B, OX-19.
@@ -1756,7 +1756,7 @@ These groupings do not merge slice acceptance. Cycle 171 is complete. The owner 
 **Verification:** Run authorized build and contract commands; compare matched installed captures, readout, central label, and selected-time mapping; observe a direct scrub. Do not add or run automated tests unless separately authorized. No RTL, TalkBack, or broad system matrix.
 **Slice board(s):** The product owner approved the same complete revised behavior package .codex/concepts/OX-111-shared-scene-core-behavior-board.dot, .svg, .png, and .md, and UI artwork package .codex/concepts/OX-111-shared-scene-core-ui-artwork-board.svg, .png, and .md for all five slices on 2026-11-25. Cycle 180 repeats approval and full SHA-256 fingerprints separately on each covered manifest entry. The packages govern the neutral core boundary, preserved current-theme treatment, Park plane/order contract, and Chicago/San Francisco tower surface. Images are board references, not runtime assets or installed acceptance evidence.
 
-### OX-111D — Migrate Urban Park composition to shared scene core — PLANNED
+### OX-111D — Migrate Urban Park composition to shared scene core — DONE
 
 **Objective/scope:** Add the optional shared plane compositor and adapt Urban Park's scene ordering. Preserve OX-99 shared center crop and Background alpha underlay plus OX-110 celestial/cloud/Middleground/tree/Foreground/banner order, weather mapping, and selected-time behavior. Preserve one cloud layer for PARTLY_SUNNY_CLOUDY and PARTLY_CLOUDY_NIGHT, two for MOSTLY_CLOUDY, three for CLOUDY_OVERCAST, and none for other/absent events. Keep the location label central until OX-111E.
 **Depends on:** OX-111C, OX-19, OX-99, OX-110.
@@ -1767,7 +1767,7 @@ These groupings do not merge slice acceptance. Cycle 171 is complete. The owner 
 **Verification:** Run authorized build and contract commands; inspect installed states for the exact one/one/two/three/no-layer mapping, plane transform, alpha, scene order, cloud identity, foreground depth, and selected-time continuity. Do not add or run automated tests unless separately authorized. No RTL, TalkBack, or broad system matrix.
 **Slice board(s):** The product owner approved the same complete revised behavior package .codex/concepts/OX-111-shared-scene-core-behavior-board.dot, .svg, .png, and .md, and UI artwork package .codex/concepts/OX-111-shared-scene-core-ui-artwork-board.svg, .png, and .md for all five slices on 2026-11-25. Cycle 180 repeats approval and full SHA-256 fingerprints separately on each covered manifest entry. The packages govern the neutral core boundary, preserved current-theme treatment, Park plane/order contract, and Chicago/San Francisco tower surface. Images are board references, not runtime assets or installed acceptance evidence.
 
-### OX-111E — Paint selected location onto the Urban Park tower — PLANNED
+### OX-111E — Paint selected location onto the Urban Park tower — DONE
 
 **Objective/scope:** Add the generic painted-data-surface renderer and use it for Urban Park's presentation-sourced selected location name. Move only the Park visible location label from the center to the tower. Preserve the picker, accessible location value, other readout values, data viewer, timeline, and other themes' central labels.
 **Depends on:** OX-111D, OX-19.

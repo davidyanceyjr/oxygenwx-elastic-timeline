@@ -16,3 +16,4 @@ dependencyResolutionManagement {
 
 rootProject.name = "OxygenElasticTimelinePrototype"
 include(":app")
+include(":scene-core")

@@ -23,6 +23,16 @@ import androidx.compose.ui.graphics.drawscope.withTransform
 import androidx.compose.ui.graphics.lerp
 import androidx.compose.ui.graphics.nativeCanvas
 import androidx.compose.ui.res.imageResource
+import androidx.compose.ui.unit.IntSize
+import com.oxygen.weather.scenecore.SceneDescription
+import com.oxygen.weather.scenecore.SceneEntry
+import com.oxygen.weather.scenecore.ScenePaintedDataSurface
+import com.oxygen.weather.scenecore.ScenePaintedDataSurfaceStyle
+import com.oxygen.weather.scenecore.ScenePlane
+import com.oxygen.weather.scenecore.ScenePlaneStack
+import com.oxygen.weather.scenecore.drawScene
+import com.oxygen.weather.scenecore.drawScenePaintedDataSurface
+import com.oxygen.weather.scenecore.drawScenePlane
 import com.oxygen.weather.timeline.presentation.atmosphere.AtmosphereInput
 import com.oxygen.weather.timeline.presentation.atmosphere.AtmospherePreview
 import com.oxygen.weather.timeline.presentation.atmosphere.DepictionKind
@@ -49,6 +59,7 @@ import com.oxygen.weather.timeline.presentation.scene.FirstCityPassReference
 import com.oxygen.weather.timeline.presentation.scene.FirstCityTheme
 import com.oxygen.weather.timeline.presentation.scene.UrbanParkCloudLayer
 import com.oxygen.weather.timeline.presentation.scene.UrbanParkComposition
+import com.oxygen.weather.timeline.presentation.scene.UrbanParkLocationSurface
 import com.oxygen.weather.timeline.presentation.scene.UrbanParkLayer
 import com.oxygen.weather.timeline.presentation.scene.FirstCityWorldBounds
 import com.oxygen.weather.timeline.presentation.scene.LivingUrbanParkComposition
@@ -137,107 +148,112 @@ fun CatalogAtmosphericScene(
         FirstCityCanopyAsset.OLIVE -> R.drawable.sg2_city_canopy_olive
     })
     val reducedMotion = !ValueAnimator.areAnimatorsEnabled()
-    Canvas(modifier.fillMaxSize()) {
-        composition.layerOrder.forEach { layer ->
-            when (layer) {
-                FirstCityLayer.SKY -> {
-                    val sky = composition.sky
-                    if (sky == null) {
-                        drawCityWorld(composition.treatment)
-                    } else {
-                        val cloudiness = composition.clouds.coverFraction
-                        val storm = composition.precipitation == CityPrecipitation.STORM
-                        drawSkyPalette(sky.condition, sky.daylight, cloudiness, storm)
-                        if (composition.precipitation == CityPrecipitation.RAIN) {
-                            drawRect(Brush.verticalGradient(
-                                0f to Color(0xFF4B6072), .55f to Color(0xFF5F7385),
-                                1f to Color.Transparent,
-                            ))
+    val sceneDescription = SceneDescription(
+        composition.layerOrder.map { layer ->
+            SceneEntry {
+                when (layer) {
+                    FirstCityLayer.SKY -> {
+                        val sky = composition.sky
+                        if (sky == null) {
+                            drawCityWorld(composition.treatment)
+                        } else {
+                            val cloudiness = composition.clouds.coverFraction
+                            val storm = composition.precipitation == CityPrecipitation.STORM
+                            drawSkyPalette(sky.condition, sky.daylight, cloudiness, storm)
+                            if (composition.precipitation == CityPrecipitation.RAIN) {
+                                drawRect(Brush.verticalGradient(
+                                    0f to Color(0xFF4B6072), .55f to Color(0xFF5F7385),
+                                    1f to Color.Transparent,
+                                ))
+                            }
                         }
                     }
-                }
-                FirstCityLayer.STARS -> drawCityStars(composition.treatment)
-                FirstCityLayer.TIME_CUE -> if (composition.cue.visible) {
-                    drawCityTimeCue(composition.cue, composition.treatment)
-                }
-                FirstCityLayer.LUNAR_CUE -> if (composition.moonCue.visible) {
-                    drawCityTimeCue(composition.moonCue, composition.treatment)
-                }
-                FirstCityLayer.BACKGROUND_CLOUDS -> {
-                    val input = composition.cloudRenderInput(layer)
-                    check(input.selectedInstant == composition.selectedInstant)
-                    check(input.id == FirstCityElementId.CLOUD_COVER)
-                    check(input.pass.layer == layer)
-                    drawCloudRenderer(input, reducedMotion)
-                }
-                FirstCityLayer.BACKGROUND_ARCHITECTURE -> {
-                    composition.sky?.let { sky ->
-                        val cloudiness = composition.clouds.coverFraction
-                        val storm = composition.precipitation == CityPrecipitation.STORM
-                        drawLandscape(
-                            hazeStrength = 0f,
-                            horizon = sceneHorizonColor(sky.condition, sky.daylight, cloudiness, storm),
-                            daylight = sky.daylight,
-                            isStorm = storm,
+                    FirstCityLayer.STARS -> drawCityStars(composition.treatment)
+                    FirstCityLayer.TIME_CUE -> if (composition.cue.visible) {
+                        drawCityTimeCue(composition.cue, composition.treatment)
+                    }
+                    FirstCityLayer.LUNAR_CUE -> if (composition.moonCue.visible) {
+                        drawCityTimeCue(composition.moonCue, composition.treatment)
+                    }
+                    FirstCityLayer.BACKGROUND_CLOUDS -> {
+                        val input = composition.cloudRenderInput(layer)
+                        check(input.selectedInstant == composition.selectedInstant)
+                        check(input.id == FirstCityElementId.CLOUD_COVER)
+                        check(input.pass.layer == layer)
+                        drawCloudRenderer(input, reducedMotion)
+                    }
+                    FirstCityLayer.BACKGROUND_ARCHITECTURE -> {
+                        composition.sky?.let { sky ->
+                            val cloudiness = composition.clouds.coverFraction
+                            val storm = composition.precipitation == CityPrecipitation.STORM
+                            drawLandscape(
+                                hazeStrength = 0f,
+                                horizon = sceneHorizonColor(sky.condition, sky.daylight, cloudiness, storm),
+                                daylight = sky.daylight,
+                                isStorm = storm,
+                            )
+                        }
+                        drawAlignedLayer(architecture)
+                    }
+                    FirstCityLayer.ATMOSPHERE -> composition.sky?.let { sky ->
+                        drawCityDiffuseLight(
+                            composition.cue.position,
+                            composition.treatment,
+                            composition.clouds.coverFraction,
                         )
                     }
-                    drawAlignedLayer(architecture)
-                }
-                FirstCityLayer.ATMOSPHERE -> composition.sky?.let { sky ->
-                    drawCityDiffuseLight(
-                        composition.cue.position,
-                        composition.treatment,
-                        composition.clouds.coverFraction,
-                    )
-                }
-                FirstCityLayer.MIDDLE_GROUND_CLOUDS -> {
-                    val input = composition.cloudRenderInput(layer)
-                    check(input.selectedInstant == composition.selectedInstant)
-                    check(input.id == FirstCityElementId.CLOUD_COVER)
-                    check(input.pass.layer == layer)
-                    drawCloudRenderer(input, reducedMotion)
-                }
-                FirstCityLayer.FOREGROUND_ARCHITECTURE -> drawCityForegroundLayer(architecture)
-                FirstCityLayer.CANOPY -> {
-                    val input = composition.canopyRenderInput()
-                    check(input.selectedInstant == composition.selectedInstant)
-                    check(input.pass.layer == layer)
-                    check(input.id == FirstCityElementId.CANOPY)
-                    check(input.bounds == FirstCityWorldBounds(0f, 0f,
-                        FirstCityTheme.worldWidth.toFloat(), FirstCityTheme.worldHeight.toFloat()))
-                    drawAlignedLayer(canopy)
-                }
-                FirstCityLayer.TIME_WASH -> drawCityTimeWash(composition.treatment)
-                FirstCityLayer.READOUT_QUIET_ZONE -> drawCityReadoutQuietZone()
-                FirstCityLayer.WINDOW_LIGHTS -> if (!omitOptionalCityLayers) drawCityWindowLights()
-                FirstCityLayer.PRECIPITATION -> {
-                    drawRect(
-                        brush = Brush.verticalGradient(
-                            0f to Color.Transparent,
-                            .5f to Color(0x09091828),
-                            1f to Color(0xDD081626),
-                        ),
-                    )
-                    when (composition.precipitation) {
-                        CityPrecipitation.RAIN -> {
-                            val input = composition.rainRenderInput()
-                            check(input.selectedInstant == composition.selectedInstant)
-                            check(input.id == FirstCityElementId.PRECIPITATION_FIELD)
-                            check(input.pass.layer == FirstCityLayer.PRECIPITATION)
-                            drawRainRenderer(input)
+                    FirstCityLayer.MIDDLE_GROUND_CLOUDS -> {
+                        val input = composition.cloudRenderInput(layer)
+                        check(input.selectedInstant == composition.selectedInstant)
+                        check(input.id == FirstCityElementId.CLOUD_COVER)
+                        check(input.pass.layer == layer)
+                        drawCloudRenderer(input, reducedMotion)
+                    }
+                    FirstCityLayer.FOREGROUND_ARCHITECTURE -> drawCityForegroundLayer(architecture)
+                    FirstCityLayer.CANOPY -> {
+                        val input = composition.canopyRenderInput()
+                        check(input.selectedInstant == composition.selectedInstant)
+                        check(input.pass.layer == layer)
+                        check(input.id == FirstCityElementId.CANOPY)
+                        check(input.bounds == FirstCityWorldBounds(0f, 0f,
+                            FirstCityTheme.worldWidth.toFloat(), FirstCityTheme.worldHeight.toFloat()))
+                        drawAlignedLayer(canopy)
+                    }
+                    FirstCityLayer.TIME_WASH -> drawCityTimeWash(composition.treatment)
+                    FirstCityLayer.READOUT_QUIET_ZONE -> drawCityReadoutQuietZone()
+                    FirstCityLayer.WINDOW_LIGHTS -> if (!omitOptionalCityLayers) drawCityWindowLights()
+                    FirstCityLayer.PRECIPITATION -> {
+                        drawRect(
+                            brush = Brush.verticalGradient(
+                                0f to Color.Transparent,
+                                .5f to Color(0x09091828),
+                                1f to Color(0xDD081626),
+                            ),
+                        )
+                        when (composition.precipitation) {
+                            CityPrecipitation.RAIN -> {
+                                val input = composition.rainRenderInput()
+                                check(input.selectedInstant == composition.selectedInstant)
+                                check(input.id == FirstCityElementId.PRECIPITATION_FIELD)
+                                check(input.pass.layer == FirstCityLayer.PRECIPITATION)
+                                drawRainRenderer(input)
+                            }
+                            CityPrecipitation.SNOW -> {
+                                val input = composition.snowRenderInput()
+                                check(input.selectedInstant == composition.selectedInstant)
+                                check(input.id == FirstCityElementId.PRECIPITATION_FIELD)
+                                check(input.pass.layer == FirstCityLayer.PRECIPITATION)
+                                drawSnowRenderer(input)
+                            }
+                            CityPrecipitation.NONE, CityPrecipitation.STORM -> Unit
                         }
-                        CityPrecipitation.SNOW -> {
-                            val input = composition.snowRenderInput()
-                            check(input.selectedInstant == composition.selectedInstant)
-                            check(input.id == FirstCityElementId.PRECIPITATION_FIELD)
-                            check(input.pass.layer == FirstCityLayer.PRECIPITATION)
-                            drawSnowRenderer(input)
-                        }
-                        CityPrecipitation.NONE, CityPrecipitation.STORM -> Unit
                     }
                 }
             }
-        }
+        },
+    )
+    Canvas(modifier.fillMaxSize()) {
+        drawScene(sceneDescription)
     }
 }
 
@@ -245,90 +261,118 @@ fun CatalogAtmosphericScene(
 @Composable
 internal fun CatalogUrbanParkScene(
     composition: UrbanParkComposition,
+    selectedLocationName: String?,
     modifier: Modifier = Modifier,
 ) {
     val background = ImageBitmap.imageResource(R.drawable.urban_park_background)
     val middleground = ImageBitmap.imageResource(R.drawable.urban_park_middleground)
     val foreground = ImageBitmap.imageResource(R.drawable.urban_park_foreground)
     val firstCity = composition.firstCity
+    val planes = ScenePlaneStack(background, middleground, foreground)
+    val inscriptionStyle = remember(middleground) {
+        ScenePaintedDataSurfaceStyle(
+            typeface = Typeface.create("cursive", Typeface.BOLD),
+            maxTextSize = 52f,
+            minTextSize = 24f,
+            maxLines = 2,
+            lineSpacingMultiplier = 1.1f,
+            pigmentStrokeWidth = 1.6f,
+            pigmentTexture = middleground,
+            pigmentTint = Color(0xFF264F73),
+            pigmentAlpha = 1f,
+            shadowColor = Color(0x66040D18),
+            shadowOffset = Offset(1f, 1.4f),
+            highlightColor = Color(0x2B293F59),
+            highlightOffset = Offset(-.6f, -.8f),
+            highlightWidth = .35f,
+        )
+    }
+    val locationInscription = remember(selectedLocationName, inscriptionStyle, middleground) {
+        ScenePaintedDataSurface(
+            value = selectedLocationName,
+            sourcePlaneSize = IntSize(middleground.width, middleground.height),
+            geometry = UrbanParkLocationSurface.geometry,
+            style = inscriptionStyle,
+        )
+    }
     Canvas(modifier.fillMaxSize()) {
-        val viewportWidth = size.width.roundToInt()
-        val viewportHeight = size.height.roundToInt()
-        val scale = maxOf(
-            size.width / background.width.toFloat(),
-            size.height / background.height.toFloat(),
-        )
-        val planeWidth = (background.width * scale).roundToInt()
-        val planeHeight = (background.height * scale).roundToInt()
-        val planeOffset = androidx.compose.ui.unit.IntOffset(
-            (viewportWidth - planeWidth) / 2,
-            (viewportHeight - planeHeight) / 2,
-        )
-        val planeSize = androidx.compose.ui.unit.IntSize(planeWidth, planeHeight)
-
-        composition.layerOrder.sortedBy(UrbanParkLayer::backToFrontPosition).forEach { layer ->
-            when (layer) {
-                UrbanParkLayer.SKY_UNDERLAY -> {
-                    val sky = firstCity.sky
-                    if (sky == null) {
-                        drawCityWorld(firstCity.treatment)
-                    } else {
-                        val cloudiness = firstCity.clouds.coverFraction
-                        val storm = firstCity.precipitation == CityPrecipitation.STORM
-                        drawSkyPalette(sky.condition, sky.daylight, cloudiness, storm)
-                        if (firstCity.precipitation == CityPrecipitation.RAIN) {
-                            drawRect(Brush.verticalGradient(
-                                0f to Color(0xFF4B6072), .55f to Color(0xFF5F7385),
-                                1f to Color.Transparent,
-                            ))
+        val planeTransform = planes.centerCropTransform(size)
+        val sceneDescription = SceneDescription(
+            entries = composition.layerOrder
+                .sortedBy(UrbanParkLayer::backToFrontPosition)
+                .map { layer ->
+                    SceneEntry {
+                        when (layer) {
+                            UrbanParkLayer.SKY_UNDERLAY -> {
+                                val sky = firstCity.sky
+                                if (sky == null) {
+                                    drawCityWorld(firstCity.treatment)
+                                } else {
+                                    val cloudiness = firstCity.clouds.coverFraction
+                                    val storm = firstCity.precipitation == CityPrecipitation.STORM
+                                    drawSkyPalette(sky.condition, sky.daylight, cloudiness, storm)
+                                    if (firstCity.precipitation == CityPrecipitation.RAIN) {
+                                        drawRect(Brush.verticalGradient(
+                                            0f to Color(0xFF4B6072), .55f to Color(0xFF5F7385),
+                                            1f to Color.Transparent,
+                                        ))
+                                    }
+                                }
+                            }
+                            UrbanParkLayer.BACKGROUND -> drawScenePlane(
+                                planes, ScenePlane.BACKGROUND, planeTransform,
+                            )
+                            UrbanParkLayer.STARS -> drawCityStars(firstCity.treatment)
+                            UrbanParkLayer.SUN -> drawCityTimeCue(firstCity.cue, firstCity.treatment)
+                            UrbanParkLayer.MOON -> drawCityTimeCue(firstCity.moonCue, firstCity.treatment)
+                            UrbanParkLayer.CLOUD_LAYER_1 -> drawUrbanParkCloudLayer(
+                                UrbanParkCloudLayer.LAYER_1, firstCity.clouds.daylight, composition.selectedInstant,
+                            )
+                            UrbanParkLayer.CLOUD_LAYER_2 -> drawUrbanParkCloudLayer(
+                                UrbanParkCloudLayer.LAYER_2, firstCity.clouds.daylight, composition.selectedInstant,
+                            )
+                            UrbanParkLayer.CLOUD_LAYER_3 -> drawUrbanParkCloudLayer(
+                                UrbanParkCloudLayer.LAYER_3, firstCity.clouds.daylight, composition.selectedInstant,
+                            )
+                            UrbanParkLayer.MIDDLEGROUND -> drawScenePlane(
+                                planes, ScenePlane.MIDDLEGROUND, planeTransform,
+                            )
+                            UrbanParkLayer.LOCATION_INSCRIPTION -> drawScenePaintedDataSurface(
+                                planes, planeTransform, locationInscription,
+                            )
+                            UrbanParkLayer.FOREGROUND -> {
+                                drawScenePlane(planes, ScenePlane.FOREGROUND, planeTransform)
+                                drawUrbanParkBannerForeground(planes, planeTransform)
+                            }
+                            UrbanParkLayer.PRECIPITATION -> {
+                                drawRect(
+                                    brush = Brush.verticalGradient(
+                                        0f to Color.Transparent,
+                                        .5f to Color(0x09091828),
+                                        1f to Color(0xDD081626),
+                                    ),
+                                )
+                                when (firstCity.precipitation) {
+                                    CityPrecipitation.RAIN -> {
+                                        val input = firstCity.rainRenderInput()
+                                        check(input.selectedInstant == composition.selectedInstant)
+                                        check(input.pass.layer == FirstCityLayer.PRECIPITATION)
+                                        drawRainRenderer(input)
+                                    }
+                                    CityPrecipitation.SNOW -> {
+                                        val input = firstCity.snowRenderInput()
+                                        check(input.selectedInstant == composition.selectedInstant)
+                                        check(input.pass.layer == FirstCityLayer.PRECIPITATION)
+                                        drawSnowRenderer(input)
+                                    }
+                                    CityPrecipitation.NONE, CityPrecipitation.STORM -> Unit
+                                }
+                            }
                         }
                     }
                 }
-                UrbanParkLayer.BACKGROUND -> drawUrbanParkPlane(background, planeOffset, planeSize)
-                UrbanParkLayer.STARS -> drawCityStars(firstCity.treatment)
-                UrbanParkLayer.SUN -> drawCityTimeCue(firstCity.cue, firstCity.treatment)
-                UrbanParkLayer.MOON -> drawCityTimeCue(firstCity.moonCue, firstCity.treatment)
-                UrbanParkLayer.CLOUD_LAYER_1 -> drawUrbanParkCloudLayer(
-                    UrbanParkCloudLayer.LAYER_1, firstCity.clouds.daylight, composition.selectedInstant,
-                )
-                UrbanParkLayer.CLOUD_LAYER_2 -> drawUrbanParkCloudLayer(
-                    UrbanParkCloudLayer.LAYER_2, firstCity.clouds.daylight, composition.selectedInstant,
-                )
-                UrbanParkLayer.CLOUD_LAYER_3 -> drawUrbanParkCloudLayer(
-                    UrbanParkCloudLayer.LAYER_3, firstCity.clouds.daylight, composition.selectedInstant,
-                )
-                UrbanParkLayer.MIDDLEGROUND ->
-                    drawUrbanParkPlane(middleground, planeOffset, planeSize)
-                UrbanParkLayer.FOREGROUND -> {
-                    drawUrbanParkPlane(foreground, planeOffset, planeSize)
-                    drawUrbanParkBannerForeground(background, planeOffset, planeSize)
-                }
-                UrbanParkLayer.PRECIPITATION -> {
-                    drawRect(
-                        brush = Brush.verticalGradient(
-                            0f to Color.Transparent,
-                            .5f to Color(0x09091828),
-                            1f to Color(0xDD081626),
-                        ),
-                    )
-                    when (firstCity.precipitation) {
-                        CityPrecipitation.RAIN -> {
-                            val input = firstCity.rainRenderInput()
-                            check(input.selectedInstant == composition.selectedInstant)
-                            check(input.pass.layer == FirstCityLayer.PRECIPITATION)
-                            drawRainRenderer(input)
-                        }
-                        CityPrecipitation.SNOW -> {
-                            val input = firstCity.snowRenderInput()
-                            check(input.selectedInstant == composition.selectedInstant)
-                            check(input.pass.layer == FirstCityLayer.PRECIPITATION)
-                            drawSnowRenderer(input)
-                        }
-                        CityPrecipitation.NONE, CityPrecipitation.STORM -> Unit
-                    }
-                }
-            }
-        }
+        )
+        drawScene(sceneDescription)
     }
 }
 
@@ -474,14 +518,14 @@ private fun DrawScope.drawStorybookCloud(
 
 /** The approved board's source-space mask redraws the same banner pixels at Foreground depth. */
 private fun DrawScope.drawUrbanParkBannerForeground(
-    background: ImageBitmap,
-    destinationOffset: androidx.compose.ui.unit.IntOffset,
-    destinationSize: androidx.compose.ui.unit.IntSize,
+    planes: ScenePlaneStack,
+    transform: com.oxygen.weather.scenecore.ScenePlaneTransform,
 ) {
-    val scaleX = destinationSize.width.toFloat() / background.width
-    val scaleY = destinationSize.height.toFloat() / background.height
-    val originX = destinationOffset.x.toFloat()
-    val originY = destinationOffset.y.toFloat()
+    val background = planes.background
+    val scaleX = transform.destinationSize.width.toFloat() / background.width
+    val scaleY = transform.destinationSize.height.toFloat() / background.height
+    val originX = transform.destinationOffset.x.toFloat()
+    val originY = transform.destinationOffset.y.toFloat()
     fun x(sourceX: Float) = originX + sourceX * scaleX
     fun y(sourceY: Float) = originY + sourceY * scaleY
     val banner = Path().apply {
@@ -496,7 +540,7 @@ private fun DrawScope.drawUrbanParkBannerForeground(
         close()
     }
     clipPath(banner) {
-        drawUrbanParkPlane(background, destinationOffset, destinationSize)
+        drawScenePlane(planes, ScenePlane.BACKGROUND, transform)
     }
 }
 
@@ -508,59 +552,76 @@ fun CatalogOpenLandscapeScene(
 ) {
     val weather = composition.weatherDecision
     val reducedMotion = !ValueAnimator.areAnimatorsEnabled()
+    val sceneDescription = SceneDescription(
+        entries = buildList<SceneEntry> {
+            add(SceneEntry {
+                val sky = weather.sky
+                if (sky == null) {
+                    drawRect(
+                        brush = Brush.verticalGradient(
+                            0f to Color(0xFF52697B),
+                            .58f to Color(0xFF647B89),
+                            1f to Color(0xFF82918A),
+                        ),
+                    )
+                } else {
+                    val cloudiness = weather.clouds.coverFraction
+                    val storm = weather.precipitation == CityPrecipitation.STORM
+                    drawSkyPalette(sky.condition, sky.daylight, cloudiness, storm)
+                    if (weather.precipitation == CityPrecipitation.RAIN) {
+                        drawRect(Brush.verticalGradient(
+                            0f to Color(0xFF4B6072), .55f to Color(0xFF5F7385),
+                            1f to Color.Transparent,
+                        ))
+                    }
+                }
+            })
+            add(SceneEntry {
+                val cloudInput = composition.cloudRenderInput()
+                if (cloudInput.decision.visible) {
+                    check(cloudInput.selectedInstant == composition.selectedInstant)
+                    check(cloudInput.id == OpenLandscapeElementId.CLOUD_COVER)
+                    check(cloudInput.pass == OpenLandscapePass.CLOUDS)
+                    drawCloudRenderer(cloudInput, reducedMotion)
+                }
+            })
+            add(SceneEntry {
+                drawOpenLandscapeTerrain()
+            })
+            add(SceneEntry {
+                val treeInput = composition.treeGroupRenderInput()
+                check(treeInput.selectedInstant == composition.selectedInstant)
+                check(treeInput.id == OpenLandscapeElementId.LEFT_TREE_GROUP)
+                check(treeInput.pass == OpenLandscapePass.FIRST_TREE_GROUP)
+                drawOpenLandscapeTreeGroup(centerX = treeInput.geometry.centerX,
+                    scale = treeInput.geometry.scale)
+            })
+            add(SceneEntry {
+                drawOpenLandscapeTreeGroup(centerX = .78f, scale = .92f)
+            })
+            add(SceneEntry {
+                when (weather.precipitation) {
+                    CityPrecipitation.RAIN -> {
+                        val input = composition.rainRenderInput()
+                        check(input.selectedInstant == composition.selectedInstant)
+                        check(input.id == OpenLandscapeElementId.PRECIPITATION_FIELD)
+                        check(input.pass == OpenLandscapePass.PRECIPITATION)
+                        drawRainRenderer(input)
+                    }
+                    CityPrecipitation.SNOW -> {
+                        val input = composition.snowRenderInput()
+                        check(input.selectedInstant == composition.selectedInstant)
+                        check(input.id == OpenLandscapeElementId.PRECIPITATION_FIELD)
+                        check(input.pass == OpenLandscapePass.PRECIPITATION)
+                        drawSnowRenderer(input)
+                    }
+                    CityPrecipitation.NONE, CityPrecipitation.STORM -> Unit
+                }
+            })
+        },
+    )
     Canvas(modifier.fillMaxSize()) {
-        val sky = weather.sky
-        if (sky == null) {
-            drawRect(
-                brush = Brush.verticalGradient(
-                    0f to Color(0xFF52697B),
-                    .58f to Color(0xFF647B89),
-                    1f to Color(0xFF82918A),
-                ),
-            )
-        } else {
-            val cloudiness = weather.clouds.coverFraction
-            val storm = weather.precipitation == CityPrecipitation.STORM
-            drawSkyPalette(sky.condition, sky.daylight, cloudiness, storm)
-            if (weather.precipitation == CityPrecipitation.RAIN) {
-                drawRect(Brush.verticalGradient(
-                    0f to Color(0xFF4B6072), .55f to Color(0xFF5F7385),
-                    1f to Color.Transparent,
-                ))
-            }
-        }
-        val cloudInput = composition.cloudRenderInput()
-        if (cloudInput.decision.visible) {
-            check(cloudInput.selectedInstant == composition.selectedInstant)
-            check(cloudInput.id == OpenLandscapeElementId.CLOUD_COVER)
-            check(cloudInput.pass == OpenLandscapePass.CLOUDS)
-            drawCloudRenderer(cloudInput, reducedMotion)
-        }
-        drawOpenLandscapeTerrain()
-        val treeInput = composition.treeGroupRenderInput()
-        check(treeInput.selectedInstant == composition.selectedInstant)
-        check(treeInput.id == OpenLandscapeElementId.LEFT_TREE_GROUP)
-        check(treeInput.pass == OpenLandscapePass.FIRST_TREE_GROUP)
-        drawOpenLandscapeTreeGroup(centerX = treeInput.geometry.centerX,
-            scale = treeInput.geometry.scale)
-        drawOpenLandscapeTreeGroup(centerX = .78f, scale = .92f)
-        when (weather.precipitation) {
-            CityPrecipitation.RAIN -> {
-                val input = composition.rainRenderInput()
-                check(input.selectedInstant == composition.selectedInstant)
-                check(input.id == OpenLandscapeElementId.PRECIPITATION_FIELD)
-                check(input.pass == OpenLandscapePass.PRECIPITATION)
-                drawRainRenderer(input)
-            }
-            CityPrecipitation.SNOW -> {
-                val input = composition.snowRenderInput()
-                check(input.selectedInstant == composition.selectedInstant)
-                check(input.id == OpenLandscapeElementId.PRECIPITATION_FIELD)
-                check(input.pass == OpenLandscapePass.PRECIPITATION)
-                drawSnowRenderer(input)
-            }
-            CityPrecipitation.NONE, CityPrecipitation.STORM -> Unit
-        }
+        drawScene(sceneDescription)
     }
 }
 
@@ -574,115 +635,126 @@ fun CatalogLivingUrbanParkScene(
 ) {
     val weather = composition.weatherDecision
     val reducedMotion = !ValueAnimator.areAnimatorsEnabled()
-    Canvas(modifier.fillMaxSize()) {
-        val sky = weather.sky
-        if (sky == null) {
-            drawRect(
-                brush = Brush.verticalGradient(
-                    0f to Color(0xFF52697B),
-                    .58f to Color(0xFF647B89),
-                    1f to Color(0xFF82918A),
-                ),
-            )
-        } else {
-            val cloudiness = weather.clouds.coverFraction
-            val storm = weather.precipitation == CityPrecipitation.STORM
-            drawSkyPalette(sky.condition, sky.daylight, cloudiness, storm)
-            if (weather.precipitation == CityPrecipitation.RAIN) {
-                drawRect(Brush.verticalGradient(
-                    0f to Color(0xFF4B6072), .55f to Color(0xFF5F7385),
-                    1f to Color.Transparent,
+    val sceneDescription = SceneDescription(
+        entries = buildList<SceneEntry> {
+            add(SceneEntry {
+                check(composition.selectedInstant == weather.selectedInstant)
+                check(temperatureBinding.selectedInstant == composition.selectedInstant)
+                check(composition.elements.map { it.pass } == listOf(
+                    LivingUrbanParkDepthPass.BACKGROUND,
+                    LivingUrbanParkDepthPass.MURAL_WALL,
+                    LivingUrbanParkDepthPass.PARK_LANDMARKS,
+                    LivingUrbanParkDepthPass.PARK_LANDMARKS,
+                    LivingUrbanParkDepthPass.PARK_LANDMARKS,
+                    LivingUrbanParkDepthPass.PATH,
+                    LivingUrbanParkDepthPass.FOREGROUND,
+                    LivingUrbanParkDepthPass.FOREGROUND,
+                    LivingUrbanParkDepthPass.FOREGROUND,
                 ))
-            }
-        }
-        if (weather.clouds.visible) {
-            clipRect(bottom = size.height * CLOUD_REGION_FRACTION) {
-                drawOpenLandscapeClouds(weather.clouds, reducedMotion)
-            }
-        }
 
-        check(composition.selectedInstant == weather.selectedInstant)
-        check(temperatureBinding.selectedInstant == composition.selectedInstant)
-        check(composition.elements.map { it.pass } == listOf(
-            LivingUrbanParkDepthPass.BACKGROUND,
-            LivingUrbanParkDepthPass.MURAL_WALL,
-            LivingUrbanParkDepthPass.PARK_LANDMARKS,
-            LivingUrbanParkDepthPass.PARK_LANDMARKS,
-            LivingUrbanParkDepthPass.PARK_LANDMARKS,
-            LivingUrbanParkDepthPass.PATH,
-            LivingUrbanParkDepthPass.FOREGROUND,
-            LivingUrbanParkDepthPass.FOREGROUND,
-            LivingUrbanParkDepthPass.FOREGROUND,
-        ))
-        composition.elements.forEach { element ->
-            when (val geometry = element.geometry) {
-                is LivingUrbanParkGeometry.MuralWall -> {
-                    check(element.id == LivingUrbanParkElementId.MURAL_WALL)
-                    check(element.role == LivingUrbanParkElementRole.MURAL_WALL)
-                    check(element.pass == LivingUrbanParkDepthPass.MURAL_WALL)
-                    val surface = requireNotNull(element.dataSurface)
-                    check(surface.id == geometry.surfaceId)
-                    drawParkMuralWall(surface, temperatureBinding, locationTimeZone)
+                val sky = weather.sky
+                if (sky == null) {
+                    drawRect(
+                        brush = Brush.verticalGradient(
+                            0f to Color(0xFF52697B),
+                            .58f to Color(0xFF647B89),
+                            1f to Color(0xFF82918A),
+                        ),
+                    )
+                } else {
+                    val cloudiness = weather.clouds.coverFraction
+                    val storm = weather.precipitation == CityPrecipitation.STORM
+                    drawSkyPalette(sky.condition, sky.daylight, cloudiness, storm)
+                    if (weather.precipitation == CityPrecipitation.RAIN) {
+                        drawRect(Brush.verticalGradient(
+                            0f to Color(0xFF4B6072), .55f to Color(0xFF5F7385),
+                            1f to Color.Transparent,
+                        ))
+                    }
                 }
-                is LivingUrbanParkGeometry.Tree -> {
-                    check(element.id in setOf(
-                        LivingUrbanParkElementId.TREE_LEFT,
-                        LivingUrbanParkElementId.TREE_RIGHT,
-                    ))
-                    check(element.role == LivingUrbanParkElementRole.VEGETATION)
-                    check(element.pass == LivingUrbanParkDepthPass.PARK_LANDMARKS)
-                    check(element.dataSurface == null)
-                    drawParkTree(geometry.frame)
+            })
+            add(SceneEntry {
+                if (weather.clouds.visible) {
+                    clipRect(bottom = size.height * CLOUD_REGION_FRACTION) {
+                        drawOpenLandscapeClouds(weather.clouds, reducedMotion)
+                    }
                 }
-                is LivingUrbanParkGeometry.StreetcarShelter -> {
-                    check(element.id == LivingUrbanParkElementId.STREETCAR_SHELTER)
-                    check(element.role == LivingUrbanParkElementRole.STREETCAR_SHELTER)
-                    check(element.pass == LivingUrbanParkDepthPass.PARK_LANDMARKS)
-                    check(element.dataSurface == null)
-                    drawParkStreetcarShelter(geometry.frame)
-                }
-                is LivingUrbanParkGeometry.Bench -> {
-                    check(element.id in setOf(
-                        LivingUrbanParkElementId.BENCH_LEFT,
-                        LivingUrbanParkElementId.BENCH_RIGHT,
-                    ))
-                    check(element.role == LivingUrbanParkElementRole.BENCH)
-                    check(element.pass == LivingUrbanParkDepthPass.FOREGROUND)
-                    check(element.dataSurface == null)
-                    drawParkBench(geometry.frame)
-                }
-                is LivingUrbanParkGeometry.Backdrop -> {
-                    check(element.id == LivingUrbanParkElementId.DISTANT_BACKDROP)
-                    check(element.role == LivingUrbanParkElementRole.DISTANT_BACKDROP)
-                    drawParkBackdrop(geometry.horizon, geometry.skyline, sky, weather.clouds.coverFraction,
-                        weather.precipitation == CityPrecipitation.STORM)
-                }
-                is LivingUrbanParkGeometry.CurvedPath -> {
-                    check(element.id == LivingUrbanParkElementId.CURVED_PATH)
-                    check(element.role == LivingUrbanParkElementRole.PATH)
-                    check(element.pass == LivingUrbanParkDepthPass.PATH)
-                    drawParkCurvedPath(geometry.leftStart, geometry.leftEdge, geometry.rightStart, geometry.rightEdge)
-                }
-                is LivingUrbanParkGeometry.Entrance -> {
-                    check(element.id == LivingUrbanParkElementId.ENTRANCE)
-                    check(element.role == LivingUrbanParkElementRole.ENTRANCE)
-                    check(element.pass == LivingUrbanParkDepthPass.FOREGROUND)
-                    drawParkEntrance(geometry.leftTop, geometry.rightTop, geometry.rightBottom, geometry.leftBottom)
-                }
+            })
+            composition.elements.forEach { element ->
+                add(SceneEntry {
+                    when (val geometry = element.geometry) {
+                        is LivingUrbanParkGeometry.MuralWall -> {
+                            check(element.id == LivingUrbanParkElementId.MURAL_WALL)
+                            check(element.role == LivingUrbanParkElementRole.MURAL_WALL)
+                            check(element.pass == LivingUrbanParkDepthPass.MURAL_WALL)
+                            val surface = requireNotNull(element.dataSurface)
+                            check(surface.id == geometry.surfaceId)
+                            drawParkMuralWall(surface, temperatureBinding, locationTimeZone)
+                        }
+                        is LivingUrbanParkGeometry.Tree -> {
+                            check(element.id in setOf(
+                                LivingUrbanParkElementId.TREE_LEFT,
+                                LivingUrbanParkElementId.TREE_RIGHT,
+                            ))
+                            check(element.role == LivingUrbanParkElementRole.VEGETATION)
+                            check(element.pass == LivingUrbanParkDepthPass.PARK_LANDMARKS)
+                            check(element.dataSurface == null)
+                            drawParkTree(geometry.frame)
+                        }
+                        is LivingUrbanParkGeometry.StreetcarShelter -> {
+                            check(element.id == LivingUrbanParkElementId.STREETCAR_SHELTER)
+                            check(element.role == LivingUrbanParkElementRole.STREETCAR_SHELTER)
+                            check(element.pass == LivingUrbanParkDepthPass.PARK_LANDMARKS)
+                            check(element.dataSurface == null)
+                            drawParkStreetcarShelter(geometry.frame)
+                        }
+                        is LivingUrbanParkGeometry.Bench -> {
+                            check(element.id in setOf(
+                                LivingUrbanParkElementId.BENCH_LEFT,
+                                LivingUrbanParkElementId.BENCH_RIGHT,
+                            ))
+                            check(element.role == LivingUrbanParkElementRole.BENCH)
+                            check(element.pass == LivingUrbanParkDepthPass.FOREGROUND)
+                            check(element.dataSurface == null)
+                            drawParkBench(geometry.frame)
+                        }
+                        is LivingUrbanParkGeometry.Backdrop -> {
+                            check(element.id == LivingUrbanParkElementId.DISTANT_BACKDROP)
+                            check(element.role == LivingUrbanParkElementRole.DISTANT_BACKDROP)
+                            drawParkBackdrop(geometry.horizon, geometry.skyline, weather.sky, weather.clouds.coverFraction,
+                                weather.precipitation == CityPrecipitation.STORM)
+                        }
+                        is LivingUrbanParkGeometry.CurvedPath -> {
+                            check(element.id == LivingUrbanParkElementId.CURVED_PATH)
+                            check(element.role == LivingUrbanParkElementRole.PATH)
+                            check(element.pass == LivingUrbanParkDepthPass.PATH)
+                            drawParkCurvedPath(geometry.leftStart, geometry.leftEdge, geometry.rightStart, geometry.rightEdge)
+                        }
+                        is LivingUrbanParkGeometry.Entrance -> {
+                            check(element.id == LivingUrbanParkElementId.ENTRANCE)
+                            check(element.role == LivingUrbanParkElementRole.ENTRANCE)
+                            check(element.pass == LivingUrbanParkDepthPass.FOREGROUND)
+                            drawParkEntrance(geometry.leftTop, geometry.rightTop, geometry.rightBottom, geometry.leftBottom)
+                        }
+                    }
+                })
             }
-        }
-        drawRect(
-            brush = Brush.verticalGradient(
-                0f to Color.Transparent,
-                .5f to Color(0x09091828),
-                1f to Color(0xDD081626),
-            ),
-        )
-        when (weather.precipitation) {
-            CityPrecipitation.RAIN -> drawCityRainField(startsAtCloudBase = weather.clouds.visible)
-            CityPrecipitation.SNOW -> drawCitySnowField()
-            CityPrecipitation.NONE, CityPrecipitation.STORM -> Unit
-        }
+            add(SceneEntry {
+                drawRect(Brush.verticalGradient(
+                    0f to Color.Transparent,
+                    .5f to Color(0x09091828),
+                    1f to Color(0xDD081626),
+                ))
+                when (weather.precipitation) {
+                    CityPrecipitation.RAIN -> drawCityRainField(startsAtCloudBase = weather.clouds.visible)
+                    CityPrecipitation.SNOW -> drawCitySnowField()
+                    CityPrecipitation.NONE, CityPrecipitation.STORM -> Unit
+                }
+            })
+        },
+    )
+    Canvas(modifier.fillMaxSize()) {
+        drawScene(sceneDescription)
     }
 }
 
@@ -1483,21 +1555,6 @@ private fun DrawScope.drawCityWorld(treatment: CityTreatment) {
         CityTreatment.UNAVAILABLE -> Color(0x160A1621)
     }
     drawRect(tint)
-}
-
-private fun DrawScope.drawUrbanParkPlane(
-    image: ImageBitmap,
-    destinationOffset: androidx.compose.ui.unit.IntOffset,
-    destinationSize: androidx.compose.ui.unit.IntSize,
-) {
-    drawImage(
-        image = image,
-        srcOffset = androidx.compose.ui.unit.IntOffset.Zero,
-        srcSize = androidx.compose.ui.unit.IntSize(image.width, image.height),
-        dstOffset = destinationOffset,
-        dstSize = destinationSize,
-        filterQuality = FilterQuality.Medium,
-    )
 }
 
 private fun DrawScope.drawAlignedLayer(bitmap: ImageBitmap) {

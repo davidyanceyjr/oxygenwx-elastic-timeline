@@ -305,6 +305,7 @@ private fun CatalogTimeLabScreenContent(
                     firstCity = composition ?: FirstCityTheme.compose(sceneReading, view.zone),
                     selectedWeatherSymbolId = view.weatherSymbolId,
                 ),
+                selectedLocationName = view.selectedLocationName,
             )
         } else if (sceneReading != null && worldChoice.selected == CatalogWorld.LIVING_URBAN_PARK) {
             CatalogLivingUrbanParkScene(
@@ -405,7 +406,13 @@ private fun CatalogTimeLabScreenContent(
             ) {
                 Text(
                     view.selectedLocationName ?: "Selected location",
-                    color = Color.White,
+                    // Keep the presentation value in the accessibility tree; Urban Park paints
+                    // its visible copy into the tower face.
+                    color = if (worldChoice.selected == CatalogWorld.URBAN_PARK) {
+                        Color.Transparent
+                    } else {
+                        Color.White
+                    },
                     fontSize = (if (compactLayout) 21.sp else 24.sp) * responsiveScale,
                     fontWeight = FontWeight.SemiBold,
                     textAlign = TextAlign.Center,

@@ -14,8 +14,9 @@ internal enum class UrbanParkLayer(val backToFrontPosition: Int) {
     CLOUD_LAYER_2(6),
     CLOUD_LAYER_3(7),
     MIDDLEGROUND(8),
-    FOREGROUND(9),
-    PRECIPITATION(10),
+    LOCATION_INSCRIPTION(9),
+    FOREGROUND(10),
+    PRECIPITATION(11),
 }
 
 /** Stable Park cloud identities with their independent selected-time tracks. */
@@ -54,6 +55,7 @@ internal data class UrbanParkComposition(
         if (firstCity.moonCue.visible) add(UrbanParkLayer.MOON)
         cloudLayers.forEach { add(it.sceneLayer) }
         add(UrbanParkLayer.MIDDLEGROUND)
+        add(UrbanParkLayer.LOCATION_INSCRIPTION)
         add(UrbanParkLayer.FOREGROUND)
         if (FirstCityLayer.PRECIPITATION in firstCity.layerOrder) {
             add(UrbanParkLayer.PRECIPITATION)
