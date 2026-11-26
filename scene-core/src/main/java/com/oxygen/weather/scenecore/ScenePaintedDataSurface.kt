@@ -75,6 +75,90 @@ public class ScenePaintedDataSurfaceStyle(
     }
 }
 
+/** One theme-authored vector path that receives the shared painted-surface treatment. */
+public class ScenePaintedPathLayer(
+    path: Path,
+    public val pigmentTint: Color,
+    public val alpha: Float = 1f,
+    public val strokeOnly: Boolean = false,
+) {
+    internal val path: Path = Path(path)
+
+    init {
+        require(alpha.isFinite() && alpha in 0f..1f)
+    }
+}
+
+/**
+ * A group of vector paths laid out in one local coordinate space and projected together onto a
+ * theme-owned painted surface. Each path may have its own pigment tint; projection, clipping,
+ * texture sampling, worn expansion, and surface lighting are shared by the complete group.
+ */
+public class ScenePaintedPathSurface(
+    sourcePlaneSize: IntSize,
+    public val localWidth: Float,
+    public val localHeight: Float,
+    public val geometry: ScenePaintedSurfaceGeometry,
+    public val style: ScenePaintedDataSurfaceStyle,
+    layers: List<ScenePaintedPathLayer>,
+) {
+    internal val layers: List<PreparedPaintedPathLayer>
+    internal val pigmentShader: BitmapShader?
+    internal val shadowPaint: Paint
+    internal val highlightPaint: Paint
+
+    init {
+        require(sourcePlaneSize.width > 0 && sourcePlaneSize.height > 0)
+        require(localWidth.isFinite() && localWidth > 0f)
+        require(localHeight.isFinite() && localHeight > 0f)
+        val surfaceStyle = style
+        val activeLayers = layers.filterNot { it.path.isEmpty }
+        this.layers = activeLayers.map { layer ->
+            PreparedPaintedPathLayer(
+                path = layer.path,
+                pigmentPaint = Paint(Paint.ANTI_ALIAS_FLAG).apply {
+                    colorFilter = pigmentColorFilter(layer.pigmentTint)
+                    alpha = (surfaceStyle.pigmentAlpha * layer.alpha * .45f * 255f).roundToInt()
+                    this.style = if (layer.strokeOnly) Paint.Style.STROKE else Paint.Style.FILL_AND_STROKE
+                    strokeJoin = Paint.Join.ROUND
+                    strokeCap = Paint.Cap.ROUND
+                },
+                pigmentTintPaint = Paint(Paint.ANTI_ALIAS_FLAG).apply {
+                    color = layer.pigmentTint.toArgb()
+                    alpha = (surfaceStyle.pigmentAlpha * layer.alpha * .86f * 255f).roundToInt()
+                    this.style = if (layer.strokeOnly) Paint.Style.STROKE else Paint.Style.FILL_AND_STROKE
+                    strokeJoin = Paint.Join.ROUND
+                    strokeCap = Paint.Cap.ROUND
+                },
+            )
+        }
+        pigmentShader = this.layers.takeIf { it.isNotEmpty() }?.let {
+            BitmapShader(
+                surfaceStyle.pigmentTexture.asAndroidBitmap(),
+                Shader.TileMode.CLAMP,
+                Shader.TileMode.CLAMP,
+            )
+        }
+        this.layers.forEach { it.pigmentPaint.shader = pigmentShader }
+        shadowPaint = Paint(Paint.ANTI_ALIAS_FLAG).apply {
+            color = surfaceStyle.shadowColor.toArgb()
+            this.style = Paint.Style.FILL
+        }
+        highlightPaint = Paint(Paint.ANTI_ALIAS_FLAG).apply {
+            color = surfaceStyle.highlightColor.toArgb()
+            this.style = Paint.Style.STROKE
+            strokeJoin = Paint.Join.ROUND
+            strokeCap = Paint.Cap.ROUND
+        }
+    }
+}
+
+internal class PreparedPaintedPathLayer(
+    val path: Path,
+    val pigmentPaint: Paint,
+    val pigmentTintPaint: Paint,
+)
+
 /**
  * A dynamic string laid out once against theme-owned surface geometry.
  *
@@ -91,11 +175,7 @@ public class ScenePaintedDataSurface(
     internal val layoutWidth: Float
     internal val layoutHeight: Float
     internal val glyphPath: Path?
-    internal val pigmentShader: BitmapShader?
-    internal val pigmentPaint: Paint?
-    internal val pigmentTintPaint: Paint?
-    internal val shadowPaint: Paint
-    internal val highlightPaint: Paint
+    internal val pathSurface: ScenePaintedPathSurface?
 
     init {
         require(sourcePlaneSize.width > 0 && sourcePlaneSize.height > 0)
@@ -108,43 +188,29 @@ public class ScenePaintedDataSurface(
         glyphPath = value?.takeIf(String::isNotBlank)?.let { text ->
             createGlyphPath(text, layoutWidth, layoutHeight, surfaceStyle)
         }
-        pigmentShader = glyphPath?.let {
-            BitmapShader(
-                surfaceStyle.pigmentTexture.asAndroidBitmap(),
-                Shader.TileMode.CLAMP,
-                Shader.TileMode.CLAMP,
+        pathSurface = glyphPath?.let { path ->
+            ScenePaintedPathSurface(
+                sourcePlaneSize = sourcePlaneSize,
+                localWidth = layoutWidth,
+                localHeight = layoutHeight,
+                geometry = geometry,
+                style = surfaceStyle,
+                layers = listOf(ScenePaintedPathLayer(path, surfaceStyle.pigmentTint)),
             )
         }
-        pigmentPaint = pigmentShader?.let { shader ->
-            Paint(Paint.ANTI_ALIAS_FLAG).apply {
-                this.shader = shader
-                colorFilter = pigmentColorFilter(surfaceStyle.pigmentTint)
-                alpha = (surfaceStyle.pigmentAlpha * .45f * 255f).roundToInt()
-                style = Paint.Style.FILL_AND_STROKE
-                strokeJoin = Paint.Join.ROUND
-                strokeCap = Paint.Cap.ROUND
-            }
-        }
-        pigmentTintPaint = glyphPath?.let {
-            Paint(Paint.ANTI_ALIAS_FLAG).apply {
-                color = surfaceStyle.pigmentTint.toArgb()
-                alpha = (surfaceStyle.pigmentAlpha * .86f * 255f).roundToInt()
-                style = Paint.Style.FILL_AND_STROKE
-                strokeJoin = Paint.Join.ROUND
-                strokeCap = Paint.Cap.ROUND
-            }
-        }
-        shadowPaint = Paint(Paint.ANTI_ALIAS_FLAG).apply {
-            color = surfaceStyle.shadowColor.toArgb()
-            this.style = Paint.Style.FILL
-        }
-        highlightPaint = Paint(Paint.ANTI_ALIAS_FLAG).apply {
-            color = surfaceStyle.highlightColor.toArgb()
-            this.style = Paint.Style.STROKE
-            strokeJoin = Paint.Join.ROUND
-            strokeCap = Paint.Cap.ROUND
-        }
     }
+}
+
+/** Creates a reusable text glyph path, centered and fit to the requested local bounds. */
+public fun createScenePaintedGlyphPath(
+    value: String?,
+    width: Float,
+    height: Float,
+    style: ScenePaintedDataSurfaceStyle,
+): Path? {
+    require(width.isFinite() && width > 0f)
+    require(height.isFinite() && height > 0f)
+    return value?.takeIf(String::isNotBlank)?.let { createGlyphPath(it, width, height, style) }
 }
 
 /** Draws a dynamic painted value after its supporting plane, preserving that plane's crop. */
@@ -153,10 +219,18 @@ public fun DrawScope.drawScenePaintedDataSurface(
     transform: ScenePlaneTransform,
     surface: ScenePaintedDataSurface,
 ) {
-    val localGlyphs = surface.glyphPath ?: return
+    val pathSurface = surface.pathSurface ?: return
+    drawScenePaintedPathSurface(stack, transform, pathSurface)
+}
+
+/** Draws theme-authored vector paths through the same projection and pigment pipeline as text. */
+public fun DrawScope.drawScenePaintedPathSurface(
+    stack: ScenePlaneStack,
+    transform: ScenePlaneTransform,
+    surface: ScenePaintedPathSurface,
+) {
+    if (surface.layers.isEmpty()) return
     val shader = surface.pigmentShader ?: return
-    val fillPaint = surface.pigmentPaint ?: return
-    val tintPaint = surface.pigmentTintPaint ?: return
     val sourceImage = stack.image(surface.geometry.plane)
     val sourceWidth = sourceImage.width.toFloat()
     val sourceHeight = sourceImage.height.toFloat()
@@ -170,15 +244,17 @@ public fun DrawScope.drawScenePaintedDataSurface(
     val textQuad = surface.geometry.textRegion.toViewportPoints(transform)
     val sourceQuad = floatArrayOf(
         0f, 0f,
-        surface.layoutWidth, 0f,
-        surface.layoutWidth, surface.layoutHeight,
-        0f, surface.layoutHeight,
+        surface.localWidth, 0f,
+        surface.localWidth, surface.localHeight,
+        0f, surface.localHeight,
     )
     val destinationQuad = textQuad.toFloatArray()
     val projection = Matrix()
     if (!projection.setPolyToPoly(sourceQuad, 0, destinationQuad, 0, 4)) return
-    val screenGlyphs = Path()
-    localGlyphs.transform(projection, screenGlyphs)
+    val screenPaths = surface.layers.map { layer ->
+        Path().also { layer.path.transform(projection, it) }
+    }
+    val combinedPath = Path().apply { screenPaths.forEach(::addPath) }
 
     val textureScaleX = surface.style.pigmentTexture.width.toFloat() / destinationWidth
     val textureScaleY = surface.style.pigmentTexture.height.toFloat() / destinationHeight
@@ -197,7 +273,7 @@ public fun DrawScope.drawScenePaintedDataSurface(
     val saveCount = canvas.save()
     canvas.clipPath(facePath)
 
-    val shadowPath = Path(screenGlyphs)
+    val shadowPath = Path(combinedPath)
     val shadowMatrix = Matrix().apply {
         setTranslate(
             surface.style.shadowOffset.x * scaleX,
@@ -206,13 +282,16 @@ public fun DrawScope.drawScenePaintedDataSurface(
     }
     shadowPath.transform(shadowMatrix)
     canvas.drawPath(shadowPath, surface.shadowPaint)
-    fillPaint.strokeWidth = surface.style.pigmentStrokeWidth * (scaleX + scaleY) / 2f
-    tintPaint.strokeWidth = fillPaint.strokeWidth
-    canvas.drawPath(screenGlyphs, fillPaint)
-    canvas.drawPath(screenGlyphs, tintPaint)
+    val pigmentStrokeWidth = surface.style.pigmentStrokeWidth * (scaleX + scaleY) / 2f
+    surface.layers.zip(screenPaths).forEach { (layer, screenPath) ->
+        layer.pigmentPaint.strokeWidth = pigmentStrokeWidth
+        layer.pigmentTintPaint.strokeWidth = pigmentStrokeWidth
+        canvas.drawPath(screenPath, layer.pigmentPaint)
+        canvas.drawPath(screenPath, layer.pigmentTintPaint)
+    }
 
     if (surface.style.highlightWidth > 0f && surface.style.highlightColor.alpha > 0f) {
-        val highlightPath = Path(screenGlyphs)
+        val highlightPath = Path(combinedPath)
         val highlightMatrix = Matrix().apply {
             setTranslate(
                 surface.style.highlightOffset.x * scaleX,

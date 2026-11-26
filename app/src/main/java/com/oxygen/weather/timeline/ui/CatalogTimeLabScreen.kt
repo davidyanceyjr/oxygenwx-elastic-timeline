@@ -71,6 +71,7 @@ import androidx.compose.ui.semantics.clearAndSetSemantics
 import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.semantics.customActions
+import androidx.compose.ui.semantics.hideFromAccessibility
 import androidx.compose.ui.semantics.onClick
 import androidx.compose.ui.semantics.role
 import androidx.compose.ui.semantics.semantics
@@ -96,6 +97,7 @@ import com.oxygen.weather.timeline.presentation.scene.LivingUrbanParkTheme
 import com.oxygen.weather.timeline.presentation.scene.MinimalOpenLandscapeTheme
 import com.oxygen.weather.timeline.presentation.scene.SceneReading
 import com.oxygen.weather.timeline.presentation.scene.UrbanParkComposition
+import com.oxygen.weather.timeline.presentation.scene.UrbanParkWallReader
 import com.oxygen.weather.timeline.presentation.scene.SceneWeatherDecision
 import com.oxygen.weather.timeline.data.scenepack.InstalledThemeCatalogEntry
 import com.oxygen.weather.timeline.data.scenepack.InstalledThemeCatalog
@@ -296,6 +298,7 @@ private fun CatalogTimeLabScreenContent(
     }
     BoxWithConstraints(Modifier.fillMaxSize().background(Color(0xFF11263D))) {
         val compactLayout = compact || maxWidth < 400.dp || maxHeight < 400.dp
+        val isUrbanPark = sceneReading != null && worldChoice.selected == CatalogWorld.URBAN_PARK
         // Keep foreground typography and pictograms proportional to the available
         // width. The atmospheric canvas already scales independently to fill it.
         val responsiveScale = (maxWidth.value / 411f).coerceIn(.75f, 1f)
@@ -304,6 +307,12 @@ private fun CatalogTimeLabScreenContent(
                 composition = UrbanParkComposition(
                     firstCity = composition ?: FirstCityTheme.compose(sceneReading, view.zone),
                     selectedWeatherSymbolId = view.weatherSymbolId,
+                    wallReader = UrbanParkWallReader(
+                        selectedInstant = view.selectedInstant,
+                        weatherSymbolId = view.weatherSymbolId,
+                        description = view.weatherSymbolName ?: view.condition,
+                        currentTemperature = view.temperature,
+                    ),
                 ),
                 selectedLocationName = view.selectedLocationName,
             )
@@ -391,12 +400,14 @@ private fun CatalogTimeLabScreenContent(
                     .then(readoutGestures),
                 contentAlignment = Alignment.Center,
             ) {
-                WeatherSymbolIcon(
-                    symbol = view.weatherSymbolId ?: WeatherSymbolId.CONDITION_UNAVAILABLE,
-                    modifier = Modifier.size((if (compactLayout) 56.dp else 72.dp) * responsiveScale),
-                    contentDescription = view.weatherSymbolId?.let { view.weatherSymbolName ?: it.label }
-                        ?: WeatherSymbolId.CONDITION_UNAVAILABLE.label,
-                )
+                if (!isUrbanPark) {
+                    WeatherSymbolIcon(
+                        symbol = view.weatherSymbolId ?: WeatherSymbolId.CONDITION_UNAVAILABLE,
+                        modifier = Modifier.size((if (compactLayout) 56.dp else 72.dp) * responsiveScale),
+                        contentDescription = view.weatherSymbolId?.let { view.weatherSymbolName ?: it.label }
+                            ?: WeatherSymbolId.CONDITION_UNAVAILABLE.label,
+                    )
+                }
             }
             Spacer(Modifier.height(7.dp))
             Row(
@@ -440,12 +451,14 @@ private fun CatalogTimeLabScreenContent(
                     .then(readoutGestures),
                 horizontalAlignment = Alignment.CenterHorizontally,
             ) {
-                Text(view.condition ?: "Condition unavailable", color = Color(0xFFECF3F8),
-                    fontSize = 18.sp * responsiveScale, fontWeight = FontWeight.SemiBold,
-                    textAlign = TextAlign.Center,
-                    style = TextStyle(shadow = readoutShadow),
-                    modifier = Modifier.fillMaxWidth().padding(horizontal = 25.dp * responsiveScale)
-                        .testTag("catalogSelectedCondition"))
+                if (!isUrbanPark) {
+                    Text(view.condition ?: "Condition unavailable", color = Color(0xFFECF3F8),
+                        fontSize = 18.sp * responsiveScale, fontWeight = FontWeight.SemiBold,
+                        textAlign = TextAlign.Center,
+                        style = TextStyle(shadow = readoutShadow),
+                        modifier = Modifier.fillMaxWidth().padding(horizontal = 25.dp * responsiveScale)
+                            .testTag("catalogSelectedCondition"))
+                }
                 view.conditionSourceDisclosure?.let { disclosure ->
                     Text(disclosure, color = Color(0xFFECF3F8),
                         fontSize = 12.sp * responsiveScale, textAlign = TextAlign.Center,
@@ -455,11 +468,12 @@ private fun CatalogTimeLabScreenContent(
                 }
                 Spacer(Modifier.height(7.dp))
                 Row(horizontalArrangement = Arrangement.Center) {
-                    Text(view.temperature ?: "—", color = Color.White,
+                    Text(view.temperature ?: "—", color = if (isUrbanPark) Color.Transparent else Color.White,
                         fontSize = (if (compactLayout) 78.sp else 102.sp) * responsiveScale,
                         fontWeight = FontWeight.Light,
                         style = TextStyle(shadow = readoutShadow),
-                        modifier = Modifier.alignByBaseline().testTag("forecastTemperature"))
+                        modifier = Modifier.alignByBaseline().testTag("forecastTemperature")
+                            .then(if (isUrbanPark) Modifier.semantics { hideFromAccessibility() } else Modifier))
                     Spacer(Modifier.width(18.dp * responsiveScale))
                     Text("≈", color = Color(0xFF59DCEF),
                         fontSize = (if (compactLayout) 34.sp else 42.sp) * responsiveScale,

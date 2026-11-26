@@ -23,6 +23,8 @@ import androidx.compose.ui.graphics.drawscope.withTransform
 import androidx.compose.ui.graphics.lerp
 import androidx.compose.ui.graphics.nativeCanvas
 import androidx.compose.ui.res.imageResource
+import androidx.compose.ui.semantics.contentDescription
+import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.unit.IntSize
 import com.oxygen.weather.scenecore.SceneDescription
 import com.oxygen.weather.scenecore.SceneEntry
@@ -32,6 +34,7 @@ import com.oxygen.weather.scenecore.ScenePlane
 import com.oxygen.weather.scenecore.ScenePlaneStack
 import com.oxygen.weather.scenecore.drawScene
 import com.oxygen.weather.scenecore.drawScenePaintedDataSurface
+import com.oxygen.weather.scenecore.drawScenePaintedPathSurface
 import com.oxygen.weather.scenecore.drawScenePlane
 import com.oxygen.weather.timeline.presentation.atmosphere.AtmosphereInput
 import com.oxygen.weather.timeline.presentation.atmosphere.AtmospherePreview
@@ -61,6 +64,7 @@ import com.oxygen.weather.timeline.presentation.scene.UrbanParkCloudLayer
 import com.oxygen.weather.timeline.presentation.scene.UrbanParkComposition
 import com.oxygen.weather.timeline.presentation.scene.UrbanParkLocationSurface
 import com.oxygen.weather.timeline.presentation.scene.UrbanParkLayer
+import com.oxygen.weather.timeline.presentation.scene.createUrbanParkWallReaderSurface
 import com.oxygen.weather.timeline.presentation.scene.FirstCityWorldBounds
 import com.oxygen.weather.timeline.presentation.scene.LivingUrbanParkComposition
 import com.oxygen.weather.timeline.presentation.scene.LivingUrbanParkDataSurfaceDeclaration
@@ -295,7 +299,15 @@ internal fun CatalogUrbanParkScene(
             style = inscriptionStyle,
         )
     }
-    Canvas(modifier.fillMaxSize()) {
+    val muralReader = remember(composition.wallReader, foreground) {
+        createUrbanParkWallReaderSurface(composition.wallReader, foreground)
+    }
+    Canvas(
+        modifier.fillMaxSize().semantics {
+            contentDescription = composition.wallReader.accessibleDescription
+        },
+    ) {
+        check(composition.wallReader.selectedInstant == composition.selectedInstant)
         val planeTransform = planes.centerCropTransform(size)
         val sceneDescription = SceneDescription(
             entries = composition.layerOrder
@@ -344,6 +356,9 @@ internal fun CatalogUrbanParkScene(
                                 drawScenePlane(planes, ScenePlane.FOREGROUND, planeTransform)
                                 drawUrbanParkBannerForeground(planes, planeTransform)
                             }
+                            UrbanParkLayer.MURAL_READER -> drawScenePaintedPathSurface(
+                                planes, planeTransform, muralReader,
+                            )
                             UrbanParkLayer.PRECIPITATION -> {
                                 drawRect(
                                     brush = Brush.verticalGradient(

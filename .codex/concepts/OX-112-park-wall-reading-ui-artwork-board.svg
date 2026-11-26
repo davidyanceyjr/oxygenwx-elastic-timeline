@@ -1,0 +1,44 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="2000" height="2100" viewBox="0 0 2000 2100" role="img" aria-labelledby="title desc">
+  <title id="title">OX-112 Urban Park left-wall reader composition</title>
+  <desc id="desc">Side-by-side comparison of the installed Urban Park screen and a revised scene composition using the existing Park planes. An oversized, weathered 49-degree current temperature is paired with an illustrated rain symbol slightly overlapping its right edge; bold expressive Drizzle lettering sits beneath. The full group is projectively mapped into a four-corner wall surface, cropped to the masonry face, and worn into the bricks with texture showing through. Every timeline scrub updates all three elements from the selected time. The tower location remains centered and unchanged.</desc>
+  <defs>
+    <linearGradient id="sky" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#79b7e9"/>
+      <stop offset="0.52" stop-color="#a7d1ec"/>
+      <stop offset="1" stop-color="#e2e3ca"/>
+    </linearGradient>
+    <clipPath id="rightScene">
+      <rect x="1060" y="205" width="880" height="1760" rx="12"/>
+    </clipPath>
+    <clipPath id="wallFace">
+      <path d="M 1060,702 L 1438,835 L 1425,1230 L 1060,1170 Z"/>
+    </clipPath>
+  </defs>
+  <rect width="2000" height="2100" fill="#0d1d2b"/>
+  <rect x="40" y="26" width="1920" height="114" rx="18" fill="#173247" stroke="#73c9df" stroke-width="3"/>
+  <text x="72" y="76" fill="#ffffff" font-family="sans-serif" font-size="34" font-weight="700">OX-112 · PAINT THE SELECTED READER ON THE LEFT WALL</text>
+  <text x="72" y="116" fill="#bfeafa" font-family="sans-serif" font-size="22">Four-corner wall projection · weathered pigment · selected-time updates</text>
+
+  <text x="60" y="178" fill="#ffffff" font-family="sans-serif" font-size="25" font-weight="700">CURRENT INSTALLED SCREEN</text>
+  <text x="1060" y="178" fill="#ffffff" font-family="sans-serif" font-size="25" font-weight="700">SCENE COMPOSITION</text>
+  <image x="60" y="205" width="850" height="1747" href="OX-112-park-current-screen-capture.png" preserveAspectRatio="none"/>
+
+  <g clip-path="url(#rightScene)">
+    <rect x="1060" y="205" width="880" height="1760" fill="url(#sky)"/>
+    <image x="1060" y="205" width="880" height="1760" href="OX-112-park-background-reference.png" preserveAspectRatio="none"/>
+    <image x="1060" y="205" width="880" height="1760" href="OX-112-park-middleground-reference.png" preserveAspectRatio="none"/>
+    <image x="1060" y="205" width="880" height="1760" href="OX-112-park-foreground-reference.png" preserveAspectRatio="none"/>
+
+    <!-- The tower location remains in its existing Middleground position. -->
+    <text x="1608" y="680" text-anchor="middle" fill="#264f73" fill-opacity="0.92" font-family="cursive" font-size="40" font-weight="700" font-style="italic" transform="rotate(-2 1608 680)">Florence</text>
+
+    <!-- This separate Park layer uses the four-corner projected reader, clipped to the masonry. -->
+    <image x="0" y="0" width="2000" height="2100" href="OX-112-park-wall-reader-projected.png" clip-path="url(#wallFace)"/>
+  </g>
+  <rect x="1060" y="1974" width="880" height="86" rx="16" fill="#173247" stroke="#67d9ee" stroke-width="2"/>
+  <text x="1084" y="2010" fill="#e7fbff" font-family="sans-serif" font-size="19" font-weight="600">Mural data · large 49° + rain icon · expressive DRIZZLE beneath</text>
+  <text x="1084" y="2040" fill="#bfeafa" font-family="sans-serif" font-size="18">Projective warp · wall-face crop · weathered pigment · selected-time updates</text>
+  <text x="60" y="2014" fill="#bad1df" font-family="sans-serif" font-size="18">Mural cue: Urban Living Park Concept Visual Reference.</text>
+  <text x="60" y="2040" fill="#bad1df" font-family="sans-serif" font-size="18">Reference layout: illustrated forecast, expressive lettering and large temperature.</text>
+  <text x="60" y="2070" fill="#bad1df" font-family="sans-serif" font-size="18">The icon, description and current temperature move from center to wall.</text>
+</svg>

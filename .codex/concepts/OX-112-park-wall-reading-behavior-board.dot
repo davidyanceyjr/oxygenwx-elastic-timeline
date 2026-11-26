@@ -1,0 +1,38 @@
+digraph OX112 {
+  graph [
+    label="OX-112 · Selected-time reader painted onto the Urban Park left wall\nReader behavior",
+    labelloc=t, fontsize=22, fontname="sans-serif", rankdir=TB,
+    bgcolor="#f7f8fa", pad=0.35, nodesep=0.42, ranksep=0.55,
+    splines=polyline
+  ];
+  node [shape=box, style="rounded,filled", fontname="sans-serif", fontsize=14,
+        color="#33536a", fillcolor="#ffffff", margin="0.2,0.14"];
+  edge [fontname="sans-serif", fontsize=11, color="#42657d", arrowsize=0.8];
+
+  selected [label="Authoritative selected instant\nTimeline remains the time owner\nEvery scrub updates the wall reader", fillcolor="#dff2fa"];
+  presentation [label="Existing typed Meteo-backed presentation\nweather forecast icon\nforecast description\nCurrent Temp"];
+  supported [label="Supplied facts stay independent\nKeep each existing value and event source time"];
+  unavailable [label="Missing / unsupported values\nKeep explicit unavailable states\nNever substitute zero or infer a new value", fillcolor="#fff0d6"];
+  mapping [label="Existing weather mapping\nSunny / clear · cloudy · rain / drizzle\nUse the current icon and condition text"];
+  surface [label="Urban Park left brick wall\nForeground plane, after its scene pass\nSeparate MURAL_READER layer\nProjected and clipped to wall face\nWeathered pigment; brick texture shows through\nNo card, guide, drop shadow, or overlay keyline", fillcolor="#e9f3e9"];
+  hierarchy [label="Reference mural composition\nOversized, weathered Current Temp\nIllustrated weather icon overlapping its right edge\nLarge expressive forecast lettering beneath\nDrizzle example: 49° + rain icon · DRIZZLE"];
+  reuse [label="Park mural render function receives 3 selected values\nIcon paths + text glyph paths\nOne four-corner perspective mapping\nCrop to wall face · expand pigment edges\nSample wall texture and worn paint\nKeep generic surface mechanics in scene-core", fillcolor="#e4f3f7"];
+  move [label="Urban Park visual result\nMove icon, description and Current Temp\nfrom center to the projected left wall\nKeep Wind chill and other facts in place\nKeep tower location code and placement untouched"];
+  access [label="Accessible reading remains exact\nRetain existing selected-time semantics\nand source / carried disclosure"];
+  untouched [label="Unchanged\nTower location inscription\nPrecipitation · wind · humidity\nTimeline · gestures · other themes", fillcolor="#eef0f3"];
+
+  selected -> presentation;
+  presentation -> mapping;
+  presentation -> supported;
+  presentation -> unavailable;
+  { rank=same; mapping; supported; unavailable; }
+  mapping -> hierarchy;
+  supported -> surface;
+  unavailable -> surface;
+  hierarchy -> surface;
+  reuse -> surface;
+  surface -> move;
+  move -> access;
+  move -> untouched;
+  { rank=same; access; untouched; }
+}

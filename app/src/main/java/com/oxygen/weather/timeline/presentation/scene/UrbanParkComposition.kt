@@ -16,7 +16,8 @@ internal enum class UrbanParkLayer(val backToFrontPosition: Int) {
     MIDDLEGROUND(8),
     LOCATION_INSCRIPTION(9),
     FOREGROUND(10),
-    PRECIPITATION(11),
+    MURAL_READER(11),
+    PRECIPITATION(12),
 }
 
 /** Stable Park cloud identities with their independent selected-time tracks. */
@@ -33,8 +34,13 @@ internal enum class UrbanParkCloudLayer(
 internal data class UrbanParkComposition(
     val firstCity: FirstCityComposition,
     val selectedWeatherSymbolId: WeatherSymbolId?,
+    val wallReader: UrbanParkWallReader,
 ) {
     val selectedInstant: Instant get() = firstCity.selectedInstant
+
+    init {
+        require(wallReader.selectedInstant == selectedInstant)
+    }
 
     val cloudLayers: List<UrbanParkCloudLayer> = when (selectedWeatherSymbolId) {
         WeatherSymbolId.PARTLY_SUNNY_CLOUDY,
@@ -57,6 +63,7 @@ internal data class UrbanParkComposition(
         add(UrbanParkLayer.MIDDLEGROUND)
         add(UrbanParkLayer.LOCATION_INSCRIPTION)
         add(UrbanParkLayer.FOREGROUND)
+        add(UrbanParkLayer.MURAL_READER)
         if (FirstCityLayer.PRECIPITATION in firstCity.layerOrder) {
             add(UrbanParkLayer.PRECIPITATION)
         }
